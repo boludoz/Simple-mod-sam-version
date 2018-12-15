@@ -119,6 +119,8 @@ Func _AndroidEmbed($Embed = True, $CallWinGetAndroidHandle = True, $bForceEmbed 
 	Local $hThumbnail = $g_aiAndroidEmbeddedCtrlTarget[9]
 	Local $targetIsHWnD = $hCtrlTarget = $g_hAndroidWindow
 
+	Local $botStyle = _WinAPI_GetWindowLong($g_hFrmBot, $GWL_STYLE)
+
 	#cs
 		Local $HWND_MESSAGE = HWnd(-3)
 		Local $WM_CHANGEUISTATE = 0x127
@@ -250,6 +252,9 @@ Func _AndroidEmbed($Embed = True, $CallWinGetAndroidHandle = True, $bForceEmbed 
 
 			$g_hProcShieldInput[3] = False
 
+			; ensure bot style wasn't changed
+			_WinAPI_SetWindowLong($g_hFrmBot, $GWL_STYLE, $botStyle)
+
 			Return True
 		EndIf
 		updateBtnEmbed()
@@ -258,10 +263,11 @@ Func _AndroidEmbed($Embed = True, $CallWinGetAndroidHandle = True, $bForceEmbed 
 
 	If $g_bAndroidEmbedded = True And $bForceEmbed = False Then
 		If $g_hAndroidWindow = $HWnD2 Then
+			Local $a = AndroidEmbed_HWnD_Position()
 			;SetDebugLog("Android Window already embedded", Default, True)
 			If $targetIsHWnD = False Then
 				; Ensure android is still hidden
-				WinMove2($g_hAndroidWindow, "", $aPosCtl[2] + 2, $g_aFrmBotPosInit[5], -1, -1, $HWND_BOTTOM)
+				WinMove2($g_hAndroidWindow, "", $a[0], $a[1], -1, -1, $HWND_BOTTOM)
 			EndIf
 
 			Return False
@@ -531,9 +537,12 @@ Func _AndroidEmbed($Embed = True, $CallWinGetAndroidHandle = True, $bForceEmbed 
 	;update Android Window
 	If $g_iAndroidEmbedMode = 0 Then
 		WinMove2($hCtrlTarget, "", 0, 0, $aPosCtl[2] - 1, $aPosCtl[3] - 1, $HWND_BOTTOM, 0, False) ; trigger window change (required for iTools and probably others)
-		WinMove2($hCtrl, "", 0, 0, $aPosCtl[2] - 1, $aPosCtl[3] - 1, $HWND_BOTTOM)
 		WinMove2($hCtrlTarget, "", 0, 0, $aPosCtl[2], $aPosCtl[3], $HWND_BOTTOM, 0, False)
-		WinMove2($hCtrl, "", 0, 0, $aPosCtl[2], $aPosCtl[3], $HWND_BOTTOM) ; ensure control is position at 0,0
+		If $targetIsHWnD Then
+			; BlueStack can have a problem, so move control
+			WinMove2($hCtrl, "", 0, 0, $aPosCtl[2] - 1, $aPosCtl[3] - 1, $HWND_BOTTOM)
+			WinMove2($hCtrl, "", 0, 0, $aPosCtl[2], $aPosCtl[3], $HWND_BOTTOM) ; ensure control is position at 0,0
+		EndIf
 	EndIf
 
 	;CheckRedrawControls(True)
@@ -544,6 +553,10 @@ Func _AndroidEmbed($Embed = True, $CallWinGetAndroidHandle = True, $bForceEmbed 
 
 	$g_hProcShieldInput[3] = False
 	$g_hProcShieldInput[4] = 0
+
+
+	; for some reason the border is sometimes not refresh, so redraw bot window border now
+	_WinAPI_RedrawWindow($g_hFrmBot, 0, 0, BitOR($RDW_FRAME, $RDW_UPDATENOW, $RDW_INVALIDATE))
 
 	AndroidShield("AndroidEmbed dock", Default, $CallWinGetAndroidHandle, 100)
 
@@ -628,7 +641,11 @@ Func AndroidEmbed_HWnD_Position($bForShield = False, $bDetachedShield = Default,
 			;$aPos[0] = $aPosCtl[2] + 2
 			;$aPos[1] = $g_aFrmBotPosInit[5]
 			$aPos[0] = 0
-			$aPos[1] = $aPosCtl[3]
+			If $g_bAndroidEmbeddedWindowZeroPosition Then
+				$aPos[1] = 0
+			Else
+				$aPos[1] = $aPosCtl[3]
+			EndIf
 		Else
 			$aPos[0] = 0
 			$aPos[1] = 0

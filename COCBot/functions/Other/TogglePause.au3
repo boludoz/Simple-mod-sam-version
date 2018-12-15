@@ -42,6 +42,7 @@ Func TogglePauseUpdateState($Source)
 		SetLog("Bot was Paused!", $COLOR_ERROR)
 		If Not $g_bSearchMode Then
 			$g_iTimePassed += Int(__TimerDiff($g_hTimerSinceStarted))
+			If ProfileSwitchAccountEnabled() Then $g_aiRunTime[$g_iCurAccount] += Int(__TimerDiff($g_ahTimerSinceSwitched[$g_iCurAccount]))
 			;AdlibUnRegister("SetTime")
 		EndIf
 		PushMsg("Pause", $Source)
@@ -56,6 +57,7 @@ Func TogglePauseUpdateState($Source)
 		SetLog("Bot was Resumed.", $COLOR_SUCCESS)
 		If Not $g_bSearchMode Then
 			$g_hTimerSinceStarted = __TimerInit()
+			If ProfileSwitchAccountEnabled() Then $g_ahTimerSinceSwitched[$g_iCurAccount] = $g_hTimerSinceStarted
 			;AdlibRegister("SetTime", 1000)
 		EndIf
 		PushMsg("Resume", $Source)
@@ -78,7 +80,7 @@ Func TogglePauseSleep()
 			TogglePause()
 		EndIf
 		$counter = $counter + 1
-		If ($g_bNotifyPBEnable = True Or $g_bNotifyTGEnable = True) And $g_bNotifyRemoteEnable = True And $counter = 200 Then
+		If $g_bNotifyTGEnable And $g_bNotifyRemoteEnable And $counter = 200 Then
 			NotifyRemoteControl()
 			$counter = 0
 		EndIf

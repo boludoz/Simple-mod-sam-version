@@ -104,9 +104,6 @@ Func chkShieldStatus($bChkShield = True, $bForceChkPBT = False)
 				SetLog("Personal Break starts in: " & $sFormattedDiff)
 				Local $CorrectstringPB_GUI = StringReplace($sFormattedDiff, StringInStr($sFormattedDiff, " hours ") >= 1 ? " hours " : " hour ", "h")
 				$CorrectstringPB_GUI = StringReplace($CorrectstringPB_GUI, StringInStr($CorrectstringPB_GUI, " minutes ") >= 1 ? " minutes " : " minute ", "'")
-				$g_aiPersonalBreak[$g_iCurAccount] = $CorrectstringPB_GUI
-			Else
-				$g_aiPersonalBreak[$g_iCurAccount] = ""
 			EndIf
 
 			If $iTimeTillPBTstartMin < -(Int($g_iSinglePBForcedEarlyExitTime)) Then
@@ -120,7 +117,6 @@ Func chkShieldStatus($bChkShield = True, $bForceChkPBT = False)
 		Else
 			SetLog("Bad getPBTtime() return value: " & $Result, $COLOR_ERROR)
 			$g_sPBStartTime = "" ; reset to force update next pass
-			$g_aiPersonalBreak[$g_iCurAccount] = ""
 		EndIf
 	EndIf
 
@@ -140,7 +136,7 @@ Func _Date_Difference($sStartDate, Const $sEndDate, Const $iGrain)
 		If $iUnit <> 0 Then
 			$sReturn &= $iUnit & " " & $aType[$i] & ($iUnit > 1 ? "s" : "") & " "
 		EndIf
-		$sStartDate = _DateAdd($aUnit[$i], $iUnit, $sStartDate)
+		$sStartDate = _DateAdd($aUnit[$i], Int($iUnit), $sStartDate)
 	Next
 
 	Return $sReturn

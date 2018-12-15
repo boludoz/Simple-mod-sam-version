@@ -23,7 +23,7 @@ Func CreateAboutTab()
 	; GUISetBkColor($COLOR_WHITE, $g_hGUI_ABOUT)
 
 	Local $sText = ""
-	Local $x = 18, $y = 15 + $_GUI_MAIN_TOP
+	Local $x = 18, $y = 10 + $_GUI_MAIN_TOP
 	;$g_hLblCreditsBckGrnd = GUICtrlCreateLabel("", $x - 20, $y - 20, 454, 380)  ; adds fixed white background for entire tab, if using "Labels"
 	;GUICtrlSetBkColor(-1, $COLOR_WHITE)
 	$sText = "My Bot is brought to you by a worldwide team of open source" & @CRLF & _
@@ -50,16 +50,25 @@ Func CreateAboutTab()
 	GUICtrlCreateLabel($sText, $x - 5, $y, 410, 20, BitOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT), 0)
 	GUICtrlSetFont(-1, 9.5, $FW_BOLD, Default, "Arial")
 	GUICtrlSetColor(-1, $COLOR_NAVY)
-	$sText = "Cosote, Fliegerfaust, MMHK, TripleM"
+	$sText = "Fliegerfaust, MMHK and TripleM"
 	GUICtrlCreateLabel($sText, $x + 5, $y + 15, 410, 50, BitOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT), 0)
 	GUICtrlSetFont(-1, 9, $FW_MEDIUM, Default, "Arial")
 
-	$y += 60
+	$y += 35
+	$sText = "Special participation at v7.6: "
+	GUICtrlCreateLabel($sText, $x - 5, $y, 410, 20, BitOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT), 0)
+	GUICtrlSetFont(-1, 9.5, $FW_BOLD, Default, "Arial")
+	GUICtrlSetColor(-1, $COLOR_NAVY)
+	$sText = "Demen, Hecki, ProMac and ViperZ"
+	GUICtrlCreateLabel($sText, $x + 5, $y + 15, 410, 50, BitOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT), 0)
+	GUICtrlSetFont(-1, 9, $FW_MEDIUM, Default, "Arial")
+
+	$y += 35
 	$sText = "Inactive developers: "
 	GUICtrlCreateLabel($sText, $x - 5, $y, 410, 20, BitOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT), 0)
 	GUICtrlSetFont(-1, 9.5, $FW_BOLD, Default, "Arial")
 	GUICtrlSetColor(-1, $COLOR_NAVY)
-	$sText = "Boju, Codeslinger69, Ezeck0001, Hervidero, IceCube, Kaganus, MR.ViPeR, Sardo, TheRevenor, Trlopes"
+	$sText = "Boju, Codeslinger69, Cosote, Ezeck0001, Hervidero, IceCube, Kaganus, MR.ViPeR, Sardo, TheRevenor, Trlopes"
 	GUICtrlCreateLabel($sText, $x + 5, $y + 15, 410, 50, BitOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT), 0)
 	GUICtrlSetFont(-1, 9, $FW_MEDIUM, Default, "Arial")
 
@@ -101,13 +110,25 @@ EndFunc   ;==>CreateAboutTab
 
 Func ShowCommandLineHelp()
 
+	SetDebugLog ("Help File called from CrtlID: " & @GUI_CtrlId)
+
+	Local $PathHelp = "CommandLineParameter"
+
+	; This can be use for several Help Files
+	Switch @GUI_CtrlId
+		Case $g_lblHelpBot; Bot/Android/Help Handle
+			$PathHelp = "CommandLineParameter"
+		Case $g_lblHepNotify
+			$PathHelp = "NotifyHelp"
+	EndSwitch
+
 	UpdateBotTitle()
 	$g_hGUI_CommandLineHelp = GUICreate($g_sBotTitle & " - Command Line Help", 650, 700, -1, -1, BitOR($WS_CAPTION, $WS_POPUPWINDOW, $DS_MODALFRAME))
 	GUISetIcon($g_sLibIconPath, $eIcnGUI, $g_hGUI_CommandLineHelp)
 
 	; add controls
 	Local $hRichEdit = _GUICtrlRichEdit_Create($g_hGUI_CommandLineHelp, "", 2, 0, 646, 667, $WS_VSCROLL + $ES_MULTILINE)
-	Local $sHelpFile = @ScriptDir & "\Help\CommandLineParameter"
+	Local $sHelpFile = @ScriptDir & "\Help\" & $PathHelp
 	If $g_sLanguage <> $g_sDefaultLanguage Then
 		If FileExists($sHelpFile & "_" & $g_sLanguage & ".rtf") Then
 			$sHelpFile &= "_" & $g_sLanguage

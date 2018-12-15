@@ -99,6 +99,7 @@ Func checkAttackDisable($iSource, $Result = "")
 						checkObstacles()
 						ExitLoop
 					EndIf
+					If Not $g_bRunState Then ExitLoop
 				WEnd
 				If _CheckPixel($aIsAttackPage, $g_bCapturePixel) Then
 					If TestCapture() Then
@@ -142,10 +143,11 @@ Func checkAttackDisable($iSource, $Result = "")
 	;       adding 18 minutes to Remain train Time and goes to next available Account
 	If ProfileSwitchAccountEnabled() Then
 		SetLog("Adding the PB time to remain time of the current account.", $COLOR_INFO)
-		; I think both are minutes and integer !!
-		If $g_aiRemainTrainTime[$g_iCurAccount] < $g_iSinglePBForcedLogoffTime Then
-			$g_aiRemainTrainTime[$g_iCurAccount] = $g_iSinglePBForcedLogoffTime
-			$g_abPBActive[$g_iCurAccount] = True
+		If _DateIsValid($g_asTrainTimeFinish[$g_iCurAccount]) Then
+			If _DateDiff("n", _NowCalc(), $g_asTrainTimeFinish[$g_iCurAccount]) < $g_iSinglePBForcedLogoffTime Then
+				$g_asTrainTimeFinish[$g_iCurAccount] = _DateAdd("n", $g_iSinglePBForcedLogoffTime, _NowCalc())
+				$g_abPBActive[$g_iCurAccount] = True
+			EndIf
 		EndIf
 		Local $iAllcounts = 0, $iAllAccountsPBactive = 0
 		For $i = 0 To $g_iTotalAcc

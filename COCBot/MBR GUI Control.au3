@@ -307,11 +307,12 @@ Func GUIControl_WM_MOUSE($hWin, $iMsg, $wParam, $lParam)
 	$g_bTogglePauseAllowed = False
 	Local $hWinMouse = $g_hFrmBotEmbeddedMouse
 	If $g_hFrmBotEmbeddedMouse = 0 Then $hWinMouse = (($g_iAndroidEmbedMode = 0) ? $g_hFrmBotEmbeddedShield : $g_hFrmBot)
-	If $g_iDebugWindowMessages > 1 Then SetDebugLog("GUIControl_WM_MOUSE: $hWin=" & $hWin & ",$iMsg=" & $iMsg & ",$wParam=" & $wParam & ",$lParam=" & $lParam & ",$hWinMouse=" & $hWinMouse, Default, True)
+	If $g_iDebugWindowMessages > 1 Then SetDebugLog("GUIControl_WM_MOUSE Received message: $hWin=" & $hWin & ",$iMsg=" & $iMsg & ",$wParam=" & $wParam & ",$lParam=" & $lParam & ",$hWinMouse=" & $hWinMouse, Default, True)
 	CheckBotZOrder()
 	; always ensure
 	If $hWin <> $hWinMouse Or $g_bAndroidEmbedded = False Or $g_avAndroidShieldStatus[0] = True Then
 		; wrong window of shield is up: block mouse
+		If $g_iDebugWindowMessages > 1 Then SetDebugLog("GUIControl_WM_MOUSE block message: $hWin=" & $hWin & ",$iMsg=" & $iMsg & ",$wParam=" & $wParam & ",$lParam=" & $lParam & ",$hWinMouse=" & $hWinMouse, Default, True)
 		If $g_avAndroidShieldStatus[0] = True And $iMsg = $WM_LBUTTONDOWN And $hWin <> $g_hFrmBotButtons Then BotMoveRequest() ; move window
 		$g_bTogglePauseAllowed = $wasAllowed
 		SetCriticalMessageProcessing($wasCritical)
@@ -365,13 +366,17 @@ Func GUIControl_WM_MOUSE($hWin, $iMsg, $wParam, $lParam)
 		SetCriticalMessageProcessing($wasCritical)
 		Return $GUI_RUNDEFMSG
 	EndIf
-	Local $hCtrlTarget = $g_aiAndroidEmbeddedCtrlTarget[0]
 	If $iMsg <> $WM_MOUSEMOVE Or $g_iAndroidEmbedMode <> 0 Then
 		; not all message got thru here, so disabled
 		;$x += $g_aiMouseOffset[0]
 		;$y += $g_aiMouseOffset[1]
 		$lParam = $y * 0x10000 + $x
-		Local $Result = _WinAPI_PostMessage($hCtrlTarget, $iMsg, $wParam, $lParam)
+		;Nox 6.2.0.0 docked clicks didn't work anymore, so copied window handle code from _ControlClick function
+		Local $useHWnD = $g_iAndroidControlClickWindow = 1 And $g_bAndroidEmbedded = False
+		Local $hCtrlTarget = (($useHWnD) ? ($g_hAndroidWindow) : ($g_hAndroidControl))
+		;Local $hCtrlTarget = $g_aiAndroidEmbeddedCtrlTarget[0]
+		;Local $Result = _WinAPI_PostMessage($hCtrlTarget, $iMsg, $wParam, $lParam)
+		Local $Result = _SendMessage($hCtrlTarget, $iMsg, $wParam, $lParam)
 	EndIf
 	;Local $Result = _SendMessage($hCtrlTarget, $iMsg, $wParam, $lParam)
 	;#ce
@@ -490,12 +495,6 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 			btnAttackNowTS()
 			;Case $idMENU_DONATE_SUPPORT
 			;	ShellExecute("https://mybot.run/forums/index.php?/donate/make-donation/")
-		Case $g_hBtnNotifyDeleteMessages
-			If $g_bRunState Then
-				btnDeletePBMessages() ; call with flag when bot is running to execute on _sleep() idle
-			Else
-				PushMsg("DeleteAllPBMessages") ; call directly when bot is stopped
-			EndIf
 		Case $g_hBtnMakeScreenshot
 			If $g_bRunState Then
 				; call with flag when bot is running to execute on _sleep() idle
@@ -543,7 +542,8 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 		Case $g_hChkMakeIMGCSV
 			chkmakeIMGCSV()
 		Case $g_hBtnTestTrain
-			btnTestTrain()
+			;btnTestTrain()
+			TestSmartFarm()
 		Case $g_hBtnTestDonateCC
 			btnTestDonateCC()
 		Case $g_hBtnTestRequestCC
@@ -564,10 +564,12 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 			btnTestDeadBaseFolder()
 		Case $g_hBtnTestTHimgloc
 			imglocTHSearch()
-		Case $g_hBtnTestimglocTroopBar
-			TestImglocTroopBar()
 		Case $g_hBtnTestAttackCSV
-			btnTestAttackCSV()
+			Local $RuntimeA = $g_bRunState
+			$g_bRunState = True
+			Setlog("Army Window Test")
+			_checkArmyCamp(False,False,False, True)
+			$g_bRunState = $RuntimeA
 		Case $g_hBtnTestBuildingLocation
 			btnTestGetLocationBuilding()
 		Case $g_hBtnTestFindButton
@@ -594,6 +596,20 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 			btnTestSmartWait()
 		Case $g_hBtnConsoleWindow
 			btnConsoleWindow()
+		Case $g_hBtnTestTrainsimgloc
+
+			Local $RuntimeA = $g_bRunState
+			$g_bRunState = True
+			Setlog("Queued Spells Test")
+			CheckQueueSpells()
+			$g_bRunState = $RuntimeA
+		Case $g_hBtnTestQuickTrainsimgloc
+
+			Local $RuntimeA = $g_bRunState
+			$g_bRunState = True
+			Setlog("Queued Troops Test")
+			CheckQueueTroops()
+			$g_bRunState = $RuntimeA
 	EndSwitch
 
 	If $lParam = $g_hCmbGUILanguage Then
@@ -618,6 +634,11 @@ Func GUIControl_WM_MOVE($hWind, $iMsg, $wParam, $lParam)
 			$g_bTogglePauseAllowed = $wasAllowed
 			SetCriticalMessageProcessing($wasCritical)
 			Return $GUI_RUNDEFMSG
+		EndIf
+
+		If $g_bAndroidEmbedded And $g_bAndroidEmbeddedWindowZeroPosition Then
+			; tell Android Window new bot position, this is currently only required for Nox 6.2.0.0 to fix user clicks when docked
+			_SendMessage($g_hAndroidWindow, $iMsg, $wParam, $lParam)
 		EndIf
 
 		; update bot pos variables
@@ -801,6 +822,19 @@ Func BotToFront($hHWndAfter = $HWND_TOPMOST)
 EndFunc   ;==>BotToFront
 
 Func CheckBotZOrder($bCheckOnly = False, $bForceZOrder = False)
+	If $g_bAndroidEmbedded And $g_iAndroidEmbedMode = 0 Then
+		Local $hCtrlTarget = $g_aiAndroidEmbeddedCtrlTarget[0]
+		Local $targetIsHWnD = $hCtrlTarget = $g_hAndroidWindow
+		If Not $targetIsHWnD Then
+			Local $bCheck = ($bForceZOrder Or _WinAPI_GetWindow($hCtrlTarget, $GW_HWNDNEXT) <>  $g_hAndroidWindow)
+			If $bCheckOnly Then Return $bCheck
+			If $bCheck Then
+				SetDebugLog("CheckBotZOrder: Ajust docked Android Window")
+				WinMove2($g_hAndroidWindow, "", -1, -1, -1, -1, $hCtrlTarget, 0, False) ; place URL Small Window after (behind) bot
+			EndIf
+			Return $bCheck
+		EndIf
+	EndIf
 	If $g_iAndroidEmbedMode = 1 And $g_bBotDockedShrinked Then
 		; check if order is (front to bottom): URL -> buttons -> graphics -> shield -> bot, to URL is top...
 		Local $hWinBehindButtons = ($g_hFrmBotEmbeddedGraphics ? $g_hFrmBotEmbeddedGraphics : ($g_hFrmBotEmbeddedShield ? $g_hFrmBotEmbeddedShield : $g_hFrmBot))
@@ -1004,6 +1038,7 @@ Func BotShrinkExpandToggleExecute()
 	;_SendMessage($g_hFrmBotBottom, $WM_SETREDRAW, False, 0)
 	GUISetState(@SW_HIDE, $g_hFrmBotEx)
 	GUISetState(@SW_HIDE, $g_hFrmBotBottom)
+
 	Local $iSteps = 10
 	Local $fStep = $_GUI_MAIN_WIDTH / $iSteps
 	Local $bGetAnimationSpeed = True
@@ -1597,39 +1632,27 @@ Func SetTime($bForceUpdate = False)
 		_TicksToTime(Int(__TimerDiff($g_hTimerSinceStarted) + $g_iTimePassed), $hour, $min, $sec)
 		GUICtrlSetData($g_hLblResultRuntimeNow, StringFormat("%02i:%02i:%02i", $hour, $min, $sec))
 	EndIf
-	Local Static $DisplayLoop = 0
-	If $DisplayLoop >= 3 Then ; Conserve Clock Cycles on Updating times
-		$DisplayLoop = 0
-		If ProfileSwitchAccountEnabled() Then
-			If GUICtrlRead($g_hGUI_STATS_TAB, 1) = $g_hGUI_STATS_TAB_ITEM5 Then
-				Local $abAccountNo = AccountNoActive()
-				For $i = 0 To $g_iTotalAcc ; Update time for all Accounts
-					If $abAccountNo[$i] And Not $g_abDonateOnly[$i] And $g_aiTimerStart[$i] <> 0 Then
-						Local $UpdateTrainTime = $g_aiRemainTrainTime[$i] - TimerDiff($g_aiTimerStart[$i]) / 60 / 1000 ; in minutes
-						Local $sReadyTime = ""
-						If Abs($UpdateTrainTime) >= 60 Then
-							$sReadyTime &= Int($UpdateTrainTime / 60) & "h " & Abs(Round(Mod($UpdateTrainTime, 60), 0)) & "m"
-						Else
-							$sReadyTime &= Int($UpdateTrainTime) & "m " & Abs(Round(Mod($UpdateTrainTime, 1) * 60, 0)) & "s"
-						EndIf
 
-						If $i = $g_iCurAccount Then
-							GUICtrlSetBkColor($g_ahLblTroopsTime[$i], $COLOR_GREEN)
-							GUICtrlSetColor($g_ahLblTroopsTime[$i], $COLOR_WHITE)
-						ElseIf $UpdateTrainTime < 0 Then
-							GUICtrlSetBkColor($g_ahLblTroopsTime[$i], $COLOR_RED)
-							GUICtrlSetColor($g_ahLblTroopsTime[$i], $COLOR_WHITE)
-						Else
-							GUICtrlSetBkColor($g_ahLblTroopsTime[$i], $COLOR_YELLOW)
-							GUICtrlSetColor($g_ahLblTroopsTime[$i], $COLOR_BLACK)
-						EndIf
-						GUICtrlSetData($g_ahLblTroopsTime[$i], $sReadyTime)
+	If ProfileSwitchAccountEnabled() Then
+		If GUICtrlRead($g_hGUI_STATS_TAB, 1) = $g_hGUI_STATS_TAB_ITEM5 Or $bForceUpdate Then
+			_TicksToTime(Int(__TimerDiff($g_ahTimerSinceSwitched[$g_iCurAccount]) + $g_aiRunTime[$g_iCurAccount]), $hour, $min, $sec)
+			GUICtrlSetData($g_ahLblResultRuntimeNowAcc[$g_iCurAccount], StringFormat("%02i:%02i:%02i", $hour, $min, $sec))
+			For $i = 0 To $g_iTotalAcc
+				If _DateIsValid($g_asTrainTimeFinish[$i]) Then
+					Local $iTime = _DateDiff("s", _NowCalc(), $g_asTrainTimeFinish[$i]) * 1000
+					_TicksToTime(Abs($iTime), $hour, $min, $sec)
+					GUICtrlSetData($g_ahLblTroopTime[$i], ($iTime < 0 ? "-" : "") & StringFormat("%02i:%02i", $min, $sec))
+					If $i = $g_iCurAccount Then
+						GUICtrlSetColor($g_ahLblTroopTime[$i], $COLOR_GREEN)
+					ElseIf $iTime < 0 Then
+						GUICtrlSetColor($g_ahLblTroopTime[$i], $COLOR_RED)
+					Else
+						GUICtrlSetColor($g_ahLblTroopTime[$i], $COLOR_BLACK)
 					EndIf
-				Next
-			EndIf
+			   EndIf
+			Next
 		EndIf
 	EndIf
-	$DisplayLoop += 1
 EndFunc   ;==>SetTime
 
 Func tabMain()
@@ -1918,6 +1941,7 @@ Func tabDeadbase()
 			GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_STANDARD)
 			GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_SCRIPTED)
 			GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_MILKING)
+			GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_SMARTFARM)
 	EndSelect
 
 EndFunc   ;==>tabDeadbase
@@ -1977,7 +2001,7 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 
 		Case $g_hGUI_VILLAGE_TAB
 			; the icons for village tab
-			Local $aIconIndex = [$eIcnTH1, $eIcnCC, $eIcnLaboratory, $eIcnAchievements, $eIcnPBNotify]
+			Local $aIconIndex = [$eIcnTH1, $eIcnCC, $eIcnLaboratory, $eIcnAchievements, $eIcnTelegram]
 
 		Case $g_hGUI_TRAINARMY_TAB
 			; the icons for army tab
@@ -1996,7 +2020,7 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 
 		Case $g_hGUI_NOTIFY_TAB
 			; the icons for NOTIFY tab
-			Local $aIconIndex = [$eIcnPBNotify, $eIcnHourGlass]
+			Local $aIconIndex = [$eIcnTelegram, $eIcnHourGlass]
 
 		Case $g_hGUI_ATTACK_TAB
 			; the icons for attack tab

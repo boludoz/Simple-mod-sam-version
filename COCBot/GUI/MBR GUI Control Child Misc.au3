@@ -50,6 +50,7 @@ Func btnAddConfirm()
 			GUICtrlSetState($g_hBtnRenameProfile, $GUI_HIDE)
 			GUICtrlSetState($g_hBtnPullSharedPrefs, $GUI_HIDE)
 			GUICtrlSetState($g_hBtnPushSharedPrefs, $GUI_HIDE)
+			GUICtrlSetState($g_hBtnSaveprofile, $GUI_HIDE)
 		Case $g_hBtnConfirmAddProfile
 			Local $newProfileName = StringRegExpReplace(GUICtrlRead($g_hTxtVillageName), '[/:*?"<>|]', '_')
 			If FileExists($g_sProfilePath & "\" & $newProfileName) Then
@@ -74,6 +75,7 @@ Func btnAddConfirm()
 			GUICtrlSetState($g_hBtnRenameProfile, $GUI_SHOW)
 			GUICtrlSetState($g_hBtnPullSharedPrefs, $GUI_SHOW)
 			GUICtrlSetState($g_hBtnPushSharedPrefs, $GUI_SHOW)
+			GUICtrlSetState($g_hBtnSaveprofile, $GUI_SHOW)
 
 			If GUICtrlGetState($g_hBtnDeleteProfile) <> $GUI_ENABLE Then GUICtrlSetState($g_hBtnDeleteProfile, $GUI_ENABLE)
 			If GUICtrlGetState($g_hBtnRenameProfile) <> $GUI_ENABLE Then GUICtrlSetState($g_hBtnRenameProfile, $GUI_ENABLE)
@@ -112,6 +114,7 @@ Func btnDeleteCancel()
 			GUICtrlSetState($g_hBtnRenameProfile, $GUI_SHOW)
 			GUICtrlSetState($g_hBtnPullSharedPrefs, $GUI_SHOW)
 			GUICtrlSetState($g_hBtnPushSharedPrefs, $GUI_SHOW)
+			GUICtrlSetState($g_hBtnSaveprofile, $GUI_SHOW)
 		Case Else
 			SetLog("If you are seeing this log message there is something wrong.", $COLOR_ERROR)
 	EndSwitch
@@ -140,6 +143,7 @@ Func btnRenameConfirm()
 			GUICtrlSetState($g_hBtnConfirmRenameProfile, $GUI_SHOW)
 			GUICtrlSetState($g_hBtnPullSharedPrefs, $GUI_HIDE)
 			GUICtrlSetState($g_hBtnPushSharedPrefs, $GUI_HIDE)
+			GUICtrlSetState($g_hBtnSaveprofile, $GUI_HIDE)
 		Case $g_hBtnConfirmRenameProfile
 			Local $newProfileName = StringRegExpReplace(GUICtrlRead($g_hTxtVillageName), '[/:*?"<>|]', '_')
 			If FileExists($g_sProfilePath & "\" & $newProfileName) Then
@@ -163,6 +167,7 @@ Func btnRenameConfirm()
 			GUICtrlSetState($g_hBtnRenameProfile, $GUI_SHOW)
 			GUICtrlSetState($g_hBtnPullSharedPrefs, $GUI_SHOW)
 			GUICtrlSetState($g_hBtnPushSharedPrefs, $GUI_SHOW)
+			GUICtrlSetState($g_hBtnSaveprofile, $GUI_SHOW)
 		Case Else
 			SetLog("If you are seeing this log message there is something wrong.", $COLOR_ERROR)
 	EndSwitch
@@ -174,6 +179,31 @@ EndFunc
 
 Func btnPushSharedPrefs()
 	PushSharedPrefs()
+EndFunc
+
+Func BtnSaveprofile()
+	Setlog("Saving your setting...", $COLOR_INFO)
+	SaveConfig()
+	readConfig()
+	applyConfig()
+	Setlog("Done!", $COLOR_SUCCESS)
+EndFunc
+
+Func OnlySCIDAccounts()
+	; $g_hChkOnlySCIDAccounts
+	If GUICtrlRead($g_hChkOnlySCIDAccounts) = $GUI_CHECKED Then
+		GUICtrlSetState($g_hCmbWhatSCIDAccount2Use, $GUI_ENABLE)
+		WhatSCIDAccount2Use()
+		$g_bOnlySCIDAccounts = True
+	Else
+		GUICtrlSetState($g_hCmbWhatSCIDAccount2Use, $GUI_DISABLE)
+		$g_bOnlySCIDAccounts = False
+	EndIf
+EndFunc
+
+Func WhatSCIDAccount2Use()
+	; $g_hCmbWhatSCIDAccount2Use
+	$g_iWhatSCIDAccount2Use = _GUICtrlComboBox_GetCurSel($g_hCmbWhatSCIDAccount2Use)
 EndFunc
 
 Func cmbBotCond()
@@ -531,10 +561,19 @@ EndFunc   ;==>chkTrophyHeroes
 
 Func ChkCollect()
 	If GUICtrlRead($g_hChkCollect) = $GUI_CHECKED Then
+		GUICtrlSetState($g_hChkCollectCartFirst, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkTreasuryCollect, $GUI_ENABLE)
+		GUICtrlSetState($g_hTxtCollectGold, $GUI_ENABLE)
+		GUICtrlSetState($g_hTxtCollectElixir, $GUI_ENABLE)
+		GUICtrlSetState($g_hTxtCollectDark, $GUI_ENABLE)
 	Else
+		GUICtrlSetState($g_hChkCollectCartFirst, $GUI_UNCHECKED)
+		GUICtrlSetState($g_hChkCollectCartFirst, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkTreasuryCollect, $GUI_UNCHECKED)
 		GUICtrlSetState($g_hChkTreasuryCollect, $GUI_DISABLE)
+		GUICtrlSetState($g_hTxtCollectGold, $GUI_DISABLE)
+		GUICtrlSetState($g_hTxtCollectElixir, $GUI_DISABLE)
+		GUICtrlSetState($g_hTxtCollectDark, $GUI_DISABLE)
 	EndIf
 	ChkTreasuryCollect()
 EndFunc   ;==>ChkCollect
@@ -563,7 +602,7 @@ EndFunc   ;==>chkStartClockTowerBoost
 
 Func chkActivateClangames()
 	If GUICtrlRead($g_hChkClanGamesEnabled) = $GUI_CHECKED Then
-		GUICtrlSetState($g_hChkClanGamesOnly, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkClanGames60, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkClanGamesAir, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkClanGamesGround, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkClanGamesMisc, $GUI_ENABLE)
@@ -581,7 +620,7 @@ Func chkActivateClangames()
 		GUICtrlSetState($g_hChkClanGamesStopBeforeReachAndPurge, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkClanGamesDebug, $GUI_ENABLE)
 	Else
-		GUICtrlSetState($g_hChkClanGamesOnly, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkClanGames60, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkClanGamesAir, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkClanGamesGround, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkClanGamesMisc, $GUI_DISABLE)

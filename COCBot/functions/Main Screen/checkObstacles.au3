@@ -51,10 +51,10 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		If checkObstacles_Network() Then Return True
 		If checkObstacles_GfxError() Then Return True
 	EndIf
-	Local $bIsOnBuilderIsland = _CheckPixel($aIsOnBuilderBase, $g_bNoCapturePixel)
+	Local $bIsOnBuilderIsland = isOnBuilderBase()
 	If $bBuilderBase = False And $bIsOnBuilderIsland = True Then
 		SetLog("Detected Builder Base, trying to switch back to Main Village")
-		If SwitchBetweenBases(False) Then
+		If SwitchBetweenBases() Then
 			$g_bMinorObstacle = True
 			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 			Return False
@@ -103,7 +103,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		EndIf
 		;;;;;;;##### 2- Take a break #####;;;;;;;
 
-		If UBound(decodeSingleCoord(FindImageInPlace("Break", $g_sImgPersonalBreak, "165,287,335,325", False))) > 1 Then ; used for all 3 different break messages
+		If UBound(decodeSingleCoord(FindImageInPlace("Break", $g_sImgPersonalBreak, "165,287,335,335", False))) > 1 Then ; used for all 3 different break messages
 			SetLog("Village must take a break, wait ...", $COLOR_ERROR)
 			If TestCapture() Then Return "Village must take a break"
 			PushMsg("TakeBreak")
@@ -165,7 +165,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 						SetLog("Error reading Maintenance Break time?", $COLOR_ERROR)
 				EndSelect
 				SetLog("Maintenance Break, waiting: " & $iMaintenanceWaitTime / 60000 & " minutes....", $COLOR_ERROR)
-				If ($g_bNotifyPBEnable = True Or $g_bNotifyTGEnable = True) And $g_bNotifyAlertMaintenance = True Then NotifyPushToBoth("Maintenance Break, waiting: " & $iMaintenanceWaitTime / 60000 & " minutes....")
+				If $g_bNotifyTGEnable And $g_bNotifyAlertMaintenance = True Then NotifyPushToTelegram("Maintenance Break, waiting: " & $iMaintenanceWaitTime / 60000 & " minutes....")
 				If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
 				If _SleepStatus($iMaintenanceWaitTime) Then Return
 				checkObstacles_ResetSearch()
@@ -316,10 +316,17 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		SetDebugLog("checkObstacles: Found Black Android Screen")
 	EndIf
 
+	If $g_bOnlySCIDAccounts Then
+		SetDebugLog("check Log in with Supercell ID login by Clicks")
+		; check Log in with Supercell ID login screen by Clicks
+		CheckLoginWithSupercellIDScreen()
+	EndIf
+
 	; check if google account list shown and select first
 	If Not CheckGoogleSelectAccount() Then
-		; check Log in with Supercell ID login screen
-		CheckLoginWithSupercellID()
+		SetDebugLog("check Log in with Supercell ID login by shared_prefs")
+		; check Log in with Supercell ID login screen by shared_prefs
+		If CheckLoginWithSupercellID() then Return True
 	EndIf
 
 	Return False
@@ -355,7 +362,7 @@ EndFunc   ;==>checkObstacles_RebootAndroid
 Func checkObstacles_StopBot($msg)
 	SetLog($msg, $COLOR_ERROR)
 	If TestCapture() Then Return $msg
-	If ($g_bNotifyPBEnable = True Or $g_bNotifyTGEnable = True) And $g_bNotifyAlertMaintenance = True Then NotifyPushToBoth($msg)
+	If $g_bNotifyTGEnable And $g_bNotifyAlertMaintenance Then NotifyPushToTelegram($msg)
 	OcrForceCaptureRegion(True)
 	Btnstop() ; stop bot
 	Return True

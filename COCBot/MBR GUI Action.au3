@@ -19,6 +19,7 @@ Func BotStart($bAutostartDelay = 0)
 	CleanSecureFiles()
 	CalCostCamp()
 	CalCostSpell()
+	CalCostSiege()
 
 	$g_bRunState = True
 	$g_bTogglePauseAllowed = True
@@ -34,7 +35,6 @@ Func BotStart($bAutostartDelay = 0)
 	$g_bMeetCondStop = False
 	$g_bIsClientSyncError = False
 	$g_bDisableBreakCheck = False ; reset flag to check for early warning message when bot start/restart in case user stopped in middle
-	$g_bDisableDropTrophy = False ; Reset Disabled Drop Trophy because the user has no Tier 1 or 2 Troops
 
 	If Not $g_bSearchMode Then
 		If $g_hLogFile = 0 Then CreateLogFile() ; only create new log file when doesn't exist yet
@@ -46,13 +46,10 @@ Func BotStart($bAutostartDelay = 0)
 	SaveConfig()
 	readConfig()
 	applyConfig(False) ; bot window redraw stays disabled!
+	CreaTableDB()
 
 	; Initial ObjEvents for the Autoit objects errors
 	__ObjEventIni()
-
-	;Reset Telegram message
-	NotifyGetLastMessageFromTelegram()
-	$g_iTGLastRemote = $g_sTGLast_UID
 
 	If BitAND($g_iAndroidSupportFeature, 1 + 2) = 0 And $g_bChkBackgroundMode = True Then
 		GUICtrlSetState($g_hChkBackgroundMode, $GUI_UNCHECKED)
@@ -169,14 +166,12 @@ Func BotStop()
 	;GUICtrlSetState($g_hBtnMakeScreenshot, $GUI_ENABLE)
 
 	; hide attack buttons if show
-	GUICtrlSetState($g_hBtnAttackNowDB, $GUI_HIDE)
-	GUICtrlSetState($g_hBtnAttackNowLB, $GUI_HIDE)
-	GUICtrlSetState($g_hBtnAttackNowTS, $GUI_HIDE)
-	GUICtrlSetState($g_hPicTwoArrowShield, $GUI_SHOW)
-	GUICtrlSetState($g_hLblVersion, $GUI_SHOW)
-	For $i = $g_hlblKing to $g_hPicLabRed
-		GUICtrlSetState($i, $GUI_SHOW)
-	NExt
+		GUICtrlSetState($g_hBtnAttackNowDB, $GUI_HIDE)
+		GUICtrlSetState($g_hBtnAttackNowLB, $GUI_HIDE)
+		GUICtrlSetState($g_hBtnAttackNowTS, $GUI_HIDE)
+		HideShields(False)
+		;GUICtrlSetState($g_hLblVersion, $GUI_SHOW)
+		$g_bBtnAttackNowPressed = False
 
 	; update try items
 	TrayItemSetText($g_hTiStartStop, GetTranslatedFileIni("MBR GUI Design - Loading", "StatusBar_Item_Start", "Start bot"))
@@ -185,6 +180,7 @@ Func BotStop()
 	SetLogCentered(" Bot Stop ", Default, $COLOR_ACTION)
 	If Not $g_bSearchMode Then
 		If Not $g_bBotPaused Then $g_iTimePassed += Int(__TimerDiff($g_hTimerSinceStarted))
+		If ProfileSwitchAccountEnabled() And Not $g_bBotPaused Then $g_aiRunTime[$g_iCurAccount] += Int(__TimerDiff($g_ahTimerSinceSwitched[$g_iCurAccount]))
 		;AdlibUnRegister("SetTime")
 		$g_bRestart = True
 

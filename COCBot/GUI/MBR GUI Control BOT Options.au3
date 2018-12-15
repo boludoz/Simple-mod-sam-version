@@ -209,11 +209,16 @@ Func chkSwitchAcc()
 		For $i = $g_hCmbTotalAccount To $g_ahChkDonate[7]
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
+		GUICtrlSetState($g_hChkOnlySCIDAccounts, $GUI_UNCHECKED)
+		GUICtrlSetState($g_hChkOnlySCIDAccounts, $GUI_DISABLE)
+		OnlySCIDAccounts()
 	Else
 		releaseSwitchAccountMutex()
 		For $i = $g_hCmbTotalAccount To $g_ahChkDonate[7]
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
+		GUICtrlSetState($g_hChkOnlySCIDAccounts, $GUI_ENABLE)
+		OnlySCIDAccounts()
 	EndIf
 EndFunc   ;==>chkSwitchAcc
 
@@ -479,14 +484,6 @@ Func btnTestTrain()
 	If @error Then $result = "Error " & @error & ", " & @extended & ", " & ((IsArray($result)) ? (_ArrayToString($result, ",")) : ($result))
 	SetLog("Result ArmyHeroStatus(0, 1, 2) = " & ((IsArray($result)) ? ("Array: " & _ArrayToString($result, ",")) : ($result)), $COLOR_INFO)
 
-	SetLog("Testing GetCurCCSpell()", $COLOR_INFO)
-	$result = GetCurCCSpell(1)
-	If @error Then $result = "Error " & @error & ", " & @extended & ", " & ((IsArray($result)) ? ("Array: " & _ArrayToString($result, ",")) : ($result))
-	SetLog("Result GetCurCCSpell(1) = " & ((IsArray($result)) ? ("Array: " & _ArrayToString($result, ",")) : ($result)), $COLOR_INFO)
-	$result = GetCurCCSpell(2)
-	If @error Then $result = "Error " & @error & ", " & @extended & ", " & ((IsArray($result)) ? ("Array: " & _ArrayToString($result, ",")) : ($result))
-	SetLog("Result GetCurCCSpell(2) = " & ((IsArray($result)) ? ("Array: " & _ArrayToString($result, ",")) : ($result)), $COLOR_INFO)
-
 	SetLog("Testing Train DONE", $COLOR_INFO)
 	EndImageTest()
 
@@ -519,9 +516,11 @@ Func btnTestDonateCC()
 		Return False
 	EndIf
 	SetLog("Detecting Troops...")
-	DetectSlotTroop($eBowl)
+	DetectSlotTroop($eIceG)
+	SetLog("Detecting Sieges...")
+	DetectSlotSiege($eSiegeStoneSlammer)
 	SetLog("Detecting Spells...")
-	DetectSlotTroop($eSkSpell)
+	DetectSlotSpell($eBtSpell)
 	SetLog(_PadStringCenter(" Test DonateCC end ", 54, "="), $COLOR_INFO)
 	ShellExecute($g_sProfileTempDebugPath & "donateCC_")
 
@@ -551,57 +550,44 @@ Func btnTestSendText()
 EndFunc   ;==>btnTestSendText
 
 Func btnTestAttackBar()
-	BeginImageTest() ; get image for testing
-	Local $currentOCR = $g_bDebugOcr
-	Local $currentRunState = $g_bRunState
+	Local $bCurrentOCR = $g_bDebugOcr, $bCurrentRunState = $g_bRunState, $bCurrentDebugImage = $g_bDebugImageSave
+
 	_GUICtrlTab_ClickTab($g_hTabMain, 0)
 
 	$g_bDebugOcr = True
+    $g_bDebugImageSave = True
 	$g_bRunState = True
-	ForceCaptureRegion()
-	SetLog(_PadStringCenter(" Test Attack Bar begin (" & $g_sBotVersion & ")", 54, "="), $COLOR_INFO)
 
-	_CaptureRegion2(0, 571 + $g_iBottomOffsetY, 859, 671 + $g_iBottomOffsetY)
-	Local $result = DllCallMyBot("searchIdentifyTroop", "ptr", $g_hHBitmap2)
-	SetLog("DLL Troopsbar list: " & $result[0], $COLOR_DEBUG)
-	If $g_bForceClanCastleDetection Then $result[0] = FixClanCastle($result[0])
-	Local $aTroopDataList = StringSplit($result[0], "|")
-	Local $aTemp[12][3]
-	If $result[0] <> "" Then
-		For $i = 1 To $aTroopDataList[0]
-			Local $troopData = StringSplit($aTroopDataList[$i], "#", $STR_NOCOUNT)
-;~ 				$aTemp[Number($troopData[1])][0] = $troopData[0]
-;~ 				$aTemp[Number($troopData[1])][1] = Number($troopData[2])
-;~ 				SetLog("-" & NameOfTroop( $aTemp[$i][0]) & " pos  " & $aTemp[$i][0] & " qty " & $aTemp[$i][2])
-			If $troopData[0] = 17 Or $troopData[0] = 18 Or $troopData[0] = 19 Or $troopData[0] = 20 Then $troopData[2] = 1
-			SetLog("position: " & $troopData[1] & " | troop code: " & $troopData[0] & " troop name:" & NameOfTroop($troopData[0]) & " | qty: " & $troopData[2])
-		Next
+	If MsgBox($MB_YESNO, "Screenshot or Live Image", "Do you want to use a Screenshot instead of a Live Image?") = $IDYES Then
+	 Local $sImageFile = BeginImageTest() ; get image for testing
+	 If $sImageFile = False Then $sImageFile = "Live Screenshot"
 	EndIf
 
-	;make snapshot start
-	_CaptureRegion(0, 630, $g_iDEFAULT_WIDTH)
-	Local $savefolder = $g_sProfileTempDebugPath
-	$savefolder = $g_sProfileTempDebugPath & "Test_Attack_Bar\"
-	DirCreate($savefolder)
-	Local $debugfile
-	Local $Date = @MDAY & "." & @MON & "." & @YEAR
-	Local $Time = @HOUR & "." & @MIN & "." & @SEC
-	$debugfile = "Test_Attack_Bar_" & $g_sBotVersion & "_" & $Date & "_" & $Time & ".png"
-	_GDIPlus_ImageSaveToFile($g_hBitmap, $savefolder & $debugfile)
-	;make snapshot end
+
+	SetLog(_PadStringCenter(" Begin AttackBar Detection", 54, "="), $COlOR_INFO)
+
+	Local $aAttackBar = StringSplit(AttackBarCheck(False, $DB, True), "|", $STR_NOCOUNT)
+	Local $aTroop
+
+	If IsArray($aAttackBar) And UBound($aAttackBar, 1) >= 1 Then
+	SetLog("Found " & UBound($aAttackBar, 1) & " Slots", $COlOR_SUCCESS)
+	For $i = 0 To UBound($aAttackBar, 1) - 1
+		$aTroop = StringSplit($aAttackBar[$i], "#", $STR_NOCOUNT)
+		If IsArray($aTroop) And UBound($aTroop, 1) = 4 Then SetLog("- Slot " & $aTroop[1] & ": " & $aTroop[2] & " " & GetTroopName($aTroop[0], $aTroop[2]), $COLOR_SUCCESS)
+	Next
+	EndIf
+	SetLog(_PadStringCenter(" End AttackBar Detection ", 54, "="), $COlOR_INFO)
 
 	EndImageTest() ; clear test image handle
 
-	SetLog(_PadStringCenter(" Test Attack Bar end ", 54, "="), $COLOR_INFO)
-	ShellExecute($savefolder)
-
-	$g_bDebugOcr = $currentOCR
-	$g_bRunState = $currentRunState
+	$g_bDebugOcr = $bCurrentOCR
+	$g_bDebugImageSave = $bCurrentDebugImage
+	$g_bRunState = $bCurrentRunState
 EndFunc   ;==>btnTestAttackBar
 
 
 Func btnTestClickDrag()
-	Local $sUserInputCoor = InputBox("Coordinators", "x1,y1,x2,y2", "650,473,323,473")
+	Local $sUserInputCoor = InputBox("Coordinators", "x1,y1,x2,y2", "650,469,290,469")
 	Local $asCoor = StringSplit($sUserInputCoor, ",")
 
 	If @error Or $asCoor[0] <> 4 Then
@@ -618,7 +604,7 @@ Func btnTestClickDrag()
 	_Sleep(3000, True, False)
 
 	SetLog("Save the image...", $COLOR_DEBUG)
-	DebugImageSave("TestClickDrag")
+	DebugImageSave("TestClickDrag", Default, Default, Default, "_" & $asCoor[1] & "x." & $asCoor[2] & "y." & $asCoor[3] & "x." & $asCoor[4] & "y_")
 
 	SetLog("Sleep 1 seconds...", $COLOR_DEBUG)
 	_Sleep(1000, True, False)
@@ -1151,3 +1137,19 @@ EndFunc   ;==>btnTestSmartWait
 Func btnConsoleWindow()
 	ConsoleWindow()
 EndFunc   ;==>btnConsoleWindow
+
+Func chkSQLite()
+	$g_bUseStatistics = GUICtrlRead($g_hChkSqlite) = $GUI_CHECKED
+EndFunc   ;==>chkSQLite
+
+Func SQLiteExport()
+
+	If Not $g_bUseStatistics Then
+		Setlog("")
+		Return
+	EndIf
+	Setlog("Exporting data from SQlite, please wait!", $COLOR_ACTION)
+	ExportDataBase(False)
+	Setlog("Export successfully completed.", $COLOR_SUCCESS)
+
+EndFunc   ;==>SQLiteExport

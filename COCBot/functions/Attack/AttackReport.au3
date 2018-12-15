@@ -172,16 +172,29 @@ Func AttackReport()
 	Local $AtkLogTxt
 	$AtkLogTxt = "  " & String($g_iCurAccount + 1) & "|" & _NowTime(4) & "|"
 	$AtkLogTxt &= StringFormat("%5d", $g_aiCurrentLoot[$eLootTrophy]) & "|"
-	$AtkLogTxt &= StringFormat("%6d", $g_iSearchCount) & "|"
+	$AtkLogTxt &= StringFormat("%3d", $g_iSearchCount) & "|"
+	$AtkLogTxt &= StringFormat("%2d", $g_iSidesAttack) & "|"
 	$AtkLogTxt &= StringFormat("%7d", $g_iStatsLastAttack[$eLootGold]) & "|"
 	$AtkLogTxt &= StringFormat("%7d", $g_iStatsLastAttack[$eLootElixir]) & "|"
-	$AtkLogTxt &= StringFormat("%7d", $g_iStatsLastAttack[$eLootDarkElixir]) & "|"
+	$AtkLogTxt &= StringFormat("%4d", $g_iStatsLastAttack[$eLootDarkElixir]) & "|"
 	$AtkLogTxt &= StringFormat("%3d", $g_iStatsLastAttack[$eLootTrophy]) & "|"
 	$AtkLogTxt &= StringFormat("%1d", $starsearned) & "|"
+	$AtkLogTxt &= StringFormat("%3d", $g_iPercentageDamage) & "|"
 	$AtkLogTxt &= StringFormat("%6d", $g_iStatsBonusLast[$eLootGold]) & "|"
 	$AtkLogTxt &= StringFormat("%6d", $g_iStatsBonusLast[$eLootElixir]) & "|"
 	$AtkLogTxt &= StringFormat("%4d", $g_iStatsBonusLast[$eLootDarkElixir]) & "|"
 	$AtkLogTxt &= $g_asLeagueDetailsShort & "|"
+
+	; Stats Attack
+	$g_sTotalDamage = $g_iPercentageDamage
+	$g_sAttacksides = $g_iSidesAttack
+	$g_sLootGold = $g_iStatsLastAttack[$eLootGold]
+	$g_sLootElixir = $g_iStatsLastAttack[$eLootElixir]
+	$g_sLootDE = $g_iStatsLastAttack[$eLootDarkElixir]
+	$g_sLeague = $g_asLeagueDetailsShort
+	$g_sBonusGold = $g_iStatsBonusLast[$eLootGold]
+	$g_sBonusElixir = $g_iStatsBonusLast[$eLootElixir]
+	$g_sBonusDE = $g_iStatsBonusLast[$eLootDarkElixir]
 
 	Local $AtkLogTxtExtend
 	$AtkLogTxtExtend = "|"
@@ -227,17 +240,13 @@ Func AttackReport()
 		EndIf
 	EndIf
 	$g_aiAttackedVillageCount[$g_iMatchMode] += 1
-	If ProfileSwitchAccountEnabled() Then
-		$g_aiGoldTotalAcc[$g_iCurAccount] += $g_iStatsLastAttack[$eLootGold] + $g_iStatsBonusLast[$eLootGold]
-		$g_aiElixirTotalAcc[$g_iCurAccount] += $g_iStatsLastAttack[$eLootElixir] + $g_iStatsBonusLast[$eLootElixir]
-		If $g_iStatsStartedWith[$eLootDarkElixir] <> "" Then
-			$g_aiDarkTotalAcc[$g_iCurAccount] += $g_iStatsLastAttack[$eLootDarkElixir] + $g_iStatsBonusLast[$eLootDarkElixir]
-		EndIf
-		$g_aiTrophyLootAcc[$g_iCurAccount] += $g_iStatsLastAttack[$eLootTrophy]
-		$g_aiAttackedCountAcc[$g_iCurAccount] += 1
-		SetSwitchAccLog(" - Acc. " & $g_iCurAccount + 1 & ", Attack: " & $g_aiAttackedCountAcc[$g_iCurAccount])
-	EndIf
 	UpdateStats()
+	UpdateSDataBase()
+	If ProfileSwitchAccountEnabled() Then
+		SetSwitchAccLog(" - Acc. " & $g_iCurAccount + 1 & ", Attack: " & $g_aiAttackedCount)
+	EndIf
 	$g_iActualTrainSkip = 0
+	$g_iPercentageDamage = 0
+	$g_iSidesAttack = 0
 
 EndFunc   ;==>AttackReport

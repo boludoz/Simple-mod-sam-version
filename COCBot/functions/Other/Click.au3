@@ -26,8 +26,6 @@ Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 
 	If $g_bAndroidAdbClick = True Then
 		AndroidClick($x, $y, $times, $speed)
-	EndIf
-	If $g_bAndroidAdbClick = True Then
 		Return
 	EndIf
 
@@ -108,9 +106,7 @@ Func BuildingClick($x, $y, $debugtxt = "")
 EndFunc   ;==>BuildingClick
 
 Func BuildingClickP($point, $debugtxt = "")
-	Local $x = $point[0]
-	Local $y = $point[1]
-	Return BuildingClick($x, $y, $debugtxt)
+	Return BuildingClick($point[0], $point[1], $debugtxt)
 EndFunc   ;==>BuildingClickP
 
 Func PureClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
@@ -122,9 +118,9 @@ Func PureClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 	If TestCapture() Then Return
 
 	If $g_bAndroidAdbClick = True Then
-		AndroidClick($x, $y, $times, $speed, False)
-	EndIf
-	If $g_bAndroidAdbClick = True Then
+		For $i = 1 to $times
+			AndroidClick($x, $y, 1, $speed, False)
+		Next
 		Return
 	EndIf
 
@@ -331,6 +327,8 @@ Func _DecodeDebug($message)
 			Return $separator & "Train - Train Baby Dragon"
 		Case "#0343"
 			Return $separator & "Train - Train Miner"
+		Case "#0344"
+			Return $separator & "Train - Train Ice Golem"	
 
 			;DONATE
 		Case "#0168"
@@ -423,7 +421,8 @@ Func _DecodeDebug($message)
 			Return $separator & "Attack Search - Press retry search button"
 		Case "#0513"
 			Return $separator & "Attack Search - Return Home button"
-
+		Case "#0514"
+			Return $separator & "Attack Search - Clouds, keep game alive"
 		Case "#0000"
 			Return $separator & " "
 

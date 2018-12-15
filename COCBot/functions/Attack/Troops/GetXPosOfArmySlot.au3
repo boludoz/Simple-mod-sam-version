@@ -16,6 +16,15 @@
 
 Func GetXPosOfArmySlot($slotNumber, $xOffsetFor11Slot)
 
+	If $slotNumber < 0 Or $slotNumber + 1 > UBound($g_avAttackTroops) Then
+		; invalid slot
+		Return 0
+	EndIf
+
+	; use x-cord from $g_avAttackTroops
+	Return $g_avAttackTroops[$slotNumber][2]
+
+	#cs
 	Local $CheckSlot12, $SlotPixelColorTemp, $SlotPixelColor1
 
 	$xOffsetFor11Slot -= 8
@@ -23,6 +32,8 @@ Func GetXPosOfArmySlot($slotNumber, $xOffsetFor11Slot)
 	Local $SlotComp = ($slotNumber = 7 ? 1 : 0)
 
 	If $slotNumber = $g_iKingSlot Or $slotNumber = $g_iQueenSlot Or $slotNumber = $g_iWardenSlot Then $xOffsetFor11Slot += 8
+
+	If $g_bDraggedAttackBar Then Return $xOffsetFor11Slot + $SlotComp + ($slotNumber * 72) + 14 ; Slot11+
 
 	; check Dark color on slot 0 to verify if exists > 11 slots
 	; $SlotPixelColor = _ColorCheck(_GetPixelColor(17, 580 + $g_iBottomOffsetY, True), Hex(0x07202A, 6), 20)
@@ -41,5 +52,5 @@ Func GetXPosOfArmySlot($slotNumber, $xOffsetFor11Slot)
 	Else
 		Return $xOffsetFor11Slot + $SlotComp + ($slotNumber * 72) - 13
 	EndIf
-
+	#ce
 EndFunc   ;==>GetXPosOfArmySlot

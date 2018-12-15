@@ -22,6 +22,8 @@ Func AttackTHGrid($troopKind, $iNbOfSpots = 1, $iAtEachSpot = 1, $Sleep = Random
 		$waveNb : 0 => "Only"  , 1 => "First" , 2 => "Second"  , 3 => "Third"  , 4 => "Last"
 	#ce ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+	$g_iSidesAttack = 1
+
 	Local $aThx, $aThy, $num
 	Local $TroopCountBeg
 	Local $THtroop = -1
@@ -113,7 +115,7 @@ Func AttackTHGrid($troopKind, $iNbOfSpots = 1, $iAtEachSpot = 1, $Sleep = Random
 	EndIf
 
 	; All Barracks Troops
-	If $troopKind >= $eBarb And $troopKind <= $eBowl Then
+	If $troopKind >= $eBarb And $troopKind <= $eIceG Then
 		$troopNb = $iNbOfSpots * $iAtEachSpot
 		If $troopNb > 1 Then $plural = 1
 		$name = NameOfTroop($troopKind, $plural)
@@ -137,7 +139,7 @@ Func AttackTHGrid($troopKind, $iNbOfSpots = 1, $iAtEachSpot = 1, $Sleep = Random
 
 	DeployTHNormal($iAtEachSpot, $iNbOfSpots)
 
-	If $troopKind >= $eBarb And $troopKind <= $eBowl Then
+	If $troopKind >= $eBarb And $troopKind <= $eIceG Then
 		If $TroopCountBeg <> Number(ReadTroopQuantity($THtroop)) Then
 			$NumTroopDeployed = $TroopCountBeg - Number(ReadTroopQuantity($THtroop))
 			SetLog("Deployment of " & $NumTroopDeployed & " " & $name & " was Successful!")

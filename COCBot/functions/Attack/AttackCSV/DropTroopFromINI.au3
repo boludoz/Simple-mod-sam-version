@@ -79,13 +79,27 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
 
 	;search slot where is the troop...
 	Local $troopPosition = -1
-	Local $troopCount = -1
+	Local $troopSlotConst = -1 ; $troopSlotConst = xx/22 (the unique slot number of troop) - Slot11+
 	For $i = 0 To UBound($g_avAttackTroops) - 1
-		If $g_avAttackTroops[$i][0] = $iTroopIndex And $g_avAttackTroops[$i][1] >= $troopCount Then
-			$troopPosition = $i
-			$troopCount = $g_avAttackTroops[$i][1]
+		If $g_avAttackTroops[$i][0] = $iTroopIndex And $g_avAttackTroops[$i][1] > 0 Then
+			debugAttackCSV("Found troop position " & $i & ". " & $troopName & " x" & $g_avAttackTroops[$i][1])
+			$troopSlotConst = $i
+			$troopPosition = $troopSlotConst
+			ExitLoop
 		EndIf
 	Next
+
+	; Slot11+
+	debugAttackCSV("Troop position / Total slots: " & $troopSlotConst & " / " & $g_iTotalAttackSlot)
+	If $troopSlotConst >= 0 And $troopSlotConst < $g_iTotalAttackSlot - 10 Then ; can only be selected when in 1st page of troopbar
+		If $g_bDraggedAttackBar Then DragAttackBar($g_iTotalAttackSlot, True) ; return drag
+	ElseIf $troopSlotConst > 10 Then ; can only be selected when in 2nd page of troopbar
+		If $g_bDraggedAttackBar = False Then DragAttackBar($g_iTotalAttackSlot, False) ; drag forward
+	EndIf
+	If $g_bDraggedAttackBar And $troopPosition > -1 Then
+		$troopPosition = $troopSlotConst - ($g_iTotalAttackSlot - 10)
+		debugAttackCSV("New troop position: " & $troopPosition)
+	EndIf
 
 	Local $usespell = True
 	Switch $iTroopIndex
@@ -109,25 +123,27 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
 			If $g_abAttackUseHasteSpell[$g_iMatchMode] = False Then $usespell = False
 		Case $eSkSpell
 			If $g_abAttackUseSkeletonSpell[$g_iMatchMode] = False Then $usespell = False
+		Case $eBtSpell
+			If $g_abAttackUseBatSpell[$g_iMatchMode] = False Then $usespell = False
 	EndSwitch
 
 	If $troopPosition = -1 Or $usespell = False Then
 
 		If $usespell = True Then
-			SetLog("No troop found in your attack troops list")
-			debugAttackCSV("No troop found in your attack troops list")
+			SetLog("No " & NameOfTroop($iTroopIndex) & "  found in your attack troops list")
+			debugAttackCSV("No " & NameOfTroop($iTroopIndex) & " found in your attack troops list")
 		Else
-			If $g_bDebugSetlog Then SetDebugLog("discard use spell", $COLOR_DEBUG)
+			If $g_bDebugSetlog Then SetDebugLog("Discard use " & NameOfTroop($iTroopIndex), $COLOR_DEBUG)
 		EndIf
 
 	Else
 
 		;Local $SuspendMode = SuspendAndroid()
 
-		If $g_iCSVLastTroopPositionDropTroopFromINI <> $troopPosition Then
+		If $g_iCSVLastTroopPositionDropTroopFromINI <> $troopSlotConst Then
 			ReleaseClicks()
 			SelectDropTroop($troopPosition) ; select the troop...
-			$g_iCSVLastTroopPositionDropTroopFromINI = $troopPosition
+			$g_iCSVLastTroopPositionDropTroopFromINI = $troopSlotConst
 			ReleaseClicks()
 		EndIf
 		;drop
@@ -167,7 +183,7 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
 					EndIf
 
 					Switch $iTroopIndex
-						Case $eBarb To $eBowl ; drop normal troops
+						Case $eBarb To $eIceG ; drop normal troops
 							If $debug = True Then
 								SetLog("AttackClick( " & $pixel[0] & ", " & $pixel[1] & " , " & $qty2 & ", " & $delayPoint & ",#0666)")
 							Else
@@ -175,36 +191,39 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
 							EndIf
 						Case $eKing
 							If $debug = True Then
-								SetLog("dropHeroes(" & $pixel[0] & ", " & $pixel[1] & ", " & $g_iKingSlot & ", -1, -1) ")
+								SetLog("dropHeroes(" & $pixel[0] & ", " & $pixel[1] & ", " & $troopPosition & ", -1, -1) ")
 							Else
-								dropHeroes($pixel[0], $pixel[1], $g_iKingSlot, -1, -1)
+								dropHeroes($pixel[0], $pixel[1], $troopPosition, -1, -1) ; was $g_iKingSlot, Slot11+
 							EndIf
 						Case $eQueen
 							If $debug = True Then
-								SetLog("dropHeroes(" & $pixel[0] & ", " & $pixel[1] & ",-1," & $g_iQueenSlot & ", -1) ")
+								SetLog("dropHeroes(" & $pixel[0] & ", " & $pixel[1] & ",-1," & $troopPosition & ", -1) ")
 							Else
-								dropHeroes($pixel[0], $pixel[1], -1, $g_iQueenSlot, -1)
+								dropHeroes($pixel[0], $pixel[1], -1, $troopPosition, -1) ; was $g_iQueenSlot, Slot11+
 							EndIf
 						Case $eWarden
 							If $debug = True Then
-								SetLog("dropHeroes(" & $pixel[0] & ", " & $pixel[1] & ", -1, -1," & $g_iWardenSlot & ") ")
+								SetLog("dropHeroes(" & $pixel[0] & ", " & $pixel[1] & ", -1, -1," & $troopPosition & ") ")
 							Else
-								dropHeroes($pixel[0], $pixel[1], -1, -1, $g_iWardenSlot)
+								dropHeroes($pixel[0], $pixel[1], -1, -1, $troopPosition) ; was $g_iWardenSlot, Slot11+
 							EndIf
-						Case $eCastle
+						Case $eCastle, $eWallW, $eBattleB, $eStoneS
 							If $debug = True Then
-								SetLog("dropCC(" & $pixel[0] & ", " & $pixel[1] & ", " & $g_iClanCastleSlot & ")")
+								SetLog("dropCC(" & $pixel[0] & ", " & $pixel[1] & ", " & $troopPosition & ")")
 							Else
-								dropCC($pixel[0], $pixel[1], $g_iClanCastleSlot)
+								dropCC($pixel[0], $pixel[1], $troopPosition)
 							EndIf
-						Case $eLSpell To $eSkSpell
+						Case $eLSpell To $eBtSpell
 							If $debug = True Then
 								SetLog("Drop Spell AttackClick( " & $pixel[0] & ", " & $pixel[1] & " , " & $qty2 & ", " & $delayPoint & ",#0666)")
 							Else
 								AttackClick($pixel[0], $pixel[1], $qty2, $delayPoint, $delayDropLast, "#0667")
 							EndIf
 							; assume spells get always dropped: adjust count so CC spells can be used without recalc
-							If UBound($g_avAttackTroops) > $troopPosition And $g_avAttackTroops[$troopPosition][1] > 0 Then $g_avAttackTroops[$troopPosition][1] -= 1
+							If UBound($g_avAttackTroops) > $troopSlotConst And $g_avAttackTroops[$troopSlotConst][1] > 0 And $qty2 > 0 Then ; Slot11 - Demen_S11_#9003
+								$g_avAttackTroops[$troopSlotConst][1] -= $qty2
+								debugAttackCSV("Adjust quantity of spell use: " & $g_avAttackTroops[$troopSlotConst][0] & " x" & $g_avAttackTroops[$troopSlotConst][1])
+							EndIf
 						Case Else
 							SetLog("Error parsing line")
 					EndSwitch
@@ -228,7 +247,7 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
 			debugAttackCSV(">> delay after drop all troops: " & $sleepafter)
 			If $sleepafter <= 1000 Then ; check SLEEPAFTER value is less than 1 second?
 				If _Sleep($sleepafter) Then Return
-				If $bHeroDrop = True Then  ;Check hero but skip Warden if was dropped with sleepafter to short to allow icon update
+				If $bHeroDrop = True Then ;Check hero but skip Warden if was dropped with sleepafter to short to allow icon update
 					Local $bHold = $g_bCheckWardenPower ; store existing flag state, should be true?
 					$g_bCheckWardenPower = False ;temp disable warden health check
 					CheckHeroesHealth()

@@ -23,6 +23,10 @@ Func getRemainTrainTimer($x_start, $y_start, $bNeedCapture = True) ;
 	Return getOcrAndCapture("coc-RemainTrain", $x_start, $y_start, 70, 12, True, False, $bNeedCapture)
 EndFunc   ;==>getRemainTrainTimer
 
+Func getRemainBuildTimer($x_start, $y_start, $bNeedCapture = True) ;
+	Return getOcrAndCapture("coc-siegeremain", $x_start, $y_start, 50, 10, True, False, $bNeedCapture)
+EndFunc   ;==>getRemainTrainTimer
+
 Func getElixirVillageSearch($x_start, $y_start) ;48, 69+29 -> Gets complete value of Elixir xxx,xxx, top left,  Getresources.au3
 	Return getOcrAndCapture("coc-v-e", $x_start, $y_start, 90, 16, True)
 EndFunc   ;==>getElixirVillageSearch
@@ -88,7 +92,7 @@ Func getBldgUpgradeTime($x_start, $y_start) ; -> Gets complete remain building u
 EndFunc   ;==>getBldgUpgradeTime
 
 Func getLabUpgradeTime($x_start, $y_start) ; -> Gets complete remain lab upgrade time V2 for Dec2015 update
-	Return getOcrAndCapture("coc-uptime2", $x_start, $y_start, 42, 22) ; 40 is enougth xxx : 2 numbers and one letter at max
+	Return getOcrAndCapture("coc-uptime2", $x_start, $y_start, 68, 22) ; 40 is enougth xxx : 2 numbers and one letter at max
 EndFunc   ;==>getLabUpgradeTime
 
 Func getHeroUpgradeTime($x_start, $y_start) ; -> Gets complete upgrade time for heroes 464, 527 + $g_iMidOffsetY
@@ -119,14 +123,6 @@ Func getTroopsSpellsLevel($x_start, $y_start) ;  -> Gets spell level on Attack S
 	Return getOcrAndCapture("coc-spellslevel", $x_start, $y_start, 20, 14, True)
 EndFunc   ;==>getTroopsSpellsLevel
 
-Func getArmyTroopQuantity($x_start, $y_start) ;  -> Gets troop amount on army camp or new windows
-	Return getOcrAndCapture("coc-train-quant", $x_start, $y_start, 45, 12, True)
-EndFunc   ;==>getArmyTroopQuantity
-
-Func getArmyTroopKind($x_start, $y_start) ;  -> Gets kind of troop on army camp or new windows
-	Return getOcrAndCapture("coc-train-t-kind", $x_start, $y_start, 59, 11, True)
-EndFunc   ;==>getArmyTroopKind
-
 Func getArmyCampCap($x_start, $y_start, $bNeedCapture = True) ;  -> Gets army camp capacity --> train.au3, and used to read CC request time remaining
 	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 82, 16, True, False, $bNeedCapture)
 EndFunc   ;==>getArmyCampCap
@@ -147,40 +143,9 @@ Func getOcrLanguage($x_start, $y_start) ;  -> Get english language - main screen
 	Return getOcrAndCapture("coc-ms-testl", $x_start, $y_start, 93, 16, True)
 EndFunc   ;==>getOcrLanguage
 
-Func getOcrSpellDetection($x_start, $y_start) ;  -> Recognition of the Spells in Armyoverview window
-	;remove text after § (if dll return heal§2 we return heal, if dll return heal§3 we return heal, if dll return heal we return heal)
-	Local $result = getOcrAndCapture("coc-t-spells2", $x_start, $y_start, 50, 30, True)
-	Local $PositionSpecialCaracter = 0 ; search position of § into result, if no found return 0
-	$PositionSpecialCaracter = StringInStr($result, "§")
-	If $PositionSpecialCaracter > 0 Then
-		Return StringLeft($result, $PositionSpecialCaracter - 1)
-	Else
-		Return $result
-	EndIf
-EndFunc   ;==>getOcrSpellDetection
-
-Func getOcrSpellQuantity($x_start, $y_start) ;  -> Get the Spells quantity in Armyoverview window
-	Return getOcrAndCapture("coc-t-t", $x_start, $y_start, 25, 12, True)
-EndFunc   ;==>getOcrSpellQuantity
-
-Func getOcrClanLevel($x_start, $y_start) ;  -> Get the clan level from clan info page
-	Return getOcrAndCapture("coc-clanlevel", $x_start, $y_start, 20, 19, True)
-EndFunc   ;==>getOcrClanLevel
-
 Func getOcrSpaceCastleDonate($x_start, $y_start) ;  -> Get the number of troops donated/capacity from a request
 	Return getOcrAndCapture("coc-totalreq", $x_start, $y_start, 45, 12, True)
 EndFunc   ;==>getOcrSpaceCastleDonate
-
-Func getOcrDonationTroopsDetection($x_start, $y_start) ;  -> Get the type of troop from the donate window
-	Local $result = getOcrAndCapture("coc-donationtroop", $x_start, $y_start, 45, 30, True)
-	Local $PositionSpecialCaracter = 0 ; search position of § into result, if no found return 0
-	$PositionSpecialCaracter = StringInStr($result, "§")
-	If $PositionSpecialCaracter > 0 Then
-		Return StringLeft($result, $PositionSpecialCaracter - 1)
-	Else
-		Return $result
-	EndIf
-EndFunc   ;==>getOcrDonationTroopsDetection
 
 Func getOcrOverAllDamage($x_start, $y_start) ;  -> Get the Overall Damage %
 	Return getOcrAndCapture("coc-overalldamage", $x_start, $y_start, 50, 20, True)
@@ -235,10 +200,6 @@ EndFunc   ;==>getRemainTLaboratory
 Func getRemainTHero($x_start, $y_start, $bNeedCapture = True) ; Get time remaining for hero to be ready for attack from train window, BK:443,504 AQ:504,504 GW:565:504
 	Return getOcrAndCapture("coc-remainhero", $x_start, $y_start, 55, 12, True, False, $bNeedCapture)
 EndFunc   ;==>getRemainTHero
-
-Func getHeroStatus($x_start, $y_start) ; Get status/type_of_Hero from Hero Slots in training overview window, Slot1:464,446 Slot2:526,446 Slot3:588:446
-	Return getOcrAndCapture("coc-herostatus", $x_start, $y_start, 20, 20)
-EndFunc   ;==>getHeroStatus
 
 Func getRequestRemainTime($x_start, $y_start, $bNeedCapture = True) ; Get Remain Time To request Troops
 	Return getOcrAndCapture("coc-CCremainTime", $x_start, $y_start, 30, 14, False, False, $bNeedCapture)

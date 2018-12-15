@@ -19,10 +19,21 @@ Global $g_aiDonIcons[21] = [$eIcnDonBarbarian, $eIcnDonArcher, $eIcnDonGiant, $e
 							$eIcnDonWitch, $eIcnDonLavaHound, $eIcnDonBowler, $eIcnDonBlank]
 
 Func btnDonateTroop()
-	For $i = 0 To $eTroopCount-1 + $g_iCustomDonateConfigs
+	For $i = 0 To $eTroopCount - 1 + $g_iCustomDonateConfigs + $eSiegeMachineCount
 		If @GUI_CtrlId = $g_ahBtnDonateTroop[$i] Then
 			If GUICtrlGetState($g_ahGrpDonateTroop[$i]) = BitOR($GUI_HIDE, $GUI_ENABLE) Then
 				_DonateBtn($g_ahGrpDonateTroop[$i], $g_ahTxtBlacklistTroop[$i]) ;Hide/Show controls on Donate tab
+			EndIf
+			GUICtrlSetState($g_hChkDonateQueueSpellOnly, $GUI_HIDE)
+			If $i <= $eTroopCount - 1 + $g_iCustomDonateConfigs Then
+				GUICtrlSetState($g_hChkDonateQueueTroopOnly, $GUI_SHOW)
+				If GUICtrlRead($g_ahChkDonateTroop[$i]) = $GUI_CHECKED Or GUICtrlRead($g_ahChkDonateAllTroop[$i]) = $GUI_CHECKED Then
+					GUICtrlSetState($g_hChkDonateQueueTroopOnly, $GUI_ENABLE)
+				Else
+					GUICtrlSetState($g_hChkDonateQueueTroopOnly, $GUI_DISABLE)
+				EndIf
+			Else
+				GUICtrlSetState($g_hChkDonateQueueTroopOnly, $GUI_HIDE)
 			EndIf
 			ExitLoop
 		EndIf
@@ -35,6 +46,13 @@ Func btnDonateSpell()
 			If GUICtrlGetState($g_ahGrpDonateSpell[$i]) = BitOR($GUI_HIDE, $GUI_ENABLE) Then
 				_DonateBtn($g_ahGrpDonateSpell[$i], $g_ahTxtBlacklistSpell[$i])
 			EndIf
+			GUICtrlSetState($g_hChkDonateQueueTroopOnly, $GUI_HIDE)
+			GUICtrlSetState($g_hChkDonateQueueSpellOnly, $GUI_SHOW)
+			If GUICtrlRead($g_ahChkDonateSpell[$i]) = $GUI_CHECKED Or GUICtrlRead($g_ahChkDonateAllSpell[$i]) = $GUI_CHECKED Then
+				GUICtrlSetState($g_hChkDonateQueueSpellOnly, $GUI_ENABLE)
+			Else
+				GUICtrlSetState($g_hChkDonateQueueSpellOnly, $GUI_DISABLE)
+			EndIf
 			ExitLoop
 		EndIf
 	Next
@@ -44,23 +62,32 @@ Func btnDonateBlacklist()
 	If GUICtrlGetState($g_hGrpDonateGeneralBlacklist) = BitOR($GUI_HIDE, $GUI_ENABLE) Then
 		_DonateBtn($g_hGrpDonateGeneralBlacklist, $g_hTxtGeneralBlacklist)
 	EndIf
+	GUICtrlSetState($g_hChkDonateQueueTroopOnly, $GUI_HIDE)
+	GUICtrlSetState($g_hChkDonateQueueSpellOnly, $GUI_HIDE)
 EndFunc   ;==>btnDonateBlacklist
 
 Func chkDonateTroop()
-	For $i = 0 To $eTroopCount-1 + $g_iCustomDonateConfigs
+	For $i = 0 To $eTroopCount-1 + $g_iCustomDonateConfigs + $eSiegeMachineCount
 		If @GUI_CtrlId = $g_ahChkDonateTroop[$i] Then
 			If GUICtrlRead($g_ahChkDonateTroop[$i]) = $GUI_CHECKED Then
 				_DonateControls($i)
+				If $i <= $eTroopCount - 1 + $g_iCustomDonateConfigs Then GUICtrlSetState($g_hChkDonateQueueTroopOnly, $GUI_ENABLE)
 			Else
 				GUICtrlSetBkColor($g_ahLblDonateTroop[$i], $GUI_BKCOLOR_TRANSPARENT)
+				If $i <= $eTroopCount - 1 + $g_iCustomDonateConfigs And GUICtrlRead($g_ahChkDonateAllTroop[$i]) = $GUI_UNCHECKED Then GUICtrlSetState($g_hChkDonateQueueTroopOnly, $GUI_DISABLE)
 			EndIf
 		EndIf
 	Next
 EndFunc   ;==>chkDonateTroop
 
 Func chkDonateAllTroop()
-	For $i = 0 To $eTroopCount-1 + $g_iCustomDonateConfigs
+	For $i = 0 To $eTroopCount - 1 + $g_iCustomDonateConfigs
 		If @GUI_CtrlId = $g_ahChkDonateAllTroop[$i] Then
+			If GUICtrlRead($g_ahChkDonateAllTroop[$i]) = $GUI_CHECKED Then
+				GUICtrlSetState($g_hChkDonateQueueTroopOnly, $GUI_ENABLE)
+			ElseIf GUICtrlRead($g_ahChkDonateTroop[$i]) = $GUI_UNCHECKED Then
+				GUICtrlSetState($g_hChkDonateQueueTroopOnly, $GUI_DISABLE)
+			EndIf
 			_DonateAllControls($i, GUICtrlRead($g_ahChkDonateAllTroop[$i]) = $GUI_CHECKED ? True : False)
 			ExitLoop
 		EndIf
@@ -72,8 +99,10 @@ Func chkDonateSpell()
 		If @GUI_CtrlId = $g_ahChkDonateSpell[$i] Then
 			If GUICtrlRead($g_ahChkDonateSpell[$i]) = $GUI_CHECKED Then
 				_DonateControlsSpell($i)
+				GUICtrlSetState($g_hChkDonateQueueSpellOnly, $GUI_ENABLE)
 			Else
 				GUICtrlSetBkColor($g_ahLblDonateSpell[$i], $GUI_BKCOLOR_TRANSPARENT)
+				If GUICtrlRead($g_ahChkDonateAllSpell[$i]) = $GUI_UNCHECKED Then GUICtrlSetState($g_hChkDonateQueueSpellOnly, $GUI_DISABLE)
 			EndIf
 		EndIf
 	Next
@@ -82,6 +111,11 @@ EndFunc   ;==>chkDonateSpell
 Func chkDonateAllSpell()
 	For $i = 0 To $eSpellCount - 1
 		If @GUI_CtrlId = $g_ahChkDonateAllSpell[$i] Then
+			If GUICtrlRead($g_ahChkDonateAllSpell[$i]) = $GUI_CHECKED Then
+				GUICtrlSetState($g_hChkDonateQueueSpellOnly, $GUI_ENABLE)
+			Else
+				If GUICtrlRead($g_ahChkDonateSpell[$i]) = $GUI_UNCHECKED Then GUICtrlSetState($g_hChkDonateQueueSpellOnly, $GUI_DISABLE)
+			EndIf
 			_DonateAllControlsSpell($i, GUICtrlRead($g_ahChkDonateAllSpell[$i]) = $GUI_CHECKED ? True : False)
 			ExitLoop
 		EndIf
@@ -150,14 +184,14 @@ EndFunc   ;==>_DonateBtn
 Func _DonateControls($iTroopIndex)
 	Local $bWasRedraw = SetRedrawBotWindow(False, Default, Default, Default, "_DonateControls")
 
-	For $i = 0 To $eTroopCount-1 + $g_iCustomDonateConfigs
+	For $i = 0 To $eTroopCount - 1 + $g_iCustomDonateConfigs + $eSiegeMachineCount
 		If $i = $iTroopIndex Then
 			GUICtrlSetBkColor($g_ahLblDonateTroop[$i], $COLOR_ORANGE)
 		Else
 			If GUICtrlGetBkColor($g_ahLblDonateTroop[$i]) = $COLOR_NAVY Then GUICtrlSetBkColor($g_ahLblDonateTroop[$i], $GUI_BKCOLOR_TRANSPARENT)
 		EndIf
 
-		GUICtrlSetState($g_ahChkDonateAllTroop[$i], $GUI_UNCHECKED)
+		If $iTroopIndex < $eTroopCount + $g_iCustomDonateConfigs Then GUICtrlSetState($g_ahChkDonateAllTroop[$i], $GUI_UNCHECKED)
 		If BitAND(GUICtrlGetState($g_ahTxtDonateTroop[$i]), $GUI_DISABLE) = $GUI_DISABLE Then GUICtrlSetState($g_ahTxtDonateTroop[$i], $GUI_ENABLE)
 		If BitAND(GUICtrlGetState($g_ahTxtBlacklistTroop[$i]), $GUI_DISABLE) = $GUI_DISABLE Then GUICtrlSetState($g_ahTxtBlacklistTroop[$i], $GUI_ENABLE)
 	Next
@@ -168,7 +202,7 @@ Func _DonateAllControls($iTroopIndex, $Set)
 	Local $bWasRedraw = SetRedrawBotWindow(False, Default, Default, Default, "_DonateAllControls")
 
 	If $Set = True Then
-		For $i = 0 To $eTroopCount-1 + $g_iCustomDonateConfigs
+		For $i = 0 To $eTroopCount - 1 + $g_iCustomDonateConfigs
 			GUICtrlSetBkColor($g_ahLblDonateTroop[$i], $i = $iTroopIndex ? $COLOR_NAVY : $GUI_BKCOLOR_TRANSPARENT)
 
 			If $i <> $iTroopIndex Then
