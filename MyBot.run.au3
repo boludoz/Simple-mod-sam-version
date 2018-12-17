@@ -1111,7 +1111,7 @@ Func _Idle() ;Sequence that runs until Full Army
 		If $ichkModTrain = 0 Then
 			If $g_iCommandStop = -1 Then
 				If $g_iActualTrainSkip < $g_iMaxTrainSkip Then
-					If CheckNeedOpenTrain($g_sTimeBeforeTrain) Then TrainRevamp()
+					If CheckNeedOpenTrain($g_sTimeBeforeTrain) Then TrainSystem()
 					If $g_bRestart = True Then ExitLoop
 					If _Sleep($DELAYIDLE1) Then ExitLoop
 					checkMainScreen(False)
@@ -1128,7 +1128,7 @@ Func _Idle() ;Sequence that runs until Full Army
 			If $g_iCommandStop = 0 And $g_bTrainEnabled = True Then
 				If Not ($g_bFullArmy) Then
 					If $g_iActualTrainSkip < $g_iMaxTrainSkip Then
-						If CheckNeedOpenTrain($g_sTimeBeforeTrain) Then TrainRevamp()
+						If CheckNeedOpenTrain($g_sTimeBeforeTrain) Then TrainSystem()
 						If $g_bRestart = True Then ExitLoop
 						If _Sleep($DELAYIDLE1) Then ExitLoop
 						checkMainScreen(False)
@@ -1399,7 +1399,7 @@ Func _RunFunction($action)
 				If $g_bTrainEnabled Then ; check for training enabled in halt mode
 					If $g_iActualTrainSkip < $g_iMaxTrainSkip Then
 						;Train()
-						TrainRevamp()
+						TrainSystem()
 						_Sleep($DELAYRUNBOT1)
 					Else
 						SetLog("Humanize bot, prevent to delete and recreate troops " & $g_iActualTrainSkip + 1 & "/" & $g_iMaxTrainSkip, $color_blue)

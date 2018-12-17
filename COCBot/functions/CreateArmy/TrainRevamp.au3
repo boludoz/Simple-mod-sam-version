@@ -14,7 +14,7 @@
 ; ===============================================================================================================================
 #include-once
 
-Func TrainRevamp()
+Func TrainSystem()
 
 	If Not $g_bTrainEnabled Then ; check for training disabled in halt mode
 		If $g_bDebugSetlogTrain Then SetLog("Halt mode - training disabled", $COLOR_DEBUG)

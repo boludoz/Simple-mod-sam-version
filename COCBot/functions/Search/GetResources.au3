@@ -77,7 +77,6 @@ Func resetAttackSearch($bStuck = False)
 		EndIf
 		PushMsg("OoSResources")
 	Else
-    Else
         If $bStuck Then
             SetLog("Attack Is Disabled Or Slow connection issues, Restarting CoC and Bot...", $COLOR_ERROR)
             CloseCoC(True)
