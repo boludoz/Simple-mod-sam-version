@@ -28,7 +28,7 @@ Func getPBTime()
 		Return
 	EndIf
 
-	ClickP($aShieldInfoButton) ; click on PBT info icon
+    ClickP($aShieldInfoButton,1,0,"#9997") ; samm0d  ; click on PBT info icon
 	If _Sleep($DELAYPERSONALSHIELD3) Then Return
 
 	Local $iCount = 0
@@ -47,6 +47,8 @@ Func getPBTime()
 			If $g_bDebugImageSave Then DebugImageSave("PBTInfo_", $g_bCapturePixel, "png", False)
 			ClickP($aAway, 1, 0, "#9999") ; close window if opened
 			If _Sleep($DELAYPERSONALSHIELD2) Then Return ; wait for close
+                ; samm0d
+                $g_bRestart = True
 			Return
 		EndIf
 	WEnd

@@ -44,7 +44,9 @@ Func getShieldInfo()
 			If $g_bDebugSetlog Then SetDebugLog("Guard Active", $COLOR_DEBUG)
 		Case Else
 			SetLog("Sorry, Monkey needs more bananas to read shield type", $COLOR_ERROR) ; Check for pixel colors errors!
-			SetError(1, "Bad shield pixel read")
+            SetError(1, "Bad shield pixel read")
+            ; samm0d
+            $g_bRestart = True
 			Return
 	EndSelect
 
@@ -57,7 +59,9 @@ Func getShieldInfo()
 		If $sTimeResult = "" Then ; error if no read value
 			$aPBReturnResult[1] = '00:00:00'
 			SetLog("strange error, no shield value found?", $COLOR_ERROR)
-			SetError(2, "Bad time value OCR")
+            SetError(2, "Bad time value OCR")
+            ; samm0d
+            $g_bRestart = True
 			Return $aPBReturnResult ; return zero value
 		EndIf
 	EndIf

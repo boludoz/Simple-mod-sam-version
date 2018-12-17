@@ -231,8 +231,9 @@ Func getBarracksNewTroopQuantity($x_start, $y_start, $bNeedCapture = True) ;  ->
 	Return getOcrAndCapture("coc-newarmy", $x_start, $y_start, 45, 18, True, False, $bNeedCapture)
 EndFunc   ;==>getBarracksNewTroopQuantity
 
-Func getArmyCapacityOnTrainTroops($x_start, $y_start) ;  -> Gets quantity of troops in army Window
-	Return getOcrAndCapture("coc-NewCapacity", $x_start, $y_start, 67, 14, True)
+
+Func getArmyCapacityOnTrainTroops($x_start, $y_start)
+        Return _getArmyCapacityOnTrainTroops($x_start, $y_start)
 EndFunc   ;==>getArmyCapacityOnTrainTroops
 
 Func getQueueTroopsQuantity($x_start, $y_start) ;  -> Gets quantity of troops in Queue in Train Tab
@@ -302,14 +303,18 @@ Func getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpa
 	If $removeSpace = Default Then $removeSpace = False
 	If $bImgLoc = Default Then $bImgLoc = False
 	If $bForceCaptureRegion = Default Then $bForceCaptureRegion = $g_bOcrForceCaptureRegion
-	Static $_hHBitmap = 0
-	If $bForceCaptureRegion = True Then
-		_CaptureRegion2($x_start, $y_start, $x_start + $width, $y_start + $height)
-	Else
-		$_hHBitmap = GetHHBitmapArea($g_hHBitmap2, $x_start, $y_start, $x_start + $width, $y_start + $height)
-	EndIf
-	Local $result
-	If $bImgLoc Then
+    Static $_hHBitmap = 0
+    If $bForceCaptureRegion = True Then
+        _CaptureRegion2($x_start, $y_start, $x_start + $width, $y_start + $height)
+        ; samm0d
+        If $g_iSamM0dDebugOCR = 1 Then _debugSaveHBitmapToImage($g_hHBitmap2, $language, True, True)
+    Else
+        $_hHBitmap = GetHHBitmapArea($g_hHBitmap2, $x_start, $y_start, $x_start + $width, $y_start + $height)
+        ; samm0d
+        If $g_iSamM0dDebugOCR = 1 Then _debugSaveHBitmapToImage($_hHBitmap, $language, True, True)
+    EndIf
+    Local $result
+    If $bImgLoc Then
 		If $_hHBitmap <> 0 Then
 			$result = getOcrImgLoc($_hHBitmap, $language)
 		Else
