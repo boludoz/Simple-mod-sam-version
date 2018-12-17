@@ -16,7 +16,10 @@
 ;collect donation request users images
 Func donateCCWBLUserImageCollect($x, $y)
 
-	Local $imagematch = False
+    ; samm0d
+    If $g_iCmbDonateFilter = 0 Then Return True
+
+    Local $imagematch = False
 
 	;capture donate request image
 	;_CaptureRegion2(0, $y - 90, $x - 30, $y)

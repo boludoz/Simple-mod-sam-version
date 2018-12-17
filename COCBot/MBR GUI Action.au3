@@ -57,13 +57,13 @@ Func BotStart($bAutostartDelay = 0)
 		SetLog("Background Mode not supported for " & $g_sAndroidEmulator & " and has been disabled", $COLOR_ERROR)
 	EndIf
 
-	; update bottom buttons
-	GUICtrlSetState($g_hBtnStart, $GUI_HIDE)
-	GUICtrlSetState($g_hBtnStop, $GUI_SHOW)
-	GUICtrlSetState($g_hBtnPause, $GUI_SHOW)
-	GUICtrlSetState($g_hBtnResume, $GUI_HIDE)
-	GUICtrlSetState($g_hBtnSearchMode, $GUI_HIDE)
-	GUICtrlSetState($g_hChkBackgroundMode, $GUI_DISABLE)
+;~     ; update bottom buttons
+;~     GUICtrlSetState($g_hBtnStart, $GUI_HIDE)
+;~     GUICtrlSetState($g_hBtnStop, $GUI_SHOW)
+;~     GUICtrlSetState($g_hBtnPause, $GUI_SHOW)
+;~     GUICtrlSetState($g_hBtnResume, $GUI_HIDE)
+;~     GUICtrlSetState($g_hBtnSearchMode, $GUI_HIDE)
+;~     GUICtrlSetState($g_hChkBackgroundMode, $GUI_DISABLE)
 
 	; update try items
 	TrayItemSetText($g_hTiStartStop, GetTranslatedFileIni("MBR GUI Design - Loading", "StatusBar_Item_Stop", "Stop bot"))
@@ -74,7 +74,16 @@ Func BotStart($bAutostartDelay = 0)
 
 	DisableGuiControls()
 
-	SetRedrawBotWindow(True, Default, Default, Default, "BotStart")
+    ; samm0d
+    ; update bottom buttons
+    GUICtrlSetState($g_hBtnStart, $GUI_HIDE)
+    GUICtrlSetState($g_hBtnStop, $GUI_SHOW)
+    GUICtrlSetState($g_hBtnPause, $GUI_SHOW)
+    GUICtrlSetState($g_hBtnResume, $GUI_HIDE)
+    GUICtrlSetState($g_hBtnSearchMode, $GUI_HIDE)
+    GUICtrlSetState($g_hChkBackgroundMode, $GUI_DISABLE)
+
+    SetRedrawBotWindow(True, Default, Default, Default, "BotStart")
 
 	If $bAutostartDelay Then
 		SetLog("Bot Auto Starting in " & Round($bAutostartDelay / 1000, 0) & " seconds", $COLOR_ERROR)
@@ -115,7 +124,13 @@ Func BotStart($bAutostartDelay = 0)
 		EndIf
 		If Not $g_bRunState Then Return FuncReturn()
 		If $hWndActive = $g_hAndroidWindow And ($g_bAndroidBackgroundLaunched = True Or AndroidControlAvailable())  Then ; Really?
-			Initiate() ; Initiate and run bot
+            ; samm0d
+            If $ichkEnableStopBotWhenLowBattery = 1 Then
+                AdlibRegister("_BatteryStatus", 10000)
+                $g_bCheckBattery = True
+                GUICtrlSetState($chkEnableStopBotWhenLowBattery, $GUI_DISABLE)
+            EndIf
+            Initiate() ; Initiate and run bot
 		Else
 			SetLog("Cannot use " & $g_sAndroidEmulator & ", please check log", $COLOR_ERROR)
 			btnStop()
@@ -175,7 +190,14 @@ Func BotStop()
 
 	; update try items
 	TrayItemSetText($g_hTiStartStop, GetTranslatedFileIni("MBR GUI Design - Loading", "StatusBar_Item_Start", "Start bot"))
-	TrayItemSetState($g_hTiPause, $TRAY_DISABLE)
+    TrayItemSetState($g_hTiPause, $TRAY_DISABLE)
+
+    ; samm0d
+    If $ichkEnableStopBotWhenLowBattery = 1 Then
+        AdlibUnRegister("_BatteryStatus")
+        $g_bCheckBattery = False
+        GUICtrlSetState($chkEnableStopBotWhenLowBattery, $GUI_ENABLE)
+    EndIf
 
 	SetLogCentered(" Bot Stop ", Default, $COLOR_ACTION)
 	If Not $g_bSearchMode Then

@@ -244,8 +244,12 @@ Func SaveRegularConfig()
 	; <><><><> Bot / Profiles <><><><>
 	; <<< nothing here >>>
 
-	; <><><><> Bot / Stats <><><><>
-	; <<< nothing here >>>
+    ; <><><><> Bot / Stats <><><><>
+    ; <<< nothing here >>>
+
+    ;===========SamM0d Config=======================
+    #include "..\..\SamM0d\saveConfig.au3"
+    ;==============End SamM0D Config================
 
 	;SetDebugLog("saveConfig: Wrote " & $g_iIniLineCount & " ini lines.")
 	_Ini_Save($g_sProfileConfigPath)

@@ -755,6 +755,12 @@ Func TroopIndexLookup(Const $sName, Const $sSource = "")
 
 	; is the name "castle"?
 	If $sName = "castle" Then Return $eCastle
+	
+    ; samm0d
+    If $sName = "EventTroop1" Then Return 51
+    If $sName = "EventTroop2" Then Return 52
+    If $sName = "EventSpell1" Then Return 61
+    If $sName = "EventSpell2" Then Return 62
 
 	SetDebugLog("TroopIndexLookup() Error: Index for troop name '" & $sName & "' not found" & (($sSource) ? (" (" & $sSource & ").") : (".")))
 	Return -1
@@ -1339,11 +1345,12 @@ Global $g_iImglocTHLevel = 0
 Global $g_aiTownHallDetails[4] = [-1, -1, -1, -1] ; [LocX, LocY, BldgLvl, Quantity]
 
 ; Attack
-Global Const $g_aaiTopLeftDropPoints[5][2] = [[66, 299], [174, 210], [240, 169], [303, 127], [390, 55]]
-Global Const $g_aaiTopRightDropPoints[5][2] = [[466, 60], [556, 120], [622, 170], [684, 220], [775, 285]]
-Global Const $g_aaiBottomLeftDropPoints[5][2] = [[81, 390], [174, 475], [235, 521], [299, 570], [390, 610]]
-Global Const $g_aaiBottomRightDropPoints[5][2] = [[466, 600], [554, 555], [615, 510], [678, 460], [765, 394]]
-Global Const $g_aaiEdgeDropPoints[4] = [$g_aaiBottomRightDropPoints, $g_aaiTopLeftDropPoints, $g_aaiBottomLeftDropPoints, $g_aaiTopRightDropPoints]
+; samm0d
+Global $g_aaiTopLeftDropPoints[5][2] = [[66, 299], [174, 210], [240, 169], [303, 127], [390, 55]]
+Global $g_aaiTopRightDropPoints[5][2] = [[466, 60], [556, 120], [622, 170], [684, 220], [775, 285]]
+Global $g_aaiBottomLeftDropPoints[5][2] = [[81, 390], [174, 475], [235, 521], [299, 570], [390, 610]]
+Global $g_aaiBottomRightDropPoints[5][2] = [[466, 600], [554, 555], [615, 510], [678, 460], [765, 394]]
+Global $g_aaiEdgeDropPoints[4] = [$g_aaiBottomRightDropPoints, $g_aaiTopLeftDropPoints, $g_aaiBottomLeftDropPoints, $g_aaiTopRightDropPoints]
 Global Const $g_aiUseAllTroops[38] = [$eBarb, $eArch, $eGiant, $eGobl, $eWall, $eBall, $eWiza, $eHeal, $eDrag, $ePekk, $eBabyD, $eMine, $eEDrag, $eMini, $eHogs, $eValk, $eGole, $eWitc, $eLava, $eBowl, $eIceG, $eKing, $eQueen, $eWarden, $eCastle, $eLSpell, $eHSpell, $eRSpell, $eJSpell, $eFSpell, $eCSpell, $ePSpell, $eESpell, $eHaSpell, $eBtSpell, $eWallW, $eBattleB, $eStoneS]
 Global Const $g_aiUseBarracks[28] = [$eBarb, $eArch, $eGiant, $eGobl, $eWall, $eBall, $eWiza, $eHeal, $eDrag, $ePekk, $eBabyD, $eMine, $eEDrag, $eKing, $eQueen, $eWarden, $eCastle, $eLSpell, $eHSpell, $eRSpell, $eJSpell, $eFSpell, $eCSpell, $ePSpell, $eESpell, $eHaSpell, $eSkSpell, $eBtSpell]
 Global Const $g_aiUseBarbs[16] = [$eBarb, $eKing, $eQueen, $eWarden, $eCastle, $eLSpell, $eHSpell, $eRSpell, $eJSpell, $eFSpell, $eCSpell, $ePSpell, $eESpell, $eHaSpell, $eSkSpell, $eBtSpell]
@@ -1360,7 +1367,9 @@ Global Const $g_aaiTroopsToBeUsed[12] = [$g_aiUseAllTroops, $g_aiUseBarracks, $g
 Global $g_bTHSnipeUsedKing = False
 Global $g_bTHSnipeUsedQueen = False
 Global $g_bTHSnipeUsedWarden = False
-Global $g_avAttackTroops[22][3] ;11 Slots of troops -  Name, Amount, x-coord (+ 11 extended slots Slot11+)
+; samm0d
+Global $g_avAttackTroops[12][3] ;11 Slots of troops -  Name, Amount, X,Y
+;Global $g_avAttackTroops[12][2] ;11 Slots of troops -  Name, Amount
 Global $g_bFullArmy = False ;Check for full army or not
 Global $g_iKingSlot = -1, $g_iQueenSlot = -1, $g_iWardenSlot = -1, $g_iClanCastleSlot = -1
 Global $g_iTotalAttackSlot = 10, $g_bDraggedAttackBar = False ; Slot11+
@@ -1585,6 +1594,12 @@ Global Const $g_iMaxCapTroopTH[13] = [0, 20, 30, 70, 80, 135, 150, 200, 200, 220
 Global Const $g_iMaxCapSpellTH[13] = [0, 0, 0, 0, 0, 2, 4, 6, 7, 9, 11, 11, 11] ; element 0 is a dummy
 Global $g_oBldgAttackInfo = ObjCreate("Scripting.Dictionary") ; stores building information of base being attacked
 $g_oBldgAttackInfo.CompareMode = 1 ; use case in-sensitve compare for key values
+
+;===============SamM0d Global Variables====================
+Global $g_sEmulatorInfo4MySwitch
+Global $g_bFullArmyHero = False
+#include "SamM0d\Global Variables.au3"
+;============END SamM0d Global Variables==================================
 
 ; $g_oBldgAttackInfo Dictionay KEY naming reference guide:
 ; 	:Key strings will be building enum value (integer) & "_" & Property name from image detection DLL [Optional: & "K" + key index value]

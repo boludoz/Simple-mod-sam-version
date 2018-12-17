@@ -81,7 +81,13 @@ Func SmartWait4Train($iTestSeconds = Default)
 			$iTrainWaitCloseFlag = BitOR($iTrainWaitCloseFlag, $TRAINWAIT_SHIELD)
 		EndIf
 	EndIf
-	If $g_bDebugSetlogTrain Or $g_bDebugSetlog And IsArray($g_asShieldStatus) Then SetLog("Shield Status:" & $g_asShieldStatus[0] & ", till " & $g_asShieldStatus[2], $COLOR_DEBUG)
+    If $g_bDebugSetlogTrain Or $g_bDebugSetlog And IsArray($g_asShieldStatus) Then SetLog("Shield Status:" & $g_asShieldStatus[0] & ", till " & $g_asShieldStatus[2], $COLOR_DEBUG)
+
+    ;====samm0d======
+    ;avoid click train windows if we don't need close game or emulator without shield
+    If $g_asShieldStatus[0] = "none" And $g_bCloseWithoutShield = False Then Return ; skip if not on shield and other options not selected
+    ;================
+
 
 	Local $result = OpenArmyOverview(True, "SmartWait4Train()") ; Open train overview
 	If Not $result Then
@@ -239,7 +245,16 @@ Func SmartWait4Train($iTestSeconds = Default)
 		$iTrainWaitTime = $g_iCCRemainTime ; Set wait time based on time remaining in CC request to ensure CC is full
 	EndIf
 
-	$iTrainWaitTime = $iTrainWaitTime * 60 ; convert $iTrainWaitTime to seconds instead of minutes returned from OCR
+    $iTrainWaitTime = $iTrainWaitTime * 60 ; convert $iTrainWaitTime to seconds instead of minutes returned from OCR
+
+    ; samm0d - max log out
+    If $ichkEnableLogoutLimit = 1 Then
+        If $iTrainWaitTime > $itxtLogoutLimitTime Then
+            Setlog("Activated Max logout time: " & Floor($iTrainWaitTime) & " to " & $itxtLogoutLimitTime & " seconds", $COLOR_INFO)
+            $iTrainWaitTime = $itxtLogoutLimitTime
+        EndIf
+    EndIf
+
 
 	$sNowTime = _NowCalc() ; find/store time right now
 	If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then SetLog("Train end time: " & _DateAdd("s", Int($iTrainWaitTime), $sNowTime), $COLOR_DEBUG)

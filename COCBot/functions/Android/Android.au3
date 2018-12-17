@@ -1084,7 +1084,10 @@ Func _RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True
 	AndroidAdbLaunchShellInstance()
 
 	; reset time lag
-	InitAndroidTimeLag()
+    InitAndroidTimeLag()
+
+    ; samm0d - reset flag of auto hide emulator
+    $g_bFlagHideEmulator = False
 
 	Return True
 EndFunc   ;==>_RestartAndroidCoC

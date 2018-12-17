@@ -148,8 +148,11 @@ Func DropTrophy()
 
 				If _Sleep($DELAYDROPTROPHY4) Then ExitLoop
 
-				; Drop a Hero or Troop
-				If $g_bDropTrophyUseHeroes Then
+                Click(63, 668)
+                If _Sleep($DELAYDROPTROPHY4) Then Return
+
+                ; Drop a Hero or Troop
+                If $g_bDropTrophyUseHeroes Then
 					;a) identify heroes avaiables...
 					$g_iKingSlot = -1
 					$g_iQueenSlot = -1
@@ -253,7 +256,9 @@ Func DropTrophy()
 							ExitLoop 2
 						EndIf
 					Next
-					SetTrophyLoss()
+					; samm0d
+						SetTrophyLoss()
+						$tempDisableTrain = False
 					If _Sleep($DELAYDROPTROPHY1) Then ExitLoop
 					ReturnHome(False, False) ;Return home no screenshot
 					If _Sleep($DELAYDROPTROPHY1) Then ExitLoop

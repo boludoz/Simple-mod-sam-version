@@ -13,7 +13,8 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func RequestCC($ClickPAtEnd = True, $specifyText = "")
+; samm0d
+Func RequestCC($ClickPAtEnd = True, $specifyText = "", $bOpenTrainWindow = True)
 
 	If Not $g_bRequestTroopsEnable Or Not $g_bCanRequestCC Or Not $g_bDonationEnabled Then
 		Return
@@ -25,16 +26,54 @@ Func RequestCC($ClickPAtEnd = True, $specifyText = "")
 			SetLog("Request Clan Castle troops not planned, Skipped..", $COLOR_ACTION)
 			Return ; exit func if no planned donate checkmarks
 		EndIf
-	EndIf
+	 EndIf
+
+    Local $bContinueRequest = False
 
 	;open army overview
 	If $specifyText <> "IsFullClanCastle" And Not OpenArmyOverview(True, "RequestCC()") Then Return
 
-	If _Sleep($DELAYREQUESTCC1) Then Return
+    ; samm0d
+    If $ichkRequestCC4Troop = 0 And $ichkRequestCC4Spell = 0 And $ichkRequestCC4SeigeMachine = 0 Then
+        $bContinueRequest = True
+    Else
+        If $ichkRequestCC4Troop = 1 And $g_bNeedRequestCCTroop = True Then
+            SetLog("Need request for cc troops.", $COLOR_ACTION)
+            $bContinueRequest = True
+        EndIf
+        If $ichkRequestCC4Spell = 1 And $g_bNeedRequestCCSpell = True Then
+            SetLog("Need request for cc spells.", $COLOR_ACTION)
+            $bContinueRequest = True
+        EndIf
+        If $ichkRequestCC4SeigeMachine = 1 And $g_bNeedRequestCCSeigeMachine = True Then
+            SetLog("Need request for cc seige machine.", $COLOR_ACTION)
+            $bContinueRequest = True
+        EndIf
+    EndIf
 
 	SetLog("Requesting Clan Castle reinforcements", $COLOR_INFO)
 
-	checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
+    If $bContinueRequest = False Then
+        SetLog("Skip request since Clan Castle Troops / Spells / Seige Machine ready.", $COLOR_ACTION)
+        Return ; exit func if no planned donate checkmarks
+    EndIf
+
+    SetLog("Requesting Clan Castle Troops", $COLOR_INFO)
+
+    ; samm0d
+    If $bOpenTrainWindow = True Then
+        ;open army overview
+        If IsMainPage() Then
+            If $g_bUseRandomClick = 0 then
+                Click($aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0, "#0334")
+            Else
+                ClickR($aArmyTrainButtonRND, $aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0)
+            EndIF
+        EndIf
+        If _Sleep(500) Then Return
+
+        checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
+    EndIf
 
 	If $ClickPAtEnd Then CheckCCArmy()
 

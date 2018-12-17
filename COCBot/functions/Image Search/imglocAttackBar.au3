@@ -12,8 +12,8 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func AttackBarCheck($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
-
+; samm0d
+Func AttackBarCheck($bRemaining = False, $pMatchMode = $DB, $bDebug = False, $SRIGHT = False)
 	Local $iX1 = 0, $iY1 = 635, $iX2 = 835, $iY2 = 698
 	Static Local $bCheckSlot12 = False
 
@@ -221,6 +221,52 @@ Func SlotAttack($iPosX, $aSlots)
 
 	Return $aTempSlot
 EndFunc   ;==>SlotAttack
+
+; samm0d
+;Func SlotAttack($PosX, $CheckSlot12, $CheckSlotwHero, $SRIGHT, $Troop)
+;
+;    Local $aTempSlot[2] = [0, 0]
+;    Local $iStartOffset = 0
+;    Local $iStartOffsetHero = 0
+;
+;    Select
+;        Case $Troop = $eKing Or $Troop = $eQueen Or $Troop = $eWarden
+;            $iStartOffsetHero = 8
+;        Case $Troop >= $eLSpell And $Troop <= $eSkSpell
+;            If $CheckSlotwHero Then $iStartOffsetHero = 16
+;    EndSelect
+;
+;    If $SRIGHT Then                                    ; if swipe right side
+;        $iStartOffset = 60                            ;
+;        If $CheckSlotwHero Then $iStartOffset = 43    ; if got hero
+;    ElseIf $CheckSlot12 Then                        ; if swipe left and got 12 slots
+;        $iStartOffset = 15                            ; got or not hero also same 15
+;    Else
+;        $iStartOffset = 37
+;        If $CheckSlotwHero Then $iStartOffset = 29
+;    EndIf
+;
+;    For $i = 0 To 12
+;        If $PosX >= $iStartOffset + ($i * 73) And $PosX < (($iStartOffset + 73 + $iStartOffsetHero) + ($i * 73)) Then
+;
+;            $aTempSlot[0] = $iStartOffset + ($i * 73) + 10 + $iStartOffsetHero
+;            $aTempSlot[1] = $i
+;
+;            If $g_iSamM0dDebug = 1 Then Setlog("$Troop: " & $Troop)
+;            If $g_iSamM0dDebug = 1 Then Setlog("$CheckSlot12: " & $CheckSlot12)
+;            If $g_iSamM0dDebug = 1 Then Setlog("$CheckSlotwHero: " & $CheckSlotwHero)
+;            If $g_iSamM0dDebug = 1 Then Setlog("$iStartOffset: " & $iStartOffset)
+;            If $g_iSamM0dDebug = 1 Then Setlog("$iStartOffsetHero: " & $iStartOffsetHero)
+;            If $g_iSamM0dDebug = 1 Then Setlog("Slot: " & $i & " | $x > " & $iStartOffset + ($i * 73) & " and $x < " & ($iStartOffset + 73 + $iStartOffsetHero) + ($i * 73))
+;            If $g_iSamM0dDebug = 1 Then Setlog("Slot: " & $i & " | $PosX: " & $PosX & " |  OCR x position: " & $aTempSlot[0] & " | OCR Slot: " & $aTempSlot[1])
+;            Return $aTempSlot
+;        EndIf
+;        If $g_bRunState = False Then Return
+;	Next
+;
+;	Return $aTempSlot
+;
+;EndFunc   ;==>SlotAttack
 
 Func SearchNearest($aArray, $iNumber)
 	Local $iVal, $iValOld = _ArrayMax($aArray), $iReturn

@@ -91,6 +91,15 @@ Func NameOfTroop($iKind, $iPlural = 0)
 			$sTroopname = "Haste Spell"
 		Case $eSkSpell
 			$sTroopname = "Skeleton Spell"
+        ; samm0d
+        Case 51
+            $sTroopname = "Event Troop 1"
+        Case 52
+            $sTroopname = "Event Troop 2"
+        Case 61
+            $sTroopname = "Event Spell 1"
+        Case 62
+            $sTroopname = "Event Spell 2"
 		Case $eBtSpell
 			$sTroopname = "Bat Spell"	
 		Case $eWallW

@@ -31,7 +31,26 @@ Func LoadProfile($bSaveCurrentProfile = True)
 		readConfig()
 		applyConfig()
 		saveConfig()
-		SetLog("Profile " & $g_sProfileCurrentName & " loaded from " & $g_sProfileConfigPath, $COLOR_SUCCESS)
+
+        ; samm0d
+        ;======================================================================================================
+        BuildProfileForSwitch()
+        ;DoCheckSwitchEnable()
+        If FileExists(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\") Then
+            If Not FileExists(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images\") Then
+                DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images")
+            EndIf
+        Else
+            DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug")
+            DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images")
+        EndIf
+
+        SetLog("Profile " & $g_sProfileCurrentName & " loaded from " & $g_sProfileConfigPath, $COLOR_SUCCESS)
+        If $g_iMyTroopsSize = 0 Then
+            SetLog($CustomTrain_MSG_15, $COLOR_ERROR)
+        EndIf
+        ;======================================================================================================
+
 		Return True
 	EndIf
 	Return False
@@ -151,8 +170,17 @@ Func btnRenameConfirm()
 				Return
 			EndIf
 
-			$g_sProfileCurrentName = $newProfileName
-			; Rename the profile.
+            ; samm0d - my switch
+            For $i = 0 To 7
+                If $icmbWithProfile[$i] = $g_sProfileCurrentName Then
+                    $icmbWithProfile[$i] = $newProfileName
+                    IniWrite(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "WithProfile" & $i + 1, $icmbWithProfile[$i])
+                    ExitLoop
+                EndIf
+            Next
+
+            $g_sProfileCurrentName = $newProfileName
+            ; Rename the profile.
 			renameProfile()
 			setupProfileComboBox()
 			selectProfile()
