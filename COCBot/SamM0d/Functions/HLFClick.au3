@@ -21,78 +21,78 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Global $aButtonClose1[9] 	                = [817, 114, 836, 134, 824, 121, 0xFFFFFF, 10, "=-= Close Train [X]"] ; Train window, Close Button
-Global $aButtonClose2[9]                  = [755, 106, 775, 126, 764, 114, 0xFFFFFF, 10, "=-= Close Setting [X] | Def / Atk Log [X]"] ; Def / Atk log window / setting window, Close Button
-Global $aButtonClose3[9]                  = [815,  65, 836,  90, 826,  73, 0xFFFFFF, 10, "=-= Close Profile/League/Clan Games [X]"] ; Profile / League page/ Clan Games, Close Button
-Global $aButtonClose4[9]                  = [620, 180, 642, 200, 632, 188, 0xFFFFFF, 10, "=-= Close Shield Info [X]"] ; PB Info page, Close Button
-Global $aButtonClose5[9] 	                = [806,  27, 828,  52, 817,  37, 0xFFFFFF, 10, "=-= Close Shop [X]"] ; Shop, Close Button  / Same area with map editor close button
-Global $aButtonClose6[9]                  = [790,  25, 818,  48, 804,  33, 0xFFFFFF, 10, "=-= Close Launch Attack [X]"] ; Launch Attack Page, Close Button
-Global $aButtonClose7[9]                  = [720, 134, 738, 155, 717, 152, 0xE91313, 10, "=-= Close Laboratory [X]"] ; Laboratory Page, Close Button
-Global $aButtonClose8[9]                  = [696, 180, 719, 207, 692, 201, 0xE91219, 10, "=-= Close Daily Discounts [X]"] ; Laboratory Page, Close Button
-Global $aButtonCloseAway[9]               = [150,   4, 175,  14,   0,   0, 0x0     ,  0, "=-= Random Away Coordinate"]
+Global Const $aButtonClose1[9] 	                = [817, 114, 836, 134, 824, 121, 0xFFFFFF, 10, "=-= Close Train [X]"] ; Train window, Close Button
+Global Const $aButtonClose2[9]                  = [755, 106, 775, 126, 764, 114, 0xFFFFFF, 10, "=-= Close Setting [X] | Def / Atk Log [X]"] ; Def / Atk log window / setting window, Close Button
+Global Const $aButtonClose3[9]                  = [815,  65, 836,  90, 826,  73, 0xFFFFFF, 10, "=-= Close Profile/League/Clan Games [X]"] ; Profile / League page/ Clan Games, Close Button
+Global Const $aButtonClose4[9]                  = [620, 180, 642, 200, 632, 188, 0xFFFFFF, 10, "=-= Close Shield Info [X]"] ; PB Info page, Close Button
+Global Const $aButtonClose5[9] 	                = [806,  27, 828,  52, 817,  37, 0xFFFFFF, 10, "=-= Close Shop [X]"] ; Shop, Close Button  / Same area with map editor close button
+Global Const $aButtonClose6[9]                  = [790,  25, 818,  48, 804,  33, 0xFFFFFF, 10, "=-= Close Launch Attack [X]"] ; Launch Attack Page, Close Button
+Global Const $aButtonClose7[9]                  = [720, 134, 738, 155, 717, 152, 0xE91313, 10, "=-= Close Laboratory [X]"] ; Laboratory Page, Close Button
+Global Const $aButtonClose8[9]                  = [696, 180, 719, 207, 692, 201, 0xE91219, 10, "=-= Close Daily Discounts [X]"] ; Laboratory Page, Close Button
+Global Const $aButtonCloseAway[9]               = [150,   4, 175,  14,   0,   0, 0x0     ,  0, "=-= Random Away Coordinate"]
 
 ;~ ; ScreenCoordinates - first 4 values store the region [x1,y1,x2,y2] that can click; values 5,6,7,8 is the color check pixel x,y,color,tolerance level for confirm the button exist if needed.
-Global $aButtonArmyTab[9]                 = [ 30, 115, 150, 140,  40, 111, 0xF9F9F7, 20, "=-= Army Tab"]
-Global $aButtonTrainTroopsTab[9]          = [190, 115, 300, 140, 200, 111, 0xF9F9F7, 20, "=-= Train Troops Tab"]
-Global $aButtonBrewSpellsTab[9]           = [350, 115, 460, 140, 360, 111, 0xF9F9F7, 20, "=-= Brew Spells Tab"]
-       
-Global $aButtonSeigeMachineTab[9]         = [500, 115, 620, 140, 625, 111, 0xFAFAF7, 20, "=-= Seige Machine Tab"]
-       
-Global $aButtonQuickTrainTab1[9]          = [500, 115, 620, 140, 510, 111, 0xFAFAF7, 20, "=-= Quick Train Tab Without Seige Machine Tab Exist"]
-Global $aButtonQuickTrainTab2[9]          = [665, 115, 770, 140, 660, 111, 0xFAFAF7, 20, "=-= Quick Train Tab With Seige Machine Tab Exist"]
-       
-Global $aButtonOpenTrainArmy[9]  	  	    = [ 25, 570,  50, 600,  50, 567, 0xEEAF45, 20, "=-= Open Train Army Page"] ; Main Screen, Army Train Button
-Global $aButtonOpenProfile[9]    	  	    = [ 28,  23,  46,  46,  38,  18, 0x10D0F0, 20, "=-= Open Profile Page"] ; Main page, Open Profile Button
-       
-Global $aButtonOpenShieldInfo[9] 	  	    = [430,   7, 442,  20, 436,  14, 0xF5F5ED,  6, "=-= Open Shield Info Page"] ; main page, open shield info page
-Global $aButtonOpenLaunchAttack[9] 		= [ 30, 640,  90, 700,  22, 674, 0x9A4916, 30, "=-= Open Launce Attack Page"] ; Main Page, Attack! Button
-       
-Global $aButtonClanWindowOpen[9]   	    = [  8, 355,  28, 410,  16, 400, 0xC55115, 20, "=-= Open Chat Window"] ; main page, clan chat Button
-Global $aButtonClanWindowClose[9]  	    = [321, 355, 342, 410, 330, 400, 0xC55115, 20, "=-= Close Chat Window"] ; main page, clan chat Button
-Global $aButtonClanChatTab[9]    	  	    = [175,  14, 275,  30, 280,  30, 0x706C50, 20, "=-= Switch to Clan Channel"] ; Chat page, ClanChat Tab
-Global $aButtonClanDonateScrollUp[9] 	    = [290, 100, 300, 112, 295, 100, 0xFFFFFF, 10, "=-= Donate Scroll Up"] ; Donate / Chat Page, Scroll up Button
-Global $aButtonClanDonateScrollDown[9] 	= [290, 650, 300, 662, 295, 655, 0xFFFFFF, 10, "=-= Donate Scroll Down"] ; Donate / Chat Page, Scroll Down Button
-       
-Global $aButtonAttackReturnHome[9]     	= [385, 558, 480, 598, 440, 588, 0x60B010, 20, "=-= Return Home"] ; IsReturnHomeBattlePage, ReturnHome Button
-Global $aButtonAttackSurrender[9]      	= [ 25, 585, 110, 609,  66, 606, 0xC00000, 20, "=-= Surrender Battle"] ; Attack Page, Surrender Button
-Global $aButtonAttackEndBattle[9]      	= [ 25, 585, 110, 609,  66, 606, 0xC00000, 20, "=-= End Battle"] ; Attack Page, EndBattle Button
-Global $aButtonAttackNext[9] 	            = [710, 560, 830, 600, 780, 576, 0xD34300, 20, "=-= Next"] ; Village Search Next Button
-Global $aButtonAttackFindMatch[9] 		= [200, 535, 300, 600, 148, 529, 0xF8E0A2, 30, "=-= Find A Match"] ; Attack Page Find A Match Button
-Global $aButtonAttackFindMatchWShield[9]  = [200, 490, 300, 530, 148, 484, 0xF8E0A4, 30, "=-= Find A Match (With Shield)"] ; Attack Page Find A Match Button With Shield
-       
-Global $aButtonRequestCC[9] 			    = [680, 550, 765, 580, 758, 572, 0x76C01E, 20, "=-= Request CC"] ; Train, RequestCC Button
-Global $aButtonRequestCCText[9] 		    = [370, 130, 510, 170, 430, 170, 0xFFFFFF, 10, "=-= Select Text"] ; RequestCC, TXT Button
-Global $aButtonRequestCCSend[9] 		    = [470, 215, 570, 255, 520, 254, 0x60AC10, 20, "=-= Send Request"] ; RequestCC, Send Button
-       
-Global $aButtonSMSetting[9]				= [810, 575, 830, 595, 814, 569, 0xFFFFFF, 10, "=-= Setting"]
-Global $aButtonSettingTabSetting[9]		= [388, 110, 484, 130, 434, 110, 0xF0F4F0, 10, "=-= Tab Settings"]
-Global $aButtonGoogleConnectRed[9]		= [410, 410, 460, 430, 431, 431, 0xD00408, 20, "=-= Connect Red"]
-Global $aButtonGoogleConnectGreen[9]	  	= [410, 410, 460, 430, 431, 408, 0xD0E878, 20, "=-= Connect Green"]
-       
-Global $aButtonSMVillageLoad[9] 		    = [480, 415, 550, 445, 455, 437, 0x72C11D, 20, "=-= Village Load"]
-Global $aButtonVillageCancel[9] 		    = [310, 415, 380, 445, 288, 433, 0xED7531, 20, "=-= Village Cancel"]
-       
-Global $aButtonVillageConfirmClose[9]     = [575,  20, 595,  40, 562,  37, 0x605450, 20, "=-= Village Confirm Close"]
-Global $aButtonVillageConfirmText[9]      = [320, 190, 375, 200, 350, 195, 0xFFFFFF,  5, "=-= Village Confirm Text"]
-Global $aButtonVillageConfirmOK[9]        = [500, 185, 555, 205, 480, 198, 0x76C01E, 20, "=-= Village Confirm Okay"]
-Global $aButtonVillageWasAttackOK[9]	    = [380, 505, 470, 540, 405, 537, 0x5EAC10, 20, "=-= Village Was Attacked Confirm Okay"]
-       
-Global $aButtonEditArmy[9]                = [750, 540, 755, 545, 752, 543, 0XDAF582, 30, "=-= Edit Army"]
-Global $aButtonEditCancel[9]              = [725, 490, 825, 522, 809, 500, 0XFF797E, 30, "=-= Edit Army Cancel"]
-Global $aButtonEditOkay[9]                = [729, 559, 823, 587, 778, 563, 0XDAF582, 30, "=-= Edit Army Okay"]
-       
-Global $aButtonFriendlyChallenge[9]       = [160, 700, 220, 714, 200, 693, 0XDDF685, 20, "=-= Friendly Challenge"]
-Global $aButtonFCChangeLayout[9]          = [200, 290, 280, 305, 240, 285, 0XDDF685, 20, "=-= Change Layout"]
-Global $aButtonFCStart[9]                 = [500, 290, 550, 305, 530, 284, 0XDBF685, 20, "=-= Start Share Challenge"]
-Global $aButtonFCBack[9]                  = [160, 106, 195, 120, 180, 116, 0XF5FDFF, 10, "=-= Back To Challenge"]
-Global $aButtonFCClose[9]                 = [690, 103, 710, 125, 700, 111, 0xFFFFFF, 10, "=-= Close Challenge"]
-       
-Global $aButtonGuardRemove[9]             = [500, 260, 560, 275, 530, 275, 0XE51115, 15,"=-= Guard Remove"]
-Global $aButtonGuardConfirmRemove[9]      = [485, 417, 543, 444, 510, 445, 0X6AB91D, 15,"=-= Confirm Guard Remove"]
-       
-Global $aButtonTrainArmy1[9]              = [750, 350, 800, 365, 735, 350, 0XCDF175, 20, "=-= Quick Train Army 1"]
-Global $aButtonTrainArmy2[9]              = [750, 467, 800, 482, 735, 467, 0XD5F17D, 20, "=-= Quick Train Army 2"]
-Global $aButtonTrainArmy3[9]              = [750, 583, 800, 602, 735, 586, 0XCDED75, 20, "=-= Quick Train Army 3"]
+Global Const $aButtonArmyTab[9]                 = [ 30, 115, 150, 140,  40, 111, 0xF9F9F7, 20, "=-= Army Tab"]
+Global Const $aButtonTrainTroopsTab[9]          = [190, 115, 300, 140, 200, 111, 0xF9F9F7, 20, "=-= Train Troops Tab"]
+Global Const $aButtonBrewSpellsTab[9]           = [350, 115, 460, 140, 360, 111, 0xF9F9F7, 20, "=-= Brew Spells Tab"]
+
+Global Const $aButtonSeigeMachineTab[9]         = [500, 115, 620, 140, 625, 111, 0xFAFAF7, 20, "=-= Seige Machine Tab"]
+
+Global Const $aButtonQuickTrainTab1[9]          = [500, 115, 620, 140, 510, 111, 0xFAFAF7, 20, "=-= Quick Train Tab Without Seige Machine Tab Exist"]
+Global Const $aButtonQuickTrainTab2[9]          = [665, 115, 770, 140, 660, 111, 0xFAFAF7, 20, "=-= Quick Train Tab With Seige Machine Tab Exist"]
+
+Global Const $aButtonOpenTrainArmy[9]  	  	    = [ 25, 570,  50, 600,  50, 567, 0xEEAF45, 20, "=-= Open Train Army Page"] ; Main Screen, Army Train Button
+Global Const $aButtonOpenProfile[9]    	  	    = [ 28,  23,  46,  46,  38,  18, 0x10D0F0, 20, "=-= Open Profile Page"] ; Main page, Open Profile Button
+
+Global Const $aButtonOpenShieldInfo[9] 	  	    = [430,   7, 442,  20, 436,  14, 0xF5F5ED,  6, "=-= Open Shield Info Page"] ; main page, open shield info page
+Global Const $aButtonOpenLaunchAttack[9] 		= [ 30, 640,  90, 700,  22, 674, 0x9A4916, 30, "=-= Open Launce Attack Page"] ; Main Page, Attack! Button
+
+Global Const $aButtonClanWindowOpen[9]   	    = [  8, 355,  28, 410,  16, 400, 0xC55115, 20, "=-= Open Chat Window"] ; main page, clan chat Button
+Global Const $aButtonClanWindowClose[9]  	    = [321, 355, 342, 410, 330, 400, 0xC55115, 20, "=-= Close Chat Window"] ; main page, clan chat Button
+Global Const $aButtonClanChatTab[9]    	  	    = [175,  14, 275,  30, 280,  30, 0x706C50, 20, "=-= Switch to Clan Channel"] ; Chat page, ClanChat Tab
+Global Const $aButtonClanDonateScrollUp[9] 	    = [290, 100, 300, 112, 295, 100, 0xFFFFFF, 10, "=-= Donate Scroll Up"] ; Donate / Chat Page, Scroll up Button
+Global Const $aButtonClanDonateScrollDown[9] 	= [290, 650, 300, 662, 295, 655, 0xFFFFFF, 10, "=-= Donate Scroll Down"] ; Donate / Chat Page, Scroll Down Button
+
+Global Const $aButtonAttackReturnHome[9]     	= [385, 558, 480, 598, 440, 588, 0x60B010, 20, "=-= Return Home"] ; IsReturnHomeBattlePage, ReturnHome Button
+Global Const $aButtonAttackSurrender[9]      	= [ 25, 585, 110, 609,  66, 606, 0xC00000, 20, "=-= Surrender Battle"] ; Attack Page, Surrender Button
+Global Const $aButtonAttackEndBattle[9]      	= [ 25, 585, 110, 609,  66, 606, 0xC00000, 20, "=-= End Battle"] ; Attack Page, EndBattle Button
+Global Const $aButtonAttackNext[9] 	            = [710, 560, 830, 600, 780, 576, 0xD34300, 20, "=-= Next"] ; Village Search Next Button
+Global Const $aButtonAttackFindMatch[9] 		= [200, 535, 300, 600, 148, 529, 0xF8E0A2, 30, "=-= Find A Match"] ; Attack Page Find A Match Button
+Global Const $aButtonAttackFindMatchWShield[9]  = [200, 490, 300, 530, 148, 484, 0xF8E0A4, 30, "=-= Find A Match (With Shield)"] ; Attack Page Find A Match Button With Shield
+
+Global Const $aButtonRequestCC[9] 			    = [680, 550, 765, 580, 758, 572, 0x76C01E, 20, "=-= Request CC"] ; Train, RequestCC Button
+Global Const $aButtonRequestCCText[9] 		    = [370, 130, 510, 170, 430, 170, 0xFFFFFF, 10, "=-= Select Text"] ; RequestCC, TXT Button
+Global Const $aButtonRequestCCSend[9] 		    = [470, 215, 570, 255, 520, 254, 0x60AC10, 20, "=-= Send Request"] ; RequestCC, Send Button
+
+Global Const $aButtonSMSetting[9]				= [810, 575, 830, 595, 814, 569, 0xFFFFFF, 10, "=-= Setting"]
+Global Const $aButtonSettingTabSetting[9]		= [388, 110, 484, 130, 434, 110, 0xF0F4F0, 10, "=-= Tab Settings"]
+Global Const $aButtonGoogleConnectRed[9]		= [410, 410, 460, 430, 431, 431, 0xD00408, 20, "=-= Connect Red"]
+Global Const $aButtonGoogleConnectGreen[9]	  	= [410, 410, 460, 430, 431, 408, 0xD0E878, 20, "=-= Connect Green"]
+
+Global Const $aButtonSMVillageLoad[9] 		    = [480, 415, 550, 445, 455, 437, 0x72C11D, 20, "=-= Village Load"]
+Global Const $aButtonVillageCancel[9] 		    = [310, 415, 380, 445, 288, 433, 0xED7531, 20, "=-= Village Cancel"]
+
+Global Const $aButtonVillageConfirmClose[9]     = [575,  20, 595,  40, 562,  37, 0x605450, 20, "=-= Village Confirm Close"]
+Global Const $aButtonVillageConfirmText[9]      = [320, 190, 375, 200, 350, 195, 0xFFFFFF,  5, "=-= Village Confirm Text"]
+Global Const $aButtonVillageConfirmOK[9]        = [500, 185, 555, 205, 480, 198, 0x76C01E, 20, "=-= Village Confirm Okay"]
+Global Const $aButtonVillageWasAttackOK[9]	    = [380, 505, 470, 540, 405, 537, 0x5EAC10, 20, "=-= Village Was Attacked Confirm Okay"]
+
+Global $aButtonEditArmy[9]                = [740, 510, 800, 536, 800, 520, 0XC0E968, 20, "=-= Edit Army"]
+Global $aButtonEditCancel[9]              = [740, 500, 800, 520, 800, 515, 0XE91217, 20, "=-= Edit Army Cancel"]
+Global $aButtonEditOkay[9]                = [740, 562, 800, 582, 800, 560, 0XDDF685, 20, "=-= Edit Army Okay"]
+
+Global Const $aButtonFriendlyChallenge[9]       = [160, 700, 220, 714, 200, 693, 0XDDF685, 20, "=-= Friendly Challenge"]
+Global Const $aButtonFCChangeLayout[9]          = [200, 290, 280, 305, 240, 285, 0XDDF685, 20, "=-= Change Layout"]
+Global Const $aButtonFCStart[9]                 = [500, 290, 550, 305, 530, 284, 0XDBF685, 20, "=-= Start Share Challenge"]
+Global Const $aButtonFCBack[9]                  = [160, 106, 195, 120, 180, 116, 0XF5FDFF, 10, "=-= Back To Challenge"]
+Global Const $aButtonFCClose[9]                 = [690, 103, 710, 125, 700, 111, 0xFFFFFF, 10, "=-= Close Challenge"]
+
+Global Const $aButtonGuardRemove[9]             = [500, 260, 560, 275, 530, 275, 0XE51115, 15,"=-= Guard Remove"]
+Global Const $aButtonGuardConfirmRemove[9]      = [485, 417, 543, 444, 510, 445, 0X6AB91D, 15,"=-= Confirm Guard Remove"]
+
+Global Const $aButtonTrainArmy1[9]              = [750, 350, 800, 365, 735, 350, 0XCDF175, 20, "=-= Quick Train Army 1"]
+Global Const $aButtonTrainArmy2[9]              = [750, 467, 800, 482, 735, 467, 0XD5F17D, 20, "=-= Quick Train Army 2"]
+Global Const $aButtonTrainArmy3[9]              = [750, 583, 800, 602, 735, 586, 0XCDED75, 20, "=-= Quick Train Army 3"]
 
 Func CheckClickMsg(ByRef $x, ByRef $y, ByRef $times, ByRef $speed, ByRef $MsgCode)
 	; return 0, do nothing

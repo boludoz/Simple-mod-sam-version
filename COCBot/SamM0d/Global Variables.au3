@@ -264,7 +264,7 @@ Global $g_ahLblStatsSwitchTotal[4]
 Global $g_ahLblStatsSwitchGPH[4]
 Global $grpMySwitch, $chkEnableMySwitch, $chkProfileImage, $g_hLblProfileName, $arrowleft2, $arrowright2, $btnMakeSwitchADBFolder, $cmbSwitchMethod, $btnPushshared_prefs
 ;Global $chkUseADBLoadVillage
-Global $chkEnableAcc[8], $cmbWithProfile[8], $cmbAtkDon[8], $StayTime[8], $chkPriority[8]
+Global $chkEnableAcc[8], $cmbWithProfile[8], $cmbAtkDon[8], $cmbStayTime[8], $chkPriority[8]
 
 ;Global $ichkUseADBLoadVillage = 0
 Global $icmbSwitchMethod = 0
@@ -280,7 +280,7 @@ Global $ichkProfileImage = 0
 Global $ichkEnableAcc[8] = [0,0,0,0,0,0,0,0]
 Global $icmbWithProfile[8] = [0,0,0,0,0,0,0,0]
 Global $icmbAtkDon[8] = [0,0,0,0,0,0,0,0]
-Global $iStayTime[8] = [0,0,0,0,0,0,0,0]
+Global $icmbStayTime[8] = [0,0,0,0,0,0,0,0]
 Global $ichkPriority[8] = [0,0,0,0,0,0,0,0]
 
 Global $ichkEnableMySwitch = 0

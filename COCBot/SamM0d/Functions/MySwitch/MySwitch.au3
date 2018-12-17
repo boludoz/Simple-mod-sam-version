@@ -217,7 +217,7 @@ Func buildSwitchList()
 			$aSwitchList[$iCount][3] = $icmbWithProfile[$i] ; profile name
 			$aSwitchList[$iCount][4] = $i ; account slot
 			$aSwitchList[$iCount][5] = 0
-			$aSwitchList[$iCount][6] = $iStayTime[$i] ; stay time (minutes)
+			$aSwitchList[$iCount][6] = $icmbStayTime[$i] ; stay time (minutes)
 			$aSwitchList[$iCount][7] = $ichkPriority[$i] ;
 			If $icmbAtkDon[$i] = 1 Then
 				$iTotalDonateType += 1
