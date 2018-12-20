@@ -77,9 +77,9 @@ Global Const $aButtonVillageConfirmText[9]      = [320, 190, 375, 200, 350, 195,
 Global Const $aButtonVillageConfirmOK[9]        = [500, 185, 555, 205, 480, 198, 0x76C01E, 20, "=-= Village Confirm Okay"]
 Global Const $aButtonVillageWasAttackOK[9]	    = [380, 505, 470, 540, 405, 537, 0x5EAC10, 20, "=-= Village Was Attacked Confirm Okay"]
 
-Global $aButtonEditArmy[9]                = [740, 510, 800, 536, 800, 520, 0XC0E968, 20, "=-= Edit Army"]
-Global $aButtonEditCancel[9]              = [740, 500, 800, 520, 800, 515, 0XE91217, 20, "=-= Edit Army Cancel"]
-Global $aButtonEditOkay[9]                = [740, 562, 800, 582, 800, 560, 0XDDF685, 20, "=-= Edit Army Okay"]
+Global Const $aButtonEditArmy2[9]               = [721, 538, 835, 546, 756, 541, 0xDDF685, 30, "=-= Edit Army"]
+Global Const $aButtonEditCancel[9]              = [740, 500, 800, 520, 800, 515, 0XE91217, 20, "=-= Edit Army Cancel"]
+Global Const $aButtonEditOkay[9]                = [740, 562, 800, 582, 800, 560, 0XDDF685, 20, "=-= Edit Army Okay"]
 
 Global Const $aButtonFriendlyChallenge[9]       = [160, 700, 220, 714, 200, 693, 0XDDF685, 20, "=-= Friendly Challenge"]
 Global Const $aButtonFCChangeLayout[9]          = [200, 290, 280, 305, 240, 285, 0XDDF685, 20, "=-= Change Layout"]
@@ -151,8 +151,8 @@ Func CheckClickMsg(ByRef $x, ByRef $y, ByRef $times, ByRef $speed, ByRef $MsgCod
 			$MsgCode = $aButtonOpenTrainArmy[8]
 			Return HMLClickPR($aButtonOpenTrainArmy,$x,$y)
 		Case "#EditArmy"
-			$MsgCode = $aButtonEditArmy[8]
-			Return HMLClickPR($aButtonEditArmy,$x,$y)
+			$MsgCode = $aButtonEditArmy2[8]
+			Return HMLClickPR($aButtonEditArmy2,$x,$y)
 		Case "#EditArmyOkay"
 			$MsgCode = $aButtonEditOkay[8]
 			Return HMLClickPR($aButtonEditOkay,$x,$y)

@@ -180,8 +180,8 @@ Func CheckAvailableCCSpellUnit()
 		If $bDeletedExcess Then
 			$bDeletedExcess = False
 			SetLog(" >>> remove excess cc spells.", $COLOR_RED)
-			If WaitforPixel($aButtonEditArmy[4],$aButtonEditArmy[5],$aButtonEditArmy[4]+1,$aButtonEditArmy[5]+1,Hex($aButtonEditArmy[6], 6), $aButtonEditArmy[7],20) Then
-				Click($aButtonEditArmy[0],$aButtonEditArmy[1],1,0,"#EditArmy")
+			If WaitforPixel($aButtonEditArmy2[4],$aButtonEditArmy2[5],$aButtonEditArmy2[4]+1,$aButtonEditArmy2[5]+1,Hex($aButtonEditArmy2[6], 6), $aButtonEditArmy2[7],20) Then
+				Click($aButtonEditArmy2[0],$aButtonEditArmy2[1],1,0,"#EditArmy")
 			Else
 				ExitLoop
 			EndIf
@@ -215,7 +215,7 @@ Func CheckAvailableCCSpellUnit()
 			EndIf
 
 			ClickOkay()
-			If WaitforPixel($aButtonEditArmy[4],$aButtonEditArmy[5],$aButtonEditArmy[4]+1,$aButtonEditArmy[5]+1,Hex($aButtonEditArmy[6], 6), $aButtonEditArmy[7],20) Then
+			If WaitforPixel($aButtonEditArmy2[4],$aButtonEditArmy2[5],$aButtonEditArmy2[4]+1,$aButtonEditArmy2[5]+1,Hex($aButtonEditArmy2[6], 6), $aButtonEditArmy2[7],20) Then
 				ContinueLoop
 			Else
 				If _Sleep(1000) Then ExitLoop

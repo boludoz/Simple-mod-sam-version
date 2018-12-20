@@ -175,19 +175,7 @@ Func setupProfile($sProfile = Default)
 
 	; Create the profile if needed, this also sets the variables if the profile exists.
 	createProfile()
-    ; samm0d
-    BuildProfileForSwitch()
-    ; samm0d
-    If FileExists(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\") Then
-        If Not FileExists(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images\") Then
-            DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images")
-        EndIf
-    Else
-        DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug")
-        DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images")
-    EndIf
-
-    ; Set the profile name on the village info group.
+	; Set the profile name on the village info group.
 	GUICtrlSetData($g_hGrpVillage, GetTranslatedFileIni("MBR Main GUI", "Tab_02", "Village") & ": " & $g_sProfileCurrentName)
 	GUICtrlSetData($g_hTxtNotifyOrigin, $g_sProfileCurrentName)
 
@@ -225,6 +213,18 @@ Func selectProfile($sProfile = Default)
 		applyConfig()
 
 		_GUICtrlComboBox_SetCurSel($g_hCmbProfile, 0)
+	EndIf
+
+	; samm0d
+	BuildProfileForSwitch()
+	; samm0d
+	If FileExists(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\") Then
+		If Not FileExists(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images\") Then
+			DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images")
+		EndIf
+	Else
+		DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug")
+		DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images")
 	EndIf
 
 	; Set the profile name on the village info group.

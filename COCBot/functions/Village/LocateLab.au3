@@ -16,7 +16,14 @@ Func LocateLab()
 	Local $stext, $MsgBox, $iStupid = 0, $iSilly = 0, $sErrorText = ""
 
 	SetLog("Locating Laboratory...", $COLOR_INFO)
-
+	
+	If $g_bSkipLocateExc Then
+		$g_aiLaboratoryPos[0] = -1
+		$g_aiLaboratoryPos[1] = -1
+		SetLog("Quick Laboratory...", $COLOR_INFO)
+	Return False
+	EndIf
+	
 	If _GetPixelColor($aTopLeftClient[0], $aTopLeftClient[1], True) <> Hex($aTopLeftClient[2], 6) Or _GetPixelColor($aTopRightClient[0], $aTopRightClient[1], True) <> Hex($aTopRightClient[2], 6) Then
 		Zoomout()
 		Collect()
