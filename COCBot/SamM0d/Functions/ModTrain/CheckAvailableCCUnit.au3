@@ -114,7 +114,7 @@ Func CheckAvailableCCUnit()
 		For $i = 0 To UBound($MyTroops) - 1
 			Local $itempTotal = Eval("curCC" & $MyTroops[$i][0])
 			If $itempTotal > 0 Then
-				SetLog(" - No. of Available CC Troops - " & MyNameOfTroop(Eval("e" & $MyTroops[$i][0]),  Eval("curCC" & $MyTroops[$i][0])) & ": " &  Eval("curCC" & $MyTroops[$i][0]), (Eval("enum" & $MyTroops[$i][0]) > 5 ? $COLOR_DARKELIXIR : $COLOR_ELIXIR))
+				SetLog(" - No. of Available CC Troops - " & MyNameOfTroop(Eval("e" & $MyTroops[$i][0]),  Eval("curCC" & $MyTroops[$i][0])) & ": " &  Eval("curCC" & $MyTroops[$i][0]), (Eval("enum" & $MyTroops[$i][0]) > $iDarkFixSpell ? $COLOR_DARKELIXIR : $COLOR_ELIXIR))
 				Local $bIsTroopInKeepList = False
 				If $iCCTroopSlot1 Or $iCCTroopSlot2 Or $iCCTroopSlot3 Then
 					For $j = 1 To 3

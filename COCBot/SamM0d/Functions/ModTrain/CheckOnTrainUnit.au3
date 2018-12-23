@@ -185,7 +185,7 @@ Func CheckOnTrainUnit($hHBitmap)
 	For $i = 0 To UBound($MyTroops) - 1
 		Local $itempTotal = Eval("cur" & $MyTroops[$i][0]) + Eval("OnT" & $MyTroops[$i][0])
 		If Eval("OnT" & $MyTroops[$i][0]) > 0 Then
-			SetLog(" - No. of On Train " & MyNameOfTroop(Eval("e" & $MyTroops[$i][0]),  Eval("OnT" & $MyTroops[$i][0])) & ": " &  Eval("OnT" & $MyTroops[$i][0]), (Eval("e" & $MyTroops[$i][0]) > 11 ? $COLOR_DARKELIXIR : $COLOR_ELIXIR))
+			SetLog(" - No. of On Train " & MyNameOfTroop(Eval("e" & $MyTroops[$i][0]),  Eval("OnT" & $MyTroops[$i][0])) & ": " &  Eval("OnT" & $MyTroops[$i][0]), (Eval("e" & $MyTroops[$i][0]) > $iDarkFixTroop ? $COLOR_DARKELIXIR : $COLOR_ELIXIR))
 			$bGotOnTrainFlag = True
 		EndIf
 		If $MyTroops[$i][3] < $itempTotal Then
@@ -238,7 +238,7 @@ Func CheckOnTrainUnit($hHBitmap)
 		For $i = 0 To UBound($MyTroops) - 1
 			Local $itempTotal = Eval("OnQ" & $MyTroops[$i][0])
 			If $itempTotal > 0 Then
-				SetLog(" - No. of On Queue " & MyNameOfTroop(Eval("e" & $MyTroops[$i][0]),  Eval("OnQ" & $MyTroops[$i][0])) & ": " &  Eval("OnQ" & $MyTroops[$i][0]), (Eval("e" & $MyTroops[$i][0]) > 11 ? $COLOR_DARKELIXIR : $COLOR_ELIXIR))
+				SetLog(" - No. of On Queue " & MyNameOfTroop(Eval("e" & $MyTroops[$i][0]),  Eval("OnQ" & $MyTroops[$i][0])) & ": " &  Eval("OnQ" & $MyTroops[$i][0]), (Eval("e" & $MyTroops[$i][0]) > $iDarkFixTroop ? $COLOR_DARKELIXIR : $COLOR_ELIXIR))
 				$bGotOnQueueFlag = True
 				If $MyTroops[$i][3] < $itempTotal Then
 					If $ichkEnableDeleteExcessTroops = 1 Then

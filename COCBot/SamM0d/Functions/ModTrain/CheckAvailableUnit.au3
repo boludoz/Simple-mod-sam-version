@@ -107,7 +107,7 @@ Func CheckAvailableUnit($hHBitmap)
 				$iTroopIndex = TroopIndexLookup($aiTroopsInfo[$i][0])
 				$sTroopName = MyNameOfTroop($iTroopIndex, $aiTroopsInfo[$i][1])
 
-				SetLog(" - No. of Available " & $sTroopName & ": " & $aiTroopsInfo[$i][1], ($iTroopIndex > 11 ? $COLOR_DARKELIXIR : $COLOR_ELIXIR))
+				SetLog(" - No. of Available " & $sTroopName & ": " & $aiTroopsInfo[$i][1], ($iTroopIndex > $iDarkFixTroop ? $COLOR_DARKELIXIR : $COLOR_ELIXIR))
 				Assign("cur" & $aiTroopsInfo[$i][0], $aiTroopsInfo[$i][1])
 
 				; assign variable for drop trophy troops type

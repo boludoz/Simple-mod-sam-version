@@ -156,7 +156,7 @@ Func CheckAvailableCCSpellUnit()
 		For $i = 0 To UBound($MySpells) - 1
 			Local $itempTotal = Eval("curCCSpell" & $MySpells[$i][0])
 			If $itempTotal > 0 Then
-				SetLog(" - No. of Available CC Spells - " & MyNameOfTroop(Eval("enum" & $MySpells[$i][0]) + $eLSpell,  Eval("curCCSpell" & $MySpells[$i][0])) & ": " &  Eval("curCCSpell" & $MySpells[$i][0]), (Eval("enum" & $MySpells[$i][0]) > 5 ? $COLOR_DARKELIXIR : $COLOR_ELIXIR))
+				SetLog(" - No. of Available CC Spells - " & MyNameOfTroop(Eval("enum" & $MySpells[$i][0]) + $eLSpell,  Eval("curCCSpell" & $MySpells[$i][0])) & ": " &  Eval("curCCSpell" & $MySpells[$i][0]), (Eval("enum" & $MySpells[$i][0]) > $iDarkFixSpell ? $COLOR_DARKELIXIR : $COLOR_ELIXIR))
 				Local $bIsSpellInKeepList = False
 				If $iCCSpellSlot1 Or $iCCSpellSlot2 Then
 					For $j = 1 To 2

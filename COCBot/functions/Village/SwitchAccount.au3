@@ -87,6 +87,13 @@ EndFunc   ;==>InitiateSwitchAcc
 
 Func CheckSwitchAcc()
 
+	; Mod exclusivo
+	If $g_bDtropAttack = True Then
+		SetLog("DT Mode , Skip switch...",$COLOR_ACTION)
+		$g_bDtropAttack = False
+		Return
+	Endif
+
 	Local $abAccountNo = AccountNoActive()
 
 	Local $aActiveAccount = _ArrayFindAll($abAccountNo, True)

@@ -173,7 +173,7 @@ Func CheckOnBrewUnit($hHBitmap)
 	For $i = 0 To UBound($MySpells) - 1
 		Local $itempTotal = Eval("cur" & $MySpells[$i][0] & "Spell") + Eval("OnT" & $MySpells[$i][0] & "Spell")
 		If Eval("OnT" & $MySpells[$i][0] & "Spell") > 0 Then
-			SetLog(" - No. of On Brew " & MyNameOfTroop(Eval("enum" & $MySpells[$i][0]) + $eLSpell,  Eval("OnT" & $MySpells[$i][0] & "Spell")) & ": " &  Eval("OnT" & $MySpells[$i][0] & "Spell"), (Eval("enum" & $MySpells[$i][0]) > 5 ? $COLOR_DARKELIXIR : $COLOR_ELIXIR))
+			SetLog(" - No. of On Brew " & MyNameOfTroop(Eval("enum" & $MySpells[$i][0]) + $eLSpell,  Eval("OnT" & $MySpells[$i][0] & "Spell")) & ": " &  Eval("OnT" & $MySpells[$i][0] & "Spell"), (Eval("enum" & $MySpells[$i][0]) > $iDarkFixSpell ? $COLOR_DARKELIXIR : $COLOR_ELIXIR))
 			$bGotOnBrewFlag = True
 		EndIf
 		If $MySpells[$i][3] < $itempTotal Then
@@ -224,7 +224,7 @@ Func CheckOnBrewUnit($hHBitmap)
 		For $i = 0 To UBound($MySpells) - 1
 			Local $itempTotal = Eval("OnQ" & $MySpells[$i][0] & "Spell")
 			If $itempTotal > 0 Then
-				SetLog(" - No. of On Queue " & MyNameOfTroop(Eval("enum" & $MySpells[$i][0]) + $eLSpell,  Eval("OnQ" & $MySpells[$i][0] & "Spell")) & ": " &  Eval("OnQ" & $MySpells[$i][0] & "Spell"), (Eval("enum" & $MySpells[$i][0]) > 5 ? $COLOR_DARKELIXIR : $COLOR_ELIXIR))
+				SetLog(" - No. of On Queue " & MyNameOfTroop(Eval("enum" & $MySpells[$i][0]) + $eLSpell,  Eval("OnQ" & $MySpells[$i][0] & "Spell")) & ": " &  Eval("OnQ" & $MySpells[$i][0] & "Spell"), (Eval("enum" & $MySpells[$i][0]) > $iDarkFixSpell ? $COLOR_DARKELIXIR : $COLOR_ELIXIR))
 				$bGotOnQueueFlag = True
 				If Eval("ichkPre" & $MySpells[$i][0]) = 1 Then
 					If $MySpells[$i][3] < $itempTotal Then

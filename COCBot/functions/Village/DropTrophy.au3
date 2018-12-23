@@ -273,6 +273,7 @@ Func DropTrophy()
 				EndIf
 			Else
 				SetLog("Trophy Drop Complete", $COLOR_INFO)
+				$g_bDtropAttack = True
 			EndIf
 		WEnd
 		If $g_bDebugSetlog Then SetDebugLog("DropTrophy(): End", $COLOR_DEBUG)

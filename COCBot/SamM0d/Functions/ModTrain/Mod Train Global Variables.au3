@@ -14,6 +14,9 @@ Global $g_aiSpellsMaxCamp[2] = [0,0]
 Global $COLOR_ELIXIR = 0xDE1AC0
 Global $COLOR_DARKELIXIR = 0x301D38
 
+Global $iDarkFixTroop = 12
+Global $iDarkFixSpell = 6
+
 Global $bTempDisAddIdleTime = False ;disable add train idle when train finish soon
 
 Global $ichkMyTroopsOrder = 0

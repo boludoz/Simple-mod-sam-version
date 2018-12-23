@@ -1172,26 +1172,26 @@ Func btnMakeSwitchADBFolder()
 			$bFileFlag = BitOR($bFileFlag, 2)
 		EndIf
 
-		If $g_sAndroidGameDistributor = $g_sGoogle Then
-			ClickP($aAway,1,0)
-			If _Sleep(250) Then Return False
-			Click($aButtonSMSetting[0],$aButtonSMSetting[1],1,0,"#Setting")
-			If Not _Wait4Pixel($aButtonClose2[4], $aButtonClose2[5], $aButtonClose2[6], $aButtonClose2[7], 1500, 100) Then
-				SetLog("Cannot load setting page, restart game...", $COLOR_RED)
-			EndIf
-			If _CheckColorPixel($aButtonGoogleConnectGreen[4], $aButtonGoogleConnectGreen[5], $aButtonGoogleConnectGreen[6], $aButtonGoogleConnectGreen[7], $g_bCapturePixel, "aButtonGoogleConnectGreen") Then
-				Click($aButtonGoogleConnectGreen[0],$aButtonGoogleConnectGreen[1],1,0,"#ConnectGoogle")
-			EndIf
-			If Not _Wait4Pixel($aButtonGoogleConnectRed[4], $aButtonGoogleConnectRed[5], $aButtonGoogleConnectRed[6], $aButtonGoogleConnectRed[7], 1500, 100) Then
-				SetLog("Cannot disconnect to google.", $COLOR_RED)
-			Else
-				SetLog("Disconnected to google.", $COLOR_INFO)
-			EndIf
-			ClickP($aAway,1,0)
-			If Not _Wait4Pixel($aIsMain[0], $aIsMain[1], $aIsMain[2], $aIsMain[3], 1500, 100) Then
-				SetLog("Cannot back to main screen.", $COLOR_RED)
-			EndIf
-		EndIf
+		;If $g_sAndroidGameDistributor = $g_sGoogle Then
+		;	ClickP($aAway,1,0)
+		;	If _Sleep(250) Then Return False
+		;	Click($aButtonSMSetting[0],$aButtonSMSetting[1],1,0,"#Setting")
+		;	If Not _Wait4Pixel($aButtonClose2[4], $aButtonClose2[5], $aButtonClose2[6], $aButtonClose2[7], 1500, 100) Then
+		;		SetLog("Cannot load setting page, restart game...", $COLOR_RED)
+		;	EndIf
+		;	If _CheckColorPixel($aButtonGoogleConnectGreen[4], $aButtonGoogleConnectGreen[5], $aButtonGoogleConnectGreen[6], $aButtonGoogleConnectGreen[7], $g_bCapturePixel, "aButtonGoogleConnectGreen") Then
+		;		Click($aButtonGoogleConnectGreen[0],$aButtonGoogleConnectGreen[1],1,0,"#ConnectGoogle")
+		;	EndIf
+		;	If Not _Wait4Pixel($aButtonGoogleConnectRed[4], $aButtonGoogleConnectRed[5], $aButtonGoogleConnectRed[6], $aButtonGoogleConnectRed[7], 1500, 100) Then
+		;		SetLog("Cannot disconnect to google.", $COLOR_RED)
+		;	Else
+		;		SetLog("Disconnected to google.", $COLOR_INFO)
+		;	EndIf
+		;	ClickP($aAway,1,0)
+		;	If Not _Wait4Pixel($aIsMain[0], $aIsMain[1], $aIsMain[2], $aIsMain[3], 1500, 100) Then
+		;		SetLog("Cannot back to main screen.", $COLOR_RED)
+		;	EndIf
+		;EndIf
 
 		Local $iResult
 
