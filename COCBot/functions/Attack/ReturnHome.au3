@@ -18,11 +18,23 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 	Local $counter = 0
 	Local $hBitmap_Scaled
 	Local $i, $j
-
+			
 	If $g_bDESideDisableOther And $g_iMatchMode = $LB And $g_aiAttackStdDropSides[$LB] = 4 And $g_bDESideEndEnable And ($g_bDropQueen Or $g_bDropKing) Then
 		SaveandDisableEBO()
 		SetLog("Disabling Normal End Battle Options", $COLOR_SUCCESS)
 	EndIf
+	
+	; Spawn Event Troops
+    Local $iSpecialColor[4][3] = [[0xFFFDFF, 1, 0], [0xFFFDFF, 2, 0], [0xCADEF2, 0, 1], [0xCADEF2, 1, 1]]
+    Local $iSpecialPixel
+        
+    For $clickss = 0 to 300
+        $iSpecialPixel = _MultiPixelSearch(23, 632, 834, 658, 1, 1, Hex(0xFFFDFF, 6), $iSpecialColor, 15)
+        If $iSpecialPixel = 0 Then ExitLoop
+        SetLog("Dropping event troops" & ": " & $iSpecialPixel[0] & "/" &  $iSpecialPixel[1])
+        PureClick($iSpecialPixel[0], $iSpecialPixel[1], 1, 10, "#0000")
+        AttackClick(608, 168, 1, SetSleep(0), 0, "#0000")
+    Next
 
 	If $GoldChangeCheck Then
 		If Not (IsReturnHomeBattlePage(True, False)) Then ; if already in return home battle page do not wait and try to activate Hero Ability and close battle
