@@ -723,6 +723,9 @@ Func runBot() ;Bot that runs everything in order
 		SetLog("Rematching Account [" & $g_iNextAccount + 1 & "] with Profile [" & GUICtrlRead($g_ahCmbProfile[$g_iNextAccount]) & "]")
 		SwitchCoCAcc($g_iNextAccount)
 	EndIf
+
+	FirstCheck()
+
 	While 1
 		; samm0d
 		If $g_iSamM0dDebug = 1 And $g_bRestart Then SetLog("Continue loop with restart", $COLOR_DEBUG)
@@ -829,7 +832,6 @@ Func runBot() ;Bot that runs everything in order
 		If $g_bIsClientSyncError = False And $g_bIsSearchLimit = False And ($g_bQuickAttack = False) Then
 			If BotCommand() Then btnStop()
 			If _Sleep($DELAYRUNBOT2) Then Return
-			If _Sleep($DELAYRUNBOT2) Then Return
 
 			checkMainScreen(False)
 			If $g_bRestart = True Then ContinueLoop
@@ -863,6 +865,9 @@ Func runBot() ;Bot that runs everything in order
 				EndIf
 				If $g_bRestart = True Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 			WEnd
+
+			If ($g_iCommandStop = 0 Or $g_iCommandStop = 3) And ProfileSwitchAccountEnabled() And Not $g_abDonateOnly[$g_iCurAccount] Then checkSwitchAcc()
+
 			AddIdleTime()
 			If $g_bRunState = False Then Return
 			If $g_bRestart = True Then ContinueLoop
@@ -1466,3 +1471,119 @@ Func _RunFunction($action)
 	EndSwitch
 	SetDebugLog("_RunFunction: " & $action & " END", $COLOR_DEBUG2)
 EndFunc   ;==>_RunFunction
+
+Func FirstCheck()
+
+	SetDebugLog("-- FirstCheck Loop --")
+	If Not $g_bRunState Then Return
+		
+	; samm0d switch
+
+	$bJustMakeDonate = False
+	$bDonateAwayFlag = False
+
+	$tempDisableBrewSpell = False
+	$tempDisableTrain = False
+
+	$bAvoidSwitch = False
+	$g_iCommandStop = -1
+
+	If $ichkEnableMySwitch Then
+		If $g_iSamM0dDebug = 1 Then SetLog("$bAvoidSwitch: " & $bAvoidSwitch)
+		$bUpdateStats = True
+		If $g_bIsClientSyncError = False And $g_bIsSearchLimit = False And ($g_bQuickAttack = False) Then
+			DoSwitchAcc()
+			If $g_bRestart = True Then ContinueLoop
+
+			If _Sleep($DELAYRUNBOT1) Then Return
+			checkMainScreen(False)
+			If $g_bRestart = True Then ContinueLoop
+
+			If $ichkProfileImage = 1 Then ; check with image is that village load correctly
+				If $bAvoidSwitch = False And $bChangeNextAcc = True Then
+					If checkProfileCorrect() = True Then
+						SetLog("Profile match with village.png, profile loaded correctly.", $COLOR_INFO)
+						$iCheckAccProfileError = 0
+						;$bProfileImageChecked = True
+					Else
+						SetLog("Profile not match with village.png, profile load failed.", $COLOR_ERROR)
+						$iCheckAccProfileError += 1
+						If $iCheckAccProfileError > 2 Then
+							$iCheckAccProfileError = 0
+							DoVillageLoadFailed()
+						EndIf
+						$iCurActiveAcc = -1
+						ClickP($aAway,1,0)
+						If _Sleep(1000) Then Return True
+						ContinueLoop
+					EndIf
+				EndIf
+			EndIf
+			If $g_iTownHallLevel = 0 Then BotDetectFirstTime()
+		Else
+			If _Sleep($DELAYRUNBOT1) Then Return
+			checkMainScreen(False)
+			If $g_bRestart = True Then ContinueLoop
+		EndIf
+		$iDoPerformAfterSwitch = True
+	Else
+		If _Sleep($DELAYRUNBOT1) Then Return
+		checkMainScreen()
+		If $g_bRestart = True Then ContinueLoop
+	EndIf
+	; samm0d switch end
+
+	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
+
+	$g_bRestart = False
+	$g_bFullArmy = False
+	$g_iCommandStop = -1
+
+	VillageReport()
+	If Not $g_bRunState Then Return
+
+	If $g_bOutOfGold = True And (Number($g_aiCurrentLoot[$eLootGold]) >= Number($g_iTxtRestartGold)) Then ; check if enough gold to begin searching again
+		$g_bOutOfGold = False ; reset out of gold flag
+		SetLog("Switching back to normal after no gold to search ...", $COLOR_SUCCESS)
+		Return ; Restart bot loop to reset $g_iCommandStop & $g_bTrainEnabled + $g_bDonationEnabled via BotCommand()
+	EndIf
+
+	If $g_bOutOfElixir = True And (Number($g_aiCurrentLoot[$eLootElixir]) >= Number($g_iTxtRestartElixir)) And (Number($g_aiCurrentLoot[$eLootDarkElixir]) >= Number($g_iTxtRestartDark)) Then ; check if enough elixir to begin searching again
+		$g_bOutOfElixir = False ; reset out of gold flag
+		SetLog("Switching back to normal setting after no elixir to train ...", $COLOR_SUCCESS)
+		Return ; Restart bot loop to reset $g_iCommandStop & $g_bTrainEnabled + $g_bDonationEnabled via BotCommand()
+	EndIf
+
+	If _Sleep($DELAYRUNBOT5) Then Return
+	checkMainScreen(False)
+	If $g_bRestart = True Then Return
+
+	If BotCommand() Then btnStop()
+
+	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
+		; VERIFY THE TROOPS AND ATTACK IF IS FULL
+		SetDebugLog("-- FirstCheck on Train --")
+		TrainSystem()
+		If Not $g_bRunState Then Return
+		SetDebugLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells))
+		If $g_bIsFullArmywithHeroesAndSpells Then
+			; Just in case of new profile! or BotDetectFirstTime() failed on Initiate()
+			If (isInsideDiamond($g_aiTownHallPos) = False) Then
+				BotDetectFirstTime()
+			EndIf
+			; Now the bot can attack
+			If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
+				Setlog("Before any other routine let's attack!!", $COLOR_INFO)
+				If Not $g_bRunState Then Return
+				AttackMain()
+				$g_bSkipFirstZoomout = False
+				If $g_bOutOfGold = True Then
+					SetLog("Switching to Halt Attack, Stay Online/Collect mode ...", $COLOR_ERROR)
+					$g_bFirstStart = True ; reset First time flag to ensure army balancing when returns to training
+					Return
+				EndIf
+				If _Sleep($DELAYRUNBOT1) Then Return
+			EndIf
+		EndIf
+	EndIf
+EndFunc   ;==>FirstCheck

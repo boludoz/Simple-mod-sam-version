@@ -111,7 +111,7 @@ Func NameOfTroop($iKind, $iPlural = 0)
 		Case Else
 			Return "" ; error or unknown case
 	EndSwitch
-	If $iPlural = 1 And $iKind = $eWitc Then $sTroopname &= "e" ; adding the "e" for "witches"
-	If $iPlural = 1 Then $sTroopname &= "s" ; if troop is not $eKing, $eQueen, $eCastle, $eWarden add the plural "s"
+	If $iPlural > 1 And $iKind = $eWitc Then $sTroopname &= "e" ; adding the "e" for "witches"
+	If $iPlural > 1 Then $sTroopname &= "s" ; if troop is not $eKing, $eQueen, $eCastle, $eWarden add the plural "s"
 	Return $sTroopname
 EndFunc   ;==>NameOfTroop
