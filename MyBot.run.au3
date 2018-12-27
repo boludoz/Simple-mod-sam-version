@@ -724,7 +724,7 @@ Func runBot() ;Bot that runs everything in order
 		SwitchCoCAcc($g_iNextAccount)
 	EndIf
 
-	FirstCheck()
+;	FirstCheck()
 
 	While 1
 		; samm0d
@@ -1370,9 +1370,6 @@ Func _RunFunction($action)
 				If _Sleep($DELAYRUNBOT1) = False Then checkMainScreen(False)
 			EndIf
 		Case "DonateCC,Train"
-		; ======================= (#ID135-)
-		    CheckAutoCamp()
-		; ======================= (#ID135-)
 			If $ichkModTrain = 1 Then
 				If $g_bTrainEnabled Then
 					ModTrain()
@@ -1477,62 +1474,6 @@ Func FirstCheck()
 	SetDebugLog("-- FirstCheck Loop --")
 	If Not $g_bRunState Then Return
 		
-	; samm0d switch
-
-	$bJustMakeDonate = False
-	$bDonateAwayFlag = False
-
-	$tempDisableBrewSpell = False
-	$tempDisableTrain = False
-
-	$bAvoidSwitch = False
-	$g_iCommandStop = -1
-
-	If $ichkEnableMySwitch Then
-		If $g_iSamM0dDebug = 1 Then SetLog("$bAvoidSwitch: " & $bAvoidSwitch)
-		$bUpdateStats = True
-		If $g_bIsClientSyncError = False And $g_bIsSearchLimit = False And ($g_bQuickAttack = False) Then
-			DoSwitchAcc()
-			If $g_bRestart = True Then ContinueLoop
-
-			If _Sleep($DELAYRUNBOT1) Then Return
-			checkMainScreen(False)
-			If $g_bRestart = True Then ContinueLoop
-
-			If $ichkProfileImage = 1 Then ; check with image is that village load correctly
-				If $bAvoidSwitch = False And $bChangeNextAcc = True Then
-					If checkProfileCorrect() = True Then
-						SetLog("Profile match with village.png, profile loaded correctly.", $COLOR_INFO)
-						$iCheckAccProfileError = 0
-						;$bProfileImageChecked = True
-					Else
-						SetLog("Profile not match with village.png, profile load failed.", $COLOR_ERROR)
-						$iCheckAccProfileError += 1
-						If $iCheckAccProfileError > 2 Then
-							$iCheckAccProfileError = 0
-							DoVillageLoadFailed()
-						EndIf
-						$iCurActiveAcc = -1
-						ClickP($aAway,1,0)
-						If _Sleep(1000) Then Return True
-						ContinueLoop
-					EndIf
-				EndIf
-			EndIf
-			If $g_iTownHallLevel = 0 Then BotDetectFirstTime()
-		Else
-			If _Sleep($DELAYRUNBOT1) Then Return
-			checkMainScreen(False)
-			If $g_bRestart = True Then ContinueLoop
-		EndIf
-		$iDoPerformAfterSwitch = True
-	Else
-		If _Sleep($DELAYRUNBOT1) Then Return
-		checkMainScreen()
-		If $g_bRestart = True Then ContinueLoop
-	EndIf
-	; samm0d switch end
-
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 
 	$g_bRestart = False

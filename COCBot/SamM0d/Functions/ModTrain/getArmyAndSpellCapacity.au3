@@ -303,6 +303,7 @@ Func getMyArmyCapacityMini($hHBitmap, $bShowLog = True)
 	$g_iTotalCampSpace = 0
 
 	$sArmyInfo = getMyOcrArmyCap($hHBitmap)
+	UpdSam($sArmyInfo)
 	If $g_iSamM0dDebug = 1 Then Setlog("getMyArmyCapacityMini $sArmyInfo = " & $sArmyInfo, $COLOR_DEBUG)
 	$aGetArmySize = StringSplit($sArmyInfo, "#")
 	If IsArray($aGetArmySize) Then
@@ -403,6 +404,7 @@ Func getMySpellCapacityMini($hHBitmap, $bShowLog = True)
 	$g_iTotalSpellCampSpace = 0
 
 	$sSpellInfo = getMyOcrSpellCap($hHBitmap)
+	UpdSam($sSpellInfo)
 	If $g_iSamM0dDebug = 1 Then Setlog("getMySpellCapacityMini $sSpellInfo = " & $sSpellInfo, $COLOR_DEBUG)
 	$aGetSpellSize = StringSplit($sSpellInfo, "#")
 	If IsArray($aGetSpellSize) Then

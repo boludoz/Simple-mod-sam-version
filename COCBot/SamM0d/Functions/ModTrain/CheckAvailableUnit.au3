@@ -18,7 +18,7 @@
 Func CheckAvailableUnit($hHBitmap)
 	If $g_iSamM0dDebug = 1 Then SetLog("============Start CheckAvailableUnit ============")
 	SetLog("Start check available unit...", $COLOR_INFO)
-
+	
 	; reset variable
 	For $i = 0 To UBound($MyTroops) - 1
 		Assign("cur" & $MyTroops[$i][0], 0)
