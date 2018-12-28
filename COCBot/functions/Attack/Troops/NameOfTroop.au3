@@ -91,6 +91,15 @@ Func NameOfTroop($iKind, $iPlural = 0)
 			$sTroopname = "Haste Spell"
 		Case $eSkSpell
 			$sTroopname = "Skeleton Spell"
+		Case $eBtSpell
+			$sTroopname = "Bat Spell"	
+		Case $eWallW
+			$sTroopname = "Wall Wrecker"
+		Case $eBattleB
+			$sTroopname = "Battle Blimp"
+		Case $eStoneS
+			$sTroopname = "Stone Slammer"
+			#cs
         ; samm0d
         Case 51
             $sTroopname = "Event Troop 1"
@@ -100,14 +109,7 @@ Func NameOfTroop($iKind, $iPlural = 0)
             $sTroopname = "Event Spell 1"
         Case 62
             $sTroopname = "Event Spell 2"
-		Case $eBtSpell
-			$sTroopname = "Bat Spell"	
-		Case $eWallW
-			$sTroopname = "Wall Wrecker"
-		Case $eBattleB
-			$sTroopname = "Battle Blimp"
-		Case $eStoneS
-			$sTroopname = "Stone Slammer"
+			#ce
 		Case Else
 			Return "" ; error or unknown case
 	EndSwitch

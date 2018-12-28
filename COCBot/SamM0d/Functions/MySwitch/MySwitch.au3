@@ -116,6 +116,178 @@ Func SelectGoogleAccount($iSlot)
 	Return True
 EndFunc
 
+Func SelectSCAccount($NextAccount, $iStep = 4)
+	; open setting page
+	Click($aButtonSMSetting[0],$aButtonSMSetting[1],1,0,"#Setting")
+
+	Local $iCount
+
+	If Not _Wait4Pixel($aButtonClose2[4], $aButtonClose2[5], $aButtonClose2[6], $aButtonClose2[7], 10000, 200) Then
+		SetLog("Cannot load setting page, restart game...", $COLOR_RED)
+		CloseCoC(True)
+		Wait4Main()
+		Return False
+	EndIf
+
+;~  	Click($aButtonSMSettingTabSetting[0],$aButtonSMSettingTabSetting[1],1,0,"#TabSettings")
+;~  	If _Sleep(500) Then Return False
+
+	If _Sleep(250) Then Return False
+
+	If _Wait4Pixel($aButtonGoogleConnectGreen[4], $aButtonGoogleConnectGreen[5], $aButtonGoogleConnectGreen[6], $aButtonGoogleConnectGreen[7], 10000, 200) Then
+		Click($aButtonGoogleConnectGreen[0],$aButtonGoogleConnectGreen[1],2,500,"#ConnectGoogle")
+	Endif
+	  Local $AccountsCoord
+	Local $YCoord = Int(336 + 73.5 * $NextAccount)
+	Local $DeltaTotal8Acc = $g_iTotalAcc = 7 ? 14 : 0
+	Local $iRetryCloseSCIDTab = 0
+	Local $aDividerExtra[7][3] = [[0xF2F2F2, 1, 0], [0xF2F2F2, 0, 1], [0xF2F2F2, 0, 2], [0xF2F2F2, 0, 3], [0xF2F2F2, 0, 4], [0xF2F2F2, 0, 5], [0xF2F2F2, 0, 6]]
+	Local $aDivider
+
+	For $i = 0 To 30 ; Checking "Log in with SuperCell ID" button continuously in 30sec
+		If _ColorCheck(_GetPixelColor($aLoginWithSupercellID[0], $aLoginWithSupercellID[1], True), Hex($aLoginWithSupercellID[2], 6), $aLoginWithSupercellID[3]) And _
+		_ColorCheck(_GetPixelColor($aLoginWithSupercellID2[0], $aLoginWithSupercellID2[1], True), Hex($aLoginWithSupercellID2[2], 6), $aLoginWithSupercellID2[3]) Then
+			SetLog("   " & $iStep & ". Click Log in with Supercell ID")
+			Click($aLoginWithSupercellID[0], $aLoginWithSupercellID[1], 1, 0, "Click Log in with SC_ID")
+			If _Sleep(600) Then Return "Exit"
+
+			For $j = 0 To 20 ; Checking Account List continuously in 20sec
+				If QuickMIS("BC1", $g_sImgListAccounts, 490, 201, 524, 232) Then
+					Local $bDragDone = False
+					If $NextAccount >= 4 Then
+						$YCoord = Int(408 - 73.5 * ($g_iTotalAcc - $NextAccount))
+						ClickDrag(700, 590, 700, 172, 2000)
+						If _Sleep(250) Then Return "Exit"
+
+						For $x = 0 To 5
+							$aDivider = _MultiPixelSearch(415, 470, 442, 487, 1, 1, Hex(0xDADADA, 6), $aDividerExtra, 35)
+
+							If IsArray($aDivider) Then
+								$bDragDone =  True
+								ExitLoop
+							EndIf
+							If _Sleep(250) Then Return "Exit" ; wait 1.5 seconds for last account to show up
+						Next
+					EndIf
+
+					If $NextAccount < 4 Or $bDragDone Then
+						Click(270, $YCoord, 3, 1000) ; Click Account
+						If _Sleep(250) Then Return "Exit"
+					EndIf
+				ElseIf QuickMIS("BC1", $g_sImgListAccounts, 470, 190, 497, 297) Then
+					$YCoord = Int(359 - 16 * ($g_iTotalAcc - 1) + 32 * $NextAccount) + $DeltaTotal8Acc
+					Click(300, $YCoord, 3, 1000) ; Click Account
+					If _Sleep(250) Then Return "Exit"
+				EndIf
+
+				If $bResult Then
+					SetLog("   " & ($iStep + 1) & ". Click Account [" & $NextAccount + 1 & "] Supercell ID")
+					SetLog("Please wait for loading CoC...!")
+					Return "OK"
+				EndIf
+
+				If $j = 20 Then
+					$iRetryCloseSCIDTab += 1
+					If $iRetryCloseSCIDTab <= 3 Then
+						SetLog("   " & $iStep & ".5 Click Close Tab Supercell ID")
+						Click($aCloseTabSCID[0], $aCloseTabSCID[1], 1, 0, "Click Close Tab SC_ID")
+						If _Sleep(500) Then Return "Exit"
+						$i = 0 ; restart loop to check & click "Login With SuperCell ID" button
+						ExitLoop
+					Else
+						$iRetryCloseSCIDTab = 0
+						$bResult = False
+					EndIf
+				EndIf
+				; Alternative to MEmu 2.5.0 or 2.8.6
+				If _ColorCheck(_GetPixelColor(490, 275, True), Hex($aListAccountSCID[2], 6), $aListAccountSCID[3]) Then
+					For $i = 0 To 10
+						Local $XCoordinates = QuickMIS("CX", $g_sImgSCID, 550, 165, 690, 605, True, $g_bDebugImageSave)
+						If UBound($XCoordinates) > 0 Then
+							SetDebugLog("[SCID Accounts]: " & UBound($XCoordinates), $COLOR_DEBUG)
+							ReDim $AccountsCoord[UBound($XCoordinates)][2]
+							For $j = 0 To UBound($XCoordinates) - 1
+								Local $Coordinates = StringSplit($XCoordinates[$j], ",", 2)
+								$AccountsCoord[$j][0] = $Coordinates[0] + 550
+								$AccountsCoord[$j][1] = $Coordinates[1] + 165
+							Next
+							_ArraySort($AccountsCoord, 0, 0, 0, 1) ; short by column 1 [Y]
+							For $j = 0 To UBound($AccountsCoord) - 1
+								SetDebugLog("[" & $j & "] Account coordinates: " & $AccountsCoord[$j][0] & "," & $AccountsCoord[$j][1] & " named: " & $g_asProfileName[$j])
+							Next
+							Setlog("SC_ID account number " & $NextAccount + 1 & " named: " & $g_asProfileName[$NextAccount])
+							If $NextAccount + 1 > UBound($XCoordinates) Then
+								setlog("You selected a SCID undetected account!!", $COLOR_ERROR)
+								ExitLoop
+							EndIf
+							Click($AccountsCoord[$NextAccount][0] - 150, $AccountsCoord[$NextAccount][1], 1)
+							SetLog("Please wait for loading CoC...!")
+							$bResult = True
+						EndIf
+
+						If $g_bRunState = False Then Return
+						If _sleep(1000) Then Return
+					Next
+				EndIf
+
+				SetDebugLog("Checking Account List x:" & $aListAccountSCID[0] & " y:" & $aListAccountSCID[1] & " : " & _GetPixelColor($aListAccountSCID[0], $aListAccountSCID[1], True))
+				If $j = 20 Then
+					$bResult = False
+					;ExitLoop 2
+				EndIf
+				If _Sleep(900) Then Return "Exit"
+			Next
+
+		EndIf
+
+Next
+	$iCount = 0
+	Local $bErrorFlag = 0
+	While $iCount <= 10
+		If _Sleep(1000) Then Return False
+		Local $iTotalAcc = 7
+		If $iTotalAcc < $NextAccount + 1 Then
+			$bErrorFlag += 1
+			If $bErrorFlag >= 3 Then
+				SetLog("You cannot select account slot " & $NextAccount + 1 & ", because you only got total: " & $iTotalAcc, $COLOR_RED)
+				AndroidBackButton()
+				If _Sleep(500) Then Return False
+				AndroidBackButton()
+				BotStop()
+				Return False
+			EndIf
+		Else
+			Click(241, 84 + $iSlotYOffset + ($NextAccount * 72), 1, 0, "#GASe")
+			ExitLoop
+		EndIf
+		$iCount += 1
+	WEnd
+
+	Local $iResult
+	$iResult = DoLoadVillage()
+
+;	$bNowWaitingConfirm =False
+
+	If $iResult <> 1 And $iResult <> 2 Then Return False
+
+	If _Sleep(500) Then Return False
+
+	If $g_iSamM0dDebug = 1 Then SetLog("$iResult: " & $iResult)
+
+	If _Sleep(5) Then Return False
+
+	If $iResult = 1 Then
+		If DoConfirmVillage() = False Then Return False
+	Else
+		ClickP($aAway,1,0)
+	EndIf
+
+	; wait for game reload
+	Wait4Main()
+
+	Return True
+EndFunc
+
 Func DoLoadVillage()
 	Local $iCount = 0
 	$iCount = 0
@@ -1291,16 +1463,21 @@ Func btnPushshared_prefs()
 	Switch $icmbSwitchMethod
 		Case 2
 			SetLog("Start game client switch")
-			If _CheckColorPixel($aIsMain[0], $aIsMain[1], $aIsMain[2], $aIsMain[3], $g_bCapturePixel, "aIsMain") Or _CheckColorPixel($aIsMainGrayed[0], $aIsMainGrayed[1], $aIsMainGrayed[2], $aIsMainGrayed[3], $g_bCapturePixel, "aIsMainGrayed") Then
-				ClickP($aAway,1,0)
-				If _Sleep(300) Then Return
-				PoliteCloseCoC("MySwitch", True)
-			Else
-				CloseCoC()
+
+			Wait4Main()
+			Local $i
+			Local $sProfile = GUICtrlRead($g_hCmbProfile2)
+			Local $iSlot4Switch = -1
+			For $i = 0 To 7
+				If $icmbWithProfile[$i] = $sProfile Then
+						$iSlot4Switch = $i
+					ExitLoop
+				EndIf
+			Next
+			If $iSlot4Switch <> -1 Then
+				SelectSCAccount($iSlot4Switch, 4)
 			EndIf
 
-			OpenCoC()
-			Wait4Main()
 		Case 1
 			SetLog("Start shared_prefs switch")
 			If _CheckColorPixel($aIsMain[0], $aIsMain[1], $aIsMain[2], $aIsMain[3], $g_bCapturePixel, "aIsMain") Or _CheckColorPixel($aIsMainGrayed[0], $aIsMainGrayed[1], $aIsMainGrayed[2], $aIsMainGrayed[3], $g_bCapturePixel, "aIsMainGrayed") Then

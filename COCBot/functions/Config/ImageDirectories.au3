@@ -115,9 +115,14 @@ Global $g_sImgEasyBuildings = @ScriptDir & "\imgxml\easybuildings"
 #EndRegion
 
 #Region SwitchAcc
-Global Const $g_sImgLoginWithSupercellID = @ScriptDir & "\imgxml\other\LoginWithSupercellID*"
-Global Const $g_sImgGoogleSelectAccount = @ScriptDir & "\imgxml\other\GoogleSelectAccount*"
-Global Const $g_sImgGoogleSelectEmail = @ScriptDir & "\imgxml\other\GoogleSelectEmail*"
+Global Const $g_sImgLogOutButton = @ScriptDir & "\imgxml\other\SwitchAccounts\LogOutButton"; Just Path Changed EDITED By Simple Mod
+Global Const $g_sImgConfirmButton = @ScriptDir & "\imgxml\other\SwitchAccounts\ConfirmButton"; Just Path Changed EDITED By Simple Mod
+Global Const $g_sImgListAccounts = @ScriptDir & "\imgxml\other\SwitchAccounts\ListAccounts"; Just Path Changed EDITED By Simple Mod
+Global Const $g_sImgLoginWithSupercellID = @ScriptDir & "\imgxml\other\SwitchAccounts\LoginWithSupercellID*"; Just Path Changed EDITED By Simple Mod
+Global Const $g_sImgGoogleSelectAccount = @ScriptDir & "\imgxml\other\SwitchAccounts\GoogleSelectAccount*"; Just Path Changed EDITED By Simple Mod
+Global Const $g_sImgGoogleSelectEmail = @ScriptDir & "\imgxml\other\SwitchAccounts\GoogleSelectEmail*"; Just Path Changed EDITED By Simple Mod
+Global Const $g_sImgSCID = @ScriptDir &"\imgxml\SuperCellID\Accounts\SCID*"
+
 #EndRegion
 
 #Region ClanGames

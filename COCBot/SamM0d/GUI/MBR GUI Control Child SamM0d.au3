@@ -7,7 +7,8 @@ Func chkMyTroopOrder()
 EndFunc
 
 Func cmbMyTroopOrder()
-	Local $tempOrder[20]
+	Local $iTotalT = UBound($MyTroops)
+	Local $tempOrder[$iTotalT]
 	For $i = 0 To UBound($MyTroops) - 1
 		$tempOrder[$i] = Int(GUICtrlRead(Eval("cmbMy" & $MyTroops[$i][0] & "Order")))
 	Next
@@ -140,6 +141,7 @@ Func UpdateSpellSetting()
 		GUICtrlSetBkColor($txtNumEarthSpell, $COLOR_MONEYGREEN)
 		GUICtrlSetBkColor($txtNumHasteSpell, $COLOR_MONEYGREEN)
 		GUICtrlSetBkColor($txtNumSkeletonSpell, $COLOR_MONEYGREEN)
+		GUICtrlSetBkColor($txtNumBatSpell, $COLOR_MONEYGREEN)
 	Else
 		GUICtrlSetBkColor($txtNumLightningSpell, $COLOR_RED)
 		GUICtrlSetBkColor($txtNumHealSpell, $COLOR_RED)
@@ -151,6 +153,7 @@ Func UpdateSpellSetting()
 		GUICtrlSetBkColor($txtNumEarthSpell, $COLOR_RED)
 		GUICtrlSetBkColor($txtNumHasteSpell, $COLOR_RED)
 		GUICtrlSetBkColor($txtNumSkeletonSpell, $COLOR_RED)
+		GUICtrlSetBkColor($txtNumBatSpell, $COLOR_RED)
 	EndIf
 	If $g_iSamM0dDebug = 1 Then SetLog("$g_iMySpellsSize: " & $g_iMySpellsSize)
 EndFunc

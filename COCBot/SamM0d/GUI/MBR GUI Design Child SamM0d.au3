@@ -29,19 +29,25 @@ Global $sTxtGolems = GetTranslatedFileIni("MBR Global GUI Design Names Troops", 
 Global $sTxtWitches = GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtWitches", "Witches")
 Global $sTxtLavaHounds = GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtLavaHounds", "Lava Hounds")
 Global $sTxtBowlers = GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBowlers", "Bowlers")
+Global $sTxtIceGolems = GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtIceGolems", "Ice Golems")
 Global $sTxtBabyDragons = GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBabyDragons", "Baby Dragons")
 Global $sTxtMiners = GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtMiners", "Miners")
 Global $sTxtElectroDragons = GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtElectroDragons", "Electro Dragons")
+
+Global $sTxtWallWreckers = GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtWallWreckers", "Wall Wreckers")
+Global $sTxtBattleBlimps = GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBattleBlimps", "Battle Blimps")
+Global $sTxtStoneSlammers = GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtStoneSlammers", "Stone Slammers")
+
 Global $sTxtLightningSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortLightningSpells", "Lightning")
 Global $sTxtHealSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortHealSpells", "Heal")
 Global $sTxtRageSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortRageSpells", "Rage")
 Global $sTxtJumpSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortJumpSpells", "Jump")
 Global $sTxtFreezeSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortFreezeSpells", "Freeze")
-Global $sTxtCloneSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortCloneSpells", "Clone")
 Global $sTxtPoisonSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortPoisonSpells", "Poison")
 Global $sTxtEarthquakeSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortEarthquakeSpells", "EarthQuake")
 Global $sTxtHasteSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortHasteSpells", "Haste")
 Global $sTxtSkeletonSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortSkeletonSpells", "Skeleton")
+Global $sTxtBatSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortBatSpells", "Bat")
 
 Global $hGUI_MOD = 0
 Local $sTxtTip
@@ -397,11 +403,23 @@ $cmbMyQuickTrain = GUICtrlCreateCombo("", $x+300, $y+20, 130, 20, BitOR($CBS_DRO
 
 
 Local $sComboData= ""
-Local $aTroopOrderList[20] = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20"]
-For $j = 0 To 19
+Local $sEvalString
+Local $iTotalT = UBound($MyTroops)
+Local $aTroopOrderList[$iTotalT + 1]
+
+For $iTropOrd = 1 To $iTotalT
+	; Assign the variable string sString with data.
+	Assign("sTString", $iTropOrd)
+	
+	; Find the value of the variable string sTString and assign to the variable $sEvalString.
+	Local $sEvalString = Eval("sTString")
+
+	$aTroopOrderList[$iTropOrd] = $sEvalString
+Next 
+
+For $j = 0 To ($iTotalT)
 	$sComboData &= $aTroopOrderList[$j] & "|"
 Next
-
 
 $xStart = 10
 $yStart = 55
@@ -447,7 +465,7 @@ GUICtrlSetFont(-1,10,$FW_BOLD)
 $idProgressbar = GUICtrlCreateProgress($x+210, $y+20,15, 165,$PBS_VERTICAL)
 
 
-$y = $yStart + 220
+$y = $yStart + 240
 
 $chkDisablePretrainTroops = GUICtrlCreateCheckbox(GetTranslatedFileIni("sam m0d", 69, "Disable pre-train troops"), $x, $y, -1, -1)
 _GUICtrlSetTip(-1, GetTranslatedFileIni("sam m0d", 70, "Disable pre-train troops, normally use by donate and train setting together."))
@@ -472,7 +490,7 @@ $txtStickToTrainWindow = GUICtrlCreateInput("2", $x, $y-2, 30, 20, BitOR($GUI_SS
 	GUICtrlCreateLabel(GetTranslatedFileIni("sam m0d", 61, "minute(s)"), $x+35, $y, -1, -1)
 	_GUICtrlSetTip(-1, $sTxtTip)
 
-$y += 45
+$y += 26
 $x = 10
 $chkForcePreTrainTroops = GUICtrlCreateCheckbox(GetTranslatedFileIni("sam m0d", "ForcePreTrainTroops", "Force pre-train troops when army strength over percentage: "), $x+10, $y, -1, -1)
 GUICtrlSetOnEvent(-1, "ForcePretrainTroops")
@@ -496,7 +514,7 @@ $yStart = 55
 
 Local $x = $xStart, $y = $yStart
 
-	$grpSpells = GUICtrlCreateGroup(GetTranslatedFileIni("sam m0d", 65, "My Spells"), $x, $y, 430, 365)
+	$grpSpells = GUICtrlCreateGroup(GetTranslatedFileIni("sam m0d", 65, "My Spells"), $x, $y, 430, 400)
 		$lblTotalSpell = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "SpellCapacity", "Spell Capacity"), $x+3 , $y + 24, -1, -1, $SS_RIGHT)
 		$txtTotalCountSpell2 = GUICtrlCreateCombo("", $x + 125, $y+20 , 35, 21, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "TxtTotalCountSpell_Info_01", "Enter the No. of Spells Capacity. Set to ZERO if you don't want any Spells"))
@@ -594,6 +612,15 @@ Local $x = $xStart, $y = $yStart
 			;GUICtrlSetState(-1, $GUI_DISABLE)
 			GUICtrlSetOnEvent(-1, "UpdateSpellSetting")
 		$lblTimesSkeletonS = GUICtrlCreateLabel("x", $x + 157, $y+3, -1, -1)
+		$y +=25
+		$lblBatIcon = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnBatSpell, $x + 10, $y, 24, 24)
+		$lblBatSpell = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtBatSpells", "Bat Spell"), $x + 38, $y+3, -1, -1)
+		$txtNumBatSpell = GUICtrlCreateInput("0", $x + 125, $y, 30, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("sam m0d", "txtNoOf", "Enter the No. of") & " " & GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtBatSpells", "Bat Spell") & " " & GetTranslatedFileIni("sam m0d", "txtQty", "Spells to make."))
+			GUICtrlSetLimit(-1, 2)
+			;GUICtrlSetState(-1, $GUI_DISABLE)
+			GUICtrlSetOnEvent(-1, "UpdateSpellSetting")
+		$lblTimesBatS = GUICtrlCreateLabel("x", $x + 157, $y+3, -1, -1)
 
 
 $y = 110
@@ -608,8 +635,21 @@ Local $x = 190, $y = 110
 $chkMySpellsOrder = GUICtrlCreateCheckbox(GetTranslatedFileIni("sam m0d", "Order", "Order"), $x, $y - 25 , -1, -1)
 
 Local $sComboSpellData= ""
-Local $aSpellOrderList[11] = ["","1","2","3","4","5","6","7","8","9","10"]
-For $j = 0 To 10
+Local $sEvalStringS
+Local $iTotalS = UBound($MySpells)
+Local $aSpellOrderList[$iTotalS + 1]
+
+For $iSpellOrd = 1 To $iTotalS
+	; Assign the variable string sSSring with data.
+	Assign("sSString", $iSpellOrd)
+	
+	; Find the value of the variable string sTString and assign to the variable $sEvalString.
+	Local $sEvalStringS = Eval("sSString")
+
+	$aSpellOrderList[$iSpellOrd] = $sEvalStringS
+Next 
+
+For $j = 0 To ($iTotalS)
 	$sComboSpellData &= $aSpellOrderList[$j] & "|"
 Next
 
@@ -625,7 +665,6 @@ Next
 		$y +=25
 	Next
 
-$y += 10
 $chkEnableDeleteExcessSpells = GUICtrlCreateCheckbox(GetTranslatedFileIni("sam m0d", "DeleteExcessSpells", "Enable delete excess Spells"), 20, $y, -1, -1)
 	$sTxtTip = GetTranslatedFileIni("sam m0d", "DeleteExcessSpellsTip", "Check is that spells excess your quantity setting, if yes then delete excess value.")
 	GUICtrlSetOnEvent(-1, "chkEnableDeleteExcessSpells")

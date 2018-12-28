@@ -66,8 +66,8 @@ Global Const $aButtonRequestCCSend[9] 		    = [470, 215, 570, 255, 520, 254, 0x6
 
 Global Const $aButtonSMSetting[9]				= [810, 575, 830, 595, 814, 569, 0xFFFFFF, 10, "=-= Setting"]
 Global Const $aButtonSettingTabSetting[9]		= [388, 110, 484, 130, 434, 110, 0xF0F4F0, 10, "=-= Tab Settings"]
-Global Const $aButtonGoogleConnectRed[9]		= [714, 533, 843, 572, 803, 541, 0xD00408, 20, "=-= Connect Red"]
-Global Const $aButtonGoogleConnectGreen[9]	  	= [714, 533, 843, 572, 803, 541, 0xDDF685, 20, "=-= Connect Green"]
+Global Const $aButtonGoogleConnectRed[9]		= [433, 513, 594, 555, 500, 520, 0xD00408, 30, "=-= Connect Red"]
+Global Const $aButtonGoogleConnectGreen[9]	  	= [433, 513, 594, 555, 500, 520, 0xDDF685, 30, "=-= Connect Green"]
 
 Global Const $aButtonSMVillageLoad[9] 		    = [480, 415, 550, 445, 455, 437, 0x72C11D, 20, "=-= Village Load"]
 Global Const $aButtonVillageCancel[9] 		    = [310, 415, 380, 445, 288, 433, 0xED7531, 20, "=-= Village Cancel"]
