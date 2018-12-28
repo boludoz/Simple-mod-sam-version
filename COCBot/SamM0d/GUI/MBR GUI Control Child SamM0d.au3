@@ -366,6 +366,7 @@ Func lblMyTotalCountSpell()
 		GUICtrlSetBkColor($txtNumEarthSpell, $COLOR_MONEYGREEN)
 		GUICtrlSetBkColor($txtNumHasteSpell, $COLOR_MONEYGREEN)
 		GUICtrlSetBkColor($txtNumSkeletonSpell, $COLOR_MONEYGREEN)
+		GUICtrlSetBkColor($txtNumBatSpell, $COLOR_MONEYGREEN)
 	Else
 		GUICtrlSetBkColor($txtNumLightningSpell, $COLOR_RED)
 		GUICtrlSetBkColor($txtNumHealSpell, $COLOR_RED)
@@ -377,6 +378,7 @@ Func lblMyTotalCountSpell()
 		GUICtrlSetBkColor($txtNumEarthSpell, $COLOR_RED)
 		GUICtrlSetBkColor($txtNumHasteSpell, $COLOR_RED)
 		GUICtrlSetBkColor($txtNumSkeletonSpell, $COLOR_RED)
+		GUICtrlSetBkColor($txtNumBatSpell, $COLOR_RED)
 	EndIf
 	$g_iTownHallLevel = Int($g_iTownHallLevel)
 	If $g_iTownHallLevel > 4 Or $g_iTownHallLevel = 0 Then
@@ -392,6 +394,7 @@ Func lblMyTotalCountSpell()
 		GUICtrlSetData($txtNumEarthSpell, 0)
 		GUICtrlSetData($txtNumHasteSpell, 0)
 		GUICtrlSetData($txtNumSkeletonSpell, 0)
+		GUICtrlSetData($txtNumBatSpell, 0)
 		GUICtrlSetData($txtTotalCountSpell2, 0)
 	EndIf
 	If $g_iTownHallLevel > 5 Or $g_iTownHallLevel = 0 Then
@@ -405,6 +408,7 @@ Func lblMyTotalCountSpell()
 		GUICtrlSetData($txtNumEarthSpell, 0)
 		GUICtrlSetData($txtNumHasteSpell, 0)
 		GUICtrlSetData($txtNumSkeletonSpell, 0)
+		GUICtrlSetData($txtNumBatSpell, 0)
 	EndIf
 	If $g_iTownHallLevel > 6 Or $g_iTownHallLevel = 0 Then
 		_GUI_Value_STATE("SHOW", $groupMyRage)
@@ -416,6 +420,7 @@ Func lblMyTotalCountSpell()
 		GUICtrlSetData($txtNumEarthSpell, 0)
 		GUICtrlSetData($txtNumHasteSpell, 0)
 		GUICtrlSetData($txtNumSkeletonSpell, 0)
+		GUICtrlSetData($txtNumBatSpell, 0)
 	EndIf
 	If $g_iTownHallLevel > 7 Or $g_iTownHallLevel = 0 Then
 		_GUI_Value_STATE("SHOW", $groupMyPoison)
@@ -426,6 +431,7 @@ Func lblMyTotalCountSpell()
 		GUICtrlSetData($txtNumCloneSpell, 0)
 		GUICtrlSetData($txtNumHasteSpell, 0)
 		GUICtrlSetData($txtNumSkeletonSpell, 0)
+		GUICtrlSetData($txtNumBatSpell, 0)
 	EndIf
 	If $g_iTownHallLevel > 8 Or $g_iTownHallLevel = 0 Then
 		_GUI_Value_STATE("SHOW", $groupMyJumpSpell)
@@ -437,6 +443,7 @@ Func lblMyTotalCountSpell()
 	EndIf
 	If $g_iTownHallLevel > 9 Or $g_iTownHallLevel = 0 Then
 		_GUI_Value_STATE("SHOW", $groupMyClone)
+		_GUI_Value_STATE("SHOW", $groupMyBat)
 	EndIf
 	If $g_iSamM0dDebug = 1 Then SetLog("$g_iMySpellsSize: " & $g_iMySpellsSize)
 

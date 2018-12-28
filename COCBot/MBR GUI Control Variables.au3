@@ -219,7 +219,8 @@ Func InitializeControlVariables()
     Global $groupMyEarthquake =$lblEarthquakeIcon&"#"&$lblEarthquakeSpell&"#"&$txtNumEarthSpell&"#"&$lblTimesEarthquakeS&"#"&$chkPreEarth
     Global $groupMyHaste =$lblHasteIcon&"#"&$lblHasteSpell&"#"&$txtNumHasteSpell&"#"&$lblTimesHasteS&"#"&$chkPreHaste
     Global $groupMySkeleton =$lblSkeletonIcon&"#"&$lblSkeletonSpell&"#"&$txtNumSkeletonSpell&"#"&$lblTimesSkeletonS&"#"&$chkPreSkeleton
-    Global $groupListMySpells=$groupMyLightning&"#"&$groupMyHeal&"#"&$groupMyRage&"#"&$groupMyJumpSpell&"#"&$groupMyFreeze&"#"&$groupMyClone&"#"&$groupMyPoison&"#"&$groupMyEarthquake&"#"&$groupMyHaste&"#"&$groupMySkeleton
+	Global $groupMyBat = $lblBatIcon&"#"&$lblBatSpell&"#"&$txtNumBatSpell&"#"&$lblTimesBatS&"#"&$chkPreBat
+	Global $groupListMySpells=$groupMyLightning&"#"&$groupMyHeal&"#"&$groupMyRage&"#"&$groupMyJumpSpell&"#"&$groupMyFreeze&"#"&$groupMyClone&"#"&$groupMyPoison&"#"&$groupMyEarthquake&"#"&$groupMyHaste&"#"&$groupMySkeleton&"#"&$groupMyBat
 
    ; Groups of controls
    Dim $aTabControlsVillage = [$g_hGUI_VILLAGE_TAB, $g_hGUI_VILLAGE_TAB_ITEM1, $g_hGUI_VILLAGE_TAB_ITEM2, $g_hGUI_VILLAGE_TAB_ITEM3, $g_hGUI_VILLAGE_TAB_ITEM4, $g_hGUI_VILLAGE_TAB_ITEM5]
