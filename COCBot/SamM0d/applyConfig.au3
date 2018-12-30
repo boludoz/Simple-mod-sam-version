@@ -21,7 +21,7 @@ GUICtrlSetData($txtLogLineLimit, $itxtLogLineLimit)
 chkBotLogLineLimit()
 
 ; use Event troop
-GUICtrlSetState($chkEnableUseEventTroop, ($ichkEnableUseEventTroop = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+GUICtrlSetState($g_hEnableSkipBuild, ($g_bEnableSkipBuild = True ? $GUI_CHECKED : $GUI_UNCHECKED))
 
 ; donate only when troop pre train ready
 GUICtrlSetState($chkEnableDonateWhenReady, ($ichkEnableDonateWhenReady = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))

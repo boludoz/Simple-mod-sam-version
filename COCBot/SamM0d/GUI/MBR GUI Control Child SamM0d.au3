@@ -645,8 +645,8 @@ Func chkEnableCustomOCR4CCRequest()
 	$ichkEnableCustomOCR4CCRequest = (GUICtrlRead($chkEnableCustomOCR4CCRequest) = $GUI_CHECKED ? 1 : 0)
 EndFunc
 
-Func chkEnableUseEventTroop()
-	$ichkEnableUseEventTroop = (GUICtrlRead($chkEnableUseEventTroop) = $GUI_CHECKED ? 1 : 0)
+Func EnableSkipBuild()
+	$g_bEnableSkipBuild = (GUICtrlRead($g_hEnableSkipBuild) = $GUI_CHECKED ? True : False)
 EndFunc
 
 Func chkEnableDonateWhenReady()

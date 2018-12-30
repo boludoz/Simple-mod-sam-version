@@ -20,7 +20,7 @@ Func LocateTownHall($bLocationOnly = False)
 
 	SetLog("Locating Town Hall ...", $COLOR_INFO)
 
-	If $g_bSkipLocateExc Then
+	If $g_bEnableSkipBuild Then
 		$g_aiTownHallPos[0] = -1
 		$g_aiTownHallPos[1] = -1
 		SetLog("Quick Town Hall...", $COLOR_INFO)

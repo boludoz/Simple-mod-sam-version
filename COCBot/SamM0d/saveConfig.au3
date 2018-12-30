@@ -21,7 +21,7 @@ _Ini_Add("BotLogLineLimit", "Enable", (GUICtrlRead($chkBotLogLineLimit) = $GUI_C
 _Ini_Add("BotLogLineLimit", "LimitValue", GUICtrlRead($txtLogLineLimit))
 
 ; use Event troop
-_Ini_Add("EnableUseEventTroop", "Enable", (GUICtrlRead($chkEnableUseEventTroop) = $GUI_CHECKED ? 1 : 0 ))
+_Ini_Add("EnableSkipBuild", "Enable", (GUICtrlRead($g_hEnableSkipBuild) = $GUI_CHECKED ? True : False ))
 
 ; donate only when troop pre train ready
 _Ini_Add("EnableDonateWhenReady", "Enable", (GUICtrlRead($chkEnableDonateWhenReady) = $GUI_CHECKED ? 1 : 0 ))

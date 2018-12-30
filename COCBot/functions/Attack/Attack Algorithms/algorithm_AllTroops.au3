@@ -267,6 +267,7 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
             $listInfoDeploy[0][4] = 1
         EndIf
     EndIf
+	Local $ichkEnableUseEventTroop = 0
     If $ichkEnableUseEventTroop = 1 Then
         Local $iListInfoDeployCount = UBound($listInfoDeploy) + 2
         ReDim $listInfoDeploy[$iListInfoDeployCount][5]

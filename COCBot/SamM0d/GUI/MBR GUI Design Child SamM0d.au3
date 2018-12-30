@@ -965,8 +965,8 @@ $txtLogoutLimitTime = GUICtrlCreateInput("240", $x + 300, $y+2, 35, 18, BitOR($G
 	GUICtrlSetOnEvent(-1, "txtLogoutLimitTime")
 
 $y += 20
-$chkEnableUseEventTroop = GUICtrlCreateCheckbox(GetTranslatedFileIni("sam m0d", "Enable use Event troops and spells", "Enable use Event troops and spells - All modes"), $x+10, $y, -1, -1)
-	GUICtrlSetOnEvent(-1, "chkEnableUseEventTroop")
+$g_hEnableSkipBuild = GUICtrlCreateCheckbox(GetTranslatedFileIni("sam m0d", "Avoid the relocation of buildings.", "Avoid the relocation of buildings."), $x+10, $y, -1, -1)
+	GUICtrlSetOnEvent(-1, "EnableSkipBuild")
 	GUICtrlSetState(-1, $GUI_UNCHECKED)
 
 $y += 20

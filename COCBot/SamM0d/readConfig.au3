@@ -22,8 +22,8 @@ IniReadS($iMultiFingerStyle, $g_sProfileConfigPath, "MultiFinger", "Select", "1"
 IniReadS($ichkBotLogLineLimit, $g_sProfileConfigPath, "BotLogLineLimit", "Enable", "0", "Int")
 IniReadS($itxtLogLineLimit, $g_sProfileConfigPath, "BotLogLineLimit", "LimitValue", "200","Int")
 
-; use Event troop
-IniReadS($ichkEnableUseEventTroop, $g_sProfileConfigPath, "EnableUseEventTroop", "Enable", "0", "Int")
+; use Enable Skip Build
+IniReadS($g_bEnableSkipBuild, $g_sProfileConfigPath, "EnableSkipBuild", "Enable", "False", "Bool")
 
 ; donate only when troop pre train ready
 IniReadS($ichkEnableDonateWhenReady, $g_sProfileConfigPath, "EnableDonateWhenReady", "Enable", "0", "Int")

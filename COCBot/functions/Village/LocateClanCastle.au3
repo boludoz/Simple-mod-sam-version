@@ -18,7 +18,7 @@ Func LocateClanCastle()
 
 	SetLog("Locating Clan Castle...", $COLOR_INFO)
 
-	If $g_bSkipLocateExc Then
+	If $g_bEnableSkipBuild Then
 		$g_aiClanCastlePos[0] = -1
 		$g_aiClanCastlePos[1] = -1
 		SetLog("Quick Clan Castle...", $COLOR_INFO)

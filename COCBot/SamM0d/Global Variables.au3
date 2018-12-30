@@ -19,9 +19,6 @@ Global $g_iScreenSizeErrorCount = 0
 
 Global $g_aiPrepDon[4] = [0, 0, 0, 0]
 
-;===============SamM0d Mod skip ====================
-Global $g_bSkipLocateExc = True
-
 ;===============SamM0d Global Last drop ====================
 Global $g_bDtropAttack = False
 
@@ -301,8 +298,8 @@ Global $ichkSwitchDonTypeOnlyWhenAtkTypeNotReady = False
 Global $bAvoidSwitch = False
 ;Global $bNowWaitingConfirm = False
 
-; use Event troop
-Global $ichkEnableUseEventTroop, $chkEnableUseEventTroop
+;===============SamM0d Mod skip ====================
+Global $g_bEnableSkipBuild, $g_hEnableSkipBuild
 
 ; donate only when troop pre train ready
 Global $ichkEnableDonateWhenReady, $chkEnableDonateWhenReady

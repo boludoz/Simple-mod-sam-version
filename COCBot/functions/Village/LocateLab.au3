@@ -17,7 +17,7 @@ Func LocateLab()
 
 	SetLog("Locating Laboratory...", $COLOR_INFO)
 	
-	If $g_bSkipLocateExc Then
+	If $g_bEnableSkipBuild Then
 		$g_aiLaboratoryPos[0] = -1
 		$g_aiLaboratoryPos[1] = -1
 		SetLog("Quick Laboratory...", $COLOR_INFO)
