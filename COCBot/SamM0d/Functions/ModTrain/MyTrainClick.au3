@@ -267,7 +267,7 @@ Func MakeTroopsAndSpellsTrainImage()
 	RemoveAllPreTrainTroops()
 
 	Local $iUpperLeftSpellStartOffset = 26
-	Local $iUpperLeftDarkSpellStartOffset = 329
+	Local $iUpperLeftDarkSpellStartOffset = 355
 
 	_CaptureRegion2()
 	Local $aTemp[1][3]

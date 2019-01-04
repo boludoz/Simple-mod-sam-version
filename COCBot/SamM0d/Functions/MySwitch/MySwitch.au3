@@ -116,28 +116,64 @@ Func SelectGoogleAccount($iSlot)
 	Return True
 EndFunc
 
-Func SelectSCAccount($NextAccount, $iStep = 4)
-	; open setting page
-	Click($aButtonSMSetting[0],$aButtonSMSetting[1],1,0,"#Setting")
+Func SwitchCOCAcc_ConfirmSC()
+	For $x = 0 To 20 ; Checking LogOut & Confirm button continuously in 20sec
+
+		; MEmu 2.5.0 and 2.8.6 haves some buttons smaller and diff position.
+		Local $AlternativeToMemuLogOut = [$aButtonLogOutSCID[0], 265, $aButtonLogOutSCID[2], $aButtonLogOutSCID[3]]
+		Local $AlternativeToMemuConfirm = [410, $aButtonConfirmSCID[1], $aButtonConfirmSCID[2], $aButtonConfirmSCID[3]]
+		Local $aToCheckLogOut[2] = [$AlternativeToMemuLogOut, $aButtonLogOutSCID]
+		Local $aToCheckConfirm = [$AlternativeToMemuConfirm, $aButtonConfirmSCID]
+
+		For $i = 0 To UBound($aToCheckLogOut) - 1
+			Local $Pixel = $aToCheckLogOut[$i]
+			If _ColorCheck(_GetPixelColor($Pixel[0], $Pixel[1], True), Hex($Pixel[2], 6), $Pixel[3]) Then
+				SetLog("   2. Click Log Out Supercell ID")
+				Click($Pixel[0], $Pixel[1], 2, 500, "Click Log Out SC_ID") ; Click LogOut button
+				If _Sleep(500) Then Return "Exit"
+
+				Local $TempConfirm = $aToCheckConfirm[$i]
+				For $j = 0 To 10 ; Click Confirm button
+					; Global $aButtonConfirmSCID[4] = [460, 410 + $g_iMidOffsetY, 0x328AFB, 20] ; Supercell ID, Confirm button
+					If _ColorCheck(_GetPixelColor($TempConfirm[0], $TempConfirm[1], True), Hex($TempConfirm[2], 6), $TempConfirm[3]) Then
+						SetLog("   3. Click Confirm Supercell ID")
+						Click($TempConfirm[0], $TempConfirm[1], 1, 0, "Click Confirm SC_ID")
+						If _Sleep(500) Then Return "Exit"
+						;ExitLoop
+						Return "OK"
+					EndIf
+					If $j = 10 Then
+						ExitLoop 3
+						If $i = 1 Then Return "Error"
+					EndIf
+					If _Sleep(900) Then Return "Exit"
+				Next
+			EndIf
+			SetDebugLog("[" & $i & "] Checking LogOut & Confirm button x:" & $Pixel[0] & " y:" & $Pixel[1] & " : " & _GetPixelColor($Pixel[0], $Pixel[1], True))
+		 Next
+	  Next
+EndFunc   ;==>SwitchCOCAcc_ConfirmSCID
+
+Func SelectSCAccount($iSlot, $iStep = 4)
+	Local $NextAccount = 0
 
 	Local $iCount
+	$NextAccount = $iSlot
+	$NextAccount -= 1
 
-	If Not _Wait4Pixel($aButtonClose2[4], $aButtonClose2[5], $aButtonClose2[6], $aButtonClose2[7], 10000, 200) Then
-		SetLog("Cannot load setting page, restart game...", $COLOR_RED)
-		CloseCoC(True)
-		Wait4Main()
-		Return False
-	EndIf
+;~	If Not _Wait4Pixel($aButtonClose2[4], $aButtonClose2[5], $aButtonClose2[6], $aButtonClose2[7], 10000, 200) Then
+;~		SetLog("Cannot load setting page, restart game...", $COLOR_RED)
+;~		CloseCoC(True)
+;~		Wait4Main()
+;~		Return False
+;~	EndIf
 
 ;~  	Click($aButtonSMSettingTabSetting[0],$aButtonSMSettingTabSetting[1],1,0,"#TabSettings")
 ;~  	If _Sleep(500) Then Return False
 
 	If _Sleep(250) Then Return False
 
-	If _Wait4Pixel($aButtonGoogleConnectGreen[4], $aButtonGoogleConnectGreen[5], $aButtonGoogleConnectGreen[6], $aButtonGoogleConnectGreen[7], 10000, 200) Then
-		Click($aButtonGoogleConnectGreen[0],$aButtonGoogleConnectGreen[1],2,500,"#ConnectGoogle")
-	Endif
-	  Local $AccountsCoord
+	Local $AccountsCoord
 	Local $YCoord = Int(336 + 73.5 * $NextAccount)
 	Local $DeltaTotal8Acc = $g_iTotalAcc = 7 ? 14 : 0
 	Local $iRetryCloseSCIDTab = 0
@@ -145,11 +181,23 @@ Func SelectSCAccount($NextAccount, $iStep = 4)
 	Local $aDivider
 
 	For $i = 0 To 30 ; Checking "Log in with SuperCell ID" button continuously in 30sec
-		If _ColorCheck(_GetPixelColor($aLoginWithSupercellID[0], $aLoginWithSupercellID[1], True), Hex($aLoginWithSupercellID[2], 6), $aLoginWithSupercellID[3]) And _
-		_ColorCheck(_GetPixelColor($aLoginWithSupercellID2[0], $aLoginWithSupercellID2[1], True), Hex($aLoginWithSupercellID2[2], 6), $aLoginWithSupercellID2[3]) Then
-			SetLog("   " & $iStep & ". Click Log in with Supercell ID")
+		; open setting page
+		Click($aButtonSMSetting[0],$aButtonSMSetting[1],1,0,"#Setting")
+		If _Sleep(600) Then Return
+
+		Click($aButtonGoogleConnectGreen[0],$aButtonGoogleConnectGreen[1],2,500,"#ConnectGoogle")
+
+		If _Sleep(600) Then Return
+		if 1 Then
+			For $j = 0 To 20 ; Checking Account List continuously in 20sec
+				If QuickMIS("BC1", $g_sImgLogOutButton, 111, 187, 758, 463) Then
+								Click($g_iQuickMISX + 111, $g_iQuickMISY + 187, 1)
+						ExitLoop
+				EndIf
+			Next
+			SwitchCOCAcc_ConfirmSC()
 			Click($aLoginWithSupercellID[0], $aLoginWithSupercellID[1], 1, 0, "Click Log in with SC_ID")
-			If _Sleep(600) Then Return "Exit"
+			If _Sleep(600) Then Return
 
 			For $j = 0 To 20 ; Checking Account List continuously in 20sec
 				If QuickMIS("BC1", $g_sImgListAccounts, 490, 201, 524, 232) Then
@@ -179,7 +227,7 @@ Func SelectSCAccount($NextAccount, $iStep = 4)
 					Click(300, $YCoord, 3, 1000) ; Click Account
 					If _Sleep(250) Then Return "Exit"
 				EndIf
-
+				Local $bResult = True
 				If $bResult Then
 					SetLog("   " & ($iStep + 1) & ". Click Account [" & $NextAccount + 1 & "] Supercell ID")
 					SetLog("Please wait for loading CoC...!")
@@ -264,7 +312,7 @@ Next
 	WEnd
 
 	Local $iResult
-	$iResult = DoLoadVillage()
+	$iResult = True
 
 ;	$bNowWaitingConfirm =False
 

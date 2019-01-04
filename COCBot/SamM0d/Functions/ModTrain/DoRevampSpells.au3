@@ -56,7 +56,6 @@ Func DoRevampSpells($bDoPreTrain = False)
 		If Eval("Dif" & $tempSpells[$i][0] & "Spell") > 0 Then
 			If $g_iSamM0dDebug = 1 Then SetLog("Some spells haven't train: " & $tempSpells[$i][0])
 			If $g_iSamM0dDebug = 1 Then SetLog("Setting Qty Of " & $tempSpells[$i][0] & " spells: " & $tempSpells[$i][3])
-			;SetLog("Prepare for train number Of " & NameOfTroop(Eval("enum" & $tempSpells[$i][0]), Eval("Dif" & $tempSpells[$i][0])) & " x" & Eval("Dif" & $tempSpells[$i][0]),$COLOR_ACTION)
 			Assign("Add" & $tempSpells[$i][0] & "Spell", Eval("Dif" & $tempSpells[$i][0] & "Spell"))
 			$bReVampFlag = True
 		ElseIf Eval("Dif" & $tempSpells[$i][0] & "Spell") < 0 Then
@@ -129,28 +128,11 @@ Func DoRevampSpells($bDoPreTrain = False)
 						EndIf
 					EndIf
 
-;~ 					If $tempSpells[$i][4] = 0 Then
-;~ 						$iCost = getSpellCost($tempSpells[$i][0])
-;~ 						If $iCost = 0 Or $iCost > $MySpellsCost[Eval("enum" & $tempSpells[$i][0])][0] Then
-;~ 							; cannot read train cost, use max level train cost
-;~ 							;$iCost = $MySpellsCost[$i][0]
-;~ 							$iCost = $MySpellsCost[Eval("enum" & $tempSpells[$i][0])][0]
-;~ 						EndIf
-;~ 						$tempSpells[$i][4] = $iCost
-;~ 						$MySpells[Eval("enum" & $tempSpells[$i][0])][4] = $iCost
-;~ 					EndIf
-;~ 					$iCost = $tempSpells[$i][4]
-
 					If $g_iSamM0dDebug = 1 Then SetLog("$iCost: " & $iCost)
-					;Local $iBuildCost = (Eval("enum" & $tempSpells[$i][0]) > $iDarkFixSpell ? getMyOcrCurDEFromTrain() : getMyOcrCurElixirFromTrain())
 					Local $iBuildCost = (Eval("enum" & $tempSpells[$i][0]) > $iDarkFixSpell ? $iCurDarkElixir : $iCurElixir)
 
 					If $g_iSamM0dDebug = 1 Then SetLog("$BuildCost: " & $iBuildCost)
 					If $g_iSamM0dDebug = 1 Then SetLog("Total need: " & ($tempSpell * $iCost))
-
-					;SetLog($CustomTrain_MSG_11 & " " & (Eval("enum" & $tempSpells[$i][0]) > $iDarkFixSpell ? $CustomTrain_MSG_DarkElixir : $CustomTrain_MSG_Elixir) & ": " & $iBuildCost, (Eval("enum" & $tempSpells[$i][0]) > $iDarkFixSpell ? $COLOR_DARKELIXIR : $COLOR_ELIXIR))
-					;SetLog($CustomTrain_MSG_13 & ": " & $iCost, (Eval("enum" & $tempSpells[$i][0]) > $iDarkFixSpell ? $COLOR_DARKELIXIR : $COLOR_ELIXIR))
-
 					If ($tempSpell * $iCost) > $iBuildCost Then
 						$bFlagOutOfResource = True
 						; use eval and not $i to compare because of maybe after array sort $tempTroops
@@ -194,101 +176,3 @@ Func DoRevampSpells($bDoPreTrain = False)
 	EndIf
 EndFunc
 
-Func getSpellCost($trooptype)
-;~ 	If $isSantaSpellAvailable <> 1 Then ; Check if santa spell variable is not set YET
-;~ 		ForceCaptureRegion()
-;~ 		Local $_IsSantaSpellPixel[4] = [65, 540, 0x7C0427, 20]
-
-;~ 		Local $rPixelCheck = _CheckPixel($_IsSantaSpellPixel, True)
-
-;~ 		If $rPixelCheck = True Then
-;~ 			$isSantaSpellAvailable = 1
-;~ 		Else
-;~ 			$isSantaSpellAvailable = 0
-;~ 		EndIf
-;~ 	EndIf
-
-	Local $iResult = 0
-;~ 	If $isSantaSpellAvailable = 1 Then
-;~ 		Switch $trooptype
-;~ 			Case "Lightning"
-;~ 				$iResult = getMyOcr(35,450,60,16,"troopcost",True)
-;~ 			Case "Heal"
-;~ 				$iResult = getMyOcr(132,450,60,16,"troopcost",True)
-;~ 			Case "Jump"
-;~ 				$iResult = getMyOcr(230,450,60,16,"troopcost",True)
-
-;~ 			Case "Clone"
-;~ 				$iResult = getMyOcr(328,450,60,16,"troopcost",True)
-
-;~ 			Case "Rage"
-;~ 				$iResult = getMyOcr(132,550,60,16,"troopcost",True)
-;~ 			Case "Freeze"
-;~ 				$iResult = getMyOcr(230,550,60,16,"troopcost",True)
-
-;~ 			Case "Poison"
-;~ 				$iResult = getMyOcr(336+98,450,60,16,"troopcost",True)
-;~ 			Case "Earth"
-;~ 				$iResult = getMyOcr(336+98,550,60,16,"troopcost",True)
-;~ 			Case "Haste"
-;~ 				$iResult = getMyOcr(434+98,450,60,16,"troopcost",True)
-;~ 			Case "Skeleton"
-;~ 				$iResult = getMyOcr(434+98,550,60,16,"troopcost",True)
-;~ 		EndSwitch
-;~ 	Else
-
-;~ 		Switch $trooptype
-;~ 			Case "Lightning"
-;~ 				$iResult = getMyOcr(0,35,451,60,14,"troopcost",True,False,True)
-;~ 			Case "Rage"
-;~ 				$iResult = getMyOcr(0,132,451,60,14,"troopcost",True,False,True)
-;~ 			Case "Freeze"
-;~ 				$iResult = getMyOcr(0,230,451,60,14,"troopcost",True,False,True)
-
-;~ 			Case "Heal"
-;~ 				$iResult = getMyOcr(0,35,551,60,14,"troopcost",True,False,True)
-;~ 			Case "Jump"
-;~ 				$iResult = getMyOcr(0,132,551,60,14,"troopcost",True,False,True)
-;~ 			Case "Clone"
-;~ 				$iResult = getMyOcr(0,230,551,60,14,"troopcost",True,False,True)
-
-;~ 			Case "Poison"
-;~ 				$iResult = getMyOcr(0,336,451,60,14,"troopcost",True,False,True)
-;~ 			Case "Earth"
-;~ 				$iResult = getMyOcr(0,336,551,60,14,"troopcost",True,False,True)
-;~ 			Case "Haste"
-;~ 				$iResult = getMyOcr(0,434,451,60,14,"troopcost",True,False,True)
-;~ 			Case "Skeleton"
-;~ 				$iResult = getMyOcr(0,434,551,60,14,"troopcost",True,False,True)
-;~ 		EndSwitch
-
-		Switch $trooptype
-			Case "Lightning"
-				$iResult = getMyOcr(0,35,451,60,14,"troopcost",True,False,True)
-			Case "Rage"
-				$iResult = getMyOcr(0,132,451,60,14,"troopcost",True,False,True)
-			Case "Freeze"
-				$iResult = getMyOcr(0,230,451,60,14,"troopcost",True,False,True)
-
-			Case "Heal"
-				$iResult = getMyOcr(0,35,551,60,14,"troopcost",True,False,True)
-			Case "Jump"
-				$iResult = getMyOcr(0,132,551,60,14,"troopcost",True,False,True)
-			Case "Clone"
-				$iResult = getMyOcr(0,230,551,60,14,"troopcost",True,False,True)
-
-			Case "Poison"
-				$iResult = getMyOcr(0,336,451,60,14,"troopcost",True,False,True)
-			Case "Earth"
-				$iResult = getMyOcr(0,336,551,60,14,"troopcost",True,False,True)
-			Case "Haste"
-				$iResult = getMyOcr(0,434,451,60,14,"troopcost",True,False,True)
-			Case "Skeleton"
-				$iResult = getMyOcr(0,434,551,60,14,"troopcost",True,False,True)
-		EndSwitch
-
-;~ 	EndIf
-	If $g_iSamM0dDebug = 1 Then SetLog("$iResult: " & $iResult)
-	If $iResult = "" Then $iResult = 0
-	Return $iResult
-EndFunc

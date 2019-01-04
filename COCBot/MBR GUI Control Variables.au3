@@ -219,7 +219,7 @@ Func InitializeControlVariables()
     Global $groupMyEarthquake =$lblEarthquakeIcon&"#"&$lblEarthquakeSpell&"#"&$txtNumEarthSpell&"#"&$lblTimesEarthquakeS&"#"&$chkPreEarth
     Global $groupMyHaste =$lblHasteIcon&"#"&$lblHasteSpell&"#"&$txtNumHasteSpell&"#"&$lblTimesHasteS&"#"&$chkPreHaste
     Global $groupMySkeleton =$lblSkeletonIcon&"#"&$lblSkeletonSpell&"#"&$txtNumSkeletonSpell&"#"&$lblTimesSkeletonS&"#"&$chkPreSkeleton
-	Global $groupMyBat = $lblBatIcon&"#"&$lblBatSpell&"#"&$txtNumBatSpell&"#"&$lblTimesBatS&"#"&$chkPreBat
+	Global $groupMyBat =$lblBatIcon&"#"&$lblBatSpell&"#"&$txtNumBatSpell&"#"&$lblTimesBatS&"#"&$chkPreBat
 	Global $groupListMySpells=$groupMyLightning&"#"&$groupMyHeal&"#"&$groupMyRage&"#"&$groupMyJumpSpell&"#"&$groupMyFreeze&"#"&$groupMyClone&"#"&$groupMyPoison&"#"&$groupMyEarthquake&"#"&$groupMyHaste&"#"&$groupMySkeleton&"#"&$groupMyBat
 
    ; Groups of controls

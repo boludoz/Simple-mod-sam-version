@@ -18,7 +18,9 @@ Func VillageSearch()
 
 	$g_bVillageSearchActive = True
 	$g_bCloudsActive = True
-
+	
+	$g_bSearchAttackNowEnable = True
+	
 	Local $Result = _VillageSearch()
 	If $g_bSearchAttackNowEnable Then
 		GUICtrlSetState($g_hBtnAttackNowDB, $GUI_HIDE)
@@ -150,7 +152,8 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		; only one capture here, very important for consistent debug images, zombies, redline calc etc.
 		ForceCaptureRegion()
 		_CaptureRegion2()
-
+		
+		#cs
 		; measure enemy village (only if resources match)
 		For $i = 0 To $g_iModeCount - 1
 			If $match[$i] Then
@@ -170,6 +173,25 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 				ExitLoop
 			EndIf
 		Next
+		
+		#ce		
+		Setlog("Check ZoomOut...", $COLOR_INFO)
+		If CheckZoomOut2("VillageSearch", False, False) = False Then
+			$i = 0
+			Local $bMeasured
+			Do
+				$i += 1
+				If _Sleep($DELAYPREPARESEARCH2) Then Return ; wait 500 ms
+				ForceCaptureRegion()
+				_CaptureRegion2()
+				$bMeasured = CheckZoomOut2("VillageSearch", True, False)
+			Until $bMeasured = True Or $i >= 2
+			If $bMeasured = False Then
+				SetLog("CheckZoomOut failed!", $COLOR_ERROR)
+				Return ; exit func
+			EndIf
+		EndIf
+
 		; ----------------- FIND TARGET TOWNHALL -------------------------------------------
 		; $g_iSearchTH name of level of townhall (return "-" if no th found)
 		; $g_iTHx and $g_iTHy coordinates of townhall
