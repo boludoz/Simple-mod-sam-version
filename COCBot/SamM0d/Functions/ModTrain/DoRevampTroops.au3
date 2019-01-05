@@ -53,7 +53,6 @@ Func DoRevampTroops($bDoPreTrain = False)
 		If Eval("Dif" & $tempTroops[$i][0]) > 0 Then
 			If $g_iSamM0dDebug = 1 Then SetLog("Some troops haven't train: " & $tempTroops[$i][0])
 			If $g_iSamM0dDebug = 1 Then SetLog("Setting Qty Of " & $tempTroops[$i][0] & " troops: " & $tempTroops[$i][3])
-			;SetLog("Prepare for train number Of " & NameOfTroop(Eval("e" & $tempTroops[$i][0]), Eval("Dif" & $tempTroops[$i][0])) & " x" & Eval("Dif" & $tempTroops[$i][0]),$COLOR_ACTION)
 			Assign("Add" & $tempTroops[$i][0], Eval("Dif" & $tempTroops[$i][0]))
 			$bReVampFlag = True
 		ElseIf Eval("Dif" & $tempTroops[$i][0]) < 0 Then
@@ -130,10 +129,7 @@ Func DoRevampTroops($bDoPreTrain = False)
 					EndIf
 
 					If $g_iSamM0dDebug = 1 Then SetLog("$iCost: " & $iCost)
-					;Local $iBuildCost = (Eval("e" & $tempTroops[$i][0]) > $iDarkFixTroop ? getMyOcrCurDEFromTrain() : getMyOcrCurElixirFromTrain())
 					Local $iBuildCost = (Eval("e" & $tempTroops[$i][0]) > $iDarkFixTroop ? $iCurDarkElixir : $iCurElixir)
-					;SetLog($CustomTrain_MSG_11 & " " & (Eval("e" & $tempTroops[$i][0]) > $iDarkFixTroop ? $CustomTrain_MSG_DarkElixir : $CustomTrain_MSG_Elixir)  & ": " & $iBuildCost, (Eval("e" & $tempTroops[$i][0]) > $iDarkFixTroop ? $COLOR_DARKELIXIR : $COLOR_ELIXIR))
-					;SetLog($CustomTrain_MSG_12 & ": " & $iCost, (Eval("e" & $tempTroops[$i][0]) > $iDarkFixTroop ? $COLOR_DARKELIXIR : $COLOR_ELIXIR))
 
 					If $g_iSamM0dDebug = 1 Then SetLog("$iBuildCost: " & $iBuildCost)
 					If $g_iSamM0dDebug = 1 Then SetLog("Total need: " & ($Troop4Add * $iCost))
@@ -279,102 +275,3 @@ Func CheckNeedSwipe($TrainTroop)
 	EndIf
 	Return True
 EndFunc
-
-;~ Func getTroopCost($trooptype)
-;~ 	Local $iResult = 0
-;~ 	Switch $trooptype
-;~ 		Case "Barb"
-;~ 			$iResult = getMyOcr(0,35,450,60,16,"troopcost",True,False,True)
-;~ 		Case "Pumpkin"
-;~ 			$iResult = getMyOcr(0,35,552,60,16,"troopcost",True,False,True)
-;~ 		Case "Arch"
-;~ 			$iResult = getMyOcr(0,134,450,60,16,"troopcost",True,False,True)
-;~ 		Case "Giant"
-;~ 			$iResult = getMyOcr(0,134,552,60,16,"troopcost",True,False,True)
-;~ 		Case "GiantSkeleton"
-;~ 			$iResult = getMyOcr(0,233,450,60,16,"troopcost",True,False,True)
-;~ 		Case "Golb"
-;~ 			$iResult = getMyOcr(0,233,552,60,16,"troopcost",True,False,True)
-;~ 		Case "Wall"
-;~ 			$iResult = getMyOcr(0,332,450,60,16,"troopcost",True,False,True)
-;~ 		Case "Ball"
-;~ 			$iResult = getMyOcr(0,332,552,60,16,"troopcost",True,False,True)
-;~ 		Case "Wiza"
-;~ 			$iResult = getMyOcr(0,431,450,60,16,"troopcost",True,False,True)
-;~ 		Case "Heal"
-;~ 			$iResult = getMyOcr(0,431,552,60,16,"troopcost",True,False,True)
-;~ 		Case "Drag"
-;~ 			$iResult = getMyOcr(0,530,450,60,16,"troopcost",True,False,True)
-;~ 		Case "Pekk"
-;~ 			$iResult = getMyOcr(0,530,552,60,16,"troopcost",True,False,True)
-
-;~ 		Case "BabyD"
-;~ 			$iResult = getMyOcr(0,622,450,60,16,"troopcost",True,False,True)
-;~ 		Case "Mine"
-;~ 			$iResult = getMyOcr(0,622,552,60,16,"troopcost",True,False,True)
-
-;~ 		Case "Mini"
-;~ 			$iResult = getMyOcr(0,731,450,60,16,"troopcost",True,False,True)
-;~ 		Case "Hogs"
-;~ 			$iResult = getMyOcr(0,731,552,60,16,"troopcost",True,False,True)
-
-;~ 		Case "Valk"
-;~ 			$iResult = getMyOcr(0,551,450,60,16,"troopcost",True,False,True)
-;~ 		Case "Gole"
-;~ 			$iResult = getMyOcr(0,551,552,60,16,"troopcost",True,False,True)
-;~ 		Case "Witc"
-;~ 			$iResult = getMyOcr(0,648,450,60,16,"troopcost",True,False,True)
-;~ 		Case "Lava"
-;~ 			$iResult = getMyOcr(0,648,552,60,16,"troopcost",True,False,True)
-;~ 		Case "Bowl"
-;~ 			$iResult = getMyOcr(0,747,450,60,16,"troopcost",True,False,True)
-
-;~ 	EndSwitch
-
-;~ 	Switch $trooptype
-;~ 		Case "Barb"
-;~ 			$iResult = getMyOcr(0,35,450,60,16,"troopcost",True,False,True)
-;~ 		Case "Arch"
-;~ 			$iResult = getMyOcr(0,35,552,60,16,"troopcost",True,False,True)
-;~ 		Case "Giant"
-;~ 			$iResult = getMyOcr(0,134,450,60,16,"troopcost",True,False,True)
-;~ 		Case "Gobl"
-;~ 			$iResult = getMyOcr(0,134,552,60,16,"troopcost",True,False,True)
-;~ 		Case "Wall"
-;~ 			$iResult = getMyOcr(0,233,450,60,16,"troopcost",True,False,True)
-;~ 		Case "Ball"
-;~ 			$iResult = getMyOcr(0,233,552,60,16,"troopcost",True,False,True)
-;~ 		Case "Wiza"
-;~ 			$iResult = getMyOcr(0,332,450,60,16,"troopcost",True,False,True)
-;~ 		Case "Heal"
-;~ 			$iResult = getMyOcr(0,332,552,60,16,"troopcost",True,False,True)
-;~ 		Case "Drag"
-;~ 			$iResult = getMyOcr(0,431,450,60,16,"troopcost",True,False,True)
-;~ 		Case "Pekk"
-;~ 			$iResult = getMyOcr(0,431,552,60,16,"troopcost",True,False,True)
-;~ 		Case "BabyD"
-;~ 			$iResult = getMyOcr(0,530,450,60,16,"troopcost",True,False,True)
-;~ 		Case "Mine"
-;~ 			$iResult = getMyOcr(0,530,552,60,16,"troopcost",True,False,True)
-
-;~ 		Case "Mini"
-;~ 			$iResult = getMyOcr(0,632,450,60,16,"troopcost",True,False,True)
-;~ 		Case "Hogs"
-;~ 			$iResult = getMyOcr(0,632,552,60,16,"troopcost",True,False,True)
-;~ 		Case "Valk"
-;~ 			$iResult = getMyOcr(0,731,450,60,16,"troopcost",True,False,True)
-;~ 		Case "Gole"
-;~ 			$iResult = getMyOcr(0,731,552,60,16,"troopcost",True,False,True)
-;~ 		Case "Witc"
-;~ 			$iResult = getMyOcr(0,648,450,60,16,"troopcost",True,False,True)
-;~ 		Case "Lava"
-;~ 			$iResult = getMyOcr(0,648,552,60,16,"troopcost",True,False,True)
-;~ 		Case "Bowl"
-;~ 			$iResult = getMyOcr(0,747,450,60,16,"troopcost",True,False,True)
-
-;~ 	EndSwitch
-
-;~ 	If $g_iSamM0dDebug = 1 Then SetLog("$iResult: " & $iResult)
-;~ 	If $iResult = "" Then $iResult = 0
-;~ 	Return $iResult
-;~ EndFunc
