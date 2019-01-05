@@ -1,3 +1,5 @@
+Global $g_iXYOCRTR[4] = [0, 0, 0, 0]
+
 Global $chkModTrain, $lblMyQuickTrain, $cmbMyQuickTrain, $grpOtherTroops, $chkMyTroopsOrder, $cmbTroopSetting, $btnResetTroops, $btnResetOrder, $btnResetSpells, $btnResetSpellOrder, $lblTotalCapacityOfMyTroops, $idProgressbar, _
 $chkDisablePretrainTroops, $chkEnableDeleteExcessTroops, $lblStickToTrainWindow, $txtStickToTrainWindow, $chkForcePreTrainTroops, $txtForcePreTrainStrength
 Global $grpSpells,$lblTotalSpell,$txtTotalCountSpell2
