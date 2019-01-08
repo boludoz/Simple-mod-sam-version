@@ -140,10 +140,8 @@
 #include "functions\Attack\Troops\DropOnEdge.au3"
 #include "functions\Attack\Troops\DropOnEdges.au3"
 #include "functions\Attack\Troops\DropOrderTroops.au3"
-;#include "functions\Attack\Troops\GetXPosOfArmySlot.au3"
 #include "functions\Attack\Troops\GetSlotIndexFromXPos.au3"
 #include "functions\Attack\Troops\LaunchTroop.au3"
-#include "functions\Attack\Troops\NameOfTroop.au3" ; sanmod
 #include "functions\Attack\Troops\OldDropTroop.au3"
 #include "functions\Attack\Troops\ReadTroopQuantity.au3"
 #include "functions\Attack\Troops\SelectDropTroop.au3"
