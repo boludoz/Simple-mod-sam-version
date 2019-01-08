@@ -35,10 +35,11 @@ Func ProfileReport()
 	If $iCount >= 25 Then SetDebugLog("Profile Page did not open after " & $iCount & " Loops", $COLOR_DEBUG)
 
    ; Check If exist 'Claim Reward' button , click and return to Top of the Profile Page
-
+	Local $aSearchResult
 	For $i = 0 to 1 ; Check twice,  because the button is animated
-		If QuickMIS("BC1", $g_sImgCollectReward, 680, 165, 855, 680) Then
-			Click($g_iQuickMISX + 680, $g_iQuickMISY + 165)
+		$aSearchResult = decodeSingleCoord(findImage("CollectReward", $g_sImgCollectReward, GetDiamondFromRect("680,165,855,680"), 1, True))
+		If IsArray($aSearchResult) And UBound($aSearchResult) = 2 Then
+			Click($aSearchResult[0], $aSearchResult[1])
 			SetLog("Reward collected", $COLOR_SUCCESS)
 			For $i = 0 To 9
 				ClickDrag(421, 200, 421, 630, 2000)

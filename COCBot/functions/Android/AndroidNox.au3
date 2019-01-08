@@ -219,7 +219,7 @@ Func InitNox($bCheckOnly = False)
 
 		;$g_sAndroidPicturesPath = "/mnt/shell/emulated/0/Download/other/"
 		;$g_sAndroidPicturesPath = "/mnt/shared/Other/"
-		$g_sAndroidPicturesPath = "(/mnt/shared/Other|/mnt/shell/emulated/0/Download/other)"
+		$g_sAndroidPicturesPath = "(/mnt/shared/Other|/mnt/shell/emulated/0/Download/other|/mnt/shell/emulated/0/Others)"
 		$aRegexResult = StringRegExp($__VBoxVMinfo, "Name: 'Other', Host path: '(.*)'.*", $STR_REGEXPARRAYGLOBALMATCH)
 		If Not @error Then
 			$g_bAndroidSharedFolderAvailable = True

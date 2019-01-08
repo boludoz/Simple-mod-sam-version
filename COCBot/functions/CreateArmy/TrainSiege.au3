@@ -78,7 +78,7 @@ Func TrainSiege()
 			If $aSearchResult[0][0] <> "" Then
 				For $i = 0 To UBound($aSearchResult) - 1
 					Local $tempSiege = TroopIndexLookup($aSearchResult[$i][0])
-					Setlog("- " & NameOfTroop($tempSiege) & " Queued.", $COLOR_INFO)
+					Setlog("- " & GetTroopName($tempSiege) & " Queued.", $COLOR_INFO)
 				Next
 			EndIf
 

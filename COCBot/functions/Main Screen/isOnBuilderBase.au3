@@ -15,10 +15,10 @@
 
 Func isOnBuilderBase($bNeedCaptureRegion = False)
 	_Sleep($DELAYISBUILDERBASE)
+    Local $aSearchResult = decodeSingleCoord(findImage("isOnBuilderBase", $g_sImgIsOnBB, GetDiamondFromRect("260,0,406,54"), 1, $bNeedCaptureRegion))
 
-	Local $ImagePath = @ScriptDir & "\imgxml\village\Page\BuilderIsland\"
-	If QuickMIS("BC1", $ImagePath, 260, 0, 406, 54, $bNeedCaptureRegion, $g_bDebugSetlog) Then
-		If $g_bDebugSetlog Then SetDebugLog("Builder Base Builder detected", $COLOR_DEBUG)
+    If IsArray($aSearchResult) And UBound($aSearchResult) = 2 Then
+        SetDebugLog("Builder Base Builder detected", $COLOR_DEBUG)
 		Return True
 	Else
 		Return False

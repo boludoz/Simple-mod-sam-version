@@ -565,6 +565,8 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 		Case $g_hBtnTestTHimgloc
 			imglocTHSearch()
 		Case $g_hBtnTestAttackCSV
+            btnTestAttackCSV()
+        Case $g_hBtnTestArmyWindow
 			Local $RuntimeA = $g_bRunState
 			$g_bRunState = True
 			Setlog("Army Window Test")
@@ -1629,17 +1631,29 @@ EndFunc   ;==>ControlRedraw
 Func SetTime($bForceUpdate = False)
 	If $g_hTimerSinceStarted = 0 Then Return ; GIGO, no setTime when timer hasn't started yet
 	Local $day = 0, $hour = 0, $min = 0, $sec = 0
-	If GUICtrlRead($g_hGUI_STATS_TAB, 1) = $g_hGUI_STATS_TAB_ITEM2 Or $bForceUpdate = True Then
+    If (GUICtrlRead($g_hGUI_STATS_TAB, 1) = $g_hGUI_STATS_TAB_ITEM2 And GUICtrlRead($g_hGUI_BOT_TAB, 1) = $g_hGUI_BOT_TAB_ITEM5 And GUICtrlRead($g_hTabMain, 1) = $g_hTabBot) Or $bForceUpdate = True Then
 		_TicksToDay(Int(__TimerDiff($g_hTimerSinceStarted) + $g_iTimePassed), $day, $hour, $min, $sec)
 		GUICtrlSetData($g_hLblResultRuntime, $day > 0 ? StringFormat("%2u Day(s) %02i:%02i:%02i", $day, $hour, $min, $sec) : StringFormat("%02i:%02i:%02i", $hour, $min, $sec))
 	EndIf
 	If GUICtrlGetState($g_hLblResultGoldNow) <> $GUI_ENABLE + $GUI_SHOW Or $bForceUpdate = True Then
 		_TicksToTime(Int(__TimerDiff($g_hTimerSinceStarted) + $g_iTimePassed), $hour, $min, $sec)
-		GUICtrlSetData($g_hLblResultRuntimeNow, StringFormat("%02i:%02i:%02i", $hour, $min, $sec))
-	EndIf
+        GUICtrlSetData($g_hLblResultRuntimeNow, StringFormat("%02i:%02i:%02i", $hour, $min, $sec))
+    EndIf
 
-	If ProfileSwitchAccountEnabled() Then
-		If GUICtrlRead($g_hGUI_STATS_TAB, 1) = $g_hGUI_STATS_TAB_ITEM5 Or $bForceUpdate Then
+    If _DateIsValid($g_sLabUpgradeTime) Then
+        Local $iLabTime = _DateDiff("s", _NowCalc(), $g_sLabUpgradeTime) * 1000
+        If $iLabTime > 0 Then
+            _TicksToDay($iLabTime, $day, $hour, $min, $sec)
+            GUICtrlSetData($g_hLbLLabTime, $day > 0 ? StringFormat("%2ud %02i:%02i'", $day, $hour, $min) : StringFormat("%02i:%02i:%02i", $hour, $min, $sec))
+            GUICtrlSetColor($g_hLbLLabTime, $day > 0 ? $COLOR_GREEN : $COLOR_ORANGE)
+        Else
+            GUICtrlSetData($g_hLbLLabTime, "")
+            $g_sLabUpgradeTime = ""
+        EndIf
+    EndIf
+
+    If ProfileSwitchAccountEnabled() Then
+        If GUICtrlRead($g_hGUI_STATS_TAB, 1) = $g_hGUI_STATS_TAB_ITEM5 And GUICtrlRead($g_hGUI_BOT_TAB, 1) = $g_hGUI_BOT_TAB_ITEM5 And GUICtrlRead($g_hTabMain, 1) = $g_hTabBot Then
 			_TicksToTime(Int(__TimerDiff($g_ahTimerSinceSwitched[$g_iCurAccount]) + $g_aiRunTime[$g_iCurAccount]), $hour, $min, $sec)
 			GUICtrlSetData($g_ahLblResultRuntimeNowAcc[$g_iCurAccount], StringFormat("%02i:%02i:%02i", $hour, $min, $sec))
 			For $i = 0 To $g_iTotalAcc
@@ -1651,13 +1665,14 @@ Func SetTime($bForceUpdate = False)
 						GUICtrlSetColor($g_ahLblTroopTime[$i], $COLOR_GREEN)
 					ElseIf $iTime < 0 Then
 						GUICtrlSetColor($g_ahLblTroopTime[$i], $COLOR_RED)
-					Else
-						GUICtrlSetColor($g_ahLblTroopTime[$i], $COLOR_BLACK)
-					EndIf
-			   EndIf
-			Next
-		EndIf
-	EndIf
+                    Else
+                        GUICtrlSetColor($g_ahLblTroopTime[$i], $COLOR_BLACK)
+                    EndIf
+                EndIf
+            Next
+            SwitchAccountVariablesReload("SetTime")
+        EndIf
+    EndIf
 EndFunc   ;==>SetTime
 
 Func tabMain()

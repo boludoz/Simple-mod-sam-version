@@ -67,10 +67,10 @@ Func Alogrithm_MilkingAttack()
 				For $i = 0 To UBound($g_avAttackTroops) - 1
 					If $g_avAttackTroops[$i][1] <> -1 Then ;if not empty
 						If $g_avAttackTroops[$i][0] = $eGobl Then
-							If $g_bDebugSetlog Then SetDebugLog("-*-" & $g_avAttackTroops[$i][0] & " " & NameOfTroop($g_avAttackTroops[$i][0]) & " " & $g_avAttackTroops[$i][1] & " <<---" & $eGobl, $COLOR_SUCCESS)
+							If $g_bDebugSetlog Then SetDebugLog("-*-" & $g_avAttackTroops[$i][0] & " " & GetTroopName($g_avAttackTroops[$i][0]) & " " & $g_avAttackTroops[$i][1] & " <<---" & $eGobl, $COLOR_SUCCESS)
 							$troopPosition = $i
 						Else
-							If $g_bDebugSetlog Then SetDebugLog("-*-" & $g_avAttackTroops[$i][0] & " " & NameOfTroop($g_avAttackTroops[$i][0]) & " " & $g_avAttackTroops[$i][1] & "", $COLOR_GRAY)
+							If $g_bDebugSetlog Then SetDebugLog("-*-" & $g_avAttackTroops[$i][0] & " " & GetTroopName($g_avAttackTroops[$i][0]) & " " & $g_avAttackTroops[$i][1] & "", $COLOR_GRAY)
 						EndIf
 					EndIf
 				Next

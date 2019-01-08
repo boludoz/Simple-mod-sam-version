@@ -54,7 +54,7 @@ Func ReArm()
 				Click(515, 400, 1, 0, "#0226")
 				If _Sleep($DELAYREARM4) Then Return
 				If isGemOpen(True) Then
-					SetLog("Not enough loot to rearm traps.....", $COLOR_ERROR)
+					SetLog("Not enough loot to rearm traps!", $COLOR_ERROR)
 					Click(585, 252, 1, 0, "#0227") ; Click close gem window "X"
 					If _Sleep($DELAYREARM1) Then Return
 				Else

@@ -72,7 +72,7 @@ Func getResourcesLootT($x_start, $y_start) ; -> Gets complete value of Trophies 
 EndFunc   ;==>getResourcesLootT
 
 Func getResourcesBonus($x_start, $y_start) ; -> Gets complete value of Gold/Elixir bonus loot in "AttackReport.au3"
-	Return getOcrAndCapture("coc-bonus", $x_start, $y_start, 98, 16, True)
+	Return getOcrAndCapture("coc-bonus", $x_start, $y_start, 98, 20, True)
 EndFunc   ;==>getResourcesBonus
 
 Func getResourcesBonusPerc($x_start, $y_start) ; -> Gets complete value of Bonus % in "AttackReport.au3"

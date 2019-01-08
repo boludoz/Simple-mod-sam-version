@@ -298,7 +298,7 @@ Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 	;01 - TROOPS ------------------------------------------------------------------------------------------------------------------------------------------
 	debugAttackCSV("Troops to be used (purged from troops) ")
 	For $i = 0 To UBound($g_avAttackTroops) - 1 ; identify the position of this kind of troop
-		debugAttackCSV("SLOT n.: " & $i & " - Troop: " & NameOfTroop($g_avAttackTroops[$i][0]) & " (" & $g_avAttackTroops[$i][0] & ") - Quantity: " & $g_avAttackTroops[$i][1])
+		debugAttackCSV("SLOT n.: " & $i & " - Troop: " & GetTroopName($g_avAttackTroops[$i][0]) & " (" & $g_avAttackTroops[$i][0] & ") - Quantity: " & $g_avAttackTroops[$i][1])
 	Next
 
 	Local $hTimerTOTAL = __timerinit()

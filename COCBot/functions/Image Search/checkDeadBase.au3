@@ -279,9 +279,9 @@ Func checkDeadBaseSuperNew($bForceCapture = True, $sFillDirectory = @ScriptDir &
 
 	; check for any collector filling
 	Local $result = findMultiple($sFillDirectory, $sCocDiamond, $redLines, $minLevel, $maxLevel, $maxReturnPoints, $returnProps, $bForceCapture)
-	Local $foundFilledCollectors = IsArray($result) = 1
+	Local $bFoundFilledCollectors = IsArray($result) = 1
 
-	If $foundFilledCollectors = True Then
+	If $bFoundFilledCollectors Then
 
 		For $matchedValues In $result
 			Local $aPoints = StringSplit($matchedValues[1], "|", $STR_NOCOUNT) ; multiple points splited by | char
@@ -312,7 +312,7 @@ Func checkDeadBaseSuperNew($bForceCapture = True, $sFillDirectory = @ScriptDir &
 							ExitLoop
 						EndIf
 					Next
-					If $bSkipPoint = False Then
+					If Not $bSkipPoint Then
 						Local $i = UBound($aPos)
 						ReDim $aPos[$i + 1]
 						$aPos[$i] = $aP
@@ -370,12 +370,12 @@ Func checkDeadBaseSuperNew($bForceCapture = True, $sFillDirectory = @ScriptDir &
 
 	Local $dbFound = $TotalMatched >= $g_iCollectorMatchesMin
 	If $g_bDebugSetlog Then
-		If $foundFilledCollectors = False Then
-			SetDebugLog("IMGLOC : NOT A DEADBASE!!!", $COLOR_INFO)
-		ElseIf $dbFound = False Then
+		If Not $bFoundFilledCollectors Then
+			SetDebugLog("IMGLOC : NOT A DEADBASE", $COLOR_INFO)
+		ElseIf Not $dbFound Then
 			SetDebugLog("IMGLOC : DEADBASE NOT MATCHED: " & $TotalMatched & "/" & $g_iCollectorMatchesMin, $COLOR_WARNING)
 		Else
-			SetDebugLog("IMGLOC : FOUND DEADBASE !!! Matched: " & $TotalMatched & "/" & $g_iCollectorMatchesMin & ": " & UBound($aPoints), $COLOR_GREEN)
+			SetDebugLog("IMGLOC : FOUND DEADBASE Matched: " & $TotalMatched & "/" & $g_iCollectorMatchesMin & ": " & UBound($aPoints), $COLOR_GREEN)
 		EndIf
 	EndIf
 

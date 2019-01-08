@@ -5,11 +5,11 @@
 #pragma compile(Icon, "Images\MyBot.ico")
 #pragma compile(FileDescription, Clash of Clans Bot - A Free Clash of Clans bot - https://mybot.run)
 #pragma compile(ProductVersion, 7.6)
-#pragma compile(FileVersion, 7.6.5)
+#pragma compile(FileVersion, 7.6.6)
 #pragma compile(LegalCopyright, © https://mybot.run)
 #Au3Stripper_Off
 #Au3Stripper_On
-Global $g_sBotVersion = "v7.6.5"
+Global $g_sBotVersion = "v7.6.6"
 Opt("MustDeclareVars", 1)
 Global $g_sBotTitle = ""
 Global $g_hFrmBot = 0
@@ -53816,7 +53816,7 @@ Local $sBldgText, $sBldgLevel, $aString
 Local $aResult[3] = ["", "", ""]
 $sBldgText = getNameBuilding($iXstart, $iYstart)
 If $sBldgText = "" Then
-If _Sleep($DELAYBUILDINGINFO1) Then Return
+If _Sleep($DELAYBUILDINGINFO1) Then Return $aResult
 $sBldgText = getNameBuilding($iXstart, $iYstart)
 EndIf
 If $g_bDebugSetlog Then SetDebugLog("Read building Name String = " & $sBldgText, $COLOR_DEBUG)
@@ -53903,7 +53903,7 @@ Func getResourcesLootT($x_start, $y_start)
 Return getOcrAndCapture("coc-loot", $x_start, $y_start, 37, 22, True)
 EndFunc
 Func getResourcesBonus($x_start, $y_start)
-Return getOcrAndCapture("coc-bonus", $x_start, $y_start, 98, 16, True)
+Return getOcrAndCapture("coc-bonus", $x_start, $y_start, 98, 20, True)
 EndFunc
 Func getResourcesBonusPerc($x_start, $y_start)
 Return getOcrAndCapture("coc-bonus", $x_start, $y_start, 48, 16, True)
@@ -54993,7 +54993,7 @@ SetLog("Going to Attack...", $COLOR_INFO)
 If $g_bSearchRestartPickupHero And $Mode <> $DT Then
 For $pTroopType = $eKing To $eWarden
 For $pMatchMode = $DB To $g_iModeCount - 1
-If IsSpecialTroopToBeUsed($pMatchMode, $pTroopType) Then
+If IsUnitUsed($pMatchMode, $pTroopType) Then
 If Not _DateIsValid($g_asHeroHealTime[$pTroopType - $eKing]) Then
 getArmyHeroTime("All", True, True)
 ExitLoop 2

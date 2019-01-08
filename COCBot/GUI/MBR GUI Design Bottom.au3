@@ -29,7 +29,7 @@ Global $g_hLblVillageReportTemp = 0
 Global $g_hlblKing = 0, $g_hPicKingGray = 0, $g_hPicKingBlue = 0, $g_hPicKingRed = 0, $g_hPicKingGreen = 0
 Global $g_hlblQueen = 0, $g_hPicQueenGray = 0, $g_hPicQueenBlue = 0, $g_hPicQueenRed = 0, $g_hPicQueenGreen = 0
 Global $g_hlblWarden = 0, $g_hPicWardenGray = 0, $g_hPicWardenBlue = 0, $g_hPicWardenRed = 0, $g_hPicWardenGreen = 0
-Global $g_hlblLab = 0, $g_hPicLabGray = 0, $g_hPicLabRed = 0, $g_hPicLabGreen = 0
+Global $g_hlblLab = 0, $g_hPicLabGray = 0, $g_hPicLabRed = 0, $g_hPicLabGreen = 0, $g_hLbLLabTime = 0
 
 Func CreateBottomPanel()
 	Local $sTxtTip = ""
@@ -187,6 +187,7 @@ Func CreateBottomPanel()
 		$g_hPicLabRed = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnRedShield, $x + 53, $y, 16, 16 )
 	  		_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetState(-1, $GUI_HIDE)
+		$g_hLbLLabTime = GUICtrlCreateLabel("", $x, $y + 15, 50, 16, $SS_LEFT)
 
    ;~ Village
    Local $x = 295, $y = $y_bottom + 20

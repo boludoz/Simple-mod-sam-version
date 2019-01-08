@@ -62,21 +62,28 @@ Func chkRequestCountCC()
 	EndIf
 	If GUICtrlRead($g_hChkRequestType_Spells) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hTxtRequestCountCCSpell, $GUI_ENABLE)
-		For $i = $g_ahCmbClanCastleSpell[0] To $g_ahCmbClanCastleSpell[1]
-			GUICtrlSetState($i, $GUI_ENABLE)
-		Next
+		GUICtrlSetState($g_ahCmbClanCastleSpell[0], $GUI_ENABLE)
+		GUICtrlSetState($g_ahCmbClanCastleSpell[1], $GUI_ENABLE)
+		GUICtrlSetState($g_ahCmbClanCastleSpell[2], $GUI_ENABLE)
 		CmbClanCastleSpell()
 	Else
 		GUICtrlSetState($g_hTxtRequestCountCCSpell, $GUI_DISABLE)
-		For $i = $g_ahCmbClanCastleSpell[0] To $g_ahTxtClanCastleSpell[1]
-			GUICtrlSetState($i, $GUI_DISABLE)
-		Next
+		GUICtrlSetState($g_ahCmbClanCastleSpell[0], $GUI_DISABLE)
+		GUICtrlSetState($g_ahCmbClanCastleSpell[1], $GUI_DISABLE)
+		GUICtrlSetState($g_ahCmbClanCastleSpell[2], $GUI_DISABLE)
+	EndIf
+	If GUICtrlRead($g_hChkRequestType_Siege) = $GUI_CHECKED Then
+		GUICtrlSetState($g_ahCmbClanCastleSiege[0], $GUI_ENABLE)
+		GUICtrlSetState($g_ahCmbClanCastleSiege[1], $GUI_ENABLE)
+	Else
+		GUICtrlSetState($g_ahCmbClanCastleSiege[0], $GUI_DISABLE)
+		GUICtrlSetState($g_ahCmbClanCastleSiege[1], $GUI_DISABLE)
 	EndIf
 EndFunc   ;==>chkRequestCountCC
 
 Func CmbClanCastleTroop()
 	For $i = 0 To UBound($g_ahCmbClanCastleTroop) - 1
-		If _GUICtrlComboBox_GetCurSel($g_ahCmbClanCastleTroop[$i]) <= $eTroopBowler Then
+		If _GUICtrlComboBox_GetCurSel($g_ahCmbClanCastleTroop[$i]) < $eTroopCount Then
 			GUICtrlSetState($g_ahTxtClanCastleTroop[$i], $GUI_ENABLE)
 		Else
 			GUICtrlSetState($g_ahTxtClanCastleTroop[$i], $GUI_DISABLE)
@@ -86,12 +93,7 @@ EndFunc   ;==>CmbClanCastleTroop
 
 Func CmbClanCastleSpell()
 	For $i = 0 To UBound($g_ahCmbClanCastleSpell) - 1
-		If _GUICtrlComboBox_GetCurSel($g_ahCmbClanCastleSpell[$i]) = $eCSpell - $eLSpell Then _GUICtrlComboBox_SetCurSel($g_ahCmbClanCastleSpell[$i], $eBtSpell - $eLSpell + 1)
-		If _GUICtrlComboBox_GetCurSel($g_ahCmbClanCastleSpell[$i]) <= $eBtSpell - $eLSpell Then
-			GUICtrlSetState($g_ahTxtClanCastleSpell[$i], $GUI_ENABLE)
-		Else
-			GUICtrlSetState($g_ahTxtClanCastleSpell[$i], $GUI_DISABLE)
-		EndIf
+		If _GUICtrlComboBox_GetCurSel($g_ahCmbClanCastleSpell[$i]) = $eCSpell - $eLSpell Then _GUICtrlComboBox_SetCurSel($g_ahCmbClanCastleSpell[$i], $eSpellCount)
 	Next
 EndFunc   ;==>CmbClanCastleSpell
 

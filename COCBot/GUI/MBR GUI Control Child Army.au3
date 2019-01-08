@@ -126,7 +126,7 @@ Func lblTotalCountTroop2()
 	Local $TotalTotalTimeTroop = 0
 	Local $NbrOfBarrack = 4 ;For the moment fix to 4 until fine detect level of each Barrack
 	Local $NbrOfDarkBarrack = 2 ;For the moment fix to 2 until fine detect level of each Barrack
-	For $i = $eTroopBarbarian To $eTroopIceGolem
+	For $i = $eTroopBarbarian To $eTroopElectroDragon
 		Local $NbrOfTroop = GUICtrlRead($g_ahTxtTrainArmyTroopCount[$i])
 		Local $LevOfTroop = $g_aiTrainArmyTroopLevel[$i]
 

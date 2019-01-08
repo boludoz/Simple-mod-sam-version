@@ -460,68 +460,52 @@ Func chkmakeIMGCSV()
 EndFunc   ;==>chkmakeIMGCSV
 
 Func btnTestTrain()
-    ; samm0d
+	Local $currentOCR = $g_bDebugOcr
 	Local $currentRunState = $g_bRunState
 	$g_bRunState = True
+	BeginImageTest()
 
-    _GUICtrlTab_ClickTab($g_hTabMain, 0)
+	Local $result
+	SetLog("Testing checkArmyCamp()", $COLOR_INFO)
+	$result = checkArmyCamp()
+	If @error Then $result = "Error " & @error & ", " & @extended & ", " & ((IsArray($result)) ? (_ArrayToString($result, ",")) : ($result))
+	SetLog("Result checkArmyCamp() = " & ((IsArray($result)) ? ("Array: " & _ArrayToString($result, ",")) : ($result)), $COLOR_INFO)
 
+	SetLog("Testing getArmyHeroTime()", $COLOR_INFO)
+	$result = getArmyHeroTime("all")
+	If @error Then $result = "Error " & @error & ", " & @extended & ", " & ((IsArray($result)) ? (_ArrayToString($result, ",")) : ($result))
+	SetLog("Result getArmyHeroTime() = " & ((IsArray($result)) ? ("Array: " & _ArrayToString($result, ",")) : ($result)), $COLOR_INFO)
 
-    Local $hTimer = __TimerInit()
+	$result = "" ;
+	SetLog("Testing ArmyHeroStatus()", $COLOR_INFO)
+	For $i = 0 To 2
+		$result &= " " & ArmyHeroStatus($i)
+	Next
+	If @error Then $result = "Error " & @error & ", " & @extended & ", " & ((IsArray($result)) ? (_ArrayToString($result, ",")) : ($result))
+	SetLog("Result ArmyHeroStatus(0, 1, 2) = " & ((IsArray($result)) ? ("Array: " & _ArrayToString($result, ",")) : ($result)), $COLOR_INFO)
 
-    checkMainScreen()
+	SetLog("Testing Train DONE", $COLOR_INFO)
+	EndImageTest()
 
-    $g_bRestart = False
-    $tempDisableTrain=False
-    $tempDisableBrewSpell=False
-    SetLog("===START TRAIN===")
-    ModTrain()
-    SetLog("===START DONATE===")
-    PrepareDonateCC()
-    DonateCC()
-    SetLog("===START FRIENDLY CHALLENGE===")
-    FriendlyChallenge()
-
-    SetLog("Elapsed: " & Round(__TimerDiff($hTimer) / 1000, 2) & "s")
-    SetLog("===All TEST END===")
-
+	$g_bDebugOcr = $currentOCR
 	$g_bRunState = $currentRunState
 EndFunc   ;==>btnTestTrain
 
 Func btnTestDonateCC()
-	Local $currentOCR = $g_bDebugOcr
 	Local $currentRunState = $g_bRunState
 	Local $currentSetlog = $g_bDebugSetlog
 	_GUICtrlTab_ClickTab($g_hTabMain, 0)
-	$g_bDebugOcr = True
 	$g_bRunState = True
-	$g_bDebugSetlog = True
-	ForceCaptureRegion()
-	DebugImageSave("donateCC_")
 
 	SetLog(_PadStringCenter(" Test DonateCC begin (" & $g_sBotVersion & ")", 54, "="), $COLOR_INFO)
-	$g_iDonationWindowY = 0
-	Local $aDonWinOffColors[3][3] = [[0xFFFFFF, 0, 1], [0xFFFFFF, 0, 31], [0xABABA8, 0, 32]]
-	Local $aDonationWindow = _MultiPixelSearch(409, 0, 410, $g_iDEFAULT_HEIGHT, 1, 1, Hex(0xFFFFFF, 6), $aDonWinOffColors, 10)
-
-	If IsArray($aDonationWindow) Then
-		$g_iDonationWindowY = $aDonationWindow[1]
-		_Sleep(250)
-		SetLog("$DonationWindowY: " & $g_iDonationWindowY, $COLOR_DEBUG)
-	Else
-		SetLog("Could not find the Donate Window :(", $COLOR_ERROR)
-		Return False
-	EndIf
-	SetLog("Detecting Troops...")
-	DetectSlotTroop($eIceG)
-	SetLog("Detecting Sieges...")
-	DetectSlotSiege($eSiegeStoneSlammer)
-	SetLog("Detecting Spells...")
-	DetectSlotSpell($eBtSpell)
+	PrepareDonateCC()
+	$g_iCurrentSpells = 11
+	$g_aiCurrentSiegeMachines[$eSiegeWallWrecker] = 1
+	$g_aiCurrentSiegeMachines[$eSiegeBattleBlimp] = 1
+	$g_aiCurrentSiegeMachines[$eSiegeStoneSlammer] = 1
+	DonateCC()
 	SetLog(_PadStringCenter(" Test DonateCC end ", 54, "="), $COLOR_INFO)
-	ShellExecute($g_sProfileTempDebugPath & "donateCC_")
 
-	$g_bDebugOcr = $currentOCR
 	$g_bRunState = $currentRunState
 	$g_bDebugSetlog = $currentSetlog
 EndFunc   ;==>btnTestDonateCC
@@ -563,14 +547,12 @@ Func btnTestAttackBar()
 
 	SetLog(_PadStringCenter(" Begin AttackBar Detection", 54, "="), $COlOR_INFO)
 
-	Local $aAttackBar = StringSplit(AttackBarCheck(False, $DB, True), "|", $STR_NOCOUNT)
-	Local $aTroop
+	Local $avAttackBar = AttackBarCheck(False, $DB, True)
 
-	If IsArray($aAttackBar) And UBound($aAttackBar, 1) >= 1 Then
-	SetLog("Found " & UBound($aAttackBar, 1) & " Slots", $COlOR_SUCCESS)
-	For $i = 0 To UBound($aAttackBar, 1) - 1
-		$aTroop = StringSplit($aAttackBar[$i], "#", $STR_NOCOUNT)
-		If IsArray($aTroop) And UBound($aTroop, 1) = 4 Then SetLog("- Slot " & $aTroop[1] & ": " & $aTroop[2] & " " & GetTroopName($aTroop[0], $aTroop[2]), $COLOR_SUCCESS)
+	If IsArray($avAttackBar) And UBound($avAttackBar, 1) >= 1 Then
+	SetLog("Found " & UBound($avAttackBar, 1) & " Slots", $COlOR_SUCCESS)
+	For $i = 0 To UBound($avAttackBar, 1) - 1
+		SetLog("- Slot " & $avAttackBar[$i][1] & ": " & $avAttackBar[$i][2] & " " & GetTroopName($avAttackBar[$i][0], $avAttackBar[$i][2]) & " (X: " & $avAttackBar[$i][3] & "|Y: " & $avAttackBar[$i][4] & "|OCR X: " & $avAttackBar[$i][5] & "|OCR Y: " & $avAttackBar[$i][6] & ")", $COLOR_SUCCESS)
 	Next
 	EndIf
 	SetLog(_PadStringCenter(" End AttackBar Detection ", 54, "="), $COlOR_INFO)
@@ -768,7 +750,13 @@ Func btnTestAttackCSV()
 
 	$g_iMatchMode = $DB ; define which script to use
 
-	SearchZoomOut($aCenterEnemyVillageClickDrag, True, "btnTestAttackCSV")
+	; reset village measures
+	setVillageOffset(0, 0, 1)
+	ConvertInternalExternArea()
+	;SearchZoomOut($aCenterEnemyVillageClickDrag, True, "btnTestAttackCSV")
+	If CheckZoomOut("btnTestAttackCSV", True, False) = False Then
+		SetLog("CheckZoomOut failed", $COLOR_INFO)
+	EndIf
 	ResetTHsearch()
 	SetLog("Testing FindTownhall()", $COLOR_INFO)
 	SetLog("FindTownhall() = " & FindTownhall(True), $COLOR_INFO)
@@ -806,7 +794,13 @@ Func btnTestGetLocationBuilding()
 	$g_bDebugBuildingPos = True
 	$g_bDebugSetlog = True
 
-	SearchZoomOut($aCenterEnemyVillageClickDrag, True, "btnTestAttackCSV")
+	; reset village measures
+	setVillageOffset(0, 0, 1)
+	ConvertInternalExternArea()
+	;SearchZoomOut($aCenterEnemyVillageClickDrag, True, "btnTestAttackCSV")
+	If CheckZoomOut("btnTestGetLocationBuilding", True, False) = False Then
+		SetLog("CheckZoomOut failed", $COLOR_INFO)
+	EndIf
 	ResetTHsearch()
 	SetLog("Testing FindTownhall()", $COLOR_INFO)
 	SetLog("FindTownhall() = " & FindTownhall(True), $COLOR_INFO)
@@ -824,6 +818,7 @@ Func btnTestGetLocationBuilding()
 
 	_LogObjList($g_oBldgAttackInfo) ; log dictionary contents
 	btnTestGetLocationBuildingImage() ; create image of locations
+	;AttackCSVDEBUGIMAGE()
 
 	Local $string, $iFindBldgTotalTestTime
 	Local $iKeys = $g_oBldgAttackInfo.Keys
@@ -1092,7 +1087,12 @@ Func btnTestWeakBase()
 	Local $currentRunState = $g_bRunState
 	$g_bRunState = True
 	BeginImageTest()
-	IsWeakBase()
+	FindTownhall(True)
+	If ($g_iSearchTH <> "-") Then
+		IsWeakBase($g_iImglocTHLevel, $g_sImglocRedline, False)
+	Else
+		IsWeakBase($g_iMaxTHLevel, "", False)
+	EndIf
 	EndImageTest()
 	$g_bRunState = $currentRunState
 EndFunc   ;==>btnTestWeakBase

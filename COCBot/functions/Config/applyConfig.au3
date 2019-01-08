@@ -440,10 +440,11 @@ Func ApplyConfig_600_11($TypeReadSave)
 			For $i = 0 To 2
 				_GUICtrlComboBox_SetCurSel($g_ahCmbClanCastleTroop[$i] , $g_aiClanCastleTroopWaitType[$i])
 				GUICtrlSetData($g_ahTxtClanCastleTroop[$i], $g_aiClanCastleTroopWaitQty[$i])
-			Next
-			For $i = 0 To 1
+
 				_GUICtrlComboBox_SetCurSel($g_ahCmbClanCastleSpell[$i] , $g_aiClanCastleSpellWaitType[$i])
-				GUICtrlSetData($g_ahTxtClanCastleSpell[$i], $g_aiClanCastleSpellWaitQty[$i])
+				
+                If $i > 1 Then ContinueLoop ; Siege has only 2 combobox
+                _GUICtrlComboBox_SetCurSel($g_ahCmbClanCastleSiege[$i] , $g_aiClanCastleSiegeWaitType[$i])
 			Next
 			chkRequestCountCC()
 			chkRequestCCHours()
@@ -463,10 +464,10 @@ Func ApplyConfig_600_11($TypeReadSave)
 			For $i = 0 To 2
 				$g_aiClanCastleTroopWaitType[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbClanCastleTroop[$i])
 				$g_aiClanCastleTroopWaitQty[$i] = GUICtrlRead($g_ahTxtClanCastleTroop[$i])
-			Next
-			For $i = 0 To 1
 				$g_aiClanCastleSpellWaitType[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbClanCastleSpell[$i])
-				$g_aiClanCastleSpellWaitQty[$i] = GUICtrlRead($g_ahTxtClanCastleSpell[$i])
+
+                If $i > 1 Then ContinueLoop ; Siege has only 2 combobox
+                $g_aiClanCastleSiegeWaitType[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbClanCastleSiege[$i])
 			Next
 			For $i = 0 To 23
 				$g_abRequestCCHours[$i] = (GUICtrlRead($g_ahChkRequestCCHours[$i]) = $GUI_CHECKED)
@@ -530,8 +531,15 @@ Func ApplyConfig_600_12($TypeReadSave)
 				If $g_abChkDonateTroop[$index + $i] Then
 					_DonateControls($index + $i)
 				Else
-					GUICtrlSetBkColor($g_ahLblDonateTroop[$index + $i], $GUI_BKCOLOR_TRANSPARENT)
-				EndIf
+                    GUICtrlSetBkColor($g_ahLblDonateTroop[$index + $i], $GUI_BKCOLOR_TRANSPARENT)
+                EndIf
+
+                If $g_abChkDonateAllTroop[$index + $i] Then
+                    GUICtrlSetState($g_ahChkDonateAllTroop[$index + $i], $GUI_CHECKED)
+                    _DonateAllControls($index + $i, True)
+                Else
+                    GUICtrlSetState($g_ahChkDonateAllTroop[$index + $i], $GUI_UNCHECKED)
+                EndIf
 
 				GUICtrlSetData($g_ahTxtDonateTroop[$index + $i], $g_asTxtDonateTroop[$index + $i])
 				GUICtrlSetData($g_ahTxtBlacklistTroop[$index + $i], $g_asTxtBlacklistTroop[$index + $i])
@@ -590,10 +598,11 @@ Func ApplyConfig_600_12($TypeReadSave)
 
 			For $i = $eSiegeWallWrecker to $eSiegeMachineCount - 1
 				Local $index = $eTroopCount + $g_iCustomDonateConfigs
-				$g_abChkDonateTroop[$index + $i] = (GUICtrlRead($g_ahChkDonateTroop[$index + $i]) = $GUI_CHECKED)
-				$g_asTxtDonateTroop[$index + $i] = GUICtrlRead($g_ahTxtDonateTroop[$index + $i])
-				$g_asTxtBlacklistTroop[$index + $i] = GUICtrlRead($g_ahTxtBlacklistTroop[$index + $i])
-			Next
+                $g_abChkDonateTroop[$index + $i] = (GUICtrlRead($g_ahChkDonateTroop[$index + $i]) = $GUI_CHECKED)
+                $g_abChkDonateAllTroop[$index + $i] = (GUICtrlRead($g_ahChkDonateAllTroop[$index + $i]) = $GUI_CHECKED)
+                $g_asTxtDonateTroop[$index + $i] = GUICtrlRead($g_ahTxtDonateTroop[$index + $i])
+                $g_asTxtBlacklistTroop[$index + $i] = GUICtrlRead($g_ahTxtBlacklistTroop[$index + $i])
+            Next
 
 			For $i = 0 To 2
 				$g_aiDonateCustomTrpNumA[$i][0] = _GUICtrlComboBox_GetCurSel($g_ahCmbDonateCustomA[$i])

@@ -734,8 +734,9 @@ Func UpdateStats($bForceUpdate = False)
         EndIf
     EndIf
     ;===================================
+	If Not _DateIsValid($g_sLabUpgradeTime) Then GUICtrlSetData($g_hLbLLabTime, "")
 
-    If ProfileSwitchAccountEnabled() Then
+	If ProfileSwitchAccountEnabled() Then
 		;village report
 		GUICtrlSetData($g_ahLblResultGoldNowAcc[$g_iCurAccount], _NumberFormat($g_aiCurrentLoot[$eLootGold], True))
 		GUICtrlSetData($g_ahLblResultElixirNowAcc[$g_iCurAccount], _NumberFormat($g_aiCurrentLoot[$eLootElixir], True))
@@ -857,6 +858,7 @@ Func ResetStats()
 		For $i = 0 To 7
 			GUICtrlSetData($g_ahLblResultRuntimeNowAcc[$i], "00:00:00")
 			$g_aiRunTime[$i] = 0
+			GUICtrlSetData($g_hLbLLabTime, "")
 		Next
 	EndIf
 	UpdateStats()

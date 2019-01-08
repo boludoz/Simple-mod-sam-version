@@ -117,7 +117,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
             Click(Random(487,543,1),Random(415,445,1), 1, 0, "#SurrenderOkay") ;Click Surrender
         EndIf
         $i += 1
-        If $i > 5 Then
+        If $i > 25 Then
             CheckAndroidReboot(False)
             Return ; if end battle or surrender button are not found in 5*(200)ms + 10*(200)ms or 3 seconds, then give up.
         EndIf
@@ -219,19 +219,23 @@ Func ReturnfromDropTrophies()
 		If _Sleep(100) Then Return
 	Next
 
-	Local $i = 0 ; Reset Loop counter
+    $i = 0 ; Reset Loop counter
+    Local $iExitLoop = -1
 	While 1
 		If $g_bDebugSetlog Then SetDebugLog("Wait for End Fight Scene to appear #" & $i)
 		If _CheckPixel($aEndFightSceneAvl, $g_bCapturePixel) Then ; check for the gold ribbon in the end of battle data screen
-			If IsReturnHomeBattlePage() Then ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
-			ExitLoop
+            If IsReturnHomeBattlePage() Then
+                ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
+                ; sometimes 1st click is not closing, so check again
+                $iExitLoop = $i
+            EndIf
 		Else
 			$i += 1
 		EndIf
-		If $i > 10 Then ExitLoop ; if end battle window is not found in 10*200mms or 2 seconds, then give up.
-		If _Sleep(100) Then Return
+        If $i > 25 Or ($iExitLoop > -1 And $i > $iExitLoop) Then ExitLoop ; if end battle window is not found in 25*200mms or 5 seconds, then give up.
+        If _Sleep($DELAYRETURNHOME5) Then Return
 	WEnd
-	If _Sleep(100) Then Return ; short wait for screen to close
+    If _Sleep($DELAYRETURNHOME2) Then Return ; short wait for screen to close
 	$g_bFullArmy = False ; forcing check the army
 	$g_bIsFullArmywithHeroesAndSpells = False ; forcing check the army
 	If ReturnHomeMainPage() Then Return

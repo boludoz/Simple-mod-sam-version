@@ -46,6 +46,7 @@ Func CloseCoC($ReOpenCoC = False, $bCheckRunState = True)
     If $j > 30 Then SetLog("Failed to close game client.", $COLOR_ERROR)
 
 	ResetAndroidProcess()
+	_Sleep($DELAYCLOSEOPEN3000)
 	If $bCheckRunState And Not $g_bRunState Then Return FuncReturn()
 	If $ReOpenCoC Then
 		OpenCoC()
@@ -79,14 +80,14 @@ Func OpenCoC()
 	Local $RunApp = "", $iCount = 0
 	WinGetAndroidHandle()
 	;AndroidHomeButton()
-	If _Sleep(500) Then Return FuncReturn()
+	If _Sleep($DELAYCLOSEOPEN500) Then Return FuncReturn()
 	If Not $g_bRunState Then Return FuncReturn()
 	If Not StartAndroidCoC() Then Return FuncReturn()
 	While _CheckPixel($aIsMain, True) = False ; Wait for MainScreen
 		$iCount += 1
-		If _Sleep(100) Then Return FuncReturn()
+		If _Sleep($DELAYCLOSEOPEN500) Then Return FuncReturn()
 		If checkObstacles() Then $iCount += 1
-		If $iCount > 250 Then ExitLoop
+		If $iCount > 50 Then ExitLoop
 		If Not $g_bRunState Then ExitLoop
 	WEnd
 	FuncReturn()

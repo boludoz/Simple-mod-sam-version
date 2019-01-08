@@ -311,6 +311,8 @@ Func InitBlueStacks2($bCheckOnly = False)
 
 	If $bInstalled And Not $bCheckOnly Then
 		$__VBoxManage_Path = $__BlueStacks_Path & "BstkVMMgr.exe"
+		$g_sAndroidAdbInstanceShellOptions = " -t -t" ; Additional shell options, only used by BlueStacks2 " -t -t"
+		$g_sAndroidAdbShellOptions = " /data/anr/../../system/xbin/bstk/su root" ; Additional shell options when launch shell with command, only used by BlueStacks2 " /data/anr/../../system/xbin/bstk/su root"
 
 		CheckBlueStacksVersionMod()
 

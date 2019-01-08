@@ -54,6 +54,7 @@ Global $g_ahLblHourlyStatsDarkAcc[8], $g_ahLblResultSkipped[8], $g_ahPicResultSk
 Global $g_ahPicArrowLeft[8], $g_ahPicArrowRight[8]
 Global $g_ahPicResultGoldTemp[8], $g_ahPicResultElixirTemp[8], $g_ahPicResultDETemp[8], $g_ahLblVillageReportTemp[8], $g_ahGrpTempAcc[8]
 Global $g_ahLblTroopTime[8], $g_ahPicTroopTime[8]
+Global $g_ahLblLabTime[8], $g_ahPicLabTime[8]
 
 Func CreateBotStats()
 
@@ -1524,6 +1525,9 @@ Func CreateMultiStatsSubTab()
 			$g_ahLblResultGemNowAcc[$i] = GUICtrlCreateLabel("", $x + $delX + $i_X * $delX2, $y + $delY * 3 + $i_Y * $delY2, 55, 17, $SS_RIGHT)
 			$g_ahPicResultGemNowAcc[$i] = GUICtrlCreateIcon($g_sLibIconPath, $eIcnGem, $x + 60 + $delX + $i_X * $delX2, $y + $delY * 3 + $i_Y * $delY2, 16, 14)
 
+			$g_ahLblLabTime[$i] = GUICtrlCreateLabel("", $x + $i_X * $delX2, $y + $delY * 4 + $i_Y * $delY2, 70, 17, $SS_RIGHT)
+			$g_ahPicLabTime[$i] = GUICtrlCreateIcon($g_sLibIconPath, $eIcnLaboratory, $x + 75 + $i_X * $delX2, $y + $delY * 4 + $i_Y * $delY2, 15, 14)
+
 			$g_ahPicArrowLeft[$i] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnArrowLeft, $x - 20 + $i_X * $delX2, $y + $delY * 2 + $i_Y * $delY2, 16, 16)
 				Local $sTxtTip = GetTranslatedFileIni("MBR GUI Design Bottom", "GrpVillage_Info_01", "Switch between village info and stats")
 				_GUICtrlSetTip(-1, $sTxtTip)
@@ -1551,7 +1555,7 @@ Func CreateMultiStatsSubTab()
 
 			$g_ahGrpDefaultAcc[$i] = $g_ahGrpVillageAcc[$i] & "#" & $g_ahPicArrowLeft[$i] & "#" & $g_ahPicArrowRight[$i] & "#" & _
 									$g_ahPicResultGoldNowAcc[$i] & "#" & $g_ahPicResultElixirNowAcc[$i] & "#" & $g_ahPicResultDENowAcc[$i] & "#" & _
-									$g_ahLblTroopTime[$i] & "#" & $g_ahPicTroopTime[$i]
+									$g_ahLblTroopTime[$i] & "#" & $g_ahPicTroopTime[$i] & "#" & $g_ahLblLabTime[$i] & "#" & $g_ahPicLabTime[$i]
 			$g_ahGrpReportAcc[$i] = $g_ahLblResultGoldNowAcc[$i] & "#" & $g_ahLblResultTrophyNowAcc[$i] & "#" & $g_ahPicResultTrophyNowAcc[$i] & "#" & _
 									$g_ahLblResultElixirNowAcc[$i] & "#" & $g_ahLblResultBuilderNowAcc[$i] & "#" & $g_ahPicResultBuilderNowAcc[$i] & "#" & _
 									$g_ahLblResultDENowAcc[$i] & "#" & $g_ahLblResultGemNowAcc[$i] & "#" & $g_ahPicResultGemNowAcc[$i]

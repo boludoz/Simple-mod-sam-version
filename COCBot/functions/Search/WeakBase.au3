@@ -274,7 +274,7 @@ Func weakBaseCheck($townHallLevel = 11, $redlines = "", $bForceCaptureRegion = T
 	Return $aResult
 EndFunc   ;==>weakBaseCheck
 
-Func IsWeakBase($townHallLevel = 11, $redlines = "", $bForceCaptureRegion = True)
+Func IsWeakBase($townHallLevel = $g_iMaxTHLevel, $redlines = "", $bForceCaptureRegion = True)
 	Local $aResult = weakBaseCheck($townHallLevel, $redlines, $bForceCaptureRegion)
 
 	; Forces the display of the various statistical displays, if set to true

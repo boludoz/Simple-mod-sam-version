@@ -45,7 +45,7 @@ Func Initiate()
 
 		$g_bFirstStart = True
 		$g_bInitiateSwitchAcc = True
-		$g_iFirstTimeLab = 0
+		$g_sLabUpgradeTime = ""
 
 ;~ 		If $g_bNotifyDeleteAllPushesOnStart Then _DeletePush()
 

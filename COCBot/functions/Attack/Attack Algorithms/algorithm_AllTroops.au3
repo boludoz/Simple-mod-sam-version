@@ -86,11 +86,30 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 	If _Sleep($DELAYALGORITHM_ALLTROOPS2) Then Return
 
 	$g_iSidesAttack = $nbSides
-	$g_iSlotsGiants = 1
+	
+	; Reset the deploy Giants points , spread along red line
+	$g_iSlotsGiants = 0
+	Local $GiantComp = 0
+	; Giants quantities
+	For $i = 0 To UBound($g_avAttackTroops) - 1
+		If $g_avAttackTroops[$i][0] = $eGiant Then
+			$GiantComp = $g_avAttackTroops[$i][1]
+		EndIf
+	Next
 
-	Local $GiantComp = $g_aiArmyCompTroops[$eTroopGiant]
-	If Number($GiantComp) > 16 Or (Number($GiantComp) >= 8 And $nbSides = 4) Then $g_iSlotsGiants = 2
-	If Number($GiantComp) > 20 Or (Number($GiantComp) >= 12 And $nbSides = 4) Then $g_iSlotsGiants = 0
+	; Lets select the deploy points according by Giants qunatities & sides
+	; Deploy points : 0 - spreads along the red line , 1 - one deploy point .... X - X deploy points
+	Switch $GiantComp
+		Case 0 To 10
+			$g_iSlotsGiants = 2
+		Case Else 
+			Switch $nbSides
+				Case 1 To 2
+					$g_iSlotsGiants = 4
+				Case Else
+					$g_iSlotsGiants = 0
+			EndSwitch
+	EndSwitch
 
 	; $ListInfoDeploy = [Troop, No. of Sides, $WaveNb, $MaxWaveNb, $slotsPerEdge]
 	If $g_iMatchMode = $LB And $g_aiAttackStdDropSides[$LB] = 4 Then ; Customise DE side wave deployment here
@@ -267,29 +286,6 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
             $listInfoDeploy[0][4] = 1
         EndIf
     EndIf
-	Local $ichkEnableUseEventTroop = 0
-    If $ichkEnableUseEventTroop = 1 Then
-        Local $iListInfoDeployCount = UBound($listInfoDeploy) + 2
-        ReDim $listInfoDeploy[$iListInfoDeployCount][5]
-        For $i = UBound($listInfoDeploy) - 2 To 1 Step -1
-            $listInfoDeploy[$i][0] = $listInfoDeploy[$i-1][0]
-            $listInfoDeploy[$i][1] = $listInfoDeploy[$i-1][1]
-            $listInfoDeploy[$i][2] = $listInfoDeploy[$i-1][2]
-            $listInfoDeploy[$i][3] = $listInfoDeploy[$i-1][3]
-            $listInfoDeploy[$i][4] = $listInfoDeploy[$i-1][4]
-        Next
-        $listInfoDeploy[0][0] = 51
-        $listInfoDeploy[0][1] = $nbSides
-        $listInfoDeploy[0][2] = 1
-        $listInfoDeploy[0][3] = 1
-        $listInfoDeploy[0][4] = 2
-        $listInfoDeploy[$iListInfoDeployCount-1][0] = 52
-        $listInfoDeploy[$iListInfoDeployCount-1][1] = $nbSides
-        $listInfoDeploy[$iListInfoDeployCount-1][2] = 1
-        $listInfoDeploy[$iListInfoDeployCount-1][3] = 1
-        $listInfoDeploy[$iListInfoDeployCount-1][4] = 0
-    EndIf
-
     ; samm0d
     If $g_aiAttackStdDropSides[$g_iMatchMode] = 4 And  $g_iMatchMode = $DB Then
         SetLog(_PadStringCenter("Multi Finger Attack", 50, "="), $COLOR_BLUE)
@@ -315,25 +311,6 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
                 If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
             EndIf
 		Next
-        ; samm0d
-        If $ichkEnableUseEventTroop = 1 Then
-            If LaunchTroop(51, $nbSides, 0, 1) = True Then
-                If $g_iActivateQueen = 0 Or $g_iActivateKing = 0 Or $g_iActivateWarden = 0 Then CheckHeroesHealth()
-                If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
-            EndIf
-            If LaunchTroop(52, $nbSides, 0, 1) = True Then
-                If $g_iActivateQueen = 0 Or $g_iActivateKing = 0 Or $g_iActivateWarden = 0 Then CheckHeroesHealth()
-                If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
-            EndIf
-            If LaunchTroop(61, $nbSides, 0, 1) = True Then
-                If $g_iActivateQueen = 0 Or $g_iActivateKing = 0 Or $g_iActivateWarden = 0 Then CheckHeroesHealth()
-                If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
-            EndIf
-            If LaunchTroop(62, $nbSides, 0, 1) = True Then
-                If $g_iActivateQueen = 0 Or $g_iActivateKing = 0 Or $g_iActivateWarden = 0 Then CheckHeroesHealth()
-                If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
-            EndIf
-        EndIf
 	Next
 
 	CheckHeroesHealth()

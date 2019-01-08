@@ -88,7 +88,7 @@ Func getArmyHeroTime($iHeroType, $bOpenArmyWindow = False, $bCloseArmyWindow = F
 			Else
 				; reading all heros, need to find if hero is active/wait to determine how to log message?
 				For $pMatchMode = $DB To $g_iMatchMode - 1 ; check all attack modes
-					If IsSpecialTroopToBeUsed($pMatchMode, $aHeroRemainData[$index][3]) And BitAND($g_aiAttackUseHeroes[$pMatchMode], $g_aiSearchHeroWaitEnable[$pMatchMode]) = $g_aiSearchHeroWaitEnable[$pMatchMode] Then ; check if Hero enabled to wait
+					If IsUnitUsed($pMatchMode, $aHeroRemainData[$index][3]) And BitAND($g_aiAttackUseHeroes[$pMatchMode], $g_aiSearchHeroWaitEnable[$pMatchMode]) = $g_aiSearchHeroWaitEnable[$pMatchMode] Then ; check if Hero enabled to wait
 						SetLog("Can not read remaining " & $aHeroRemainData[$index][2] & " train time", $COLOR_ERROR)
 						ExitLoop
 					Else

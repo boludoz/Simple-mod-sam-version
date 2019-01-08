@@ -29,7 +29,6 @@ Func AttackTHGrid($troopKind, $iNbOfSpots = 1, $iAtEachSpot = 1, $Sleep = Random
 	Local $THtroop = -1
 	Local $troopNb = 0
 	Local $name = ""
-	Local $plural = 0
 	Local $waveName = "first"
 	Local $NumTroopDeployed = 0
 
@@ -117,8 +116,7 @@ Func AttackTHGrid($troopKind, $iNbOfSpots = 1, $iAtEachSpot = 1, $Sleep = Random
 	; All Barracks Troops
 	If $troopKind >= $eBarb And $troopKind <= $eIceG Then
 		$troopNb = $iNbOfSpots * $iAtEachSpot
-		If $troopNb > 1 Then $plural = 1
-		$name = NameOfTroop($troopKind, $plural)
+		$name = GetTroopName($troopKind, $troopNb)
 
 		$TroopCountBeg = Number(ReadTroopQuantity($THtroop))
 		If ($TroopCountBeg = 0) And $g_bDebugSetlog Then SetLog("No " & $name & " Remaining!!!")
@@ -285,7 +283,7 @@ Func CastSpell($THSpell, $x, $y)
 	For $i = 0 To UBound($g_avAttackTroops) - 1
 		If $g_avAttackTroops[$i][0] = $THSpell Then
 			$Spell = $i
-			$name = NameOfTroop($THSpell, 0)
+			$name = GetTroopName($THSpell)
 		EndIf
 	Next
 
