@@ -137,12 +137,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 				SetLog("Connection lost, Reloading CoC...", $COLOR_ERROR)
 				If $g_bChkSharedPrefs And HaveSharedPrefs() Then
 					SetLog("Please wait for loading CoC...!")
-					; Sanm0d
-					If $g_sAndroidPicturesPathAvailable Then 
-						PushSharedPrefs()
-						Else
-						btnPushshared_prefs()
-					EndIf
+					PushSharedPrefs()
 					OpenCoC()
 				EndIf
 			Case _CheckPixel($aIsCheckOOS, $g_bNoCapturePixel) Or (UBound(decodeSingleCoord(FindImageInPlace("OOS", $g_sImgOutOfSync, "355,335,435,395", False, $g_iAndroidLollipop))) > 1) ; Check OoS

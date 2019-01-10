@@ -68,7 +68,7 @@ Global Const $aButtonSMSetting[9]				= [810, 575, 830, 595, 814, 569, 0xFFFFFF, 
 Global Const $aButtonSettingTabSetting[9]		= [388, 110, 484, 130, 434, 110, 0xF0F4F0, 10, "=-= Tab Settings"]
 Global Const $aButtonGoogleConnectRed[9]		= [433, 513, 594, 555, 500, 520, 0xD00408, 30, "=-= Connect Red"]
 Global Const $aButtonGoogleConnectGreen[9]	  	= [433, 513, 594, 555, 500, 520, 0xDDF685, 30, "=-= Connect Green"]
-
+;
 Global Const $aButtonSMVillageLoad[9] 		    = [480, 415, 550, 445, 455, 437, 0x72C11D, 20, "=-= Village Load"]
 Global Const $aButtonVillageCancel[9] 		    = [310, 415, 380, 445, 288, 433, 0xED7531, 20, "=-= Village Cancel"]
 
@@ -93,6 +93,8 @@ Global Const $aButtonGuardConfirmRemove[9]      = [485, 417, 543, 444, 510, 445,
 Global Const $aButtonTrainArmy1[9]              = [750, 350, 800, 365, 735, 350, 0XCDF175, 20, "=-= Quick Train Army 1"]
 Global Const $aButtonTrainArmy2[9]              = [750, 467, 800, 482, 735, 467, 0XD5F17D, 20, "=-= Quick Train Army 2"]
 Global Const $aButtonTrainArmy3[9]              = [750, 583, 800, 602, 735, 586, 0XCDED75, 20, "=-= Quick Train Army 3"]
+
+Global $aIsOnBuilderBaseGrayed[4] = [359, 9, 0x3B5F72, 6] ; Check the Gold Coin from resources , is a square not round
 
 Func CheckClickMsg(ByRef $x, ByRef $y, ByRef $times, ByRef $speed, ByRef $MsgCode)
 	; return 0, do nothing

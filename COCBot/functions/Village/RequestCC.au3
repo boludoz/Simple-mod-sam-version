@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func RequestCC($bClickPAtEnd = True, $sText = "")
+Func RequestCC($bClickPAtEnd = True, $sText = "", $bOpenTrainWindow = True)
 
 	If Not $g_bRequestTroopsEnable Or Not $g_bDonationEnabled Then
 		Return
@@ -27,12 +27,50 @@ Func RequestCC($bClickPAtEnd = True, $sText = "")
 		EndIf
 	EndIf
 
+	Local $bContinueRequest = False
+
+	; samm0d
+	If $ichkRequestCC4Troop = 0 And $ichkRequestCC4Spell = 0 And $ichkRequestCC4SeigeMachine = 0 Then
+		$bContinueRequest = True
+	Else
+		If $ichkRequestCC4Troop = 1 And $g_bNeedRequestCCTroop = True Then
+			SetLog("Need request for cc troops.", $COLOR_ACTION)
+			$bContinueRequest = True
+		EndIf
+		If $ichkRequestCC4Spell = 1 And $g_bNeedRequestCCSpell = True Then
+			SetLog("Need request for cc spells.", $COLOR_ACTION)
+			$bContinueRequest = True
+		EndIf
+		If $ichkRequestCC4SeigeMachine = 1 And $g_bNeedRequestCCSeigeMachine = True Then
+			SetLog("Need request for cc seige machine.", $COLOR_ACTION)
+			$bContinueRequest = True
+		EndIf
+	EndIf
+
+	If $bContinueRequest = False Then
+		SetLog("Skip request since Clan Castle Troops / Spells / Seige Machine ready.", $COLOR_ACTION)
+		Return ; exit func if no planned donate checkmarks
+	EndIf
+	
 	;open army overview
 	If $sText <> "IsFullClanCastle" And Not OpenArmyOverview(True, "RequestCC()") Then Return
 
 	If _Sleep($DELAYREQUESTCC1) Then Return
 	SetLog("Requesting Clan Castle reinforcements", $COLOR_INFO)
-	checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
+    ; samm0d
+    If $bOpenTrainWindow = True Then
+        ;open army overview
+        If IsMainPage() Then
+            If $g_bUseRandomClick = 0 then
+                Click($aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0, "#0334")
+            Else
+                ClickR($aArmyTrainButtonRND, $aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0)
+            EndIF
+        EndIf
+        If _Sleep(500) Then Return
+
+        checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
+    EndIf
 	If $bClickPAtEnd Then CheckCCArmy()
 
 	Local $sSearchDiamond = GetDiamondFromRect("600,430,850,620")
@@ -85,6 +123,7 @@ Func RequestCC($bClickPAtEnd = True, $sText = "")
 	;exit from army overview
 	If _Sleep($DELAYREQUESTCC1) Then Return
 	If $bClickPAtEnd Then ClickP($aAway, 2, 0, "#0335")
+
 
 EndFunc   ;==>RequestCC
 

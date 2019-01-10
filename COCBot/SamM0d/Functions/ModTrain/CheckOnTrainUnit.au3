@@ -90,12 +90,12 @@ Func CheckOnTrainUnit($hHBitmap)
 			Local $iQty = 0
 			If IsArray($result) then
 				For $j = 0 To UBound($result) -1
-					If $j = 0 Then
+					If $j = 0 Or $j = 1 Then
 						$aPropsValues = $result[$j] ; should be return objectname (file name like Arch_92.png, Barb_92.png will return as object Arch, Barb)
 						If UBound($aPropsValues) = 1 then
 							$sObjectname = $aPropsValues[0] ; objectname
 						EndIf
-					ElseIf $j = 1 Then
+					ElseIf $j = 2 Then
 						$aPropsValues = $result[$j]
 						; this occur when multiple image detected, if this happened then you need re capture the troop image for detect.
 						SetLog("Error: Multiple detect troops on slot: " & $i + 1 , $COLOR_ERROR)

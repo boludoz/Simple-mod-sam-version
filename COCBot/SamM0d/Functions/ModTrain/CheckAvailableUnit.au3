@@ -60,14 +60,14 @@ Func CheckAvailableUnit($hHBitmap)
 
 			If IsArray($result) then
 				For $j = 0 To UBound($result) -1
-					If $j = 0 Then
+					If $j = 0 Or $j = 1 Then
 						$aPropsValues = $result[$j] ; should be return objectname
 						If UBound($aPropsValues) = 1 then
 							$aiTroopsInfo[$i][0] = $aPropsValues[0] ; objectname
 							;SetLog("objectname: " & $aiTroopsInfo[$i][0], $COLOR_DEBUG)
 							$aiTroopsInfo[$i][2] = $i + 1
 						EndIf
-					ElseIf $j = 1 Then
+					ElseIf $j = 2 Then
 						$aPropsValues = $result[$j]
 						SetLog("Error: Multiple detect troops on slot: " & $i + 1 , $COLOR_ERROR)
 						SetLog("Troop: " & $aiTroopsInfo[$i][0], $COLOR_ERROR)
