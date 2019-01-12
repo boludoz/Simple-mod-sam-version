@@ -192,7 +192,7 @@ GUICtrlSetData($txtTotalCountSpell2, $g_iTotalSpellValue)
 lblMyTotalCountSpell()
 
 _GUI_Value_STATE("HIDE",$g_aGroupListTHLevels)
-If $g_iTownHallLevel >= 4 And $g_iTownHallLevel <= 11 Then
+If $g_iTownHallLevel >= 4 And $g_iTownHallLevel <= 12 Then
 	GUICtrlSetState($g_ahPicTHLevels[$g_iTownHallLevel], $GUI_SHOW)
 EndIf
 

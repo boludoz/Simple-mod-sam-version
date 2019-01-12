@@ -359,3 +359,11 @@ Global $aProfileStats[44][9] = _
 ["g_aiNbrOfDetectedMines",0,0,0,0,0,0,0,0], _
 ["g_aiNbrOfDetectedCollectors",0,0,0,0,0,0,0,0], _
 ["g_aiNbrOfDetectedDrills",0,0,0,0,0,0,0,0]]
+
+; Profile Backup
+Global $g_sProfileBackup = ""
+Global $g_sProfileBackupToBackup = ""
+Global $g_sProfileBackupPath = @ScriptDir & "\Backups"
+Global $g_bBackup = False ; Backup check
+Global $g_bFirstRun = False ; First Run
+

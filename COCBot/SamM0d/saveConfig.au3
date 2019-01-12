@@ -13,6 +13,12 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
+; First Run
+_Ini_Add("Backup", "FirstRun", $g_bFirstRun)
+
+; Backup check
+_Ini_Add("Backup", "BackupControl", $g_bBackup)
+
 ; Multi Finger (LunaEclipse)
 _Ini_Add("MultiFinger", "Select", _GUICtrlComboBox_GetCurSel($cmbDBMultiFinger))
 

@@ -12,6 +12,11 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+; First Run
+IniReadS($g_bFirstRun, $g_sProfileConfigPath, "Backup", "FirstRun", False, "Bool")
+
+; Backup check
+IniReadS($g_bBackup, $g_sProfileConfigPath, "Backup", "BackupControl", False, "Bool")
 
 Global $iMultiFingerStyle = 0
 

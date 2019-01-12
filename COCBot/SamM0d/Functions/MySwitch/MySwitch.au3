@@ -608,6 +608,7 @@ EndFunc
 
 Func DoSwitchAcc()
 	If _Sleep(500) Then Return
+    BackupSystem()
 
 	; Mod exclusivo
 	If $g_bDtropAttack = True Then

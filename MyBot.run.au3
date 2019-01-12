@@ -382,6 +382,10 @@ Func SetupProfileFolder()
 	$g_sProfileDonateCapturePath = $g_sProfilePath & "\" & $g_sProfileCurrentName & '\Donate\'
 	$g_sProfileDonateCaptureWhitelistPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & '\Donate\White List\'
 	$g_sProfileDonateCaptureBlacklistPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & '\Donate\Black List\'
+	; Backup system
+	$g_sProfileBackupToBackup = $g_sProfilePath & "\" & $g_sProfileCurrentName
+	$g_sProfileBackup = $g_sProfileBackupPath & "\" & $g_sProfileCurrentName
+
 EndFunc   ;==>SetupProfileFolder
 
 ; #FUNCTION# ====================================================================================================================
@@ -723,9 +727,6 @@ Func runBot() ;Bot that runs everything in order
 		SetLog("Rematching Account [" & $g_iNextAccount + 1 & "] with Profile [" & GUICtrlRead($g_ahCmbProfile[$g_iNextAccount]) & "]")
 		SwitchCoCAcc($g_iNextAccount)
 	EndIf
-
-;	FirstCheck()
-
 	While 1
 		; samm0d
 		If $g_iSamM0dDebug = 1 And $g_bRestart Then SetLog("Continue loop with restart", $COLOR_DEBUG)
@@ -803,7 +804,7 @@ Func runBot() ;Bot that runs everything in order
 						EndIf
 					EndIf
 				EndIf
-				If $g_iTownHallLevel = 0 Then BotDetectFirstTime()
+				If not $g_bFirstRun Then BotDetectFirstTime()
 			Else
 				If _Sleep($DELAYRUNBOT1) Then Return
 				checkMainScreen(False)
@@ -816,6 +817,8 @@ Func runBot() ;Bot that runs everything in order
 			If $g_bRestart = True Then ContinueLoop
 		EndIf
 
+		
+		BackupSystem()
 		chkShieldStatus()
 		If Not $g_bRunState Then Return
 		If $g_bRestart = True Then ContinueLoop
