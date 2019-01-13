@@ -160,13 +160,17 @@ Func ModTrain($ForcePreTrain = False)
 			EndIf
 		EndIf
 	EndIf
+	
+	
+	getArmyCCStatus(False, False, False)
+	If _Sleep(350) Then Return ; 50ms improve pause button response
 
-	getArmyCCStatus()
-	If _Sleep(50) Then Return ; 50ms improve pause button response
+    RequestCC(False, "", False)
+	If _Sleep(350) Then Return ; 50ms improve pause button response
 
 	If $g_iSamM0dDebug = 1 Then Setlog("Fullarmy = " & $g_bFullArmy & " CurCamp = " & $g_CurrentCampUtilization & " TotalCamp = " & $g_iTotalCampSpace & " - result = " & ($g_bFullArmy = True And $g_CurrentCampUtilization = $g_iTotalCampSpace), $COLOR_DEBUG)
 	If $g_bFullArmy = True Then
-		SetLog($CustomTrain_MSG_4, $COLOR_SUCCESS, "Times New Roman", 10)
+		SetLog($CustomTrain_MSG_4, $COLOR_SUCCESS)
 		If $g_bNotifyTGEnable And $g_bNotifyAlertCampFull Then PushMsg("CampFull")
 	EndIf
 

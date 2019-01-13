@@ -653,6 +653,10 @@ Func chkEnableDonateWhenReady()
 	$ichkEnableDonateWhenReady = (GUICtrlRead($chkEnableDonateWhenReady) = $GUI_CHECKED ? 1 : 0)
 EndFunc
 
+Func chkEnableDonateHours()
+	$ichkEnableDonateHours = (GUICtrlRead($chkEnableDonateHours) = $GUI_CHECKED ? 1 : 0)
+EndFunc
+
 Func chkEnableStopBotWhenLowBattery()
 	$ichkEnableStopBotWhenLowBattery = (GUICtrlRead($chkEnableStopBotWhenLowBattery) = $GUI_CHECKED ? 1 : 0)
 EndFunc

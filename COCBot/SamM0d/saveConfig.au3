@@ -32,6 +32,9 @@ _Ini_Add("EnableSkipBuild", "Enable", (GUICtrlRead($g_hEnableSkipBuild) = $GUI_C
 ; donate only when troop pre train ready
 _Ini_Add("EnableDonateWhenReady", "Enable", (GUICtrlRead($chkEnableDonateWhenReady) = $GUI_CHECKED ? 1 : 0 ))
 
+; Enable Donate Hours
+_Ini_Add("chkEnableDonateHours", "Enable", (GUICtrlRead($chkEnableDonateHours) = $GUI_CHECKED ? 1 : 0 ))
+
 ; stop bot when low battery
 _Ini_Add("EnableStopBotWhenLowBattery", "Enable", (GUICtrlRead($chkEnableStopBotWhenLowBattery) = $GUI_CHECKED ? 1 : 0 ))
 

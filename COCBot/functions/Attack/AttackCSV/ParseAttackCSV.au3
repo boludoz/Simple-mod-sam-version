@@ -205,7 +205,7 @@ Func ParseAttackCSV($debug = False)
 								Next
 								If $bUpdateQuantity = True Then
 									If $theTroopPosition >= 0 Then
-										SetLog("Updating Available " & NameOfTroop($iTroopIndex, 1) & " Quantities", $COLOR_INFO)
+										SetLog("Updating Available " & GetTroopName($iTroopIndex, 1) & " Quantities", $COLOR_INFO)
 										$theTroopPosition = UpdateTroopQuantity($troopName)
 									EndIf
 								EndIf

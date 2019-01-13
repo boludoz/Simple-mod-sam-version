@@ -109,4 +109,5 @@ Func BotDetectFirstTime()
 	GUICtrlSetState($g_ahPicTHLevels[$g_iTownHallLevel], $GUI_SHOW)
 	GUICtrlSetData($g_hLblTHLevels, $g_iTownHallLevel)
 
+	$g_bFirstRun = True
 EndFunc   ;==>BotDetectFirstTime

@@ -33,6 +33,9 @@ IniReadS($g_bEnableSkipBuild, $g_sProfileConfigPath, "EnableSkipBuild", "Enable"
 ; donate only when troop pre train ready
 IniReadS($ichkEnableDonateWhenReady, $g_sProfileConfigPath, "EnableDonateWhenReady", "Enable", "0", "Int")
 
+; Enable Donate Hours
+IniReadS($ichkEnableDonateHours, $g_sProfileConfigPath, "chkEnableDonateHours", "Enable", "0", "Int")
+
 ; stop bot when low battery
 IniReadS($ichkEnableStopBotWhenLowBattery, $g_sProfileConfigPath, "EnableStopBotWhenLowBattery", "Enable", "0", "Int")
 

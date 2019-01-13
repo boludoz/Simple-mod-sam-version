@@ -26,6 +26,9 @@ GUICtrlSetState($g_hEnableSkipBuild, ($g_bEnableSkipBuild = True ? $GUI_CHECKED 
 ; donate only when troop pre train ready
 GUICtrlSetState($chkEnableDonateWhenReady, ($ichkEnableDonateWhenReady = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
 
+; Enable Donate Hours
+GUICtrlSetState($chkEnableDonateHours, ($ichkEnableDonateHours = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+
 ; stop bot when low battery
 GUICtrlSetState($chkEnableStopBotWhenLowBattery, ($ichkEnableStopBotWhenLowBattery = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
 

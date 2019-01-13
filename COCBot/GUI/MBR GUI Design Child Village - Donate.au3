@@ -190,7 +190,8 @@ Func CreateRequestSubTab()
 
 	$x += 70
 	$y += 90
-		GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Only_during_hours", "Only during these hours of each day"), $x, $y, 300, 20, $BS_MULTILINE)
+		$chkEnableDonateHours = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design", "Only_during_hours", "Only during these hours of each day"), $x, $y, 300, 20, $BS_MULTILINE)
+			GUICtrlSetOnEvent(-1, "chkEnableDonateHours")
 
 	$x += 40
 	$y += 20

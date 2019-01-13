@@ -18,15 +18,19 @@ Func RequestCC($bClickPAtEnd = True, $sText = "", $bOpenTrainWindow = True)
 	If Not $g_bRequestTroopsEnable Or Not $g_bDonationEnabled Then
 		Return
 	EndIf
-
-	If $g_bRequestTroopsEnable Then
-		Local $hour = StringSplit(_NowTime(4), ":", $STR_NOCOUNT)
-		If $g_abRequestCCHours[$hour[0]] = False Then
-			SetLog("Request Clan Castle troops not planned, Skipped..", $COLOR_ACTION)
-			Return ; exit func if no planned donate checkmarks
+	
+	; samm0d
+	If $ichkEnableDonateHours = 1 Then
+		If $g_bRequestTroopsEnable Then
+			Local $hour = StringSplit(_NowTime(4), ":", $STR_NOCOUNT)
+			If $g_abRequestCCHours[$hour[0]] = False Then
+				SetLog("Request Clan Castle troops not planned, Skipped..", $COLOR_ACTION)
+				Return ; exit func if no planned donate checkmarks
+			EndIf
 		EndIf
 	EndIf
-
+	
+;	#cs
 	Local $bContinueRequest = False
 
 	; samm0d
@@ -51,13 +55,21 @@ Func RequestCC($bClickPAtEnd = True, $sText = "", $bOpenTrainWindow = True)
 		SetLog("Skip request since Clan Castle Troops / Spells / Seige Machine ready.", $COLOR_ACTION)
 		Return ; exit func if no planned donate checkmarks
 	EndIf
+;	#ce
 	
 	;open army overview
-	If $sText <> "IsFullClanCastle" And Not OpenArmyOverview(True, "RequestCC()") Then Return
-
+	; samm0d
+	;If $sText <> "IsFullClanCastle" And Not OpenArmyOverview(True, "RequestCC()") Then Return
+	If $sText <> "IsFullClanCastle" Then Return
+	;-------
+	
 	If _Sleep($DELAYREQUESTCC1) Then Return
 	SetLog("Requesting Clan Castle reinforcements", $COLOR_INFO)
+	
     ; samm0d
+;	checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
+;	#cs
+
     If $bOpenTrainWindow = True Then
         ;open army overview
         If IsMainPage() Then
@@ -71,6 +83,7 @@ Func RequestCC($bClickPAtEnd = True, $sText = "", $bOpenTrainWindow = True)
 
         checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
     EndIf
+;	#ce
 	If $bClickPAtEnd Then CheckCCArmy()
 
 	Local $sSearchDiamond = GetDiamondFromRect("600,430,850,620")

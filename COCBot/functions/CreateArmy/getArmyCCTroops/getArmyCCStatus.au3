@@ -51,11 +51,8 @@ Func getArmyCCStatus($bOpenArmyWindow = False, $bCloseArmyWindow = False, $Check
 
 		Local $sResultCC = getRequestRemainTime($aArmyCCRemainTime[0], $aArmyCCRemainTime[1])
 		If $g_bDebugSetlogTrain Then SetLog("getArmyCampCap returned: " & $sResultCC, $COLOR_DEBUG)
-        $g_iCCRemainTime = ConvertOCRTime("CC request", $sResultCC, $bSetLog)
-    EndIf
-
-    ; samm0d
-    RequestCC(False,"",False)
+		$g_iCCRemainTime = ConvertOCRTime("CC request", $sResultCC, $bSetLog)
+	EndIf
 
 	If $bCloseArmyWindow Then
 		ClickP($aAway, 1, 0, "#0000") ;Click Away

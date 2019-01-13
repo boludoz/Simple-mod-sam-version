@@ -60,15 +60,15 @@ Global Const $aButtonAttackNext[9] 	            = [710, 560, 830, 600, 780, 576,
 Global Const $aButtonAttackFindMatch[9] 		= [200, 535, 300, 600, 148, 529, 0xF8E0A2, 30, "=-= Find A Match"] ; Attack Page Find A Match Button
 Global Const $aButtonAttackFindMatchWShield[9]  = [200, 490, 300, 530, 148, 484, 0xF8E0A4, 30, "=-= Find A Match (With Shield)"] ; Attack Page Find A Match Button With Shield
 
-Global Const $aButtonRequestCC[9] 			    = [715, 578, 842, 615, 798, 586, 0xDDF685, 20, "=-= Request CC"] ; Train, RequestCC Button
+Global Const $aButtonRequestCC[9] 			    = [720, 582, 836, 610, 752, 587, 0xDDF685, 20, "=-= Request CC"] ; Train, RequestCC Button
 Global Const $aButtonRequestCCText[9] 		    = [370, 130, 510, 170, 430, 170, 0xFFFFFF, 10, "=-= Select Text"] ; RequestCC, TXT Button
 Global Const $aButtonRequestCCSend[9] 		    = [470, 215, 570, 255, 520, 254, 0x60AC10, 20, "=-= Send Request"] ; RequestCC, Send Button
 
 Global Const $aButtonSMSetting[9]				= [810, 575, 830, 595, 814, 569, 0xFFFFFF, 10, "=-= Setting"]
 Global Const $aButtonSettingTabSetting[9]		= [388, 110, 484, 130, 434, 110, 0xF0F4F0, 10, "=-= Tab Settings"]
 Global Const $aButtonGoogleConnectRed[9]		= [433, 513, 594, 555, 500, 520, 0xD00408, 30, "=-= Connect Red"]
-Global Const $aButtonGoogleConnectGreen[9]	  	= [433, 513, 594, 555, 500, 520, 0xDDF685, 30, "=-= Connect Green"]
-;
+Global Const $aButtonGoogleConnectGreen[9]      = [714, 533, 843, 572, 803, 541, 0xDDF685, 30, "=-= Connect Green"]
+
 Global Const $aButtonSMVillageLoad[9] 		    = [480, 415, 550, 445, 455, 437, 0x72C11D, 20, "=-= Village Load"]
 Global Const $aButtonVillageCancel[9] 		    = [310, 415, 380, 445, 288, 433, 0xED7531, 20, "=-= Village Cancel"]
 

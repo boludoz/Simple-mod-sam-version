@@ -304,6 +304,9 @@ Global $g_bEnableSkipBuild, $g_hEnableSkipBuild
 ; donate only when troop pre train ready
 Global $ichkEnableDonateWhenReady, $chkEnableDonateWhenReady
 
+; Enable Donate Hours
+Global $ichkEnableDonateHours, $chkEnableDonateHours
+
 ; stop bot when low battery
 Global $ichkEnableStopBotWhenLowBattery, $chkEnableStopBotWhenLowBattery
 Global $g_bCheckBattery = False
