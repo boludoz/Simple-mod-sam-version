@@ -213,7 +213,7 @@ Func ParseAttackCSV($debug = False)
 									If Int($qtyvect[0]) > 0 Then
 										$qty1 = Round((Number($qtyvect[0]) / 100) * Number($g_avAttackTroops[Number($theTroopPosition)][1]))
 										$qty2 = $qty1
-										SetLog($qtyvect[0] & "% Of x" & Number($g_avAttackTroops[$theTroopPosition][1]) & " " & NameOfTroop($g_avAttackTroops[$theTroopPosition][0], 1) & " = " & $qty1, $COLOR_INFO)
+										SetLog($qtyvect[0] & "% Of x" & Number($g_avAttackTroops[$theTroopPosition][1]) & " " & GetTroopName($g_avAttackTroops[$theTroopPosition][0], 1) & " = " & $qty1, $COLOR_INFO)
 									Else
 										$index1 = 1
 										$qty2 = 1

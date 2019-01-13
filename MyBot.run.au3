@@ -1043,6 +1043,7 @@ Func _Idle() ;Sequence that runs until Full Army
 		NotifyPendingActions()
 		If _Sleep($DELAYIDLE1) Then Return
 		If $g_iCommandStop = -1 Then SetLog("====== Waiting for full army ======", $COLOR_SUCCESS)
+				
 		Local $hTimer = __TimerInit()
 		Local $iReHere = 0
 
@@ -1069,7 +1070,7 @@ Func _Idle() ;Sequence that runs until Full Army
 				If CheckAndroidReboot() Then ContinueLoop 2
 			WEnd
 		EndIf
-
+				
 		If _Sleep($DELAYIDLE1) Then ExitLoop
 		checkObstacles() ; trap common error messages also check for reconnecting animation
 		checkMainScreen(False) ; required here due to many possible exits
@@ -1186,10 +1187,13 @@ Func _Idle() ;Sequence that runs until Full Army
 
 		If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) And $g_bTrainEnabled = False Then ExitLoop ; If training is not enabled, run only 1 idle loop
 
-		If $g_iCommandStop = -1 Then ; Check if closing bot/emulator while training and not in halt mode
-			SmartWait4Train()
-			If Not $g_bRunState Then Return
-			If $g_bRestart = True Then ExitLoop ; if smart wait activated, exit to runbot in case user adjusted GUI or left emulator/bot in bad state
+		; samm0d
+		If $ichkModTrain = 0 Then
+			If $g_iCommandStop = -1 Then ; Check if closing bot/emulator while training and not in halt mode
+				SmartWait4Train()
+				If Not $g_bRunState Then Return
+				If $g_bRestart = True Then ExitLoop ; if smart wait activated, exit to runbot in case user adjusted GUI or left emulator/bot in bad state
+			EndIf
 		EndIf
 		; samm0d
 		If $ichkEnableMySwitch Then
@@ -1273,7 +1277,7 @@ Func AttackMain() ;Main control for attack functions
 			$g_bIsClientSyncError = False
 			$g_bQuickAttack = False
 			If ProfileSwitchAccountEnabled() Then checkSwitchAcc()
-			SmartWait4Train()
+					If $ichkModTrain = 0 Then SmartWait4Train()
 		EndIf
 	Else
 		SetLog("Attacking Not Planned, Skipped..", $COLOR_WARNING)
