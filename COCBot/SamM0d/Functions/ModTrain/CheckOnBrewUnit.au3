@@ -191,7 +191,7 @@ Func CheckOnBrewUnit($hHBitmap)
 		EndIf
 	Next
 
-	If $bDeletedExcess Then
+	If $bDeletedExcess = True Then
 		$bDeletedExcess = False
 		If gotoBrewSpells() = False Then Return
 		SetLog(" >>> Some Spells over train, stop and remove Spells.", $COLOR_RED)
@@ -259,7 +259,7 @@ Func CheckOnBrewUnit($hHBitmap)
 			EndIf
 		EndIf
 
-		If $bDeletedExcess Then
+		If $bDeletedExcess = True Then
 			$bDeletedExcess = False
 			If gotoBrewSpells() = False Then Return
 			SetLog(" >>> Some spells over train, stop and remove pre-train Spells.", $COLOR_RED)

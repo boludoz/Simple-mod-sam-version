@@ -30465,7 +30465,7 @@ $ToUse = $eCastle
 $iDa = 0
 EndIf
 If Not $Remaining And $g_abAttackDropCC[$pMatchMode] Then
-Setlog("Let's use " & NameOfTroop($ToUse))
+Setlog("Let's use " & GetTroopName($ToUse))
 If QuickMIS("BC1", $g_sImgSwitchSiegeMachine, 50, 700, 820, 720, True, False) Then
 If $g_bDebugSetlog Then SetDebugLog("Benchmark Switch Siege Bar: " & StringFormat("%.2f", _Timer_Diff($hStarttime)) & "'ms")
 $hStarttime = _Timer_Init()
@@ -30501,7 +30501,7 @@ $aSiegeAvailable[UBound($aSiegeAvailable) - 1][1] = $y
 Local $SiegeLevel = getTroopsSpellsLevel($x - 26, 587)
 $aSiegeAvailable[UBound($aSiegeAvailable) - 1][2] = $SiegeLevel <> "" ? Number($SiegeLevel) : 1
 If $DebugSiege Then
-Local $Info = $i + 1 & "_" & NameOfTroop($ToUse) & "_L" & $aSiegeAvailable[UBound($aSiegeAvailable) - 1][2] & "_" & $x & "_" & $y
+Local $Info = $i + 1 & "_" & GetTroopName($ToUse) & "_L" & $aSiegeAvailable[UBound($aSiegeAvailable) - 1][2] & "_" & $x & "_" & $y
 addInfoToDebugImage($hGraphic, $hPenRED, $Info, $x, $y)
 _GDIPlus_GraphicsDrawLine($hGraphic, 0, 587, 860, 587, $hPenRED)
 _GDIPlus_GraphicsDrawLine($hGraphic, $x - 26, 0, $x - 26, 732, $hPenRED)
@@ -30521,7 +30521,7 @@ EndIf
 Next
 Click($iFinalX, $iFinalY, 1)
 Local $TextLog = $ToUse = $eCastle ? "" : " Level " & $iFinalLevel
-Setlog(NameOfTroop($ToUse) & $TextLog & " selected!", $COLOR_SUCCESS)
+Setlog(GetTroopName($ToUse) & $TextLog & " selected!", $COLOR_SUCCESS)
 Else
 If $g_bDebugImageSave Then DebugImageSave("PrepareAttack_SwitchSiege")
 Click($lastX, $lastY, 1)
@@ -30536,7 +30536,7 @@ _GDIPlus_BitmapDispose($editedImage)
 EndIf
 Else
 If $g_bDebugImageSave Then DebugImageSave("PrepareAttack_SwitchSiege")
-Setlog("Undetected " & NameOfTroop($ToUse) & " after click on switch btn!", $COLOR_DEBUG)
+Setlog("Undetected " & GetTroopName($ToUse) & " after click on switch btn!", $COLOR_DEBUG)
 Click($lastX, $lastY, 1)
 If _sleep(250) Then Return
 Click(35, 595 + $g_iBottomOffsetY, 1, 0, "#0111")
@@ -30576,7 +30576,7 @@ Else
 Local $troopKind = $aTemp[$i][0]
 If $troopKind < $eKing Then
 If Not IsTroopToBeUsed($pMatchMode, $troopKind) Then
-If $g_bDebugSetlog Then SetDebugLog("Discard use of troop " & $troopKind & " " & NameOfTroop($troopKind), $COLOR_ERROR)
+If $g_bDebugSetlog Then SetDebugLog("Discard use of troop " & $troopKind & " " & GetTroopName($troopKind), $COLOR_ERROR)
 $g_avAttackTroops[$i][0] = -1
 $g_avAttackTroops[$i][1] = 0
 $g_avAttackTroops[$i][2] = 0
@@ -30598,13 +30598,13 @@ If $g_avAttackTroops[$i][0] = $eKing Or $g_avAttackTroops[$i][0] = $eQueen Or $g
 $troopKind = $g_avAttackTroops[$i][1]
 $troopsnumber += 1
 Else
-If $g_bDebugSetlog Then SetDebugLog($aTemp[$i][2] & " » Discard use Hero/Spell/Castle/Siege [" & $troopKind & "] " & NameOfTroop($troopKind), $COLOR_ERROR)
+If $g_bDebugSetlog Then SetDebugLog($aTemp[$i][2] & " » Discard use Hero/Spell/Castle/Siege [" & $troopKind & "] " & GetTroopName($troopKind), $COLOR_ERROR)
 $troopKind = -1
 EndIf
 EndIf
 $Plural = 0
 If $aTemp[$i][1] > 1 Then $Plural = 1
-If $troopKind <> -1 Then SetLog($aTemp[$i][2] & " » " & $g_avAttackTroops[$i][1] & " " & NameOfTroop($g_avAttackTroops[$i][0], $Plural) & ", x: " & $g_avAttackTroops[$i][2], $COLOR_SUCCESS)
+If $troopKind <> -1 Then SetLog($aTemp[$i][2] & " » " & $g_avAttackTroops[$i][1] & " " & GetTroopName($g_avAttackTroops[$i][0], $Plural) & ", x: " & $g_avAttackTroops[$i][2], $COLOR_SUCCESS)
 EndIf
 Next
 SetSlotSpecialTroops()
@@ -31286,7 +31286,7 @@ EndIf
 If $troopKind >= $eBarb And $troopKind <= $eIceG Then
 $troopNb = $iNbOfSpots * $iAtEachSpot
 If $troopNb > 1 Then $plural = 1
-$name = NameOfTroop($troopKind, $plural)
+$name = GetTroopName($troopKind, $plural)
 $TroopCountBeg = Number(ReadTroopQuantity($THtroop))
 If($TroopCountBeg = 0) And $g_bDebugSetlog Then SetLog("No " & $name & " Remaining!!!")
 If($TroopCountBeg = 0) Then Return False
@@ -31406,7 +31406,7 @@ If CheckOneStar(0, False, True) Then Return
 For $i = 0 To UBound($g_avAttackTroops) - 1
 If $g_avAttackTroops[$i][0] = $THSpell Then
 $Spell = $i
-$name = NameOfTroop($THSpell, 0)
+$name = GetTroopName($THSpell, 0)
 EndIf
 Next
 If $Spell > -1 Then
@@ -31645,7 +31645,7 @@ $g_iCSVLastTroopPositionDropTroopFromINI = -1
 If _Sleep($DELAYRESPOND) Then Return
 debugAttackCSV("Troops to be used (purged from troops) ")
 For $i = 0 To UBound($g_avAttackTroops) - 1
-debugAttackCSV("SLOT n.: " & $i & " - Troop: " & NameOfTroop($g_avAttackTroops[$i][0]) & " (" & $g_avAttackTroops[$i][0] & ") - Quantity: " & $g_avAttackTroops[$i][1])
+debugAttackCSV("SLOT n.: " & $i & " - Troop: " & GetTroopName($g_avAttackTroops[$i][0]) & " (" & $g_avAttackTroops[$i][0] & ") - Quantity: " & $g_avAttackTroops[$i][1])
 Next
 Local $hTimerTOTAL = __timerinit()
 Local $hTimer = __timerinit()
@@ -32529,7 +32529,7 @@ Local $nbSides = $listInfoDeploy[$i][1]
 Local $waveNb = $listInfoDeploy[$i][2]
 Local $maxWaveNb = $listInfoDeploy[$i][3]
 Local $slotsPerEdge = $listInfoDeploy[$i][4]
-If $g_bDebugSetlog Then SetDebugLog("**ListInfoDeploy row " & $i & ": USE " & NameOfTroop($troopKind, 0) & " SIDES " & $nbSides & " WAVE " & $waveNb & " XWAVE " & $maxWaveNb & " SLOTXEDGE " & $slotsPerEdge, $COLOR_DEBUG)
+If $g_bDebugSetlog Then SetDebugLog("**ListInfoDeploy row " & $i & ": USE " & GetTroopName($troopKind, 0) & " SIDES " & $nbSides & " WAVE " & $waveNb & " XWAVE " & $maxWaveNb & " SLOTXEDGE " & $slotsPerEdge, $COLOR_DEBUG)
 If(IsNumber($troopKind)) Then
 For $j = 0 To UBound($g_avAttackTroops) - 1
 If $g_avAttackTroops[$j][0] = $troopKind Then
@@ -32537,7 +32537,7 @@ $troop = $j
 $troopNb = Ceiling($g_avAttackTroops[$j][1] / $maxWaveNb)
 Local $plural = 0
 If $troopNb > 1 Then $plural = 1
-$name = NameOfTroop($troopKind, $plural)
+$name = GetTroopName($troopKind, $plural)
 EndIf
 Next
 EndIf
@@ -32653,7 +32653,7 @@ If $nbSides < 1 Then Return
 Local $nbTroopsLeft = $number
 Local $nbTroopsPerEdge = Round($nbTroopsLeft / $nbSides)
 If($number > 0 And $nbTroopsPerEdge = 0) Then $nbTroopsPerEdge = 1
-If $g_bDebugSmartFarm Then Setlog(" - " & NameOfTroop($troop) & " Number: " & $number & " Sides: " & $nbSides & " SlotsPerEdge: " & $slotsPerEdge)
+If $g_bDebugSmartFarm Then Setlog(" - " & GetTroopName($troop) & " Number: " & $number & " Sides: " & $nbSides & " SlotsPerEdge: " & $slotsPerEdge)
 If $nbSides = 4 Then
 ReDim $listInfoPixelDropTroop[4]
 $listInfoPixelDropTroop = GetPixelDropTroop($troop, $number, $slotsPerEdge)
@@ -33163,10 +33163,10 @@ If $g_abAttackUseBatSpell[$g_iMatchMode] = False Then $usespell = False
 EndSwitch
 If $troopPosition = -1 Or $usespell = False Then
 If $usespell = True Then
-SetLog("No " & NameOfTroop($iTroopIndex) & "  found in your attack troops list")
-debugAttackCSV("No " & NameOfTroop($iTroopIndex) & " found in your attack troops list")
+SetLog("No " & GetTroopName($iTroopIndex) & "  found in your attack troops list")
+debugAttackCSV("No " & GetTroopName($iTroopIndex) & " found in your attack troops list")
 Else
-If $g_bDebugSetlog Then SetDebugLog("Discard use " & NameOfTroop($iTroopIndex), $COLOR_DEBUG)
+If $g_bDebugSetlog Then SetDebugLog("Discard use " & GetTroopName($iTroopIndex), $COLOR_DEBUG)
 EndIf
 Else
 If $g_iCSVLastTroopPositionDropTroopFromINI <> $troopSlotConst Then
@@ -34749,10 +34749,10 @@ Local $troopPosition = -1
 For $i = 0 To UBound($g_avAttackTroops) - 1
 If $g_avAttackTroops[$i][1] <> -1 Then
 If $g_avAttackTroops[$i][0] = $eGobl Then
-If $g_bDebugSetlog Then SetDebugLog("-*-" & $g_avAttackTroops[$i][0] & " " & NameOfTroop($g_avAttackTroops[$i][0]) & " " & $g_avAttackTroops[$i][1] & " <<---" & $eGobl, $COLOR_SUCCESS)
+If $g_bDebugSetlog Then SetDebugLog("-*-" & $g_avAttackTroops[$i][0] & " " & GetTroopName($g_avAttackTroops[$i][0]) & " " & $g_avAttackTroops[$i][1] & " <<---" & $eGobl, $COLOR_SUCCESS)
 $troopPosition = $i
 Else
-If $g_bDebugSetlog Then SetDebugLog("-*-" & $g_avAttackTroops[$i][0] & " " & NameOfTroop($g_avAttackTroops[$i][0]) & " " & $g_avAttackTroops[$i][1] & "", $COLOR_GRAY)
+If $g_bDebugSetlog Then SetDebugLog("-*-" & $g_avAttackTroops[$i][0] & " " & GetTroopName($g_avAttackTroops[$i][0]) & " " & $g_avAttackTroops[$i][1] & "", $COLOR_GRAY)
 EndIf
 EndIf
 Next
@@ -37603,7 +37603,7 @@ $troop = $i
 $troopNb = Ceiling($g_avAttackTroops[$i][1] / $maxWaveNb)
 Local $plural = 0
 If $troopNb > 1 Then $plural = 1
-$name = NameOfTroop($troopKind, $plural)
+$name = GetTroopName($troopKind, $plural)
 EndIf
 Next
 If $g_bDebugSetlog Then SetDebugLog("Dropping : " & $troopNb & " " & $name, $COLOR_DEBUG)
@@ -37642,7 +37642,7 @@ $troop = $j
 $troopNb = Ceiling($g_avAttackTroops[$j][1] / $maxWaveNb)
 Local $plural = 0
 If $troopNb > 1 Then $plural = 1
-$name = NameOfTroop($troopKind, $plural)
+$name = GetTroopName($troopKind, $plural)
 EndIf
 Next
 EndIf
@@ -37832,7 +37832,7 @@ Next
 EndIf
 Return True
 EndFunc
-Func NameOfTroop($iKind, $iPlural = 0)
+Func GetTroopName($iKind, $iPlural = 0)
 Local $sTroopname
 Switch $iKind
 Case $eBarb
@@ -38189,9 +38189,9 @@ Next
 If $Spells[0][4] + $Spells[1][4] + $Spells[2][4] = 0 Then
 $spellsLeftString &= "None"
 Else
-If $Spells[2][4] > 0 Then $spellsLeftString &= $Spells[2][4] & " " & NameOfTroop($Spells[2][1], 1)
+If $Spells[2][4] > 0 Then $spellsLeftString &= $Spells[2][4] & " " & GetTroopName($Spells[2][1], 1)
 If $Spells[2][4] > 0 And $Spells[0][4] + $Spells[1][4] > 0 Then $spellsLeftString &= ", "
-If $Spells[0][4] + $Spells[1][4] > 0 Then $spellsLeftString &= $Spells[0][4] + $Spells[1][4] & " " & NameOfTroop($Spells[1][1], 1)
+If $Spells[0][4] + $Spells[1][4] > 0 Then $spellsLeftString &= $Spells[0][4] + $Spells[1][4] & " " & GetTroopName($Spells[1][1], 1)
 EndIf
 If $drillStealableString <> "Drills Lvl/Estimated Amount left: " Then
 If $g_bNoobZap = False Then
@@ -38314,19 +38314,19 @@ If $iTroops > 0 Then
 For $i = 0 To UBound($g_avAttackTroops) - 1
 If $g_avAttackTroops[$i][0] = $eLSpell Then
 If $aSpells[0][4] = 0 Then
-If $g_bDebugSmartZap = True Then SetLog(NameOfTroop($g_avAttackTroops[$i][0], 0) & ": " & $g_avAttackTroops[$i][1], $COLOR_DEBUG)
+If $g_bDebugSmartZap = True Then SetLog(GetTroopName($g_avAttackTroops[$i][0], 0) & ": " & $g_avAttackTroops[$i][1], $COLOR_DEBUG)
 $aSpells[0][2] = $i
 $aSpells[0][3] = Number($g_iLSpellLevel)
 $aSpells[0][4] = $g_avAttackTroops[$i][1]
 Else
-If $g_bDebugSmartZap = True Then SetLog("Donated " & NameOfTroop($g_avAttackTroops[$i][0], 0) & ": " & $g_avAttackTroops[$i][1], $COLOR_DEBUG)
+If $g_bDebugSmartZap = True Then SetLog("Donated " & GetTroopName($g_avAttackTroops[$i][0], 0) & ": " & $g_avAttackTroops[$i][1], $COLOR_DEBUG)
 $aSpells[1][2] = $i
 $aSpells[1][3] = Number($g_iLSpellLevel)
 $aSpells[1][4] = $g_avAttackTroops[$i][1]
 EndIf
 EndIf
 If $g_avAttackTroops[$i][0] = $eESpell Then
-If $g_bDebugSmartZap = True Then SetLog(NameOfTroop($g_avAttackTroops[$i][0], 0) & ": " & $g_avAttackTroops[$i][1], $COLOR_DEBUG)
+If $g_bDebugSmartZap = True Then SetLog(GetTroopName($g_avAttackTroops[$i][0], 0) & ": " & $g_avAttackTroops[$i][1], $COLOR_DEBUG)
 $aSpells[2][2] = $i
 $aSpells[2][3] = Number($g_iESpellLevel)
 $aSpells[2][4] = $g_avAttackTroops[$i][1]
@@ -38338,14 +38338,14 @@ SetLog("No lightning spells trained, time to go home!", $COLOR_ERROR)
 Return $performedZap
 Else
 If $aSpells[0][4] > 0 Then
-SetLog(" - Number of " & NameOfTroop($aSpells[0][1], 1) & " (Lvl " & $aSpells[0][3] & "): " & Number($aSpells[0][4]), $COLOR_INFO)
+SetLog(" - Number of " & GetTroopName($aSpells[0][1], 1) & " (Lvl " & $aSpells[0][3] & "): " & Number($aSpells[0][4]), $COLOR_INFO)
 EndIf
 If $aSpells[1][4] > 0 Then
-SetLog(" - Number of Donated " & NameOfTroop($aSpells[1][1], 1) & " (Lvl " & $aSpells[1][3] & "): " & Number($aSpells[1][4]), $COLOR_INFO)
+SetLog(" - Number of Donated " & GetTroopName($aSpells[1][1], 1) & " (Lvl " & $aSpells[1][3] & "): " & Number($aSpells[1][4]), $COLOR_INFO)
 EndIf
 EndIf
 If $aSpells[2][4] > 0 And $g_bEarthQuakeZap = True Then
-SetLog(" - Number of " & NameOfTroop($aSpells[2][1], 1) & " (Lvl " & $aSpells[2][3] & "): " & Number($aSpells[2][4]), $COLOR_INFO)
+SetLog(" - Number of " & GetTroopName($aSpells[2][1], 1) & " (Lvl " & $aSpells[2][3] & "): " & Number($aSpells[2][4]), $COLOR_INFO)
 Else
 $aSpells[2][4] = 0
 EndIf
@@ -38612,7 +38612,7 @@ Local $iTroops = PrepareAttack($g_iMatchMode, True)
 If $iTroops > 0 Then
 For $i = 0 To UBound($g_avAttackTroops) - 1
 If $g_avAttackTroops[$i][0] = $eLSpell Then
-If $g_bDebugSmartZap = True Then SetLog("Donated " & NameOfTroop($g_avAttackTroops[$i][0], 0) & ": " & $g_avAttackTroops[$i][1], $COLOR_DEBUG)
+If $g_bDebugSmartZap = True Then SetLog("Donated " & GetTroopName($g_avAttackTroops[$i][0], 0) & ": " & $g_avAttackTroops[$i][1], $COLOR_DEBUG)
 $aSpells[1][2] = $i
 $aSpells[1][3] = Number($g_iLSpellLevel)
 $aSpells[1][4] = $g_avAttackTroops[$i][1]
@@ -38620,7 +38620,7 @@ EndIf
 Next
 EndIf
 If $aSpells[1][4] > 0 Then
-SetLog("Woohoo, found a donated " & NameOfTroop($aSpells[1][1], 0) & " (Lvl " & $aSpells[1][3] & ").", $COLOR_INFO)
+SetLog("Woohoo, found a donated " & GetTroopName($aSpells[1][1], 0) & " (Lvl " & $aSpells[1][3] & ").", $COLOR_INFO)
 EndIf
 EndIf
 WEnd
@@ -38638,10 +38638,10 @@ SetLog("No lightning spells left, time to go home!", $COLOR_ERROR)
 Return $performedZap
 Else
 If $aSpells[0][4] > 0 Then
-SetLog(" - Number of " & NameOfTroop($aSpells[0][1], 1) & " (Lvl " & $aSpells[0][3] & "): " & Number($aSpells[0][4]), $COLOR_INFO)
+SetLog(" - Number of " & GetTroopName($aSpells[0][1], 1) & " (Lvl " & $aSpells[0][3] & "): " & Number($aSpells[0][4]), $COLOR_INFO)
 EndIf
 If $aSpells[1][4] > 0 Then
-SetLog(" - Number of Donated " & NameOfTroop($aSpells[1][1], 1) & " (Lvl " & $aSpells[1][3] & "): " & Number($aSpells[1][4]), $COLOR_INFO)
+SetLog(" - Number of Donated " & GetTroopName($aSpells[1][1], 1) & " (Lvl " & $aSpells[1][3] & "): " & Number($aSpells[1][4]), $COLOR_INFO)
 EndIf
 EndIf
 Local $iPercentageNeeded = 50 - getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY)
@@ -38690,13 +38690,13 @@ $iSpell = $i
 EndIf
 Next
 If $Spells[$iSpell][2] > -1 Then
-SetLog("Dropping " & $Spells[$iSpell][0] & " " & String(NameOfTroop($Spells[$iSpell][1], 0)), $COLOR_ACTION)
+SetLog("Dropping " & $Spells[$iSpell][0] & " " & String(GetTroopName($Spells[$iSpell][1], 0)), $COLOR_ACTION)
 SelectDropTroop($Spells[$iSpell][2])
 If _Sleep($DELAYCASTSPELL1) Then Return
 If IsAttackPage() Then Click($x, $y, 1, 0, "#0029")
 $Spells[$iSpell][4] -= 1
 Else
-If $g_bDebugSmartZap = True Then SetLog("No " & String(NameOfTroop($Spells[$iSpell][1], 0)) & " Found", $COLOR_DEBUG)
+If $g_bDebugSmartZap = True Then SetLog("No " & String(GetTroopName($Spells[$iSpell][1], 0)) & " Found", $COLOR_DEBUG)
 EndIf
 Return $Spells[$iSpell][1]
 EndFunc
@@ -39092,7 +39092,7 @@ For $pTroopType = $eKing To $eWarden
 Local $iHeroIdx = $pTroopType - $eKing
 For $pMatchMode = $DB To $LB
 If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then
-SetLog("$pTroopType: " & NameOfTroop($pTroopType) & ", $pMatchMode: " & $g_asModeText[$pMatchMode], $COLOR_DEBUG)
+SetLog("$pTroopType: " & GetTroopName($pTroopType) & ", $pMatchMode: " & $g_asModeText[$pMatchMode], $COLOR_DEBUG)
 SetLog("TroopToBeUsed: " & IsSpecialTroopToBeUsed($pMatchMode, $pTroopType) & ", Hero Wait Status= " & IsSearchModeActiveMini($pMatchMode) & " & " & IsSpecialTroopToBeUsed($pMatchMode, $pTroopType) & " & " &($g_iHeroUpgrading[$iHeroIdx] <> 1) & " & " &($g_iHeroWaitAttackNoBit[$pMatchMode][$iHeroIdx] = 1), $COLOR_DEBUG)
 SetLog("$g_aiAttackUseHeroes[" & $pMatchMode & "]= " & $g_aiAttackUseHeroes[$pMatchMode] & ", $g_aiSearchHeroWaitEnable[" & $pMatchMode & "]= " & $g_aiSearchHeroWaitEnable[$pMatchMode] & ", $g_iHeroUpgradingBit=" & $g_iHeroUpgradingBit, $COLOR_DEBUG)
 EndIf
@@ -39108,7 +39108,7 @@ $g_aiTimeTrain[2] = $aHeroResult[$iActiveHero]
 EndIf
 $iTrainWaitCloseFlag = BitOR($iTrainWaitCloseFlag, $TRAINWAIT_HERO)
 If $g_bDebugSetlogTrain Or $g_bDebugSetlog Then
-SetLog("Wait enabled: " & NameOfTroop($pTroopType) & ":" & $g_asModeText[$pMatchMode] & ", $iTrainWaitCloseFlag:" & $iTrainWaitCloseFlag & ", Hero Time:" & $aHeroResult[$iActiveHero] & ", Wait Time: " & StringFormat("%.2f", $g_aiTimeTrain[2]), $COLOR_DEBUG)
+SetLog("Wait enabled: " & GetTroopName($pTroopType) & ":" & $g_asModeText[$pMatchMode] & ", $iTrainWaitCloseFlag:" & $iTrainWaitCloseFlag & ", Hero Time:" & $aHeroResult[$iActiveHero] & ", Wait Time: " & StringFormat("%.2f", $g_aiTimeTrain[2]), $COLOR_DEBUG)
 EndIf
 EndIf
 Next
@@ -40939,7 +40939,7 @@ Local $aSearchResult = SearchArmy("trainwindow-SiegesInQueue-bundle", 520, 210, 
 If $aSearchResult[0][0] <> "" Then
 For $i = 0 To UBound($aSearchResult) - 1
 Local $tempSiege = TroopIndexLookup($aSearchResult[$i][0])
-Setlog("- " & NameOfTroop($tempSiege) & " Queued.", $COLOR_INFO)
+Setlog("- " & GetTroopName($tempSiege) & " Queued.", $COLOR_INFO)
 Next
 EndIf
 Local $sResultSpells = getRemainBuildTimer(780, 244, True)

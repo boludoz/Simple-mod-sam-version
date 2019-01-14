@@ -14,7 +14,6 @@
 ; ===============================================================================================================================
 Func ParseAttackCSV($debug = False)
 
-	Local $rownum = 0
 	Local $bForceSideExist = False
 	Local $sErrorText, $sTargetVectors = ""
 	Local $iTroopIndex, $bWardenDrop = False
@@ -42,7 +41,6 @@ Func ParseAttackCSV($debug = False)
 		; Read in lines of text until the EOF is reached
 		For $iLine = 0 To UBound($aLines) - 1
 			$line = $aLines[$iLine]
-			$rownum = $line + 1
 			$sErrorText = "" ; empty error text each row
 			debugAttackCSV("line: " & $iLine + 1)
 			If @error = -1 Then ExitLoop
@@ -180,75 +178,24 @@ Func ParseAttackCSV($debug = False)
 								EndIf
 							EndIf
 						EndIf
-						;quantities : With %
-						Local $qty1, $qty2, $qtyvect, $bUpdateQuantity = False
-						If StringInStr($value3, "%") > 0 Then
-							$qtyvect = StringSplit($value3, "%", 2)
-							If UBound($qtyvect) > 0 Then
-								Local $iPercentage = $qtyvect[0]
-								If UBound($qtyvect) > 1 Then $bUpdateQuantity = (($qtyvect[1] = "U") ? True : False)
-								Local $theTroopPosition = -2
-
-								;get the integer index of the troop name specified
-								Local $troopName = $value4
-								Local $iTroopIndex = TroopIndexLookup($troopName)
-								If $iTroopIndex = -1 Then
-									SetLog("CSV CMD '%' troop name '" & $troopName & "' is unrecognized.")
-									Return
-								EndIf
-
-								For $i = 0 To UBound($g_avAttackTroops) - 1
-									If $g_avAttackTroops[$i][0] = $iTroopIndex Then
-										$theTroopPosition = $i
-										ExitLoop
-									EndIf
-								Next
-								If $bUpdateQuantity = True Then
-									If $theTroopPosition >= 0 Then
-										SetLog("Updating Available " & GetTroopName($iTroopIndex, 1) & " Quantities", $COLOR_INFO)
-										$theTroopPosition = UpdateTroopQuantity($troopName)
-									EndIf
-								EndIf
-								If $theTroopPosition >= 0 And UBound($g_avAttackTroops) > $theTroopPosition Then
-									If Int($qtyvect[0]) > 0 Then
-										$qty1 = Round((Number($qtyvect[0]) / 100) * Number($g_avAttackTroops[Number($theTroopPosition)][1]))
-										$qty2 = $qty1
-										SetLog($qtyvect[0] & "% Of x" & Number($g_avAttackTroops[$theTroopPosition][1]) & " " & GetTroopName($g_avAttackTroops[$theTroopPosition][0], 1) & " = " & $qty1, $COLOR_INFO)
-									Else
-										$index1 = 1
-										$qty2 = 1
-									EndIf
-								Else
-									$qty1 = 0
-									$qty2 = 0
-								EndIf
+						;qty...
+						Local $qty1, $qty2, $qtyvect
+						$qtyvect = StringSplit($value3, "-", 2)
+						If UBound($qtyvect) > 1 Then
+							If Int($qtyvect[0]) > 0 And Int($qtyvect[1]) > 0 Then
+								$qty1 = Int($qtyvect[0])
+								$qty2 = Int($qtyvect[1])
 							Else
-								If Int($value3) > 0 Then
-									$qty1 = Int($value3)
-									$qty2 = Int($value3)
-								Else
-									$qty1 = 1
-									$qty2 = 1
-								EndIf
+								$index1 = 1
+								$qty2 = 1
 							EndIf
 						Else
-							$qtyvect = StringSplit($value3, "-", 2)
-							If UBound($qtyvect) > 1 Then
-								If Int($qtyvect[0]) > 0 And Int($qtyvect[1]) > 0 Then
-									$qty1 = Int($qtyvect[0])
-									$qty2 = Int($qtyvect[1])
-								Else
-									$index1 = 1
-									$qty2 = 1
-								EndIf
+							If Int($value3) > 0 Then
+								$qty1 = Int($value3)
+								$qty2 = Int($value3)
 							Else
-								If Int($value3) > 0 Then
-									$qty1 = Int($value3)
-									$qty2 = Int($value3)
-								Else
-									$qty1 = 1
-									$qty2 = 1
-								EndIf
+								$qty1 = 1
+								$qty2 = 1
 							EndIf
 						EndIf
 						;delay between points
@@ -372,10 +319,10 @@ Func ParseAttackCSV($debug = False)
                                         ; Loop on all detected troops
                                         For $x = 0 To UBound($g_avAttackTroops) - 1
                                             ; If the Name exist and haves more than zero is deploy it
-                                            If $g_avAttackTroops[$x][0] = $ii And $g_avAttackTroops[$x][1] > 0 Then
+                                            If $g_avAttackTroops[$x][0] = $ii and $g_avAttackTroops[$x][1] > 0 Then
                                                 Local $plural = 0
                                                 If $g_avAttackTroops[$x][1] > 1 Then $plural = 1
-                                                Local $name = NameOfTroop($g_avAttackTroops[$x][0], $plural)
+                                                Local $name = GetTroopName($g_avAttackTroops[$x][0], $plural)
                                                 Setlog("Name: " & $name, $COLOR_DEBUG)
                                                 Setlog("Qty: " & $g_avAttackTroops[$x][1], $COLOR_DEBUG)
                                                 DropTroopFromINI($value1, $index1, $index2, $indexArray, $g_avAttackTroops[$x][1], $g_avAttackTroops[$x][1], $g_asTroopShortNames[$ii], $delaypoints1, $delaypoints2, $delaydrop1, $delaydrop2, $sleepdrop1, $sleepdrop2, $sleepbeforedrop1, $sleepbeforedrop2, $debug)
@@ -392,10 +339,8 @@ Func ParseAttackCSV($debug = False)
 						ReleaseClicks($g_iAndroidAdbClicksTroopDeploySize)
 						If _Sleep($DELAYRESPOND) Then Return ; check for pause/stop
 						;set flag if warden was dropped and sleep after delay was to short for icon to update properly
-						If $value4 <> "REMAIN" Then
 						$iTroopIndex = TroopIndexLookup($value4, "ParseAttackCSV") ; obtain enum
 						$bWardenDrop = ($iTroopIndex = $eWarden) And ($sleepdrop1 < 1000)
-						EndIf
 					Case "WAIT"
 						ReleaseClicks()
 						;sleep time

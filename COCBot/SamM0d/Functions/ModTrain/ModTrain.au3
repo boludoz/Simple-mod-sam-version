@@ -11,7 +11,6 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Global $iMaxV
 
 Func ModTrain($ForcePreTrain = False)
 	Local $bJustMakeDonateFlag = $bJustMakeDonate
@@ -105,25 +104,46 @@ Func ModTrain($ForcePreTrain = False)
 	If _Sleep(50) Then Return ; 50ms improve pause button response
 
 		Local $iKTime[5] = [0,0,0,0,0]
+		Local $bKingTrue = False
 		getArmyTroopTime(False,False)
-		$iKTime[4] = $g_aiTimeTrain[0]
+		
 		If BitAND($g_aiSearchHeroWaitEnable[$DB], $eHeroKing) = $eHeroKing Or BitAND($g_aiSearchHeroWaitEnable[$LB], $eHeroKing) = $eHeroKing Then
 			$iKTime[0] = getArmyHeroTime($eHeroKing)
+			$bKingTrue = True
 		EndIf
 		If BitAND($g_aiSearchHeroWaitEnable[$DB], $eHeroQueen) = $eHeroQueen Or BitAND($g_aiSearchHeroWaitEnable[$LB], $eHeroQueen) = $eHeroQueen Then
 			$iKTime[1] = getArmyHeroTime($eHeroQueen)
+			$bKingTrue = True
 		EndIf
 		If BitAND($g_aiSearchHeroWaitEnable[$DB], $eHeroWarden) = $eHeroWarden Or BitAND($g_aiSearchHeroWaitEnable[$LB], $eHeroWarden) = $eHeroWarden Then
 			$iKTime[2] = getArmyHeroTime($eHeroWarden)
+			$bKingTrue = True
 		EndIf
+		
+		;$iKTime[4] = $g_aiTimeTrain[0]
+		;If Number($g_aiTimeTrain[0]) > 0 Then Setlog("Troops Time: " & $g_aiTimeTrain[0], $COLOR_INFO)
+		
 		If $g_abSearchSpellsWaitEnable[$DB] Or $g_abSearchSpellsWaitEnable[$LB] Then
 			getArmySpellTime()
 			$iKTime[3] = $g_aiTimeTrain[1]
 		EndIf
+		
+		; No kings
+		Local $iTTime = $iKTime
+		For $i = 0 To 2
+			_ArrayDelete($iTTime, $i)
+		Next
+		Local $iMaxVt = _ArrayMax($iKTime, 1)
 
-		;_ArraySort($iKTime,1)
-		$iMaxV =  _ArrayMax($iKTime, 1)
+		; No Troops and Spells
+		Local $iTKTime = $iKTime
+		For $h = 2 To 3
+			_ArrayDelete($iTKTime, $i)
+		Next
+		Local $iMaxVk = _ArrayMax($iKTime, 1)
 
+		Local $iMaxV = _ArrayMax($iKTime, 1)
+		
 		If $g_iSamM0dDebug = 1 Then SetLog("$iMaxV: " & $iMaxV)
 		
 	If $ichkEnableMySwitch = 1 Then
@@ -165,22 +185,33 @@ Func ModTrain($ForcePreTrain = False)
 	EndIf
 	
 	getArmyCCStatus(False, False, False)
-	If _Sleep(350) Then Return ; 50ms improve pause button response
+	If _Sleep(350) Then Return ; 350ms improve pause button response
 
     RequestCC(False, "", False)
-	If _Sleep(350) Then Return ; 50ms improve pause button response
+	If _Sleep(350) Then Return ; 350ms improve pause button response
 
 
 	If $g_iSamM0dDebug = 1 Then Setlog("Fullarmy = " & $g_bFullArmy & " CurCamp = " & $g_CurrentCampUtilization & " TotalCamp = " & $g_iTotalCampSpace & " - result = " & ($g_bFullArmy = True And $g_CurrentCampUtilization = $g_iTotalCampSpace), $COLOR_DEBUG)
-	If $g_bFullArmy = True Then
-		SetLog($CustomTrain_MSG_4, $COLOR_SUCCESS)
-		If $g_bNotifyTGEnable And $g_bNotifyAlertCampFull Then PushMsg("CampFull")
-		Else
-	Setlog("Waiting troops: " & $iMaxV & " Min.", $COLOR_INFO)
-	SmartWait4TrainMini((Int($iMaxV)*60))
+	
+	If $g_abSearchSpellsWaitEnable[$DB] Or $g_abSearchSpellsWaitEnable[$LB] Then 
 
-	EndIf
-
+			If $g_bFullArmy = True and $g_bFullArmySpells = True Then
+			SetLog($CustomTrain_MSG_4, $COLOR_SUCCESS)
+			If $g_bNotifyTGEnable And $g_bNotifyAlertCampFull Then PushMsg("CampFull")
+			Else
+			Setlog("Waiting troops and Spell: " & $iMaxVt & " Min.", $COLOR_GREEN)
+			SmartWait4TrainMini((Int($iMaxVt)*60))
+			EndIf
+	Else
+			If $g_bFullArmy = True Then
+			SetLog($CustomTrain_MSG_4, $COLOR_SUCCESS)
+			If $g_bNotifyTGEnable And $g_bNotifyAlertCampFull Then PushMsg("CampFull")
+			Else
+			Setlog("Waiting troops: " & $iMaxVt & " Min.", $COLOR_GREEN)
+			SmartWait4TrainMini((Int($iMaxVt)*60))
+			EndIf
+		EndIf
+	
 	If _Sleep(200) Then Return
 	ClickP($aAway, 1, 250, "#0504")
 	If _Sleep(250) Then Return

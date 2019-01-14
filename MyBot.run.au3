@@ -146,6 +146,15 @@ Func InitializeBot()
 	CreateMainGUIControls() ; Create all GUI Controls
 	InitializeMainGUI() ; setup GUI Controls
 
+	; samm0d
+	; =======================================================================================================
+	; MySwitch
+	$g_sEmulatorInfo4MySwitch = $sAndroidInfo
+
+	; samm0d log translate
+	#include "COCBot\SamM0d\Log Msg.au3"
+	; =======================================================================================================
+
 	; Files/folders
 	SetupFilesAndFolders()
 
@@ -160,46 +169,6 @@ Func InitializeBot()
 
 	; Some final setup steps and checks
 	FinalInitialization($sAndroidInfo)
-
-	; samm0d
-	; =======================================================================================================
-	; MySwitch
-	$g_sEmulatorInfo4MySwitch = $sAndroidInfo
-
-	InitializeMySwitch()
-
-	If FileExists(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\") Then
-		If Not FileExists(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images\") Then
-			DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images")
-		EndIf
-	Else
-		DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug")
-		DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images")
-	EndIf
-
-	If $g_iMyTroopsSize = 0 Then
-		SetLog($CustomTrain_MSG_15, $COLOR_ERROR)
-	EndIf
-
-	DirRemove(@ScriptDir & "\profiles\SamM0d", 1)
-	;DirCreate(@ScriptDir & "\profiles\SamM0d")
-	DirCopy(@ScriptDir & "\COCBot\SamM0d\Images",@ScriptDir & "\profiles\SamM0d", $FC_OVERWRITE)
-
-    Local $aSize = DirGetSize(@ScriptDir & "\profiles\SamM0d", 1)
-;~ 	For $i = 0 To UBound($aSize) - 1
-;~ 		SetLog("$aSize[" & $i & "]: " & $aSize[$i])
-;~ 	Next
-	If IsArray($aSize) Then
-		If $aSize[1] >= 235 Then
-			$g_sSamM0dImageLocation = @ScriptDir & "\profiles\SamM0d"
-		EndIf
-	EndIf
-
-	; samm0d log translate
-	#include "COCBot\SamM0d\Log Msg.au3"
-	; =======================================================================================================
-
-
 
 	;ProcessSetPriority(@AutoItPID, $iBotProcessPriority) ;~ Restore process priority
 
@@ -516,6 +485,44 @@ EndFunc   ;==>InitializeMBR
 ; Example .......: No
 ; ===============================================================================================================================
 Func SetupFilesAndFolders()
+	; samm0d
+	; =======================================================================================================
+	; MySwitch
+
+	InitializeMySwitch()
+	
+	BackupSystem()
+
+	If FileExists(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\") Then
+		If Not FileExists(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images\") Then
+			DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images")
+		EndIf
+	Else
+		DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug")
+		DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images")
+	EndIf
+
+	If $g_iMyTroopsSize = 0 Then
+		SetLog($CustomTrain_MSG_15, $COLOR_ERROR)
+	EndIf
+
+	DirRemove(@ScriptDir & "\profiles\SamM0d", 1)
+	;DirCreate(@ScriptDir & "\profiles\SamM0d")
+	DirCopy(@ScriptDir & "\COCBot\SamM0d\Images",@ScriptDir & "\profiles\SamM0d", $FC_OVERWRITE)
+
+    Local $aSize = DirGetSize(@ScriptDir & "\profiles\SamM0d", 1)
+;~ 	For $i = 0 To UBound($aSize) - 1
+;~ 		SetLog("$aSize[" & $i & "]: " & $aSize[$i])
+;~ 	Next
+	If IsArray($aSize) Then
+		If $aSize[1] >= 235 Then
+			$g_sSamM0dImageLocation = @ScriptDir & "\profiles\SamM0d"
+		EndIf
+	EndIf
+
+	; samm0d log translate
+	#include "COCBot\SamM0d\Log Msg.au3"
+	; =======================================================================================================
 
 	;DirCreate($sTemplates)
 	DirCreate($g_sProfilePresetPath)
@@ -727,6 +734,7 @@ Func runBot() ;Bot that runs everything in order
 		SetLog("Rematching Account [" & $g_iNextAccount + 1 & "] with Profile [" & GUICtrlRead($g_ahCmbProfile[$g_iNextAccount]) & "]")
 		SwitchCoCAcc($g_iNextAccount)
 	EndIf
+	
 	While 1
 		; samm0d
 		If $g_iSamM0dDebug = 1 And $g_bRestart Then SetLog("Continue loop with restart", $COLOR_DEBUG)
@@ -804,6 +812,7 @@ Func runBot() ;Bot that runs everything in order
 						EndIf
 					EndIf
 				EndIf
+				; Backup system
 				If not $g_bFirstRun Then BotDetectFirstTime()
 			Else
 				If _Sleep($DELAYRUNBOT1) Then Return
@@ -818,7 +827,6 @@ Func runBot() ;Bot that runs everything in order
 		EndIf
 
 		
-		BackupSystem()
 		chkShieldStatus()
 		If Not $g_bRunState Then Return
 		If $g_bRestart = True Then ContinueLoop
@@ -931,6 +939,7 @@ Func runBot() ;Bot that runs everything in order
 				If CheckAndroidReboot() = True Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 			WEnd
 			; samm0d
+			BackupSystem()
 			FriendlyChallenge()
 			If $g_bRunState = False Then Return
 			If $g_bRestart = True Then ContinueLoop
