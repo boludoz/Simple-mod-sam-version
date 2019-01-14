@@ -39,7 +39,7 @@ Func BotDetectFirstTime()
 		If $g_aiTownHallPos[1] = "" Or $g_aiTownHallPos[1] = -1 Then
 			imglocTHSearch(True, True) ; search th on myvillage
 			$g_aiTownHallPos[0] = $g_iTHx
-			$g_aiTownHallPos[1] = $g_iTHy
+			$g_aiTownHallPos[1] = $g_iTHy + 5
 			If $g_bDebugSetlog Then SetDebugLog("OldDDL Townhall: (" & $g_aiTownHallPos[0] & "," & $g_aiTownHallPos[1] & ")", $COLOR_ERROR)
 		EndIf
 		SetLog("Townhall: (" & $g_aiTownHallPos[0] & "," & $g_aiTownHallPos[1] & ")", $COLOR_DEBUG)
