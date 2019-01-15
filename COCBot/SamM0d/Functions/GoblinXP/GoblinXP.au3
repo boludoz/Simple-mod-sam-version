@@ -855,14 +855,14 @@ Func IsInGoblinPicnic($Retry = True, $maxRetry = 30, $timeBetweenEachRet = 300)
 	Local $result = ""
 	While $Found = False
 		If _Sleep($timeBetweenEachRet) Then Return False
-		If Not IsInAttackSuperXP() Then
-			$Counter += 1
-			If $Counter = $maxRetry Then
-				$Found = False
-				ExitLoop
-			EndIf
-			ContinueLoop
-		EndIf
+        If Not IsInAttackSuperXP() Then
+            $Counter += 1
+            If $Counter = $maxRetry Then
+                $Found = False
+                ExitLoop
+            EndIf
+            ContinueLoop
+        EndIf
 
 		$result = multiMatchesPixelOnly($directory, 0, "FV", "FV", "", 0, 1000, 0, 0, 111, 31)
 		If $g_bDebugSX Then SetDebugLog("SX|IGP|$result=" & $result)
@@ -1008,7 +1008,8 @@ Func GetPositionInSinglePlayer()
 			ExitLoop
 		EndIf
 	WEnd
-
+	
+    If _Sleep(50) Then Return
 	Local $rColCheckEnd = _ColorCheck(_GetPixelColor(517, 729, True, "GetPositionInSinglePlayer CheckEnd"), Hex(0x3B3426, 6), 10) ; Safe Corrdinates To Avoid Conflict With Stars Color - October Update
 	If $rColCheckEnd Then
 		If $g_bDebugSX Then SetDebugLog("SX|GPISP|Return END")
