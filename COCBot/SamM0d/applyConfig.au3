@@ -167,6 +167,20 @@ GUICtrlSetState($chkDisablePretrainTroops, ($ichkDisablePretrainTroops = 1 ? $GU
 GUICtrlSetState($chkMyTroopsOrder, ($ichkMyTroopsOrder = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
 GUICtrlSetState($chkEnableDeleteExcessTroops, ($ichkEnableDeleteExcessTroops = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
 
+; ================================================== Super XP ============================== ;
+
+GUICtrlSetState($g_hChkEnableSuperXP, $g_bEnableSuperXP ? $GUI_CHECKED : $GUI_UNCHECKED)
+;chkEnableSuperXP()
+GUICtrlSetState($g_hChkSkipZoomOutXP, $g_bSkipZoomOutXP ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($g_hChkFastGoblinXP, $g_bFastGoblinXP ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($g_hChkSkipDragToEndXP, $g_bSkipDragToEndXP ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($rbSXTraining, ($g_irbSXTraining = 1) ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($rbSXIAttacking, ($g_irbSXTraining = 2) ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetData($g_hTxtMaxXPtoGain, $g_iTxtMaxXPtoGain)
+GUICtrlSetState($g_hChkSXBK, $g_bSXBK = $eHeroKing ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($g_hChkSXAQ, $g_bSXAQ = $eHeroQueen ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($g_hChkSXGW, $g_bSXGW = $eHeroWarden ? $GUI_CHECKED : $GUI_UNCHECKED)
+
 $g_iMyTroopsSize = 0
 For $i = 0 To UBound($MyTroops)-1
 	GUICtrlSetData(Eval("txtMy" & $MyTroops[$i][0]), $MyTroops[$i][3])

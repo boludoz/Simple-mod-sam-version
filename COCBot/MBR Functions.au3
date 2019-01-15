@@ -27,6 +27,12 @@
 #include "SamM0d\Functions\FriendlyChallenge.au3"
 #include "SamM0d\Functions\MySwitch\MySwitch.au3"
 #include "SamM0d\Functions\Backup system.au3"
+; GoblinXP
+;---------------------------------------------------------------
+#include "SamM0d\Functions\GoblinXP\ArrayFunctions.au3"
+#include "SamM0d\Functions\GoblinXP\GoblinXP.au3"
+#include "SamM0d\Functions\GoblinXP\multiSearch.au3"
+;---------------------------------------------------------------
 ; Mod Train
 ;---------------------------------------------------------------
 #include "SamM0d\Functions\ModTrain\ModTrain.au3"

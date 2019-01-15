@@ -2029,7 +2029,7 @@ Func IIf($Condition, $IfTrue, $IfFalse)
 		Return $IfFalse
 	EndIf
 EndFunc   ;==>IIf
-
+#cs Samm0d
 Func _ArryRemoveBlanks(ByRef $aArray)
 	Local $iCounter = 0
 	For $i = 0 To UBound($aArray) - 1
@@ -2040,7 +2040,7 @@ Func _ArryRemoveBlanks(ByRef $aArray)
 	Next
 	ReDim $aArray[$iCounter]
 EndFunc   ;==>_ArryRemoveBlanks
-
+#ce
 Func ValidateSearchArmyResult($aSearchResult, $iIndex = 0)
 	If IsArray($aSearchResult) Then
 		If UBound($aSearchResult) > 0 Then

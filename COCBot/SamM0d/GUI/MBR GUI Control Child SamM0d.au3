@@ -849,3 +849,55 @@ Func _BatteryStatus()
 		EndIf
 	EndIf
 EndFunc   ;==>_BatteryStatus
+
+Func chkEnableSuperXP()
+	$g_bEnableSuperXP = True
+	$g_bEnableSuperXP = (GUICtrlRead($g_hChkEnableSuperXP) = $GUI_CHECKED)
+	If GUICtrlRead($g_hChkEnableSuperXP) = $GUI_CHECKED Then
+
+		GUICtrlSetState($rbSXTraining, $GUI_ENABLE)
+		GUICtrlSetState($rbSXIAttacking, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkSkipZoomOutXP, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkFastGoblinXP, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkSkipDragToEndXP, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkSXBK, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkSXAQ, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkSXGW, $GUI_ENABLE)
+		GUICtrlSetState($g_hTxtMaxXPtoGain, $GUI_ENABLE)
+	Else
+		$g_bEnableSuperXP = False
+
+		GUICtrlSetState($rbSXTraining, $GUI_DISABLE)
+		GUICtrlSetState($rbSXIAttacking, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkSkipZoomOutXP, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkFastGoblinXP, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkSkipDragToEndXP, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkSXBK, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkSXAQ, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkSXGW, $GUI_DISABLE)
+		GUICtrlSetState($g_hTxtMaxXPtoGain, $GUI_DISABLE)
+	EndIf
+
+EndFunc   ;==>chkEnableSuperXP
+
+Func chkEnableSuperXP2()
+	$g_bSkipZoomOutXP = (GUICtrlRead($g_hChkSkipZoomOutXP) = $GUI_CHECKED)
+	$g_bFastGoblinXP = (GUICtrlRead($g_hChkFastGoblinXP) = $GUI_CHECKED)
+	$g_bSkipDragToEndXP = (GUICtrlRead($g_hChkSkipDragToEndXP) = $GUI_CHECKED)
+	$g_irbSXTraining = GUICtrlRead($rbSXTraining) = $GUI_CHECKED ? 1 : 2
+	$g_bSXBK = (GUICtrlRead($g_hChkSXBK) = $GUI_CHECKED) ? $eHeroKing : $eHeroNone
+	$g_bSXAQ = (GUICtrlRead($g_hChkSXAQ) = $GUI_CHECKED) ? $eHeroQueen : $eHeroNone
+	$g_bSXGW = (GUICtrlRead($g_hChkSXGW) = $GUI_CHECKED) ? $eHeroWarden : $eHeroNone
+	$g_iTxtMaxXPtoGain = GUICtrlRead($g_hTxtMaxXPtoGain)
+
+	$g_bEnableSuperXP = (GUICtrlRead($g_hChkEnableSuperXP) = $GUI_CHECKED)
+	$g_bSkipZoomOutXP = (GUICtrlRead($g_hChkSkipZoomOutXP) = $GUI_CHECKED)
+	$g_bFastGoblinXP = (GUICtrlRead($g_hChkFastGoblinXP) = $GUI_CHECKED)
+	$g_bSkipDragToEndXP = (GUICtrlRead($g_hChkSkipDragToEndXP) = $GUI_CHECKED)
+	$g_irbSXTraining = GUICtrlRead($rbSXTraining) = $GUI_CHECKED ? 1 : 2
+	$g_bSXBK = (GUICtrlRead($g_hChkSXBK) = $GUI_CHECKED) ? $eHeroKing : $eHeroNone
+	$g_bSXAQ = (GUICtrlRead($g_hChkSXAQ) = $GUI_CHECKED) ? $eHeroQueen : $eHeroNone
+	$g_bSXGW = (GUICtrlRead($g_hChkSXGW) = $GUI_CHECKED) ? $eHeroWarden : $eHeroNone
+	$g_iTxtMaxXPtoGain = Int(GUICtrlRead($g_hTxtMaxXPtoGain))
+	chkEnableSuperXP()
+EndFunc   ;==>chkEnableSuperXP2

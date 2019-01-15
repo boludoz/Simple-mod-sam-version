@@ -158,6 +158,18 @@ _Ini_Add("MyTroops", "EnableModTrain", (GUICtrlRead($chkModTrain) = $GUI_CHECKED
 _Ini_Add("MyTroops", "Order", (GUICtrlRead($chkMyTroopsOrder) = $GUI_CHECKED ? 1 : 0))
 _Ini_Add("MyTroops", "TrainCombo", _GUICtrlComboBox_GetCurSel($cmbMyQuickTrain))
 
+	; ================================================== Super XP ================================ ;
+
+	_Ini_Add("GoblinXP", "EnableSuperXP", $g_bEnableSuperXP ? True : False)
+	_Ini_Add("GoblinXP", "SkipZoomOutXP", $g_bSkipZoomOutXP ? True : False)
+	_Ini_Add("GoblinXP", "FastGoblinXP", $g_bFastGoblinXP ? True : False)
+	_Ini_Add("GoblinXP", "SkipDragToEndXP", $g_bSkipDragToEndXP ? True : False)
+	_Ini_Add("GoblinXP", "SXTraining", $g_irbSXTraining)
+	_Ini_Add("GoblinXP", "SXBK", $g_bSXBK)
+	_Ini_Add("GoblinXP", "SXAQ", $g_bSXAQ)
+	_Ini_Add("GoblinXP", "SXGW", $g_bSXGW)
+	_Ini_Add("GoblinXP", "MaxXptoGain", GUICtrlRead($g_hTxtMaxXPtoGain))
+
 Local $itempcmbTroopSetting = _GUICtrlComboBox_GetCurSel($cmbTroopSetting)
 
 _Ini_Add("MyTroops", "Composition", $itempcmbTroopSetting)

@@ -19,6 +19,28 @@ Global $g_iScreenSizeErrorCount = 0
 
 Global $g_aiPrepDon[4] = [0, 0, 0, 0]
 
+; ================================================== Goblin XP =========================================== ;
+
+;SuperXP / GoblinXP
+Global $g_bEnableSuperXP = False, $g_bSkipZoomOutXP = False, $g_bFastGoblinXP = False, $g_bSkipDragToEndXP = False, $g_bFastGoblinXP = False, $g_irbSXTraining = 1, $g_bSXBK = False, $g_bSXAQ = False, $g_bSXGW = False
+Global $g_iStartXP = 0, $g_iCurrentXP = 0, $g_iGainedXP = 0, $g_iGainedXPHour = 0, $g_iTxtMaxXPtoGain = 500, $g_iTxtXPRunTime = 0
+Global $g_bDebugSX = False
+
+; [0] = Queen, [1] = Warden, [2] = Barbarian King
+; [0][0] = X, [0][1] = Y, [0][2] = XRandomOffset, [0][3] = YRandomOffset
+Global $g_DpGoblinPicnic[3][4] = [[310, 200, 5, 5], [340, 140, 5, 5], [290, 220, 5, 5]]
+Global $g_BdGoblinPicnic[3] = [0, "5000-7000", "6000-8000"] ; [0] = Queen, [1] = Warden, [2] = Barbarian King
+Global $g_ActivatedHeroes[3] = [False, False, False] ; [0] = Queen, [1] = Warden, [2] = Barbarian King , Prevent to click on them to Activate Again And Again
+Global Const $g_minStarsToEnd = 1
+Global $g_canGainXP = False
+;GUI
+Global $g_hGrpSuperXP = 0, $g_hChkEnableSuperXP = 0, $g_hChkSkipZoomOutXP = 0, $g_hChkSkipDragToEndXP = 0, $g_hChkFastGoblinXP = 0, $rbSXTraining = 0, $g_hLblLOCKEDSX = 0, $rbSXIAttacking = 0, $g_hTxtMaxXPtoGain = 0
+Global $g_hChkSXBK = 0, $g_hChkSXAQ = 0, $g_hChkSXGW = 0
+Global $DocXP1 = 0, $DocXP2 = 0, $DocXP3 = 0, $DocXP4 = 0, $DocXP5 = 0
+Global $g_hLblXPatStart = 0, $g_hLblXPCurrent = 0, $g_hLblXPSXWon = 0, $g_hLblXPSXWonHour = 0, $g_hLblXPRunTime = 0
+
+
+
 ;===============SamM0d Global Last drop ====================
 Global $g_bDtropAttack = False
 

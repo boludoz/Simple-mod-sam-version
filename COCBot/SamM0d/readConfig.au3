@@ -164,6 +164,18 @@ IniReadS($icmbTroopSetting, $g_sProfileConfigPath, "MyTroops", "Composition", "0
 
 IniReadS($ichkDisablePretrainTroops, $g_sProfileConfigPath, "MyTroops", "NoPreTrain", "0", "Int")
 
+	; ================================================== Super XP ==================================== ;
+
+	IniReadS($g_bEnableSuperXP, $g_sProfileConfigPath, "GoblinXP", "EnableSuperXP", $g_bEnableSuperXP, "Bool")
+	IniReadS($g_bSkipZoomOutXP, $g_sProfileConfigPath, "GoblinXP", "SkipZoomOutXP", $g_bSkipZoomOutXP, "Bool")
+	IniReadS($g_bFastGoblinXP, $g_sProfileConfigPath, "GoblinXP", "FastGoblinXP", $g_bFastGoblinXP, "Bool")
+	IniReadS($g_bSkipDragToEndXP, $g_sProfileConfigPath, "GoblinXP", "SkipDragToEndXP", $g_bSkipDragToEndXP, "Bool")
+	IniReadS($g_irbSXTraining, $g_sProfileConfigPath, "GoblinXP", "SXTraining", $g_irbSXTraining, "int")
+	IniReadS($g_iTxtMaxXPtoGain, $g_sProfileConfigPath, "SM GoblinXP", "MaxXptoGain", $g_iTxtMaxXPtoGain, "int")
+	IniReadS($g_bSXBK, $g_sProfileConfigPath, "GoblinXP", "SXBK", $eHeroNone)
+	IniReadS($g_bSXAQ, $g_sProfileConfigPath, "GoblinXP", "SXAQ", $eHeroNone)
+	IniReadS($g_bSXGW, $g_sProfileConfigPath, "GoblinXP", "SXGW", $eHeroNone)
+
 For $j = 0 To 2
 	For $i = 0 To UBound($MyTroops) - 1
 		IniReadS($MyTroopsSetting[$j][$i][0],$g_sProfileConfigPath, "MyTroops", $MyTroops[$i][0] & $j, "0","Int")
