@@ -490,7 +490,7 @@ Func SetupFilesAndFolders()
 	; MySwitch
 
 	InitializeMySwitch()
-	
+
 	BackupSystem()
 
 	If FileExists(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\") Then
@@ -521,7 +521,7 @@ Func SetupFilesAndFolders()
 	EndIf
 
 	; samm0d log translate
-	#include "COCBot\SamM0d\Log Msg.au3"
+	;#include "COCBot\SamM0d\Log Msg.au3"
 	; =======================================================================================================
 
 	;DirCreate($sTemplates)
@@ -678,7 +678,7 @@ Func MainLoop($bCheckPrerequisitesOK = True)
 	;Reset Telegram message
 	NotifyGetLastMessageFromTelegram()
 	$g_iTGLastRemote = $g_sTGLast_UID
-	
+
 	; samm0d - auto minimize bot
 	If $g_bChkAutoMinimizeBot Then
 		If $g_bFlagMinimizeBot = False Then
@@ -734,7 +734,7 @@ Func runBot() ;Bot that runs everything in order
 		SetLog("Rematching Account [" & $g_iNextAccount + 1 & "] with Profile [" & GUICtrlRead($g_ahCmbProfile[$g_iNextAccount]) & "]")
 		SwitchCoCAcc($g_iNextAccount)
 	EndIf
-	
+
 	While 1
 		; samm0d
 		If $g_iSamM0dDebug = 1 And $g_bRestart Then SetLog("Continue loop with restart", $COLOR_DEBUG)
@@ -826,7 +826,7 @@ Func runBot() ;Bot that runs everything in order
 			If $g_bRestart = True Then ContinueLoop
 		EndIf
 
-		
+
 		chkShieldStatus()
 		If Not $g_bRunState Then Return
 		If $g_bRestart = True Then ContinueLoop
@@ -929,7 +929,7 @@ Func runBot() ;Bot that runs everything in order
 				If $g_bRestart = True Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 				If UBound($aRndFuncList) > 1 Then
 					$Index = Random(0, UBound($aRndFuncList) - 1, 1)
-																				  
+
 					_RunFunction($aRndFuncList[$Index])
 					_ArrayDelete($aRndFuncList, $Index)
 				Else
@@ -1052,7 +1052,7 @@ Func _Idle() ;Sequence that runs until Full Army
 		NotifyPendingActions()
 		If _Sleep($DELAYIDLE1) Then Return
 		If $g_iCommandStop = -1 Then SetLog("====== Waiting for full army ======", $COLOR_SUCCESS)
-				
+
 		Local $hTimer = __TimerInit()
 		Local $iReHere = 0
 
@@ -1079,7 +1079,7 @@ Func _Idle() ;Sequence that runs until Full Army
 				If CheckAndroidReboot() Then ContinueLoop 2
 			WEnd
 		EndIf
-				
+
 		If _Sleep($DELAYIDLE1) Then ExitLoop
 		checkObstacles() ; trap common error messages also check for reconnecting animation
 		checkMainScreen(False) ; required here due to many possible exits
@@ -1236,6 +1236,8 @@ EndFunc   ;==>_Idle
 Func AttackMain() ;Main control for attack functions
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 	; samm0d
+	MainSuperXPHandler()
+
 	;getArmyCapacity(True, True)
 	; getArmyTroopCapacity(True, True)
 	ClickP($aAway, 1, 0, "#0000") ;Click Away to prevent any pages on top
@@ -1489,7 +1491,7 @@ Func FirstCheck()
 
 	SetDebugLog("-- FirstCheck Loop --")
 	If Not $g_bRunState Then Return
-		
+
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 
 	$g_bRestart = False

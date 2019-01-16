@@ -12,6 +12,11 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+;SuperXP / GoblinXP
+Global Const $DELAYDROPSuperXP1= 500
+Global Const $DELAYDROPSuperXP2 = 1000
+Global Const $DELAYDROPSuperXP3 = 250
+Global Const $DELAYPREPARESearchSuperXP = 500
 
 Func SetStatsGoblinsXP()
 
@@ -98,48 +103,6 @@ Func SXSetXP($toSet = "")
 
 
 EndFunc   ;==>SXSetXP
-
-Func chkEnableSuperXP()
-	$g_bEnableSuperXP = True
-	If GUICtrlRead($g_hChkEnableSuperXP) = $GUI_CHECKED Then
-
-		GUICtrlSetState($rbSXTraining, $GUI_ENABLE)
-		GUICtrlSetState($rbSXIAttacking, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkSkipZoomOutXP, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkFastGoblinXP, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkSkipDragToEndXP, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkSXBK, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkSXAQ, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkSXGW, $GUI_ENABLE)
-		GUICtrlSetState($g_hTxtMaxXPtoGain, $GUI_ENABLE)
-	Else
-		$g_bEnableSuperXP = False
-
-		GUICtrlSetState($rbSXTraining, $GUI_DISABLE)
-		GUICtrlSetState($rbSXIAttacking, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkSkipZoomOutXP, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkFastGoblinXP, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkSkipDragToEndXP, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkSXBK, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkSXAQ, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkSXGW, $GUI_DISABLE)
-		GUICtrlSetState($g_hTxtMaxXPtoGain, $GUI_DISABLE)
-	EndIf
-
-EndFunc   ;==>chkEnableSuperXP
-
-Func chkEnableSuperXP2()
-	$g_bEnableSuperXP = (GUICtrlRead($g_hChkEnableSuperXP) = $GUI_CHECKED)
-	$g_bSkipZoomOutXP = (GUICtrlRead($g_hChkSkipZoomOutXP) = $GUI_CHECKED)
-	$g_bFastGoblinXP = (GUICtrlRead($g_hChkFastGoblinXP) = $GUI_CHECKED)
-	$g_bSkipDragToEndXP = (GUICtrlRead($g_hChkSkipDragToEndXP) = $GUI_CHECKED)
-	$g_irbSXTraining = GUICtrlRead($rbSXTraining) = $GUI_CHECKED ? 1 : 2
-	$g_bSXBK = (GUICtrlRead($g_hChkSXBK) = $GUI_CHECKED) ? $eHeroKing : $eHeroNone
-	$g_bSXAQ = (GUICtrlRead($g_hChkSXAQ) = $GUI_CHECKED) ? $eHeroQueen : $eHeroNone
-	$g_bSXGW = (GUICtrlRead($g_hChkSXGW) = $GUI_CHECKED) ? $eHeroWarden : $eHeroNone
-	$g_iTxtMaxXPtoGain = Int(GUICtrlRead($g_hTxtMaxXPtoGain))
-	chkEnableSuperXP()
-EndFunc   ;==>chkEnableSuperXP2
 
 Func MainSuperXPHandler()
 	If Not $g_bEnableSuperXP Then Return
@@ -479,7 +442,7 @@ EndFunc   ;==>CheckAvailableHeroes
 Func DropAQSuperXP($bActivateASAP = True)
 	If $g_iQueenSlot <> -1 And $g_bSXAQ <> $eHeroNone Then
 		SetLog("Deploying Queen", $COLOR_BLUE)
-		Click(GetXPosOfArmySlot($g_iQueenSlot, 68), 595 + $g_ibottomOffsetY, 1, 0, "#0000") ;Select Queen
+	    Click(GetXPosOfArmySlot($g_iQueenSlot, 68), 595 + $g_iBottomOffsetY, 1, 0, "#0084")
 		If _Sleep($DELAYDROPSuperXP1) Then Return False
 		If CheckEarnedStars($g_minStarsToEnd) = True Then Return True
 		ClickP(GetDropPointSuperXP(1), 1, 0, "#0000") ;Drop Queen
@@ -590,7 +553,7 @@ Func PrepareSuperXPAttack()
 			EndIf
 			$Plural = 0
 			If $aTemp[$i][1] > 1 Then $Plural = 1
-			If $troopKind <> -1 Then SetLog($aTemp[$i][2] & " » " & $aTemp[$i][1] & " " & NameOfTroop($g_avAttackTroops[$i][0], $Plural), $COLOR_GREEN)
+			If $troopKind <> -1 Then SetLog($aTemp[$i][2] & " » " & $aTemp[$i][1] & " " & GetTroopName($g_avAttackTroops[$i][0], $Plural), $COLOR_GREEN)
 		EndIf
 	Next
 
@@ -1008,7 +971,7 @@ Func GetPositionInSinglePlayer()
 			ExitLoop
 		EndIf
 	WEnd
-	
+
     If _Sleep(50) Then Return
 	Local $rColCheckEnd = _ColorCheck(_GetPixelColor(517, 729, True, "GetPositionInSinglePlayer CheckEnd"), Hex(0x3B3426, 6), 10) ; Safe Corrdinates To Avoid Conflict With Stars Color - October Update
 	If $rColCheckEnd Then
@@ -1077,3 +1040,52 @@ Func WaitForMain($clickAway = True, $DELAYEachCheck = 50, $maxRetry = 100)
 
 	Return True
 EndFunc   ;==>WaitForMain
+
+; #FUNCTION# ====================================================================================================================
+; Name ..........: GetXPosOfArmySlot
+; Description ...:
+; Syntax ........: GetXPosOfArmySlot($slotNumber, $xOffsetFor11Slot)
+; Parameters ....: $slotNumber          - a string value.
+;                  $xOffsetFor11Slot    - an unknown value.
+; Return values .: None
+; Author ........:
+; Modified ......: Promac(12-2016)
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2018
+;                  MyBot is distributed under the terms of the GNU GPL
+; Related .......:
+; Link ..........: https://github.com/MyBotRun/MyBot/wiki
+; Example .......: No
+; ===============================================================================================================================
+
+Func GetXPosOfArmySlot($slotNumber, $xOffsetFor11Slot)
+
+	Local $CheckSlot12, $SlotPixelColorTemp, $SlotPixelColor1, $bDraggedAttackBar
+
+	$xOffsetFor11Slot -= 8
+
+	Local $SlotComp = ($slotNumber = 7 ? 1 : 0)
+
+	If $slotNumber = $g_iKingSlot Or $slotNumber = $g_iQueenSlot Or $slotNumber = $g_iWardenSlot Then $xOffsetFor11Slot += 8
+
+	If $bDraggedAttackBar Then Return $xOffsetFor11Slot + $SlotComp + ($slotNumber * 72) + 14	; Slot11 - Team AiO MOD++
+
+	; check Dark color on slot 0 to verify if exists > 11 slots
+	; $SlotPixelColor = _ColorCheck(_GetPixelColor(17, 580 + $g_iBottomOffsetY, True), Hex(0x07202A, 6), 20)
+	$CheckSlot12 = _ColorCheck(_GetPixelColor(17, 643, True), Hex(0x478AC6, 6), 15) Or _  	 ; Slot Filled / Background Blue / More than 11 Slots
+			_ColorCheck(_GetPixelColor(17, 643, True), Hex(0x434343, 6), 10) ; Slot deployed / Gray / More than 11 Slots
+
+
+	If $g_bDebugSetlog Then
+		SetDebugLog(" Slot 0  _ColorCheck 0x478AC6 at (17," & 643 & "): " & $CheckSlot12, $COLOR_DEBUG) ;Debug
+		$SlotPixelColorTemp = _GetPixelColor(17, 643, $g_bCapturePixel)
+		SetDebugLog(" Slot 0  _GetPixelColo(17," & 643 & "): " & $SlotPixelColorTemp, $COLOR_DEBUG) ;Debug
+	EndIf
+
+	If Not $CheckSlot12 Then
+		Return $xOffsetFor11Slot + $SlotComp + ($slotNumber * 72)
+	Else
+		Return $xOffsetFor11Slot + $SlotComp + ($slotNumber * 72) - 13
+	EndIf
+
+EndFunc   ;==>GetXPosOfArmySlot
+

@@ -170,16 +170,36 @@ GUICtrlSetState($chkEnableDeleteExcessTroops, ($ichkEnableDeleteExcessTroops = 1
 ; ================================================== Super XP ============================== ;
 
 GUICtrlSetState($g_hChkEnableSuperXP, $g_bEnableSuperXP ? $GUI_CHECKED : $GUI_UNCHECKED)
-;chkEnableSuperXP()
 GUICtrlSetState($g_hChkSkipZoomOutXP, $g_bSkipZoomOutXP ? $GUI_CHECKED : $GUI_UNCHECKED)
 GUICtrlSetState($g_hChkFastGoblinXP, $g_bFastGoblinXP ? $GUI_CHECKED : $GUI_UNCHECKED)
 GUICtrlSetState($g_hChkSkipDragToEndXP, $g_bSkipDragToEndXP ? $GUI_CHECKED : $GUI_UNCHECKED)
-GUICtrlSetState($rbSXTraining, ($g_irbSXTraining = 1) ? $GUI_CHECKED : $GUI_UNCHECKED)
-GUICtrlSetState($rbSXIAttacking, ($g_irbSXTraining = 2) ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($rbSXTraining, $g_irbSXTraining ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($rbSXIAttacking, $g_irbSXTraining ? $GUI_CHECKED : $GUI_UNCHECKED)
 GUICtrlSetData($g_hTxtMaxXPtoGain, $g_iTxtMaxXPtoGain)
 GUICtrlSetState($g_hChkSXBK, $g_bSXBK = $eHeroKing ? $GUI_CHECKED : $GUI_UNCHECKED)
 GUICtrlSetState($g_hChkSXAQ, $g_bSXAQ = $eHeroQueen ? $GUI_CHECKED : $GUI_UNCHECKED)
 GUICtrlSetState($g_hChkSXGW, $g_bSXGW = $eHeroWarden ? $GUI_CHECKED : $GUI_UNCHECKED)
+	If $g_bEnableSuperXP = True Then
+		GUICtrlSetState($rbSXTraining, $GUI_ENABLE)
+		GUICtrlSetState($rbSXIAttacking, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkSkipZoomOutXP, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkFastGoblinXP, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkSkipDragToEndXP, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkSXBK, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkSXAQ, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkSXGW, $GUI_ENABLE)
+		GUICtrlSetState($g_hTxtMaxXPtoGain, $GUI_ENABLE)
+	Else
+		GUICtrlSetState($rbSXTraining, $GUI_DISABLE)
+		GUICtrlSetState($rbSXIAttacking, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkSkipZoomOutXP, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkFastGoblinXP, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkSkipDragToEndXP, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkSXBK, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkSXAQ, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkSXGW, $GUI_DISABLE)
+		GUICtrlSetState($g_hTxtMaxXPtoGain, $GUI_DISABLE)
+	EndIf
 
 $g_iMyTroopsSize = 0
 For $i = 0 To UBound($MyTroops)-1

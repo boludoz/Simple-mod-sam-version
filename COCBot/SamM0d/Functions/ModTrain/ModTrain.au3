@@ -106,7 +106,8 @@ Func ModTrain($ForcePreTrain = False)
 		Local $iKTime[5] = [0,0,0,0,0]
 		Local $bKingTrue = False
 		getArmyTroopTime(False,False)
-		
+		$iKTime[4] = $g_aiTimeTrain[0]
+
 		If BitAND($g_aiSearchHeroWaitEnable[$DB], $eHeroKing) = $eHeroKing Or BitAND($g_aiSearchHeroWaitEnable[$LB], $eHeroKing) = $eHeroKing Then
 			$iKTime[0] = getArmyHeroTime($eHeroKing)
 			$bKingTrue = True
@@ -120,8 +121,6 @@ Func ModTrain($ForcePreTrain = False)
 			$bKingTrue = True
 		EndIf
 		
-		;$iKTime[4] = $g_aiTimeTrain[0]
-		;If Number($g_aiTimeTrain[0]) > 0 Then Setlog("Troops Time: " & $g_aiTimeTrain[0], $COLOR_INFO)
 		
 		If $g_abSearchSpellsWaitEnable[$DB] Or $g_abSearchSpellsWaitEnable[$LB] Then
 			getArmySpellTime()
@@ -429,7 +428,7 @@ Func TroopsAndSpellsChecker($bDisableTrain = True, $bDisableBrewSpell = True, $b
 									DoRevampTroops(True)
 								EndIf
 							Case $g_CurrentCampUtilization < $iFullArmyCamp And $g_aiTroopsMaxCamp[0] > $iFullArmyCamp
-								If $bPreTrainFlag Then
+								If $bPreTrainFlag = True Then
 									If $ichkDisablePretrainTroops = 1 Then
 										SetLog("Pre-train troops disable by user.",$COLOR_INFO)
 										$tempDisableTrain = True
@@ -438,7 +437,7 @@ Func TroopsAndSpellsChecker($bDisableTrain = True, $bDisableBrewSpell = True, $b
 									EndIf
 								EndIf
 							Case $g_CurrentCampUtilization < $iFullArmyCamp And $g_aiTroopsMaxCamp[0] = $iFullArmyCamp
-								If $bPreTrainFlag Then
+								If $bPreTrainFlag = True Then
 									If $icmbMyQuickTrain = 0 Then
 										If $ichkDisablePretrainTroops = 1 Then
 											SetLog("Pre-train troops disable by user.",$COLOR_INFO)
@@ -456,7 +455,7 @@ Func TroopsAndSpellsChecker($bDisableTrain = True, $bDisableBrewSpell = True, $b
 								EndIf
 							Case $g_CurrentCampUtilization < $iFullArmyCamp And $g_aiTroopsMaxCamp[0] < $iFullArmyCamp
 								DoRevampTroops()
-								If $bPreTrainFlag Then
+								If $bPreTrainFlag = True Then
 									ContinueLoop
 								EndIf
 							Case Else

@@ -851,9 +851,9 @@ Func _BatteryStatus()
 EndFunc   ;==>_BatteryStatus
 
 Func chkEnableSuperXP()
-	$g_bEnableSuperXP = True
 	$g_bEnableSuperXP = (GUICtrlRead($g_hChkEnableSuperXP) = $GUI_CHECKED)
-	If GUICtrlRead($g_hChkEnableSuperXP) = $GUI_CHECKED Then
+
+	If $g_bEnableSuperXP = True Then
 
 		GUICtrlSetState($rbSXTraining, $GUI_ENABLE)
 		GUICtrlSetState($rbSXIAttacking, $GUI_ENABLE)
@@ -865,8 +865,6 @@ Func chkEnableSuperXP()
 		GUICtrlSetState($g_hChkSXGW, $GUI_ENABLE)
 		GUICtrlSetState($g_hTxtMaxXPtoGain, $GUI_ENABLE)
 	Else
-		$g_bEnableSuperXP = False
-
 		GUICtrlSetState($rbSXTraining, $GUI_DISABLE)
 		GUICtrlSetState($rbSXIAttacking, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkSkipZoomOutXP, $GUI_DISABLE)
@@ -877,7 +875,6 @@ Func chkEnableSuperXP()
 		GUICtrlSetState($g_hChkSXGW, $GUI_DISABLE)
 		GUICtrlSetState($g_hTxtMaxXPtoGain, $GUI_DISABLE)
 	EndIf
-
 EndFunc   ;==>chkEnableSuperXP
 
 Func chkEnableSuperXP2()
@@ -899,5 +896,11 @@ Func chkEnableSuperXP2()
 	$g_bSXAQ = (GUICtrlRead($g_hChkSXAQ) = $GUI_CHECKED) ? $eHeroQueen : $eHeroNone
 	$g_bSXGW = (GUICtrlRead($g_hChkSXGW) = $GUI_CHECKED) ? $eHeroWarden : $eHeroNone
 	$g_iTxtMaxXPtoGain = Int(GUICtrlRead($g_hTxtMaxXPtoGain))
-	chkEnableSuperXP()
+	;chkEnableSuperXP()
 EndFunc   ;==>chkEnableSuperXP2
+
+Func chkEnableSuperXP3()
+	$g_irbSXTraining = GUICtrlRead($rbSXTraining) = $GUI_CHECKED ? 1 : 2
+	;chkEnableSuperXP()
+EndFunc   ;==>chkEnableSuperXP3
+

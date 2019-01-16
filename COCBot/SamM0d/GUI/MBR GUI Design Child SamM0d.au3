@@ -710,14 +710,14 @@ Local $x = 25, $y = 45, $xStart = 25, $yStart = 50
 	GUICtrlSetOnEvent(-1, "chkEnableSuperXP2")
 	$rbSXTraining = GUICtrlCreateRadio(GetTranslatedFileIni("MBR GUI Design MOD - Goblin XP", "chkEnableSuperXP2_Info_01", "Farm XP during troops Training"), $x, $y + 25, 220, 17)
 	GUICtrlSetState(-1, $GUI_CHECKED)
-	GUICtrlSetOnEvent(-1, "chkEnableSuperXP2")
+	GUICtrlSetOnEvent(-1, "chkEnableSuperXP3")
+	$rbSXIAttacking = GUICtrlCreateRadio(GetTranslatedFileIni("MBR GUI Design MOD - Goblin XP", "chkEnableSuperXP2_Info_02", "Farm XP instead of Attacking"), $x, $y + 45, 158, 17)
+	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design MOD - Goblin XP", "chkEnableSuperXP2_Info_03", "Max XP to Gain") & ":", $x, $y + 78, -1, 17)
+	GUICtrlSetOnEvent(-1, "chkEnableSuperXP3")
 	$g_hLblLOCKEDSX = GUICtrlCreateLabel("LOCKED", $x + 210, $y + 35, 173, 50)
 	GUICtrlSetFont(-1, 30, 800, 0, "Arial")
 	GUICtrlSetColor(-1, 0xFF0000)
 	GUICtrlSetState(-1, $GUI_HIDE)
-	$rbSXIAttacking = GUICtrlCreateRadio(GetTranslatedFileIni("MBR GUI Design MOD - Goblin XP", "chkEnableSuperXP2_Info_02", "Farm XP instead of Attacking"), $x, $y + 45, 158, 17)
-	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design MOD - Goblin XP", "chkEnableSuperXP2_Info_03", "Max XP to Gain") & ":", $x, $y + 78, -1, 17)
-	GUICtrlSetOnEvent(-1, "chkEnableSuperXP2")
 	$g_hTxtMaxXPtoGain = GUICtrlCreateInput("500", $x + 85, $y + 75, 70, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 	GUICtrlSetLimit(-1, 8)
 	GUICtrlSetOnEvent(-1, "chkEnableSuperXP2")
@@ -770,8 +770,10 @@ Local $x = 25, $y = 45, $xStart = 25, $yStart = 50
 	$y += 55
 	GUICtrlCreateLabel( GetTranslatedFileIni("MBR GUI Design MOD - Goblin XP", "Label_03", "Goblin XP attack continuously the TH of Goblin Picnic to farm XP."), $x - 13, $y, 312, 17)
 	GUICtrlCreateLabel( GetTranslatedFileIni("MBR GUI Design MOD - Goblin XP", "Label_04", "At each attack, you win 5 XP"), $x - 13, $y + 20, 306, 17)
-
+	
 	chkEnableSuperXP()
+	chkEnableSuperXP2()
+	chkEnableSuperXP3()
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 

@@ -154,10 +154,10 @@ Func SwitchCOCAcc_ConfirmSC()
 	  Next
 EndFunc   ;==>SwitchCOCAcc_ConfirmSCID
 
-Func SelectSCAccount(ByRef $bResult, $NextAccount, $iStep = 4)
+Func SelectSCAccount($bResult, $NextAccount, $iStep = 4)
 	;Local $aDividerExtra[7][3] = [[0xF2F2F2, 1, 0], [0xF2F2F2, 0, 1], [0xF2F2F2, 0, 2], [0xF2F2F2, 0, 3], [0xF2F2F2, 0, 4], [0xF2F2F2, 0, 5], [0xF2F2F2, 0, 6]]
 	;Local $aDivider
-	
+
 	For $j = 0 To 20 ; Checking Account List continuously in 20sec
 		If QuickMIS("BC1", $g_sImgLogOutButton, 111, 187, 758, 463) Then
 						Click($g_iQuickMISX + 111, $g_iQuickMISY + 187, 1)
@@ -266,7 +266,7 @@ Func SelectSCAccount(ByRef $bResult, $NextAccount, $iStep = 4)
 		If _Sleep(900) Then Return True
 	Next
 	Return False ; should never get here
-	
+
 	; wait for game reload
 	Wait4Main()
 
