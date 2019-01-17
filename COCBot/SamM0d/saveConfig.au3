@@ -111,6 +111,7 @@ _Ini_Add("AutoMinimizeBot", "Enable", (GUICtrlRead($chkAutoMinimizeBot) = $GUI_C
 ; CSV Deployment Speed Mod
 _Ini_Add("attack", "CSVSpeedDB", $isldSelectedCSVSpeed[$DB])
 _Ini_Add("attack", "CSVSpeedAB", $isldSelectedCSVSpeed[$LB])
+_Ini_Add("attack", "SpeedWaitCVS", $isldSelectedSpeedWaitCVS)
 
 ; Wait 4 CC
 _Ini_Add("Wait4CC", "Enable", (GUICtrlRead($chkWait4CC) = $GUI_CHECKED ? 1 : 0))

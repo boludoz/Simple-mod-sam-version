@@ -711,7 +711,7 @@ EndFunc
 Func g_hchkSamM0dImage()
 	$g_iSamM0dDebugImage = (GUICtrlRead($g_hchkSamM0dImage) = $GUI_CHECKED ? 1 : 0)
 EndFunc
-
+#cs
 ; CSV Deployment Speed Mod
 Func sldSelectedSpeedDB()
 	$isldSelectedCSVSpeed[$DB] = GUICtrlRead($sldSelectedSpeedDB)
@@ -726,7 +726,7 @@ Func sldSelectedSpeedAB()
 	IF $isldSelectedCSVSpeed[$LB] = 4 Then $speedText = GetTranslatedFileIni("sam m0d", "Normal", "Normal")
 	GUICtrlSetData($lbltxtSelectedSpeedAB, $speedText & " " &  GetTranslatedFileIni("sam m0d", "speed", "speed"))
 EndFunc
-
+#ce
 Func AttackNowLB()
 	Setlog("Begin Live Base Attack TEST")
 	$g_iMatchMode = $LB

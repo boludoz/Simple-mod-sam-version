@@ -386,7 +386,7 @@ Func chkTSActivateCamps()
 EndFunc   ;==>chkTSActivateCamps
 
 Func chkDBKingWait()
-	If $g_iTownHallLevel > 6 Or $g_iTownHallLevel = 0 Then ; Must be TH7 or above to have King
+	;If $g_iTownHallLevel > 6 Or $g_iTownHallLevel = 0 Then ; Must be TH7 or above to have King
 		If GUICtrlRead($g_hChkDBKingWait) = $GUI_CHECKED Then
 			If $g_bUpgradeKingEnable = False Then
 				GUICtrlSetState($g_hChkDBKingAttack, $GUI_CHECKED)
@@ -400,14 +400,14 @@ Func chkDBKingWait()
 				GUICtrlSetState($g_hChkDBKingWait, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
 			EndIf
 		EndIf
-	Else
-		GUICtrlSetState($g_hChkDBKingWait, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
-		GUICtrlSetState($g_hChkDBKingAttack, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
-	EndIf
+	;Else
+	;	GUICtrlSetState($g_hChkDBKingWait, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
+	;	GUICtrlSetState($g_hChkDBKingAttack, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
+	;EndIf
 EndFunc   ;==>chkDBKingWait
 
 Func chkDBQueenWait()
-	If $g_iTownHallLevel > 8 Or $g_iTownHallLevel = 0 Then ; Must be TH9 or above to have Queen
+	;If $g_iTownHallLevel > 8 Or $g_iTownHallLevel = 0 Then ; Must be TH9 or above to have Queen
 		If GUICtrlRead($g_hChkDBQueenWait) = $GUI_CHECKED Then
 			If $g_bUpgradeQueenEnable = False Then
 				GUICtrlSetState($g_hChkDBQueenAttack, $GUI_CHECKED)
@@ -421,14 +421,14 @@ Func chkDBQueenWait()
 				GUICtrlSetState($g_hChkDBQueenWait, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
 			EndIf
 		EndIf
-	Else
-		GUICtrlSetState($g_hChkDBQueenWait, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
-		GUICtrlSetState($g_hChkDBQueenAttack, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
-	EndIf
+	;Else
+	;	GUICtrlSetState($g_hChkDBQueenWait, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
+	;	GUICtrlSetState($g_hChkDBQueenAttack, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
+	;EndIf
 EndFunc   ;==>chkDBQueenWait
 
 Func chkDBWardenWait()
-	If $g_iTownHallLevel > 10 Or $g_iTownHallLevel = 0 Then ; Must be TH11 to have warden
+	;If $g_iTownHallLevel > 10 Or $g_iTownHallLevel = 0 Then ; Must be TH11 to have warden
 		If GUICtrlRead($g_hChkDBWardenWait) = $GUI_CHECKED Then
 			If $g_bUpgradeWardenEnable = False Then
 				GUICtrlSetState($g_hChkDBWardenAttack, $GUI_CHECKED)
@@ -443,14 +443,14 @@ Func chkDBWardenWait()
 				GUICtrlSetState($g_hChkDBWardenWait, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
 			EndIf
 		EndIf
-	Else
-		GUICtrlSetState($g_hChkDBWardenWait, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
-		GUICtrlSetState($g_hChkDBWardenAttack, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
-	EndIf
+	;Else
+	;	GUICtrlSetState($g_hChkDBWardenWait, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
+	;	GUICtrlSetState($g_hChkDBWardenAttack, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
+	;EndIf
 EndFunc   ;==>chkDBWardenWait
 
 Func chkABKingWait()
-	If $g_iTownHallLevel > 6 Or $g_iTownHallLevel = 0 Then ; Must be TH7 or above to have King
+	;If $g_iTownHallLevel > 6 Or $g_iTownHallLevel = 0 Then ; Must be TH7 or above to have King
 		If GUICtrlRead($g_hChkABKingWait) = $GUI_CHECKED Then
 			If $g_bUpgradeKingEnable = False Then
 				GUICtrlSetState($g_hChkABKingAttack, $GUI_CHECKED)
@@ -464,14 +464,14 @@ Func chkABKingWait()
 				GUICtrlSetState($g_hChkABKingWait, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
 			EndIf
 		EndIf
-	Else
-		GUICtrlSetState($g_hChkABKingWait, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
-		GUICtrlSetState($g_hChkABKingAttack, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
-	EndIf
+	;Else
+	;	GUICtrlSetState($g_hChkABKingWait, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
+	;	GUICtrlSetState($g_hChkABKingAttack, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
+	;EndIf
 EndFunc   ;==>chkABKingWait
 
 Func chkABQueenWait()
-	If $g_iTownHallLevel > 8 Or $g_iTownHallLevel = 0 Then ; Must be TH9 or above to have Queen
+	;If $g_iTownHallLevel > 8 Or $g_iTownHallLevel = 0 Then ; Must be TH9 or above to have Queen
 		If GUICtrlRead($g_hChkABQueenWait) = $GUI_CHECKED Then
 			If $g_bUpgradeQueenEnable = False Then
 				GUICtrlSetState($g_hChkABQueenAttack, $GUI_CHECKED)
@@ -485,14 +485,14 @@ Func chkABQueenWait()
 				GUICtrlSetState($g_hChkABQueenWait, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
 			EndIf
 		EndIf
-	Else
-		GUICtrlSetState($g_hChkABQueenWait, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
-		GUICtrlSetState($g_hChkABQueenAttack, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
-	EndIf
+	;Else
+	;	GUICtrlSetState($g_hChkABQueenWait, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
+	;	GUICtrlSetState($g_hChkABQueenAttack, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
+	;EndIf
 EndFunc   ;==>chkABQueenWait
 
 Func chkABWardenWait()
-	If $g_iTownHallLevel > 10 Or $g_iTownHallLevel = 0 Then ; Must be TH11 to have warden
+	;If $g_iTownHallLevel > 10 Or $g_iTownHallLevel = 0 Then ; Must be TH11 to have warden
 		If GUICtrlRead($g_hChkABWardenWait) = $GUI_CHECKED Then
 			If $g_bUpgradeWardenEnable = False Then
 				GUICtrlSetState($g_hChkABWardenAttack, $GUI_CHECKED)
@@ -506,14 +506,14 @@ Func chkABWardenWait()
 				GUICtrlSetState($g_hChkABWardenWait, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
 			EndIf
 		EndIf
-	Else
-		GUICtrlSetState($g_hChkABWardenWait, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
-		GUICtrlSetState($g_hChkABWardenAttack, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
-	EndIf
+	;Else
+	;	GUICtrlSetState($g_hChkABWardenWait, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
+	;	GUICtrlSetState($g_hChkABWardenAttack, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
+	;EndIf
 EndFunc   ;==>chkABWardenWait
 
 Func chkDBSpellsWait()
-	If $g_iTownHallLevel > 4 Or $g_iTownHallLevel = 0 Then ; Must be TH5+ to have spells
+	;If $g_iTownHallLevel > 4 Or $g_iTownHallLevel = 0 Then ; Must be TH5+ to have spells
 		For $i = $g_hPicDBLightSpellWait To $g_hPicDBHasteSpellWait
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
@@ -528,16 +528,16 @@ Func chkDBSpellsWait()
 		Else
 			$g_abSearchSpellsWaitEnable[$DB] = False
 		EndIf
-	Else
-		GUICtrlSetState($g_hChkDBSpellsWait, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
-		For $i = $g_hPicDBLightSpellWait To $g_hPicDBHasteSpellWait
-			GUICtrlSetState($i, $GUI_DISABLE)
-		Next
-	EndIf
+	;Else
+	;	GUICtrlSetState($g_hChkDBSpellsWait, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
+	;	For $i = $g_hPicDBLightSpellWait To $g_hPicDBHasteSpellWait
+	;		GUICtrlSetState($i, $GUI_DISABLE)
+	;	Next
+	;EndIf
 EndFunc   ;==>chkDBSpellsWait
 
 Func chkABSpellsWait()
-	If $g_iTownHallLevel > 4 Or $g_iTownHallLevel = 0 Then ; Must be TH5+ to have spells
+	;If $g_iTownHallLevel > 4 Or $g_iTownHallLevel = 0 Then ; Must be TH5+ to have spells
 		For $i = $g_hPicABLightSpellWait To $g_hPicABHasteSpellWait
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
@@ -552,12 +552,12 @@ Func chkABSpellsWait()
 		Else
 			$g_abSearchSpellsWaitEnable[$LB] = False
 		EndIf
-	Else
-		GUICtrlSetState($g_hChkABSpellsWait, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
-		For $i = $g_hPicABLightSpellWait To $g_hPicABHasteSpellWait
-			GUICtrlSetState($i, $GUI_DISABLE)
-		Next
-	EndIf
+	;Else
+	;	GUICtrlSetState($g_hChkABSpellsWait, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
+	;	For $i = $g_hPicABLightSpellWait To $g_hPicABHasteSpellWait
+	;		GUICtrlSetState($i, $GUI_DISABLE)
+	;	Next
+	;EndIf
 EndFunc   ;==>chkABSpellsWait
 
 Func chkSpellWaitError()

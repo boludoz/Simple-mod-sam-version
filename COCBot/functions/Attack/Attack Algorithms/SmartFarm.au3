@@ -559,10 +559,9 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 				, [$eLava, $nbSides, 1, 1, 2] _
 				, [$eGiant, $nbSides, 1, 1, $g_iSlotsGiants] _
 				, [$eDrag, $nbSides, 1, 1, 0] _
-				, ["CC", 1, 1, 1, 1] _
 				, [$eBall, $nbSides, 1, 1, 0] _
 				, [$eBabyD, $nbSides, 1, 1, 0] _
-				, [$eHogs, $nbSides, 1, 1, 1] _
+				, [$eHogs, $nbSides, 1, 1, 2] _
 				, [$eValk, $nbSides, 1, 1, 0] _
 				, [$eBowl, $nbSides, 1, 1, 0] _
 				, [$eIceG, $nbSides, 1, 1, 0] _
@@ -577,10 +576,29 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 				, [$eGobl, $nbSides, 1, 1, 0] _
 				, [$eHeal, $nbSides, 1, 1, 1] _
 				, [$ePekk, $nbSides, 1, 1, 1] _
+				, ["CC", 1, 1, 1, 1] _
 				, ["HEROES", 1, 2, 1, 1] _
 				]
 	EndIf
-
+	
+    If $ichkDropCCFirst = 1 Then
+	    ; samm0d
+		Local $aFilled[1][5] = [[0, 0, 0, 0, 0]]
+        Local $iPos = -1
+		
+        For $i = 0 To UBound($listInfoDeploy) - 1
+            If IsString($listInfoDeploy[$i][0]) And $listInfoDeploy[$i][0] = "CC" Then
+					For $iF = 0 to UBound($aFilled, 2) -1
+						$aFilled[0][$iF] = $listInfoDeploy[$i][$iF]
+					Next
+					_ArrayInsert($listInfoDeploy, 0, $aFilled)
+					_ArrayDelete($listInfoDeploy, $i+1)
+                ExitLoop
+            EndIf
+        Next
+		;_ArrayDisplay($listInfoDeploy)
+		Endif
+		
 	$g_bIsCCDropped = False
 	$g_aiDeployCCPosition[0] = -1
 	$g_aiDeployCCPosition[1] = -1
@@ -588,6 +606,7 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	$g_aiDeployHeroesPosition[0] = -1
 	$g_aiDeployHeroesPosition[1] = -1
 
+	;-------------
 	LaunchTroopSmartFarm($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $SIDESNAMES)
 
 	If Not $g_bRunState Then Return
@@ -602,10 +621,10 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 			ExitLoop ;Check remaining quantities
 		EndIf
 		For $i = $eBarb To $eIceG ; launch all remaining troops
-			If LaunchTroop($i, $nbSides, 1, 1, 1) Then
-				CheckHeroesHealth()
-				If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
-			EndIf
+            If LaunchTroop($i, $nbSides, 0, 1) = True Then
+                If $g_iActivateQueen = 0 Or $g_iActivateKing = 0 Or $g_iActivateWarden = 0 Then CheckHeroesHealth()
+                If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
+            EndIf
 		Next
 	Next
 

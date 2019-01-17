@@ -1,12 +1,12 @@
 #cs FUNCTION ====================================================================================================================
 	; Name ..........: AreCollectorsOutside
-	; Description ...: dark drills are ignored since they can be zapped
+	; Description ...: 
 	; Syntax ........:
 	; Parameters ....: $percent				minimum % of collectors outside of walls to all
 	; Return values .: True					more collectors outside than specified
 	;				 : False				less collectors outside than specified
 	; Author ........: McSlither (Jan-2016)
-	; Modified ......: TheRevenor (Jul 2016), Samkie (19 Feb 2018)
+	; Modified ......: TheRevenor (Jul 2016), Samkie (19 Feb 2018), Bld (16/1/2019)
 	; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2016
 	;                  MyBot is distributed under the terms of the GNU GPL
 	; Related .......:
@@ -21,6 +21,7 @@ Func AreCollectorsOutside($percent)
 	; reset variables
 	Global $g_aiPixelMine[0]
 	Global $g_aiPixelElixir[0]
+	Global $g_aiPixelDarkElixir[0]
 	Global $g_aiPixelNearCollector[0]
 	Global $colOutside = 0
 	Global $hTimer = TimerInit()
@@ -36,6 +37,11 @@ Func AreCollectorsOutside($percent)
 	If (IsArray($g_aiPixelElixir)) Then
 		_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
 	EndIf
+	$g_aiPixelDarkElixir = GetLocationDarkElixir()
+		If (IsArray($g_aiPixelDarkElixir)) Then
+		_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelDarkElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+	EndIf
+
 	ResumeAndroid()
 
 	$bIDoScanMineAndElixir = True
@@ -44,6 +50,7 @@ Func AreCollectorsOutside($percent)
 	SetLog("Located collectors in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds:")
 	SetLog("[" & UBound($g_aiPixelMine) & "] Gold Mines")
 	SetLog("[" & UBound($g_aiPixelElixir) & "] Elixir Collectors")
+	SetLog("[" & UBound($g_aiPixelDarkElixir) & "] Dark Elixir Collectors")
 	;$iNbrOfDetectedMines[$DB] += UBound($g_aiPixelMine)
 	;$iNbrOfDetectedCollectors[$DB] += UBound($g_aiPixelElixir)
 	;UpdateStats()

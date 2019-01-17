@@ -21,8 +21,8 @@ Func AreCollectorsNearRedline($percent)
 	; reset variables
 	Global $g_aiPixelMine[0]
 	Global $g_aiPixelElixir[0]
+	Global $g_aiPixelDarkElixir[0]
 	Global $g_aiPixelNearCollector[0]
-
 	Global $hTimer = TimerInit()
 	Global $iTotalCollectorNearRedline = 0
 	_WinAPI_DeleteObject($hBitmapFirst)
@@ -38,6 +38,11 @@ Func AreCollectorsNearRedline($percent)
 	If (IsArray($g_aiPixelElixir)) Then
 		_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
 	EndIf
+	$g_aiPixelDarkElixir = GetLocationDarkElixir()
+		If (IsArray($g_aiPixelDarkElixir)) Then
+		_ArrayAdd($g_aiPixelNearCollector, $g_aiPixelDarkElixir, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING)
+	EndIf
+
 	ResumeAndroid()
 
 	$bIDoScanMineAndElixir = True
@@ -47,6 +52,7 @@ Func AreCollectorsNearRedline($percent)
 	SetLog("Located collectors in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds:")
 	SetLog("[" & UBound($g_aiPixelMine) & "] Gold Mines")
 	SetLog("[" & UBound($g_aiPixelElixir) & "] Elixir Collectors")
+	SetLog("[" & UBound($g_aiPixelDarkElixir) & "] Dark Elixir Collectors")
 
  	Local $diamondx = $g_iMilkFarmOffsetX + $g_iMilkFarmOffsetXStep * $icmbRedlineTiles
  	Local $diamondy = $g_iMilkFarmOffsetY + $g_iMilkFarmOffsetYStep * $icmbRedlineTiles

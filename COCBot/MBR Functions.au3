@@ -27,6 +27,8 @@
 #include "SamM0d\Functions\FriendlyChallenge.au3"
 #include "SamM0d\Functions\MySwitch\MySwitch.au3"
 #include "SamM0d\Functions\Backup system.au3"
+;Attack
+#include "SamM0d\Functions\Attack.au3"
 ; GoblinXP
 ;---------------------------------------------------------------
 #include "SamM0d\Functions\GoblinXP\ArrayFunctions.au3"

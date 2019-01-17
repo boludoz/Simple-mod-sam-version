@@ -15,16 +15,16 @@
 ; ===============================================================================================================================
 Func LocateClanCastle()
 	Local $stext, $MsgBox, $iSilly = 0, $iStupid = 0, $sErrorText = "", $sInfo
+	
+	If $g_bEnableSkipBuild = True Then
+		$g_aiClanCastlePos[0] = -1
+		$g_aiClanCastlePos[1] = -1
+		SetLog("Skipping Clan Castle...", $COLOR_INFO)
+	Return
+	EndIf
 
 	SetLog("Locating Clan Castle...", $COLOR_INFO)
 
-	If $g_bEnableSkipBuild Then
-		$g_aiClanCastlePos[0] = -1
-		$g_aiClanCastlePos[1] = -1
-		SetLog("Quick Clan Castle...", $COLOR_INFO)
-	Return False
-	EndIf
-	
 	If _GetPixelColor($aTopLeftClient[0], $aTopLeftClient[1], True) <> Hex($aTopLeftClient[2], 6) Or _GetPixelColor($aTopRightClient[0], $aTopRightClient[1], True) <> Hex($aTopRightClient[2], 6) Then
 		Zoomout()
 		Collect(False)

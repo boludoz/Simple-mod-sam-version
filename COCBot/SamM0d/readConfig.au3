@@ -115,6 +115,7 @@ IniReadS($g_bChkAutoMinimizeBot, $g_sProfileConfigPath, "AutoMinimizeBot", "Enab
 ; CSV Deployment Speed Mod
 IniReadS($isldSelectedCSVSpeed[$DB], $g_sProfileConfigPath, "attack", "CSVSpeedDB", 3)
 IniReadS($isldSelectedCSVSpeed[$LB], $g_sProfileConfigPath, "attack", "CSVSpeedAB", 3)
+IniReadS($isldSelectedSpeedWaitCVS, $g_sProfileConfigPath, "attack", "SpeedWaitCVS", 3)
 
 ; Wait 4 CC
 IniReadS($g_iChkWait4CC, $g_sProfileConfigPath, "Wait4CC", "Enable", "0", "Int")

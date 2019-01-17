@@ -120,7 +120,7 @@ Func ModTrain($ForcePreTrain = False)
 			$iKTime[2] = getArmyHeroTime($eHeroWarden)
 			$bKingTrue = True
 		EndIf
-		
+		getArmyCCSiegeMachines()
 		
 		If $g_abSearchSpellsWaitEnable[$DB] Or $g_abSearchSpellsWaitEnable[$LB] Then
 			getArmySpellTime()

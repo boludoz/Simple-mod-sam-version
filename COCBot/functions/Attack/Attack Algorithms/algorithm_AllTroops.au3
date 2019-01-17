@@ -262,30 +262,24 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 	$g_aiDeployHeroesPosition[0] = -1
 	$g_aiDeployHeroesPosition[1] = -1
 
-    ; samm0d
     If $ichkDropCCFirst = 1 Then
+	    ; samm0d
+		Local $aFilled[1][5] = [[0, 0, 0, 0, 0]]
         Local $iPos = -1
+		
         For $i = 0 To UBound($listInfoDeploy) - 1
             If IsString($listInfoDeploy[$i][0]) And $listInfoDeploy[$i][0] = "CC" Then
-                $iPos = $i
+					For $iF = 0 to UBound($aFilled, 2) -1
+						$aFilled[0][$iF] = $listInfoDeploy[$i][$iF]
+					Next
+					_ArrayInsert($listInfoDeploy, 0, $aFilled)
+					_ArrayDelete($listInfoDeploy, $i+1)
                 ExitLoop
             EndIf
         Next
-        If $iPos > 0 Then
-            For $i = $iPos To 1 Step -1
-                $listInfoDeploy[$i][0] = $listInfoDeploy[$i-1][0]
-                $listInfoDeploy[$i][1] = $listInfoDeploy[$i-1][1]
-                $listInfoDeploy[$i][2] = $listInfoDeploy[$i-1][2]
-                $listInfoDeploy[$i][3] = $listInfoDeploy[$i-1][3]
-                $listInfoDeploy[$i][4] = $listInfoDeploy[$i-1][4]
-            Next
-            $listInfoDeploy[0][0] = "CC"
-            $listInfoDeploy[0][1] = 1
-            $listInfoDeploy[0][2] = 1
-            $listInfoDeploy[0][3] = 1
-            $listInfoDeploy[0][4] = 1
-        EndIf
-    EndIf
+		;_ArrayDisplay($listInfoDeploy)
+		Endif
+	
     ; samm0d
     If $g_aiAttackStdDropSides[$g_iMatchMode] = 4 And  $g_iMatchMode = $DB Then
         SetLog(_PadStringCenter("Multi Finger Attack", 50, "="), $COLOR_BLUE)

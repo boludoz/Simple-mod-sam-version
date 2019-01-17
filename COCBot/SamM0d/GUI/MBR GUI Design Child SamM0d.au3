@@ -59,9 +59,9 @@ $hGUI_MOD = GUICreate("", $_GUI_MAIN_WIDTH - 20, $_GUI_MAIN_HEIGHT - 255, $_GUI_
 GUISwitch($hGUI_MOD)
 
 ;========================Attack=============================
-SplashStep("Loading M0d - Attack tab...")
+SplashStep("Loading M0d - smartZap tab...")
 GUICtrlCreateTab(0, 0, $_GUI_MAIN_WIDTH - 20, $_GUI_MAIN_HEIGHT - 255, $TCS_FLATBUTTONS)
-GUICtrlCreateTabItem(GetTranslatedFileIni("sam m0d", 54, "Attack"))
+GUICtrlCreateTabItem(GetTranslatedFileIni("sam m0d", 54, "smartZap"))
 
 ;======================smartzap================================
 Local $x = 10, $y = 30 ;Start location
@@ -156,7 +156,7 @@ $lblMyLightningUsed = GUICtrlCreateLabel("0", $x + 60, $y, 80, 30, $SS_RIGHT)
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 ;===============END smartZap========================================
-
+#CS
 Local $x = 0, $y = 290
 
 ; CSV Deployment Speed Mod
@@ -196,6 +196,72 @@ GUICtrlCreateGroup("", -99, -99, 1, 1)
 		$btnAttNowLB = GUICtrlCreateButton(GetTranslatedFileIni("sam m0d", 58, "Attack Now"), $x+250, $y+15, 91, 25)
 				;GUISetState(@SW_SHOW)
 				GUICtrlSetOnEvent(-1, "AttackNowLB")
+#CE
+GUICtrlCreateGroup("", -99, -99, 1, 1)
+
+SplashStep("Loading M0d - Attack tab...")
+GUICtrlCreateTabItem(GetTranslatedFileIni("sam m0d", 112, "Attack I"))
+
+;==========================================
+Local $x = 25, $y = 45
+AttackRead()
+#Region ### START Koda GUI section ### Form=
+GUISetFont(8, 400, 0, "Tahoma")
+$g_hGroup1 = GUICtrlCreateGroup("CVS: Deploy LV/DB", 40, 80, 201, 113)
+$g_hSliderLB = GUICtrlCreateSlider(48, 112, 150, 29)
+$sTxtTip = GetTranslatedFileIni("sam m0d", 56, "Increase or decrease the speed at which the CSV attack script deploys troops and waves.")
+_GUICtrlSetTip(-1, $sTxtTip)
+
+			GUICtrlSetLimit(-1, 49, -4)
+            GUICtrlSetOnEvent(-1, "AttackGUICheckbox")
+			$btnAttNowLB = GUICtrlCreateButton(GetTranslatedFileIni("sam m0d", 58, "Attack"), 200, 120, 41, 17)
+			GUICtrlSetOnEvent(-1, "AttackNowLB")
+
+$g_hSliderDB = GUICtrlCreateSlider(48, 160, 150, 29)
+$sTxtTip = GetTranslatedFileIni("sam m0d", 56, "Increase or decrease the speed at which the CSV attack script deploys troops and waves.")
+_GUICtrlSetTip(-1, $sTxtTip)
+			GUICtrlSetLimit(-1, 49, -4)
+            GUICtrlSetOnEvent(-1, "AttackGUICheckbox")
+			$btnAttNowDB = GUICtrlCreateButton(GetTranslatedFileIni("sam m0d", 58, "Attack"), 200, 168, 41, 17)
+			GUICtrlSetOnEvent(-1, "AttackNowDB")
+
+$g_hLabel1 = GUICtrlCreateLabel("Live base", 200, 96, 51, 18)
+$lbltxtSelectedSpeedAB = GUICtrlCreateLabel("", 48+20, 96, 51, 18)
+
+$g_hLabel2 = GUICtrlCreateLabel("Dead base", 200, 144, 56, 18)
+$lbltxtSelectedSpeedDB = GUICtrlCreateLabel("", 48+20, 144, 56, 18)
+
+GUICtrlCreateGroup("", -99, -99, 1, 1)
+$g_hGroup2 = GUICtrlCreateGroup("CVS: Fast attack", 256, 80, 185, 113)
+$g_hRadioCVSwait1 = GUICtrlCreateRadio("No wait", 272, 104, 65, 17)
+            GUICtrlSetState(-1, $g_bRadioCVSwait1)
+            GUICtrlSetOnEvent(-1, "AttackGUICheckbox")
+
+$g_hRadioCVSwait2 = GUICtrlCreateRadio("/ MOD : ", 272, 128, 57, 17)
+$lbltxtSelectedSpeedWaitCVS = GUICtrlCreateLabel("",350, 128, 113, 17)
+
+            GUICtrlSetState(-1, $g_bRadioCVSwait2)
+            GUICtrlSetOnEvent(-1, "AttackGUICheckbox")
+
+$g_hSliderWaitCVS = GUICtrlCreateSlider(272, 152, 153, 25)
+			GUICtrlSetData($g_hSliderWaitCVS, 0)
+            GUICtrlSetState(-1, $g_iSliderWaitCVS)
+			GUICtrlSetLimit(-1, 49, -4)
+            GUICtrlSetOnEvent(-1, "AttackGUICheckbox")
+
+$g_hRadioCVSwait3 = GUICtrlCreateRadio("Off", 344, 104, 73, 17)
+            GUICtrlSetState(-1, $g_bRadioCVSwait3)
+            GUICtrlSetOnEvent(-1, "AttackGUICheckbox")
+
+GUICtrlCreateGroup("", -99, -99, 1, 1)
+$g_hLabel3 = GUICtrlCreateLabel("CVS Attack", 30, 40, 422, 30, BitOR($SS_CENTER,$SS_CENTERIMAGE))
+GUICtrlSetFont(-1, 12, 400, 0, "Tahoma")
+GUICtrlSetBkColor(-1, 0xB7FFA3)
+GUISetState(@SW_SHOW)
+#EndRegion ### END Koda GUI section ###
+AttackGUICheckboxControl()
+;==========================================
+GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 SplashStep("Loading M0d - Attack II tab...")
 GUICtrlCreateTabItem(GetTranslatedFileIni("sam m0d", 112, "Attack II"))
@@ -236,8 +302,8 @@ $txtWaveFactor = GUICtrlCreateInput("100", $x + 180, $y + 20, 31, 20, BitOR($GUI
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 $y = 140
-$chkDropCCFirst = GUICtrlCreateCheckbox(GetTranslatedFileIni("sam m0d", 105, "Enable deploy cc troops first"), $x+10, $y, -1, -1)
-	$sTxtTip = GetTranslatedFileIni("sam m0d", 106, "Deploy cc troops first, only support for standard attack mode")
+$chkDropCCFirst = GUICtrlCreateCheckbox(GetTranslatedFileIni("sam m0d", 105, "Enable deploy CC troops first (Standard Attack and Samart Farm)"), $x+10, $y, -1, -1)
+	$sTxtTip = GetTranslatedFileIni("sam m0d", 106, "Deploy CC troops first, only support for Standard Attack and Samart Farm mode/s")
 	GUICtrlSetOnEvent(-1, "chkDropCCFirst")
 	_GUICtrlSetTip(-1, $sTxtTip)
 	GUICtrlSetState(-1, $GUI_UNCHECKED)
@@ -311,7 +377,7 @@ $y += 25
 	_GUICtrlSetTip(-1, $sTxtTip)
 	GUICtrlSetState(-1, $GUI_CHECKED)
 	$txtIFTHLevel = GUICtrlCreateCombo("", $x+30, $y+25, 100, 20, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-			GUICtrlSetData(-1, "7|8|9|10","7")
+			GUICtrlSetData(-1, "7|8|9|10|11|12","7")
 
 
 Local $x = 10, $y = 30

@@ -130,11 +130,6 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
 			If Not $g_abAttackUseBatSpell[$g_iMatchMode] Then $bUseSpell = False
 	EndSwitch
 
-    ; CVSDeploy Speed Mod - samm0d
-    If $isldSelectedCSVSpeed[$g_iMatchMode] <> 4 Then
-        If $delayPointmin = 0 Then $delayPointmin = 50
-        If $delayPointmax = 0 Then $delayPointmax = 100
-    EndIf
 	If $troopPosition = -1 Or Not $bUseSpell Then
 
 		If $bUseSpell Then
@@ -159,10 +154,11 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
         Local $sleepBefore = 0
         If $sleepBeforeMin <> $sleepBeforeMax Then
             $sleepBefore = Random($sleepBeforeMin, $sleepBeforeMax, 1)
+            $sleepBefore = Int($sleepBefore / $g_iMultWaitCVS)
         Else
             $sleepBefore = Int($sleepBeforeMin)
+            $sleepBefore = Int($sleepBefore / $g_iMultWaitCVS)
         EndIf
-        $sleepBefore = Int($sleepBefore / $iCSVSpeeds[$isldSelectedCSVSpeed[$g_iMatchMode]])
 
         If $sleepBefore > 50 And IsKeepClicksActive() = False Then
             debugAttackCSV(">> delay Before drop all troops: " & $sleepBefore)
@@ -193,11 +189,19 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
 				;delay time between 2 drops in different point
 				If $delayDropMin <> $delayDropMax Then
 					$delayDrop = Random($delayDropMin, $delayDropMax, 1)
+                Else
+                    $delayDrop = $delayDropMin
+		 			EndIf
+;================== Simple Mod =================
+
+				If ($g_iMatchMode = $DB) Then
+						$delayDrop = Int($delayDrop / $g_iSlider[0])
 				Else
-					$delayDrop = $delayDropMin
+						$delayDrop = Int($delayDrop / $g_iSlider[1])
 				EndIf
-				debugAttackCSV("- delay change drop point: " & $delayDrop)
+				debugAttackCSV("Delay change drop point: " & $delayDrop)
 			EndIf
+;================== Simple Mod =================
 
 			For $j = 1 To $numbersOfVectors
 				;delay time between 2 drops in different point
@@ -211,14 +215,17 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
 					;delay time between 2 drops in same point
 					If $delayPointmin <> $delayPointmax Then
 						Local $delayPoint = Random($delayPointmin, $delayPointmax, 1)
-					Else
-						Local $delayPoint = $delayPointmin
+                    Else
+                        Local $delayPoint = $delayPointmin
+                    EndIf
+;================== Simple Mod =================
+					If ($g_iMatchMode = $DB) Then
+							$delayPoint = Int($delayPoint / $g_iSlider[0])
+					Else                                    
+							$delayPoint = Int($delayPoint / $g_iSlider[1])
 					EndIf
+;================== Simple Mod =================
 					
-                    ; CSV Deployment Speed Mod - samm0d
-                    $delayPoint = $delayPoint / $iCSVSpeeds[$isldSelectedCSVSpeed[$g_iMatchMode]]
-                    $delayDropLast = $delayDropLast / $iCSVSpeeds[$isldSelectedCSVSpeed[$g_iMatchMode]]
-
 					Switch $iTroopIndex
 						Case $eBarb To $eIceG ; drop normal troops
 							If $debug = True Then
@@ -277,11 +284,18 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
 		Local $sleepafter = 0
 		If $sleepafterMin <> $sleepAfterMax Then
 			$sleepafter = Random($sleepafterMin, $sleepAfterMax, 1)
-		Else
-			$sleepafter = Int($sleepafterMin)
+        Else
+            $sleepafter = Int($sleepafterMin)
+        EndIf
+;================== Simple Mod =================
+		If ($g_iMatchMode = $DB) Then
+				$sleepafter = Int($sleepafter / $g_iSlider[0])
+		Else                                    
+				$sleepafter = Int($sleepafter / $g_iSlider[1])
 		EndIf
+;================== Simple Mod =================
 		If $sleepafter > 0 And IsKeepClicksActive() = False Then
-			debugAttackCSV("- delay after drop all troops: " & $sleepafter)
+			debugAttackCSV("Delay after drop all troops: " & $sleepafter)
 			If $sleepafter <= 1000 Then ; check SLEEPAFTER value is less than 1 second?
 				If _Sleep($sleepafter) Then Return
 				If $bHeroDrop = True Then ;Check hero but skip Warden if was dropped with sleepafter to short to allow icon update

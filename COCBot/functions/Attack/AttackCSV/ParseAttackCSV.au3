@@ -14,16 +14,19 @@
 ; ===============================================================================================================================
 Func ParseAttackCSV($debug = False)
 
+	Local $rownum = 0
 	Local $bForceSideExist = False
 	Local $sErrorText, $sTargetVectors = ""
 	Local $iTroopIndex, $bWardenDrop = False
-	; TL , TR , BL , BR
-	Local $sides2drop[4] = [False, False, False, False]
-
-	For $v = 0 To 25 ; Zero all 26 vectors from last atttack in case here is error MAKE'ing new vectors
+	Local $SWIPE = ""
+    Local $sides2drop[4] = [False, False , False , False]
+	
+;====================== Simple Mod ===========================
+    For $v = 0 To 25 ; Zero all 26 vectors from last atttack in case here is error MAKE'ing new vectors
 		Assign("ATTACKVECTOR_" & Chr(65 + $v), "", $ASSIGN_EXISTFAIL) ; start with character "A" = ASCII 65
 		If @error Then SetLog("Failed to erase old vector: " & Chr(65 + $v) & ", ask code monkey to fix!", $COLOR_ERROR)
 	Next
+;====================== Simple Mod ===========================
 
 	;Local $filename = "attack1"
 	If $g_iMatchMode = $DB Then
@@ -41,6 +44,7 @@ Func ParseAttackCSV($debug = False)
 		; Read in lines of text until the EOF is reached
 		For $iLine = 0 To UBound($aLines) - 1
 			$line = $aLines[$iLine]
+			$rownum = $line + 1
 			$sErrorText = "" ; empty error text each row
 			debugAttackCSV("line: " & $iLine + 1)
 			If @error = -1 Then ExitLoop
@@ -178,24 +182,75 @@ Func ParseAttackCSV($debug = False)
 								EndIf
 							EndIf
 						EndIf
-						;qty...
-						Local $qty1, $qty2, $qtyvect
-						$qtyvect = StringSplit($value3, "-", 2)
-						If UBound($qtyvect) > 1 Then
-							If Int($qtyvect[0]) > 0 And Int($qtyvect[1]) > 0 Then
-								$qty1 = Int($qtyvect[0])
-								$qty2 = Int($qtyvect[1])
+						;quantities : With %
+						Local $qty1, $qty2, $qtyvect, $bUpdateQuantity = False
+						If StringInStr($value3, "%") > 0 Then
+							$qtyvect = StringSplit($value3, "%", 2)
+							If UBound($qtyvect) > 0 Then
+								Local $iPercentage = $qtyvect[0]
+								If UBound($qtyvect) > 1 Then $bUpdateQuantity = (($qtyvect[1] = "U") ? True : False)
+								Local $theTroopPosition = -2
+
+								;get the integer index of the troop name specified
+								Local $troopName = $value4
+								Local $iTroopIndex = TroopIndexLookup($troopName)
+								If $iTroopIndex = -1 Then
+									SetLog("CSV CMD '%' troop name '" & $troopName & "' is unrecognized.")
+									Return
+								EndIf
+
+								For $i = 0 To UBound($g_avAttackTroops) - 1
+									If $g_avAttackTroops[$i][0] = $iTroopIndex Then
+										$theTroopPosition = $i
+										ExitLoop
+									EndIf
+								Next
+								If $bUpdateQuantity = True Then
+									If $theTroopPosition >= 0 Then
+										SetLog("Updating Available " & GetTroopName($iTroopIndex, 1) & " Quantities", $COLOR_INFO)
+										$theTroopPosition = UpdateTroopQuantity($troopName)
+									EndIf
+								EndIf
+								If $theTroopPosition >= 0 And UBound($g_avAttackTroops) > $theTroopPosition Then
+									If Int($qtyvect[0]) > 0 Then
+										$qty1 = Round((Number($qtyvect[0]) / 100) * Number($g_avAttackTroops[Number($theTroopPosition)][1]))
+										$qty2 = $qty1
+										SetLog($qtyvect[0] & "% Of x" & Number($g_avAttackTroops[$theTroopPosition][1]) & " " & GetTroopName($g_avAttackTroops[$theTroopPosition][0], 1) & " = " & $qty1, $COLOR_INFO)
+									Else
+										$index1 = 1
+										$qty2 = 1
+									EndIf
+								Else
+									$qty1 = 0
+									$qty2 = 0
+								EndIf
 							Else
-								$index1 = 1
-								$qty2 = 1
+								If Int($value3) > 0 Then
+									$qty1 = Int($value3)
+									$qty2 = Int($value3)
+								Else
+									$qty1 = 1
+									$qty2 = 1
+								EndIf
 							EndIf
 						Else
-							If Int($value3) > 0 Then
-								$qty1 = Int($value3)
-								$qty2 = Int($value3)
+							$qtyvect = StringSplit($value3, "-", 2)
+							If UBound($qtyvect) > 1 Then
+								If Int($qtyvect[0]) > 0 And Int($qtyvect[1]) > 0 Then
+									$qty1 = Int($qtyvect[0])
+									$qty2 = Int($qtyvect[1])
+								Else
+									$index1 = 1
+									$qty2 = 1
+								EndIf
 							Else
-								$qty1 = 1
-								$qty2 = 1
+								If Int($value3) > 0 Then
+									$qty1 = Int($value3)
+									$qty2 = Int($value3)
+								Else
+									$qty1 = 1
+									$qty2 = 1
+								EndIf
 							EndIf
 						EndIf
 						;delay between points
@@ -258,6 +313,7 @@ Func ParseAttackCSV($debug = False)
 								$sleepdrop2 = 1
 							EndIf
 						EndIf
+;====================== Simple Mod ===========================
                         ;sleep time before drop
                         Local $sleepbeforedrop1 = 0, $sleepbeforedrop2 = 0, $sleepbeforedroppvect
                         $sleepbeforedroppvect = StringSplit($value8, "-", 2)
@@ -278,7 +334,8 @@ Func ParseAttackCSV($debug = False)
                                 $sleepbeforedrop2 = 0
                             EndIf
                         EndIf
-                        ; check for targeted vectors and validate index numbers, need too many values for check logic to use CheckCSVValues()
+;====================== Simple Mod ===========================
+						; check for targeted vectors and validate index numbers, need too many values for check logic to use CheckCSVValues()
 						Local $tmpVectorList = StringSplit($value1, "-", $STR_NOCOUNT) ; get array with all vector(s) used
 						For $v = 0 To UBound($tmpVectorList) - 1 ; loop thru each vector in target list
 							If StringInStr($sTargetVectors, $tmpVectorList[$v], $STR_NOCASESENSEBASIC) = True Then
@@ -309,7 +366,9 @@ Func ParseAttackCSV($debug = False)
 							SetLog("Discard row, " & $sErrorText & ": row " & $iLine + 1)
 							debugAttackCSV("Discard row, " & $sErrorText & ": row " & $iLine + 1)
 						Else
-                            ; REMAIN CMD from @chalicucu
+; ============= Simple Mod - REMAIN TROOPS CVS ========================
+                            ; REMAIN CMD from @chalicucu | ProMac Updated 
+                            ;If $value4 = "REMAIN" or DropRemain Then
                             If $value4 = "REMAIN" Then
                                 SetLog("Drop|Remain:  Dropping left over troops", $COLOR_BLUE)
                                 ; Let's get the troops again and quantities
@@ -335,6 +394,7 @@ Func ParseAttackCSV($debug = False)
                             Else
                                 DropTroopFromINI($value1, $index1, $index2, $indexArray, $qty1, $qty2, $value4, $delaypoints1, $delaypoints2, $delaydrop1, $delaydrop2, $sleepdrop1, $sleepdrop2, $sleepbeforedrop1, $sleepbeforedrop2, $debug)
                             EndIf
+; ============= Simple Mod - REMAIN TROOPS CVS ========================
 						EndIf
 						ReleaseClicks($g_iAndroidAdbClicksTroopDeploySize)
 						If _Sleep($DELAYRESPOND) Then Return ; check for pause/stop
@@ -347,9 +407,10 @@ Func ParseAttackCSV($debug = False)
 						Local $sleep1, $sleep2, $sleepvect
 						$sleepvect = StringSplit($value1, "-", 2)
 						If UBound($sleepvect) > 1 Then
+						$sleepvect[0]
 							If Int($sleepvect[0]) > 0 And Int($sleepvect[1]) > 0 Then
-								$sleep1 = Int($sleepvect[0])
-								$sleep2 = Int($sleepvect[1])
+								$sleep1 = Int($sleepvect[0]) ;/ $g_iMultWaitCVS)
+								$sleep2 = Int($sleepvect[1]) ;/ $g_iMultWaitCVS)
 							Else
 								$sleep1 = 1
 								$sleep2 = 1
@@ -368,6 +429,10 @@ Func ParseAttackCSV($debug = False)
 						Else
 							Local $sleep = Int($sleep1)
 						EndIf
+						Local $iSleepS = Int($sleep1 / $g_iMultWaitCVS)
+						Setlog("Wait time: " & $sleep & " /" & $g_iMultWaitCVS & " = " & $iSleepS, $COLOR_GREEN)
+						$sleep = Int($sleep1 / $g_iMultWaitCVS)
+
 						debugAttackCSV("wait " & $sleep)
 						;If _Sleep($sleep) Then Return
 						Local $Gold = 0
@@ -419,40 +484,43 @@ Func ParseAttackCSV($debug = False)
 						WEnd
 						If $exitOneStar = 1 Or $exitTwoStars = 1 Or $exitNoResources = 1 Then ExitLoop ;stop parse CSV file, start exit battle procedure
 
-                    Case "RECALC"
-                        ReleaseClicks()
-                        PrepareAttack($g_iMatchMode, True)
-                    ; samm0d
-                    Case "SWIPE"
-                        ReleaseClicks()
-                        $value1 = StringStripWS($value1, $STR_STRIPALL)
-                        $value2 = Int(StringStripWS($value2, $STR_STRIPALL))
-                        $value3 = Int(StringStripWS($value3, $STR_STRIPALL))
-                        $value4 = Int(StringStripWS($value4, $STR_STRIPALL))
+					Case "RECALC"
+						ReleaseClicks()
+						PrepareAttack($g_iMatchMode, True)
+	   
+					Case "SWIPE"
+						ReleaseClicks()
+						$value1 = StringStripWS($value1, $STR_STRIPALL)
+						$value2 = Int(StringStripWS($value2, $STR_STRIPALL))
+						$value3 = Int(StringStripWS($value3, $STR_STRIPALL))
+						$value4 = Int(StringStripWS($value4, $STR_STRIPALL))
 
-                        If $value3 = 0 Then $value3 = 400
-                        If $value4 = 0 Then $value4 = 250
+						If $value3 = 0 Then $value3 = 400
+						If $value4 = 0 Then $value4 = 250
 
-                        Local $iDragPixelDistance = 700
-                        If $value2 <> 0 Then
-                            $iDragPixelDistance    = Random($value2 - 5, $value2 + 5, 1)
-                        Else
-                            $iDragPixelDistance = Random(695 - 5, 705, 1)
-                        EndIf
-                        Select
-                            Case $value1 = "RIGHT"
-                                SetLog("SWIPE RIGHT")
-                                Local $iStartX = Random(770,780,1)
-                                ClickDrag($iStartX,Random(680,690,1),$iStartX - $iDragPixelDistance,Random(680,690,1),$value4)
-                                If _Sleep($value3) Then Return
-                                PrepareAttack($g_iMatchMode, True, True)
-                            Case $value1 = "LEFT"
-                                SetLog("SWIPE LEFT")
-                                Local $iStartX = Random(35,45,1)
-                                ClickDrag($iStartX,Random(680,690,1),$iStartX + $iDragPixelDistance,Random(680,690,1),$value4)
-                                If _Sleep($value3) Then Return
-                                PrepareAttack($g_iMatchMode, True)
-                        EndSelect
+						Local $iDragPixelDistance = 700
+						If $value2 <> 0 Then
+							$iDragPixelDistance	= Random($value2 - 5, $value2 + 5, 1)
+						Else
+							$iDragPixelDistance = Random(695 - 5, 705, 1)
+						EndIf
+						Select
+							Case $value1 = "RIGHT"
+								$SWIPE = "RIGHT"
+								SetLog("SWIPE RIGHT")
+								Local $iStartX = Random(770,780,1)
+								ClickDrag($iStartX,Random(680,690,1),$iStartX - $iDragPixelDistance,Random(680,690,1),$value4)
+								If _Sleep($value3) Then Return
+								PrepareAttack($g_iMatchMode, True)
+							Case $value1 = "LEFT"
+								$SWIPE = "LEFT"
+								SetLog("SWIPE LEFT")
+								Local $iStartX = Random(35,45,1)
+								ClickDrag($iStartX,Random(680,690,1),$iStartX + $iDragPixelDistance,Random(680,690,1),$value4)
+								If _Sleep($value3) Then Return
+								PrepareAttack($g_iMatchMode, True)
+						EndSelect
+						
 					Case "SIDE"
 						ReleaseClicks()
 						SetLog("Calculate main side... ")

@@ -112,8 +112,9 @@ GUICtrlSetState($chkAutoMinimizeBot, ($g_bChkAutoMinimizeBot = 1 ? $GUI_CHECKED 
 ; CSV Deployment Speed Mod
 GUICtrlSetData($sldSelectedSpeedDB, $isldSelectedCSVSpeed[$DB])
 GUICtrlSetData($sldSelectedSpeedAB, $isldSelectedCSVSpeed[$LB])
-sldSelectedSpeedDB()
-sldSelectedSpeedAB()
+GUICtrlSetData($sldSelectedSpeedWaitCVS, $isldSelectedSpeedWaitCVS)
+;sldSelectedSpeedDB()
+;sldSelectedSpeedAB()
 
 ; wait 4 cc
 GUICtrlSetState($chkWait4CC, ($g_iChkWait4CC = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))

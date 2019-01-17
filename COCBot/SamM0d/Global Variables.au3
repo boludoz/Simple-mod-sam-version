@@ -19,6 +19,34 @@ Global $g_iScreenSizeErrorCount = 0
 
 Global $g_aiPrepDon[4] = [0, 0, 0, 0]
 
+; ================================================== Attack PART ============================================ ;
+;GUI
+Global $g_hGroup1  = 0
+Global $g_hSliderLB = 0
+Global $g_hSliderDB = 0
+Global $g_hLabel1  = 0
+Global $g_hLabel2  = 0
+Global $g_hGroup2  = 0
+Global $g_hRadioCVSwait1  = 0
+Global $g_hRadioCVSwait2  = 0
+Global $g_hRadioCVSwait3  = 0
+Global $g_hSliderWaitCVS = 0
+Global $g_hLabel3  = 0
+Global $g_iGroup1  = 0
+Global $g_iSliderLB = 0
+Global $g_iSliderDB = 0
+Global $g_iLabel1  = 0
+Global $g_iLabel2  = 0
+Global $g_iGroup2  = 0
+Global $g_bRadioCVSwait1  = False
+Global $g_bRadioCVSwait2  = False
+Global $g_bRadioCVSwait3  = False
+Global $g_iSliderWaitCVS = 0
+Global $g_iLabel3  = 0
+; FUNCS
+Global $g_iMultWaitCVS = 1
+Global $g_iSlider[2] = [1, 1]
+
 ; ================================================== Goblin XP =========================================== ;
 
 ;SuperXP / GoblinXP
@@ -254,9 +282,10 @@ Global $iFaceDirection = -1
 Global $grpStatsMisc, $chkEnableCustomOCR4CCRequest, $chkCheck4CC, $txtCheck4CCWaitTime, $chkIncreaseGlobalDelay, $txtIncreaseGlobalDelay, $chkAutoDock
 
 ; CSV Deployment Speed Mod
-Global $isldSelectedCSVSpeed[$g_iModeCount], $iCSVSpeeds[19]
+Global $isldSelectedCSVSpeed[$g_iModeCount], $iCSVSpeeds[19], $isldSelectedSpeedWaitCVS, $sldSelectedSpeedWaitCVS
 $isldSelectedCSVSpeed[$DB] = 4
 $isldSelectedCSVSpeed[$LB] = 4
+$isldSelectedSpeedWaitCVS = 0.9
 $iCSVSpeeds[0] = .1
 $iCSVSpeeds[1] = .25
 $iCSVSpeeds[2] = .5
@@ -276,7 +305,7 @@ $iCSVSpeeds[15] = 10
 $iCSVSpeeds[16] = 20
 $iCSVSpeeds[17] = 50
 $iCSVSpeeds[18] = 99
-Global $grpScriptSpeedDB, $lbltxtSelectedSpeedDB, $sldSelectedSpeedDB, $grpScriptSpeedAB, $lbltxtSelectedSpeedAB, $sldSelectedSpeedAB
+Global $grpScriptSpeedDB, $lbltxtSelectedSpeedDB, $sldSelectedSpeedDB, $grpScriptSpeedAB, $lbltxtSelectedSpeedAB, $sldSelectedSpeedAB, $lbltxtSelectedSpeedWaitCVS
 
 Global $btnAttNowDB, $btnAttNowLB
 

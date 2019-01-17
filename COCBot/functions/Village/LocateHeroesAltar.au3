@@ -28,6 +28,11 @@ EndFunc   ;==>LocateQueenAltar
 Func _LocateQueenAltar()
 
 	Local $stext, $MsgBox, $iSilly = 0, $iStupid = 0, $sErrorText = "", $sInfo
+	
+	If Number($g_iTownHallLevel) < 9 And not Number($g_iTownHallLevel) <= 0 Then
+		SetLog("Archer Queen requires TH9, Cancel locate Altar!; detected :" & $g_iTownHallLevel, $COLOR_ERROR)
+		Return
+	EndIf
 
 	WinGetAndroidHandle()
 	checkMainScreen(False)
@@ -39,7 +44,15 @@ Func _LocateQueenAltar()
 		$g_bDisableBreakCheck = False ; restore flag
 	EndIf
 
+	If $g_bEnableSkipBuild = True Then
+		$g_aiQueenAltarPos[0] = -1
+		$g_aiQueenAltarPos[1] = -1
+		SetLog("Skipping Queen Altar...", $COLOR_INFO)
+	Return
+	EndIf
+
 	SetLog("Locating Queen Altar...", $COLOR_INFO)
+	
 	While 1
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
 		$stext = $sErrorText & @CRLF & GetTranslatedFileIni("MBR Popups", "Func_Locate_Queen_Altar_01", "Click OK then click on your Queen Altar") & @CRLF & @CRLF & _
@@ -163,6 +176,12 @@ EndFunc   ;==>LocateKingAltar
 Func _LocateKingAltar()
 
 	Local $stext, $MsgBox, $iSilly = 0, $iStupid = 0, $sErrorText = "", $sInfo
+	
+	If Number($g_iTownHallLevel) < 7 And not Number($g_iTownHallLevel) <= 0 Then
+		SetLog("Barbarian King requires TH7, Cancel locate Altar!; detected :" & $g_iTownHallLevel, $COLOR_ERROR)
+		Return
+	EndIf
+
 	WinGetAndroidHandle()
 	checkMainScreen(False)
 
@@ -171,6 +190,13 @@ Func _LocateKingAltar()
 		$g_bDisableBreakCheck = True ; stop early PB log off when locating upgrades
 		Collect()
 		$g_bDisableBreakCheck = False ; restore flag
+	EndIf
+	
+	If $g_bEnableSkipBuild = True Then
+		$g_aiKingAltarPos[0] = -1
+		$g_aiKingAltarPos[1] = -1
+		SetLog("Skipping King Altar...", $COLOR_INFO)
+	Return
 	EndIf
 
 	SetLog("Locating King Altar...", $COLOR_INFO)
@@ -297,8 +323,15 @@ EndFunc   ;==>LocateWardenAltar
 Func _LocateWardenAltar()
 	Local $stext, $MsgBox, $iSilly = 0, $iStupid = 0, $sErrorText = "", $sInfo
 
-	If Number($g_iTownHallLevel) < 11 Then
-		SetLog("Grand Warden requires TH11, Cancel locate Altar!", $COLOR_ERROR)
+	If $g_bEnableSkipBuild = True Then
+		$g_aiWardenAltarPos[0] = -1
+		$g_aiWardenAltarPos[1] = -1
+		SetLog("Skipping Grand Warden Altar...", $COLOR_INFO)
+	Return
+	EndIf
+
+	If Number($g_iTownHallLevel) < 11 And not Number($g_iTownHallLevel) <= 0 Then
+		SetLog("Grand Warden requires TH11, Cancel locate Altar!; detected :" & $g_iTownHallLevel, $COLOR_ERROR)
 		Return
 	EndIf
 
