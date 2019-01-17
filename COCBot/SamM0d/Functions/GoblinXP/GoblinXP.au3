@@ -514,68 +514,41 @@ EndFunc   ;==>GetDropPointSuperXP
 
 Func PrepareSuperXPAttack()
 	If $g_bDebugSX Then SetDebugLog("SX|PrepareSuperXPAttack", $COLOR_PURPLE)
-	Local $troopsnumber = 0
-	If _Sleep($DELAYPREPAREATTACK1) Then Return
-	_CaptureRegion2(0, 571 + $g_ibottomOffsetY, 859, 671 + $g_ibottomOffsetY)
-	Local $Plural = 0
-	Local $result = AttackBarCheck()
-	If $g_bDebugSetlog Then SetDebugLog("DLL Troopsbar list: " & $result, $COLOR_DEBUG) ;Debug
-	Local $aTroopDataList = StringSplit($result, "|")
-	Local $aTemp[22][3] ; Slot11+
-	If $result <> "" Then
-		; example : 0#0#92|1#1#108|2#2#8|22#3#1|20#4#1|21#5#1|26#5#0|23#6#1|24#7#2|25#8#1|29#10#1
-		; [0] = Troop Enum Cross Reference [1] = Slot position [2] = Quantities
-		For $i = 1 To $aTroopDataList[0]
-			Local $troopData = StringSplit($aTroopDataList[$i], "#", $STR_NOCOUNT)
-			$aTemp[Number($troopData[1])][0] = $troopData[0]
-			$aTemp[Number($troopData[1])][1] = Number($troopData[2])
-			$aTemp[Number($troopData[1])][2] = Number($troopData[1])
+	Local $iTroopNumber = 0
+	For $i = 0 To UBound($g_avAttackTroops, 1) - 1
+		$g_avAttackTroops[$i][0] = -1
+		$g_avAttackTroops[$i][1] = 0
+		$g_avAttackTroops[$i][2] = 0
+		$g_avAttackTroops[$i][3] = 0
+		$g_avAttackTroops[$i][4] = 0
+		$g_avAttackTroops[$i][5] = 0
+	Next
+
+	Local $avAttackBar = AttackBarCheck()
+	If UBound($avAttackBar, 1) > 0 Then
+		For $i = 0 To UBound($avAttackBar, 1) - 1
+			If IsUnitUsed($DT, $avAttackBar[$i][0]) Then
+				$g_avAttackTroops[$avAttackBar[$i][1]][0] = Number($avAttackBar[$i][0]) ; Troop Index
+				$g_avAttackTroops[$avAttackBar[$i][1]][1] = Number($avAttackBar[$i][2]) ; Amount
+				$g_avAttackTroops[$avAttackBar[$i][1]][2] = Number($avAttackBar[$i][3]) ; X-Coord
+				$g_avAttackTroops[$avAttackBar[$i][1]][3] = Number($avAttackBar[$i][4]) ; Y-Coord
+				$g_avAttackTroops[$avAttackBar[$i][1]][4] = Number($avAttackBar[$i][5]) ; OCR X-Coord
+				$g_avAttackTroops[$avAttackBar[$i][1]][5] = Number($avAttackBar[$i][6]) ; OCR Y-Coord
+				$iTroopNumber += $avAttackBar[$i][2]
+				Local $sDebugText = $g_bDebugSetlog ? " (X:" & $avAttackBar[$i][3] & "|Y:" & $avAttackBar[$i][4] & "|OCR-X:" & $avAttackBar[$i][5] & "|OCR-Y:" & $avAttackBar[$i][6] & ")" : ""
+				SetLog($avAttackBar[$i][1] & ": " & $avAttackBar[$i][2] & " " & GetTroopName($avAttackBar[$i][0], $avAttackBar[$i][2]) & $sDebugText, $COLOR_SUCCESS)
+			Else
+				SetDebugLog("Discard use of " & GetTroopName($avAttackBar[$i][0]) & " (" & $avAttackBar[$i][0] & ")", $COLOR_ERROR)
+			EndIf
 		Next
 	EndIf
-	For $i = 0 To UBound($aTemp) - 1
-		If $aTemp[$i][0] = "" And $aTemp[$i][1] = "" Then
-			$g_avAttackTroops[$i][0] = -1
-			$g_avAttackTroops[$i][1] = 0
-		Else
-			Local $troopKind = $aTemp[$i][0]
-			If $troopKind < $eKing Then
-				$g_avAttackTroops[$i][0] = $aTemp[$i][0]
-				$g_avAttackTroops[$i][1] = $aTemp[$i][1]
-				$troopKind = $aTemp[$i][1]
-				$troopsnumber += $aTemp[$i][1]
-
-			Else ;king, queen, warden and spells
-				$g_avAttackTroops[$i][0] = $troopKind
-				$troopsnumber += 1
-				$g_avAttackTroops[$i][0] = $aTemp[$i][0]
-				$troopKind = $aTemp[$i][1]
-				$troopsnumber += 1
-			EndIf
-			$Plural = 0
-			If $aTemp[$i][1] > 1 Then $Plural = 1
-			If $troopKind <> -1 Then SetLog($aTemp[$i][2] & " » " & $aTemp[$i][1] & " " & GetTroopName($g_avAttackTroops[$i][0], $Plural), $COLOR_GREEN)
-		EndIf
-	Next
-
-	;ResumeAndroid()
-
+	
 	If $g_bDebugSetlog Then SetDebugLog("troopsnumber  = " & $troopsnumber)
-
-	$g_iKingSlot = -1
-	$g_iQueenSlot = -1
-	$g_iWardenSlot = -1
-	For $i = 0 To UBound($g_avAttackTroops) - 1
-		If $g_avAttackTroops[$i][0] = $eKing Then
-			$g_iKingSlot = $i
-		ElseIf $g_avAttackTroops[$i][0] = $eQueen Then
-			$g_iQueenSlot = $i
-		ElseIf $g_avAttackTroops[$i][0] = $eWarden Then
-			$g_iWardenSlot = $i
-		EndIf
-	Next
-
+	
+	SetSlotSpecialTroops()
+	
 	If $g_bDebugSX Then SetDebugLog("SX|PrepareSuperXPAttack Finished", $COLOR_PURPLE)
-	Return $troopsnumber
+	Return $iTroopNumber
 EndFunc   ;==>PrepareSuperXPAttack
 
 Func CheckEarnedStars($ExitWhileHave = 0) ; If the parameter is 0, will not exit from attack lol
