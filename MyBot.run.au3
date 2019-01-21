@@ -737,7 +737,7 @@ Func runBot() ;Bot that runs everything in order
 
 	ModTrain()
 
-	While 1
+	while $g_bRunState = True
 		; samm0d
 		If $g_iSamM0dDebug = 1 And $g_bRestart Then SetLog("Continue loop with restart", $COLOR_DEBUG)
 		If $ichkAutoDock = 1 Then
@@ -865,7 +865,7 @@ Func runBot() ;Bot that runs everything in order
 			checkMainScreen(False)
 			If $g_bRestart = True Then ContinueLoop
 			Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'ReArm', 'CleanYard']
-			While 1
+			while $g_bRunState = True
 				If $g_bRunState = False Then Return
 				If $g_bRestart = True Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 				If UBound($aRndFuncList) > 1 Then
@@ -887,7 +887,7 @@ Func runBot() ;Bot that runs everything in order
 			If IsSearchAttackEnabled() Then ; if attack is disabled skip reporting, requesting, donating, training, and boosting
 				; samm0d - ignore request cc, since later when train army will be apply request cc.
 				Local $aRndFuncList = ['ReplayShare', 'NotifyReport', 'DonateCC,Train', 'CollectFreeMagicItems']
-				While 1
+				while $g_bRunState = True
 					If $g_bRunState = False Then Return
 					If $g_bRestart = True Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 					If UBound($aRndFuncList) > 1 Then
@@ -902,7 +902,7 @@ Func runBot() ;Bot that runs everything in order
 				WEnd
 				BoostEverything() ; 1st Check if is to use Training Potion
 				;Local $aRndFuncList = ['ReplayShare', 'NotifyReport', 'DonateCC,Train', 'BoostBarracks', 'BoostSpellFactory', 'BoostKing', 'BoostQueen', 'BoostWarden', 'RequestCC', 'CollectFreeMagicItems']
-				While 1
+				while $g_bRunState = True
 					If $g_bRunState = False Then Return
 					If $g_bRestart = True Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 					If UBound($aRndFuncList) > 1 Then
@@ -926,7 +926,7 @@ Func runBot() ;Bot that runs everything in order
 				If BalanceDonRec(True) Then DonateCC()
 			EndIf
 			Local $aRndFuncList = ['Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'BuilderBase']
-			While 1
+			while $g_bRunState = True
 				If $g_bRunState = False Then Return
 				If $g_bRestart = True Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 				If UBound($aRndFuncList) > 1 Then
@@ -1104,7 +1104,7 @@ Func _Idle() ;Sequence that runs until Full Army
 		If $g_bRestart = True Then ExitLoop
 		If $iCollectCounter > $g_iCollectAtCount Then ; This is prevent from collecting all the time which isn't needed anyway
 			Local $aRndFuncList = ['Collect', 'CheckTombs', 'DonateCC', 'CleanYard']
-			While 1
+			while $g_bRunState = True
 				If $g_bRunState = False Then Return
 				If $g_bRestart = True Then ExitLoop
 				If CheckAndroidReboot() Then ContinueLoop 2

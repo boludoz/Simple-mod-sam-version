@@ -179,16 +179,17 @@ IniReadS($ichkMySpellsOrder, $g_sProfileConfigPath, "MySpells", "Order", "0","In
 IniReadS($ichkEnableDeleteExcessSpells, $g_sProfileConfigPath, "MySpells", "DeleteExcess", "0","Int")
 IniReadS($ichkForcePreBrewSpell, $g_sProfileConfigPath, "MySpells", "ForcePreBrewSpell", "0","Int")
 
-For $j = 0 To 2
-	For $i = 0 To UBound($MySpells) - 1
+For $j = 0 To UBound($MySpellSetting) -1 
+	For $i = 0 To UBound($MySpells) -1 
 		IniReadS($MySpellSetting[$j][$i][0], $g_sProfileConfigPath, "MySpells", $MySpells[$i][0] & $j, "0", "Int")
 		IniReadS($MySpellSetting[$j][$i][1],$g_sProfileConfigPath, "MySpells", $MySpells[$i][0] & "Order" & $j, $i + 1,"Int")
 		IniReadS($MySpellSetting[$j][$i][2], $g_sProfileConfigPath, "MySpells", $MySpells[$i][0] & "Pre" & $j, "0", "Int")
 	Next
 Next
 
+
 $g_bDoPrebrewspell = 0
-For $i = 0 To UBound($MySpells) - 1
+For $i = 0 To UBound($MySpells) -1
 	Assign("ichkPre" & $MySpells[$i][0],  $MySpellSetting[$icmbTroopSetting][$i][2])
 	$g_bDoPrebrewspell = BitOR($g_bDoPrebrewspell, $MySpellSetting[$icmbTroopSetting][$i][2])
 	$MySpells[$i][3] =  $MySpellSetting[$icmbTroopSetting][$i][0]
@@ -201,12 +202,11 @@ IniReadS($ichkMySiegesOrder, $g_sProfileConfigPath, "MySieges", "Order", "0","In
 IniReadS($ichkEnableDeleteExcessSieges, $g_sProfileConfigPath, "MySieges", "DeleteExcess", "0","Int")
 IniReadS($ichkForcePreBrewSiege, $g_sProfileConfigPath, "MySieges", "ForcePreBrewSiege", "0","Int")
 
-
-For $iSg = 0 To 2
-	For $iMySiegeS = 0 To UBound($MySieges) -1 
-		IniReadS($MySiegeSetting[$iSg][$iMySiegeS][0], $g_sProfileConfigPath, "MySieges", $MySieges[$iMySiegeS][0] & $iSg, "0", "Int")
-		IniReadS($MySiegeSetting[$iSg][$iMySiegeS][1],$g_sProfileConfigPath, "MySieges", $MySieges[$iMySiegeS][0] & "Order" & $iSg, $iMySiegeS + 1,"Int")
-		IniReadS($MySiegeSetting[$iSg][$iMySiegeS][2], $g_sProfileConfigPath, "MySieges", $MySieges[$iMySiegeS][0] & "Pre" & $iSg, "0", "Int")
+For $j = 0 To UBound($MySiegeSetting) -1 
+	For $i = 0 To UBound($MySieges) -1 
+		IniReadS($MySiegeSetting[$j][$i][0], $g_sProfileConfigPath, "MySieges", $MySieges[$i][0] & $j, "0", "Int")
+		IniReadS($MySiegeSetting[$j][$i][1],$g_sProfileConfigPath, "MySieges", $MySieges[$i][0] & "Order" & $j, $i + 1,"Int")
+		IniReadS($MySiegeSetting[$j][$i][2], $g_sProfileConfigPath, "MySieges", $MySieges[$i][0] & "Pre" & $j, "0", "Int")
 	Next
 Next
 
@@ -217,6 +217,15 @@ $g_bDoPrebrewSiege = 0
 	$MySieges[$iMySiegeSpre][3] =  $MySiegeSetting[$icmbTroopSetting][$iMySiegeSpre][0]
 	$MySieges[$iMySiegeSpre][1] =  $MySiegeSetting[$icmbTroopSetting][$iMySiegeSpre][1]
 Next
+	; ================================================== FriendlyChallenge ==================================== ;
+
+	$g_abFriendlyChallengehours = StringSplit(IniRead($g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengePlannedRequestHours", "1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1"), "|", $STR_NOCOUNT)
+	$ichkFriendlyChallengeBase = StringSplit(IniRead($g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeBaseForShare", "0|0|0|0|0|0"), "|", $STR_NOCOUNT)
+	IniReadS($ichkEnableFriendlyChallenge, $g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeEnable", "0", "Int")
+	IniReadS($ichkOnlyOnRequest, $g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeEnableOnlyOnRequest", "0", "Int")
+	$stxtKeywordForRequest = StringReplace(IniRead($g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeKeyword", "friendly|challenge"), "|", @CRLF)
+	$stxtChallengeText = StringReplace(IniRead($g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeText", ""), "|", @CRLF)
+	IniReadS($itxtFriendlyChallengeCoolDownTime, $g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeCoolDownTime", "5", "Int")
 
 	; ================================================== Super XP ==================================== ;
 
@@ -231,4 +240,3 @@ Next
 	IniReadS($g_bSXAQ, $g_sProfileConfigPath, "GoblinXP", "SXAQ", $eHeroNone)
 	IniReadS($g_bSXGW, $g_sProfileConfigPath, "GoblinXP", "SXGW", $eHeroNone)
 
-readFriendlyChallengeSetting()

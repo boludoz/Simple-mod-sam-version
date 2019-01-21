@@ -7,8 +7,7 @@ Func chkMyTroopOrder()
 EndFunc
 
 Func cmbMyTroopOrder()
-	Local $iTotalT = UBound($MyTroops)
-	Local $tempOrder[$iTotalT]
+	Local $tempOrder[UBound($MyTroops)]
 	For $i = 0 To UBound($MyTroops) - 1
 		$tempOrder[$i] = Int(GUICtrlRead(Eval("cmbMy" & $MyTroops[$i][0] & "Order")))
 	Next

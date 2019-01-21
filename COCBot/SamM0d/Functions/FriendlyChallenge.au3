@@ -199,48 +199,6 @@ Func chkFriendlyChallengehoursE2()
 	ChkFriendlyChallengehours()
 EndFunc   ;==>chkFriendlyChallengehoursE2
 
-Func saveFriendlyChallengeSetting()
-	Local $string = ""
-	For $i = 0 To 23
-		$string &= (GUICtrlRead($g_ahChkFriendlyChallengehours[$i]) = $GUI_CHECKED ? 1: 0) & "|"
-	Next
-	_Ini_Add("FriendlyChallenge", "FriendlyChallengePlannedRequestHours", $string)
-	$string = ""
-	For $i = 0 To 5
-		$string &= (GUICtrlRead($chkFriendlyChallengeBase[$i]) = $GUI_CHECKED ? 1: 0) & "|"
-	Next
-	_Ini_Add("FriendlyChallenge", "FriendlyChallengeBaseForShare", $string)
-	_Ini_Add("FriendlyChallenge", "FriendlyChallengeEnable", (GUICtrlRead($chkEnableFriendlyChallenge) = $GUI_CHECKED ? 1 : 0))
-	_Ini_Add("FriendlyChallenge", "FriendlyChallengeEnableOnlyOnRequest", (GUICtrlRead($chkOnlyOnRequest) = $GUI_CHECKED ? 1 : 0))
-	_Ini_Add("FriendlyChallenge", "FriendlyChallengeKeyword", StringReplace(GUICtrlRead($txtKeywordForRequest), @CRLF, "|"))
-	_Ini_Add("FriendlyChallenge", "FriendlyChallengeText", StringReplace(GUICtrlRead($txtChallengeText), @CRLF, "|"))
-	_Ini_Add("FriendlyChallenge", "FriendlyChallengeCoolDownTime", GUICtrlRead($txtFriendlyChallengeCoolDownTime))
-EndFunc
-
-Func readFriendlyChallengeSetting()
-	$g_abFriendlyChallengehours = StringSplit(IniRead($g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengePlannedRequestHours", "1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1"), "|", $STR_NOCOUNT)
-	$ichkFriendlyChallengeBase = StringSplit(IniRead($g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeBaseForShare", "0|0|0|0|0|0"), "|", $STR_NOCOUNT)
-	IniReadS($ichkEnableFriendlyChallenge, $g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeEnable", "0", "Int")
-	IniReadS($ichkOnlyOnRequest, $g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeEnableOnlyOnRequest", "0", "Int")
-	$stxtKeywordForRequest = StringReplace(IniRead($g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeKeyword", "friendly|challenge"), "|", @CRLF)
-	$stxtChallengeText = StringReplace(IniRead($g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeText", ""), "|", @CRLF)
-	IniReadS($itxtFriendlyChallengeCoolDownTime, $g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeCoolDownTime", "5", "Int")
-EndFunc
-
-Func applyFriendlyChallengeSetting()
-	For $i = 0 To 23
-		GUICtrlSetState($g_ahChkFriendlyChallengehours[$i], ($g_abFriendlyChallengehours[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
-	Next
-	For $i = 0 To 5
-		GUICtrlSetState($chkFriendlyChallengeBase[$i], ($ichkFriendlyChallengeBase[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
-	Next
-	GUICtrlSetState($chkEnableFriendlyChallenge, $ichkEnableFriendlyChallenge = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
-	GUICtrlSetState($chkOnlyOnRequest, $ichkOnlyOnRequest = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
-	GUICtrlSetData($txtKeywordForRequest, $stxtKeywordForRequest)
-	GUICtrlSetData($txtChallengeText, $stxtChallengeText)
-	GUICtrlSetData($txtFriendlyChallengeCoolDownTime, $itxtFriendlyChallengeCoolDownTime)
-EndFunc
-
 Func chkEnableFriendlyChallenge()
 	$ichkEnableFriendlyChallenge = (GUICtrlRead($chkEnableFriendlyChallenge) = $GUI_CHECKED ? 1: 0)
 EndFunc

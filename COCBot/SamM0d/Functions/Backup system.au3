@@ -3,19 +3,19 @@
 Func BackupSystem()
 Sleep(50)
 ;SetupProfileFolder()
-Local $bInfoState = $g_bRunState
-$g_bRunState = False
+;Local $bInfoState = ;$g_bRunState
+;$g_bRunState = False
 ; Principio:
 	If not $g_bBackup = False and not $g_bFirstRun = False Then
 		 Setlog("Backups system : Files OK", $COLOR_INFO)
-			$g_bRunState = False
+			;$g_bRunState = False
 			$g_bBackup = True
 			DirCopy($g_sProfileBackupToBackup, $g_sProfileBackup, $FC_OVERWRITE + $FC_CREATEPATH)
 			TempDelete($g_sProfileBackup)
-			$g_bRunState = True
+			;$g_bRunState = True
 			Return
 	Else;If not $g_bBackup = True and not $g_bFirstRun = True Then
-			$g_bRunState = False ;stop bot
+			;$g_bRunState = False ;stop bot
 					If Not FileExists($g_sProfileBackupPath) Then 
 						Setlog("Backups system : First Backup", $COLOR_GREEN)
 						DirCreate($g_sProfileBackupPath)
@@ -23,11 +23,11 @@ $g_bRunState = False
 						$g_bBackup = True
 						If Not FileExists($g_sProfileBackupPath) Then DirCreate($g_sProfileBackupPath)
 						; COPYPROFILE TO BACKUP FIRST
-						$g_bRunState = False
+						;$g_bRunState = False
 						Saveconfig()
 						DirCopy($g_sProfileBackupToBackup, $g_sProfileBackup, $FC_OVERWRITE + $FC_CREATEPATH)
 						TempDelete($g_sProfileBackup)
-						$g_bRunState = True
+						;$g_bRunState = True
 						Return
 					EndIf
 			Setlog("Backups system : Files damaged, backup system ON", $COLOR_ERROR)
@@ -37,7 +37,7 @@ $g_bRunState = False
 			Applyconfig()
 			Saveconfig()
 			TempDelete($g_sProfileBackup)
-			$g_bRunState = True ;start bot
+			;$g_bRunState = True ;start bot
 			Return
 
 		#cs	
@@ -47,11 +47,11 @@ $g_bRunState = False
 			$g_bBackup = True
 			If Not FileExists($g_sProfileBackupPath) Then DirCreate($g_sProfileBackupPath)
 			; COPYPROFILE TO BACKUP FIRST
-			$g_bRunState = False
+			;$g_bRunState = False
 			Saveconfig()
 			DirCopy($g_sProfileBackupToBackup, $g_sProfileBackup, $FC_OVERWRITE)
 			TempDelete($g_sProfileBackup)
-			$g_bRunState = True
+			;$g_bRunState = True
 		#ce
 	  Endif
    Return

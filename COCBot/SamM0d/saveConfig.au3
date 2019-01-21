@@ -207,19 +207,39 @@ If GUICtrlRead($chkMySpellsOrder) = $GUI_CHECKED Then
 Else
 	_Ini_Add("MySpells", "Order", 0)
 EndIf
-
-For $j = 0 To 2
-	For $iMySiegeS = 0 To UBound($MySieges) - 1 
-		_Ini_Add("MySieges", $MySieges[$iMySiegeS][0] & $j, $MySiegeSetting[$j][$iMySiegeS][0])
-		_Ini_Add("MySieges", $MySieges[$iMySiegeS][0] & "Order" & $j, $MySiegeSetting[$j][$iMySiegeS][1])
-		_Ini_Add("MySieges", $MySieges[$iMySiegeS][0] & "Pre" & $j, $MySiegeSetting[$j][$iMySiegeS][2])
+For $j = 0 To UBound($MySiegeSetting) - 1 
+	For $i = 0 To UBound($MySieges) - 1 
+		_Ini_Add("MySieges", $MySieges[$i][0] & $j, $MySiegeSetting[$j][$i][0])
+		_Ini_Add("MySieges", $MySieges[$i][0] & "Order" & $j, $MySiegeSetting[$j][$i][1])
+		_Ini_Add("MySieges", $MySieges[$i][0] & "Pre" & $j, $MySiegeSetting[$j][$i][2])
 	Next
-	For $i = 0 To UBound($MySpells) -1
+Next
+	
+For $j = 0 To UBound($MySpellSetting) - 1 
+	For $i = 0 To UBound($MySpells) - 1 
 		_Ini_Add("MySpells", $MySpells[$i][0] & $j, $MySpellSetting[$j][$i][0])
 		_Ini_Add("MySpells", $MySpells[$i][0] & "Order" & $j, $MySpellSetting[$j][$i][1])
 		_Ini_Add("MySpells", $MySpells[$i][0] & "Pre" & $j, $MySpellSetting[$j][$i][2])
 	Next
 Next
+
+	; ================================================== FriendlyChallenge ==================================== ;
+	Local $string = ""
+	For $i = 0 To 23
+		$string &= (GUICtrlRead($g_ahChkFriendlyChallengehours[$i]) = $GUI_CHECKED ? 1: 0) & "|"
+	Next
+	_Ini_Add("FriendlyChallenge", "FriendlyChallengePlannedRequestHours", $string)
+	$string = ""
+	For $i = 0 To 5
+		$string &= (GUICtrlRead($chkFriendlyChallengeBase[$i]) = $GUI_CHECKED ? 1: 0) & "|"
+	Next
+	_Ini_Add("FriendlyChallenge", "FriendlyChallengeBaseForShare", $string)
+	_Ini_Add("FriendlyChallenge", "FriendlyChallengeEnable", (GUICtrlRead($chkEnableFriendlyChallenge) = $GUI_CHECKED ? 1 : 0))
+	_Ini_Add("FriendlyChallenge", "FriendlyChallengeEnableOnlyOnRequest", (GUICtrlRead($chkOnlyOnRequest) = $GUI_CHECKED ? 1 : 0))
+	_Ini_Add("FriendlyChallenge", "FriendlyChallengeKeyword", StringReplace(GUICtrlRead($txtKeywordForRequest), @CRLF, "|"))
+	_Ini_Add("FriendlyChallenge", "FriendlyChallengeText", StringReplace(GUICtrlRead($txtChallengeText), @CRLF, "|"))
+	_Ini_Add("FriendlyChallenge", "FriendlyChallengeCoolDownTime", GUICtrlRead($txtFriendlyChallengeCoolDownTime))
+
 	; ================================================== Sieges ================================ ;
 	;If GUICtrlRead($chkEnableDeleteExcessSieges) = $GUI_CHECKED Then
 		;_Ini_Add("MySieges", "DeleteExcess", 1)
@@ -259,4 +279,4 @@ Next
 	_Ini_Add("GoblinXP", "SXAQ", $g_bSXAQ)
 	_Ini_Add("GoblinXP", "SXGW", $g_bSXGW)
 	_Ini_Add("GoblinXP", "MaxXptoGain", GUICtrlRead($g_hTxtMaxXPtoGain))
-saveFriendlyChallengeSetting()
+	

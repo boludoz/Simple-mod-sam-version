@@ -182,7 +182,7 @@ GUICtrlSetState($chkMySpellsOrder, ($ichkMySpellsOrder = 1 ? $GUI_CHECKED : $GUI
 GUICtrlSetState($chkEnableDeleteExcessSpells, ($ichkEnableDeleteExcessSpells = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
 GUICtrlSetState($chkForcePreBrewSpell, ($ichkForcePreBrewSpell = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
 
-For $i = 0 To UBound($MySpells) - 1
+For $i = 0 To UBound($MySpells)-1
 	GUICtrlSetState(Eval("chkPre" & $MySpells[$i][0]), (Eval("ichkPre" & $MySpells[$i][0]) = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
 	GUICtrlSetData(Eval("txtNum" & $MySpells[$i][0] & "Spell"), $MySpells[$i][3])
 	_GUICtrlComboBox_SetCurSel(Eval("cmbMy" & $MySpells[$i][0] & "SpellOrder"), $MySpells[$i][1]-1)
@@ -191,6 +191,7 @@ Next
 ;cmbMySpellOrder()
 
 GUICtrlSetData($txtTotalCountSpell2, $g_iTotalSpellValue)
+lblMyTotalCountSpell()
 
 
 ; ================================================== Sieges ================================ ;
@@ -199,15 +200,26 @@ GUICtrlSetState($chkMySiegesOrder, ($ichkMySiegesOrder = 1 ? $GUI_CHECKED : $GUI
 GUICtrlSetState($chkEnableDeleteExcessSieges, ($ichkEnableDeleteExcessSieges = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
 GUICtrlSetState($chkForcePreBrewSiege, ($ichkForcePreBrewSiege = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
 
-For $iSg = 0 To UBound($MySieges)-1
-	GUICtrlSetState(Eval("chkPre" & $MySieges[$iSg][0]), (Eval("ichkPre" & $MySieges[$iSg][0]) = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
-	GUICtrlSetData(Eval("txtNum" & $MySieges[$iSg][0] & "Siege"), $MySieges[$iSg][3])
-	_GUICtrlComboBox_SetCurSel(Eval("cmbMy" & $MySieges[$iSg][0] & "SiegeOrder"), $MySieges[$iSg][1]-1)
+For $i = 0 To UBound($MySieges)-1
+	GUICtrlSetState(Eval("chkPre" & $MySieges[$i][0]), (Eval("ichkPre" & $MySieges[$i][0]) = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+	GUICtrlSetData(Eval("txtNum" & $MySieges[$i][0] & "Siege"), $MySieges[$i][3])
+	_GUICtrlComboBox_SetCurSel(Eval("cmbMy" & $MySieges[$i][0] & "SiegeOrder"), $MySieges[$i][1]-1)
 Next
 
-lblMyTotalCountSpell()
 lblMyTotalCountSiege()
 
+; ================================================== FriendlyChallenge ============================== ;
+	For $i = 0 To 23
+		GUICtrlSetState($g_ahChkFriendlyChallengehours[$i], ($g_abFriendlyChallengehours[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+	Next
+	For $i = 0 To 5
+		GUICtrlSetState($chkFriendlyChallengeBase[$i], ($ichkFriendlyChallengeBase[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+	Next
+	GUICtrlSetState($chkEnableFriendlyChallenge, $ichkEnableFriendlyChallenge = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+	GUICtrlSetState($chkOnlyOnRequest, $ichkOnlyOnRequest = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+	GUICtrlSetData($txtKeywordForRequest, $stxtKeywordForRequest)
+	GUICtrlSetData($txtChallengeText, $stxtChallengeText)
+	GUICtrlSetData($txtFriendlyChallengeCoolDownTime, $itxtFriendlyChallengeCoolDownTime)
 ; ================================================== Super XP ============================== ;
 
 GUICtrlSetState($g_hChkEnableSuperXP, $g_bEnableSuperXP ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -249,4 +261,3 @@ EndIf
 
 GUICtrlSetData($g_hLblTHLevels, $g_iTownHallLevel)
 
-applyFriendlyChallengeSetting()
