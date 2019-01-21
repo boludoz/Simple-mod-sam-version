@@ -771,7 +771,7 @@ Local $x = $xStart, $y = $yStart
 			GUICtrlSetLimit(-1, 2)
 			;GUICtrlSetState(-1, $GUI_DISABLE)
 			GUICtrlSetOnEvent(-1, "UpdateSiegeSetting")
-		$lblTimesWallWS = GUICtrlCreateLabel("x", $x + 157, $y+3, -1, -1)
+		$lblTimesWallW = GUICtrlCreateLabel("x", $x + 157, $y+3, -1, -1)
 
 		$y +=25
 		$lblBattleBIcon=GUICtrlCreateIcon ($g_sLibIconPath, $eIcnBattleB, $x + 10, $y, 24, 24)
@@ -781,7 +781,7 @@ Local $x = $xStart, $y = $yStart
 			GUICtrlSetLimit(-1, 2)
 			;GUICtrlSetState(-1, $GUI_DISABLE)
 			GUICtrlSetOnEvent(-1, "UpdateSiegeSetting")
-		$lblTimesBattleBS = GUICtrlCreateLabel("x", $x + 157, $y+3, -1, -1)
+		$lblTimesBattleB = GUICtrlCreateLabel("x", $x + 157, $y+3, -1, -1)
 		
 		$y +=25
 		$lblStoneSIcon=GUICtrlCreateIcon ($g_sLibIconPath, $eIcnStoneS, $x + 10, $y, 24, 24)
@@ -791,7 +791,7 @@ Local $x = $xStart, $y = $yStart
 			GUICtrlSetLimit(-1, 2)
 			;GUICtrlSetState(-1, $GUI_DISABLE)
 			GUICtrlSetOnEvent(-1, "UpdateSiegeSetting")
-		$lblTimesStoneSS = GUICtrlCreateLabel("x", $x + 157, $y+3, -1, -1)
+		$lblTimesStoneS = GUICtrlCreateLabel("x", $x + 157, $y+3, -1, -1)
 
 $y = 110
 $btnResetSieges= GUICtrlCreateButton(GetTranslatedFileIni("sam m0d", "Reset Siege", "Reset Siege"), $x+360, $y, 40, 47,$BS_MULTILINE)

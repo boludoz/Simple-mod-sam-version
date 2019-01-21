@@ -1030,6 +1030,7 @@ EndFunc   ;==>chkEnableSuperXP3
 			$g_iMySiegesSize += Int(GUICtrlRead(Eval("txtNum" & $MySieges[$i][0] & "Siege"))) * $MySieges[$i][2]
 		Next
 		$txtTotalCountSiege = GuiCtrlRead($g_hTxtTotalCountSiege)
+		
 		If $g_iSamM0dDebug = 1 Then SetLog("$txtTotalCountSiege: " & $txtTotalCountSiege)
 	
 		;_GUICtrlComboBox_SetCurSel($g_hTxtTotalCountSiege, $txtTotalCountSiege)

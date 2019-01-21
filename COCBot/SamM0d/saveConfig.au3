@@ -99,14 +99,6 @@ _Ini_Add("AutoDock", "Enable", (GUICtrlRead($chkAutoDock) = $GUI_CHECKED ? 1 : 0
 _Ini_Add("AutoHideEmulator", "Enable", (GUICtrlRead($chkAutoHideEmulator) = $GUI_CHECKED ? 1 : 0))
 _Ini_Add("AutoMinimizeBot", "Enable", (GUICtrlRead($chkAutoMinimizeBot) = $GUI_CHECKED ? 1 : 0))
 
-;~ ; advanced update for wall by Samkie
-;~ _Ini_Add("AU4Wall", "EnableSmartUpdateWall", (GUICtrlRead($chkSmartUpdateWall) = $GUI_CHECKED ? 1 :0))
-;~ _Ini_Add("AU4Wall", "ClickWallDelay", GUICtrlRead($txtClickWallDelay))
-;~ _Ini_Add("AU4Wall", "BaseNodeX", $aBaseNode[0])
-;~ _Ini_Add("AU4Wall", "BaseNodeY", $aBaseNode[1])
-;~ _Ini_Add("AU4Wall", "LastWallX", $aLastWall[0])
-;~ _Ini_Add("AU4Wall", "LastWallY", $aLastWall[1])
-;~ _Ini_Add("AU4Wall", "FaceDirection", $iFaceDirection)
 
 ; CSV Deployment Speed Mod
 _Ini_Add("attack", "CSVSpeedDB", $isldSelectedCSVSpeed[$DB])
@@ -128,6 +120,7 @@ _Ini_Add("MyTroops", "DeleteExcess", (GUICtrlRead($chkEnableDeleteExcessTroops) 
 _Ini_Add("MyTroops", "EnableModTrain", (GUICtrlRead($chkModTrain) = $GUI_CHECKED ? 1 : 0))
 _Ini_Add("MyTroops", "Order", (GUICtrlRead($chkMyTroopsOrder) = $GUI_CHECKED ? 1 : 0))
 _Ini_Add("MyTroops", "TrainCombo", _GUICtrlComboBox_GetCurSel($cmbMyQuickTrain))
+
 Local $itempcmbTroopSetting = _GUICtrlComboBox_GetCurSel($cmbTroopSetting)
 
 _Ini_Add("MyTroops", "Composition", $itempcmbTroopSetting)
@@ -140,26 +133,7 @@ For $j = 0 To 2
 		_Ini_Add("MyTroops", $MyTroops[$i][0] & "Order" & $j, $MyTroopsSetting[$j][$i][1])
 	Next
 Next
-	; ================================================== Sieges ================================ ;
-	_Ini_Add("MySieges", "Composition", _GUICtrlComboBox_GetCurSel($g_hTxtTotalCountSiege))
-	
-If GUICtrlRead($chkEnableDeleteExcessSieges) = $GUI_CHECKED Then
-	_Ini_Add("MySieges", "DeleteExcess", 1)
-Else
-	_Ini_Add("MySieges", "DeleteExcess", 0)
-EndIf 
 
-If GUICtrlRead($chkForcePreBrewSiege) = $GUI_CHECKED Then
-	_Ini_Add("MySieges", "ForcePreBrewSiege", 1)
-Else
-	_Ini_Add("MySieges", "ForcePreBrewSiege", 0)
-EndIf
-
-If GUICtrlRead($chkMySiegesOrder) = $GUI_CHECKED Then
-	_Ini_Add("MySieges", "Order", 1)
-Else
-	_Ini_Add("MySieges", "Order", 0)
-EndIf
 If GUICtrlRead($chkEnableDeleteExcessSpells) = $GUI_CHECKED Then
 	_Ini_Add("MySpells", "DeleteExcess", 1)
 Else
@@ -177,76 +151,97 @@ If GUICtrlRead($chkMySpellsOrder) = $GUI_CHECKED Then
 Else
 	_Ini_Add("MySpells", "Order", 0)
 EndIf
-For $j = 0 To UBound($MySiegeSetting) - 1 
-	For $i = 0 To UBound($MySieges) - 1 
-		_Ini_Add("MySieges", $MySieges[$i][0] & $j, $MySiegeSetting[$j][$i][0])
-		_Ini_Add("MySieges", $MySieges[$i][0] & "Order" & $j, $MySiegeSetting[$j][$i][1])
-		_Ini_Add("MySieges", $MySieges[$i][0] & "Pre" & $j, $MySiegeSetting[$j][$i][2])
-	Next
-Next
-	
-For $j = 0 To UBound($MySpellSetting) - 1 
-	For $i = 0 To UBound($MySpells) - 1 
+
+For $j = 0 To 2
+	For $i = 0 To UBound($MySpells) - 1
 		_Ini_Add("MySpells", $MySpells[$i][0] & $j, $MySpellSetting[$j][$i][0])
 		_Ini_Add("MySpells", $MySpells[$i][0] & "Order" & $j, $MySpellSetting[$j][$i][1])
 		_Ini_Add("MySpells", $MySpells[$i][0] & "Pre" & $j, $MySpellSetting[$j][$i][2])
 	Next
 Next
 
-	; ================================================== FriendlyChallenge ==================================== ;
-	Local $string = ""
-	For $i = 0 To 23
-		$string &= (GUICtrlRead($g_ahChkFriendlyChallengehours[$i]) = $GUI_CHECKED ? 1: 0) & "|"
-	Next
-	_Ini_Add("FriendlyChallenge", "FriendlyChallengePlannedRequestHours", $string)
-	$string = ""
-	For $i = 0 To 5
-		$string &= (GUICtrlRead($chkFriendlyChallengeBase[$i]) = $GUI_CHECKED ? 1: 0) & "|"
-	Next
-	_Ini_Add("FriendlyChallenge", "FriendlyChallengeBaseForShare", $string)
-	_Ini_Add("FriendlyChallenge", "FriendlyChallengeEnable", (GUICtrlRead($chkEnableFriendlyChallenge) = $GUI_CHECKED ? 1 : 0))
-	_Ini_Add("FriendlyChallenge", "FriendlyChallengeEnableOnlyOnRequest", (GUICtrlRead($chkOnlyOnRequest) = $GUI_CHECKED ? 1 : 0))
-	_Ini_Add("FriendlyChallenge", "FriendlyChallengeKeyword", StringReplace(GUICtrlRead($txtKeywordForRequest), @CRLF, "|"))
-	_Ini_Add("FriendlyChallenge", "FriendlyChallengeText", StringReplace(GUICtrlRead($txtChallengeText), @CRLF, "|"))
-	_Ini_Add("FriendlyChallenge", "FriendlyChallengeCoolDownTime", GUICtrlRead($txtFriendlyChallengeCoolDownTime))
-
 	; ================================================== Sieges ================================ ;
-	;If GUICtrlRead($chkEnableDeleteExcessSieges) = $GUI_CHECKED Then
-		;_Ini_Add("MySieges", "DeleteExcess", 1)
-	;Else
-		;_Ini_Add("MySieges", "DeleteExcess", 0)
-	;EndIf 
-	;
-	;If GUICtrlRead($chkForcePreBrewSiege) = $GUI_CHECKED Then
-		;_Ini_Add("MySieges", "ForcePreBrewSiege", 1)
-	;Else
-		;_Ini_Add("MySieges", "ForcePreBrewSiege", 0)
-	;EndIf
-	;
-	;If GUICtrlRead($chkMySiegesOrder) = $GUI_CHECKED Then
-		;_Ini_Add("MySieges", "Order", 1)
-	;Else
-		;_Ini_Add("MySieges", "Order", 0)
-	;EndIf
-
-;For $iSg = 0 To 2
-;	For $iMySiegeS = 0 To UBound($MySieges) - 1
-;		_Ini_Add("MySieges", $MySieges[$iMySiegeS][0] & $iSg, $MySiegeSetting[$iSg][$iMySiegeS][0])
-;		_Ini_Add("MySieges", $MySieges[$iMySiegeS][0] & "Order" & $iSg, $MySiegeSetting[$iSg][$iMySiegeS][1])
-;		_Ini_Add("MySieges", $MySieges[$iMySiegeS][0] & "Pre" & $iSg, $MySiegeSetting[$iSg][$iMySiegeS][2])
+;	_Ini_Add("MySieges", "Composition", _GUICtrlComboBox_GetCurSel($g_hTxtTotalCountSiege))
+;	
+;	If GUICtrlRead($chkEnableDeleteExcessSieges) = $GUI_CHECKED Then
+;		_Ini_Add("MySieges", "DeleteExcess", 1)
+;	Else
+;		_Ini_Add("MySieges", "DeleteExcess", 0)
+;	EndIf 
+;	
+;	If GUICtrlRead($chkForcePreBrewSiege) = $GUI_CHECKED Then
+;		_Ini_Add("MySieges", "ForcePreBrewSiege", 1)
+;	Else
+;		_Ini_Add("MySieges", "ForcePreBrewSiege", 0)
+;	EndIf
+;	
+;	If GUICtrlRead($chkMySiegesOrder) = $GUI_CHECKED Then
+;		_Ini_Add("MySieges", "Order", 1)
+;	Else
+;		_Ini_Add("MySieges", "Order", 0)
+;	EndIf
+;	For $j = 0 To UBound($MySiegeSetting) - 1 
+;		For $i = 0 To UBound($MySieges) - 1 
+;			_Ini_Add("MySieges", $MySieges[$i][0] & $j, $MySiegeSetting[$j][$i][0])
+;			_Ini_Add("MySieges", $MySieges[$i][0] & "Order" & $j, $MySiegeSetting[$j][$i][1])
+;			_Ini_Add("MySieges", $MySieges[$i][0] & "Pre" & $j, $MySiegeSetting[$j][$i][2])
+;		Next
 ;	Next
-;Next
-
-	; ================================================== Super XP ================================ ;
-
-	_Ini_Add("GoblinXP", "EnableSuperXP", $g_bEnableSuperXP ? True : False)
-	_Ini_Add("GoblinXP", "SkipZoomOutXP", $g_bSkipZoomOutXP ? True : False)
-	_Ini_Add("GoblinXP", "FastGoblinXP", $g_bFastGoblinXP ? True : False)
-	_Ini_Add("GoblinXP", "SkipDragToEndXP", $g_bSkipDragToEndXP ? True : False)
-	_Ini_Add("GoblinXP", "SXTraining", (GUICtrlRead($rbSXTraining) = $GUI_CHECKED ? 1 : 2))
-	_Ini_Add("GoblinXP", "SXIAttacking", (GUICtrlRead($rbSXTraining) = $GUI_CHECKED ? 2 : 1))
-	_Ini_Add("GoblinXP", "SXBK", $g_bSXBK)
-	_Ini_Add("GoblinXP", "SXAQ", $g_bSXAQ)
-	_Ini_Add("GoblinXP", "SXGW", $g_bSXGW)
-	_Ini_Add("GoblinXP", "MaxXptoGain", GUICtrlRead($g_hTxtMaxXPtoGain))
+;	
+;   	; ================================================== FriendlyChallenge ==================================== ;
+;   	Local $string = ""
+;   	For $i = 0 To 23
+;   		$string &= (GUICtrlRead($g_ahChkFriendlyChallengehours[$i]) = $GUI_CHECKED ? 1: 0) & "|"
+;   	Next
+;   	_Ini_Add("FriendlyChallenge", "FriendlyChallengePlannedRequestHours", $string)
+;   	$string = ""
+;   	For $i = 0 To 5
+;   		$string &= (GUICtrlRead($chkFriendlyChallengeBase[$i]) = $GUI_CHECKED ? 1: 0) & "|"
+;   	Next
+;   	_Ini_Add("FriendlyChallenge", "FriendlyChallengeBaseForShare", $string)
+;   	_Ini_Add("FriendlyChallenge", "FriendlyChallengeEnable", (GUICtrlRead($chkEnableFriendlyChallenge) = $GUI_CHECKED ? 1 : 0))
+;   	_Ini_Add("FriendlyChallenge", "FriendlyChallengeEnableOnlyOnRequest", (GUICtrlRead($chkOnlyOnRequest) = $GUI_CHECKED ? 1 : 0))
+;   	_Ini_Add("FriendlyChallenge", "FriendlyChallengeKeyword", StringReplace(GUICtrlRead($txtKeywordForRequest), @CRLF, "|"))
+;   	_Ini_Add("FriendlyChallenge", "FriendlyChallengeText", StringReplace(GUICtrlRead($txtChallengeText), @CRLF, "|"))
+;   	_Ini_Add("FriendlyChallenge", "FriendlyChallengeCoolDownTime", GUICtrlRead($txtFriendlyChallengeCoolDownTime))
+;   
+;   	; ================================================== Sieges ================================ ;
+;   	;If GUICtrlRead($chkEnableDeleteExcessSieges) = $GUI_CHECKED Then
+;   		;_Ini_Add("MySieges", "DeleteExcess", 1)
+;   	;Else
+;   		;_Ini_Add("MySieges", "DeleteExcess", 0)
+;   	;EndIf 
+;   	;
+;   	;If GUICtrlRead($chkForcePreBrewSiege) = $GUI_CHECKED Then
+;   		;_Ini_Add("MySieges", "ForcePreBrewSiege", 1)
+;   	;Else
+;   		;_Ini_Add("MySieges", "ForcePreBrewSiege", 0)
+;   	;EndIf
+;   	;
+;   	;If GUICtrlRead($chkMySiegesOrder) = $GUI_CHECKED Then
+;   		;_Ini_Add("MySieges", "Order", 1)
+;   	;Else
+;   		;_Ini_Add("MySieges", "Order", 0)
+;   	;EndIf
+;   
+;   ;For $iSg = 0 To 2
+;   ;	For $iMySiegeS = 0 To UBound($MySieges) - 1
+;   ;		_Ini_Add("MySieges", $MySieges[$iMySiegeS][0] & $iSg, $MySiegeSetting[$iSg][$iMySiegeS][0])
+;   ;		_Ini_Add("MySieges", $MySieges[$iMySiegeS][0] & "Order" & $iSg, $MySiegeSetting[$iSg][$iMySiegeS][1])
+;   ;		_Ini_Add("MySieges", $MySieges[$iMySiegeS][0] & "Pre" & $iSg, $MySiegeSetting[$iSg][$iMySiegeS][2])
+;   ;	Next
+;   ;Next
+;   
+;   	; ================================================== Super XP ================================ ;
+;   
+;   	_Ini_Add("GoblinXP", "EnableSuperXP", $g_bEnableSuperXP ? True : False)
+;   	_Ini_Add("GoblinXP", "SkipZoomOutXP", $g_bSkipZoomOutXP ? True : False)
+;   	_Ini_Add("GoblinXP", "FastGoblinXP", $g_bFastGoblinXP ? True : False)
+;   	_Ini_Add("GoblinXP", "SkipDragToEndXP", $g_bSkipDragToEndXP ? True : False)
+;   	_Ini_Add("GoblinXP", "SXTraining", (GUICtrlRead($rbSXTraining) = $GUI_CHECKED ? 1 : 2))
+;   	_Ini_Add("GoblinXP", "SXIAttacking", (GUICtrlRead($rbSXTraining) = $GUI_CHECKED ? 2 : 1))
+;   	_Ini_Add("GoblinXP", "SXBK", $g_bSXBK)
+;   	_Ini_Add("GoblinXP", "SXAQ", $g_bSXAQ)
+;   	_Ini_Add("GoblinXP", "SXGW", $g_bSXGW)
+;   	_Ini_Add("GoblinXP", "MaxXptoGain", GUICtrlRead($g_hTxtMaxXPtoGain))
 	

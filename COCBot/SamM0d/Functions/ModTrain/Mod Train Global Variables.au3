@@ -72,7 +72,13 @@ Global $grpSieges, $lblTotalSiege
 Global $lblWallWIcon,$lblBattleBIcon,$lblStoneSIcon
 Global $lblWallWSiege,$lblBattleBSiege,$lblStoneSSiege
 Global $txtNumWallWSiege,$txtNumBattleBSiege,$txtNumStoneSSiege
-Global $lblTimesWallWW, $lblTimesBattleBW,$lblTimesStoneSW
+Global $lblTimesWallW, $lblTimesBattleB,$lblTimesStoneS
+
+Global $g_hTxtTotalCountSiege, $txtTotalCountSiege
+Global $chkMySiegesOrder, $ichkMySiegesOrder
+Global $chkEnableDeleteExcessSieges, $ichkEnableDeleteExcessSieges
+Global $chkForcePreBrewSiege, $ichkForcePreBrewSiege
+Global $cmbMyWallWSiegeOrder, $cmbMyBattleBSiegeOrder, $cmbMyStoneSSiegeOrder
 
  ; Ejercito|Tipo de tropa|Settings
 Global $MySiegeSetting[3][4][3] = _
@@ -87,25 +93,16 @@ Global $MySieges[3][5] = _
 ["BattleB",2,1,0,0], _
 ["StoneS",3,1,0, 0]]
 
-
-Global $g_hTxtTotalCountSiege, $txtTotalCountSiege
-Global $chkMySiegesOrder, $ichkMySiegesOrder
-Global $chkEnableDeleteExcessSieges, $ichkEnableDeleteExcessSieges
-Global $chkForcePreBrewSiege, $ichkForcePreBrewSiege
-Global $cmbMyWallWSiegeOrder, $cmbMyBattleBSiegeOrder, $cmbMyStoneSSiegeOrder
-Global $lblTimesWallWS, $lblTimesBattleBS, $lblTimesStoneSS
-
-Global $chkPreWallW = 0
-Global $chkPreBattleB = 0
-Global $chkPreStoneS = 0
+Global $chkPreWallW
+Global $chkPreBattleB
+Global $chkPreStoneS
 
 Global $tempDisableBrewSiege = False
 Global $g_iTotalSiegeCampSpace = 0
 
-Global $ichkPreWallW = 0
-Global $ichkPreBattleB = 0
-Global $ichkPreStoneS = 0
-
+Global $ichkPreWallW
+Global $ichkPreBattleB
+Global $ichkPreStoneS
  ; ---------------------
 
 Global $g_iMyTroopsSize = 0

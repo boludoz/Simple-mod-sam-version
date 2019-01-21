@@ -39,12 +39,6 @@ IniReadS($ichkEnableDonateHours, $g_sProfileConfigPath, "chkEnableDonateHours", 
 ; stop bot when low battery
 IniReadS($ichkEnableStopBotWhenLowBattery, $g_sProfileConfigPath, "EnableStopBotWhenLowBattery", "Enable", "0", "Int")
 
-;~ ; Remove Special Obstacle at Builder Base
-;~ IniReadS($ichkRemoveSpecialObstacleBB, $g_sProfileConfigPath, "RemoveSpecialObstacleBB", "Enable", "1", "Int")
-
-;~ ; Pause tray tip
-;~ IniReadS($ichkDisablePauseTrayTip, $g_sProfileConfigPath, "DisablePauseTrayTip", "Enable", "0", "Int")
-
 ; prevent over donate
 IniReadS($ichkEnableLimitDonateUnit, $g_sProfileConfigPath, "PreventOverDonate", "Enable", "0", "Int")
 IniReadS($itxtLimitDonateUnit, $g_sProfileConfigPath, "PreventOverDonate", "LimitValue", "8","Int")
@@ -95,15 +89,6 @@ IniReadS($ichkEnableHLFClick, $g_sProfileConfigPath, "HLFClick", "EnableHLFClick
 IniReadS($isldHLFClickDelayTime, $g_sProfileConfigPath, "HLFClick", "HLFClickDelayTime", "500", "Int")
 IniReadS($EnableHMLSetLog, $g_sProfileConfigPath, "HLFClick", "EnableHLFClickSetlog", "0", "Int")
 
-;~ ; advanced update for wall by Samkie
-;~ IniReadS($ichkSmartUpdateWall, $g_sProfileConfigPath, "AU4Wall", "EnableSmartUpdateWall", "0", "Int")
-;~ IniReadS($itxtClickWallDelay, $g_sProfileConfigPath, "AU4Wall", "ClickWallDelay", "500", "Int")
-;~ IniReadS($aBaseNode[0], $g_sProfileConfigPath, "AU4Wall", "BaseNodeX", "-1", "Int")
-;~ IniReadS($aBaseNode[1], $g_sProfileConfigPath, "AU4Wall", "BaseNodeY", "-1", "Int")
-;~ IniReadS($aLastWall[0], $g_sProfileConfigPath, "AU4Wall", "LastWallX", "-1", "Int")
-;~ IniReadS($aLastWall[1], $g_sProfileConfigPath, "AU4Wall", "LastWallY", "-1", "Int")
-;~ IniReadS($iFaceDirection, $g_sProfileConfigPath, "AU4Wall", "FaceDirection", "1", "Int")
-
 ; samm0d ocr
 IniReadS($ichkEnableCustomOCR4CCRequest, $g_sProfileConfigPath, "GetMyOcr", "EnableCustomOCR4CCRequest", "0", "Int")
 
@@ -134,9 +119,9 @@ IniReadS($ichkForcePreTrainTroops, $g_sProfileConfigPath, "MyTroops", "ForcePreT
 IniReadS($itxtForcePreTrainStrength, $g_sProfileConfigPath, "MyTroops", "ForcePreTrainStrength", "95","Int")
 IniReadS($icmbMyQuickTrain, $g_sProfileConfigPath, "MyTroops", "TrainCombo", "0", "Int")
 IniReadS($icmbTroopSetting, $g_sProfileConfigPath, "MyTroops", "Composition", "0", "Int")
-;$icmbCoCVersion = IniRead($g_sProfileConfigPath, "COCVer", "CoCVersion", "0")
 
 IniReadS($ichkDisablePretrainTroops, $g_sProfileConfigPath, "MyTroops", "NoPreTrain", "0", "Int")
+
 For $j = 0 To 2
 	For $i = 0 To UBound($MyTroops) - 1
 		IniReadS($MyTroopsSetting[$j][$i][0],$g_sProfileConfigPath, "MyTroops", $MyTroops[$i][0] & $j, "0","Int")
@@ -152,64 +137,62 @@ IniReadS($ichkMySpellsOrder, $g_sProfileConfigPath, "MySpells", "Order", "0","In
 IniReadS($ichkEnableDeleteExcessSpells, $g_sProfileConfigPath, "MySpells", "DeleteExcess", "0","Int")
 IniReadS($ichkForcePreBrewSpell, $g_sProfileConfigPath, "MySpells", "ForcePreBrewSpell", "0","Int")
 
-For $j = 0 To UBound($MySpellSetting) -1 
-	For $i = 0 To UBound($MySpells) -1 
+For $j = 0 To 2
+	For $i = 0 To UBound($MySpells) - 1
 		IniReadS($MySpellSetting[$j][$i][0], $g_sProfileConfigPath, "MySpells", $MySpells[$i][0] & $j, "0", "Int")
 		IniReadS($MySpellSetting[$j][$i][1],$g_sProfileConfigPath, "MySpells", $MySpells[$i][0] & "Order" & $j, $i + 1,"Int")
 		IniReadS($MySpellSetting[$j][$i][2], $g_sProfileConfigPath, "MySpells", $MySpells[$i][0] & "Pre" & $j, "0", "Int")
 	Next
 Next
 
-
 $g_bDoPrebrewspell = 0
-For $i = 0 To UBound($MySpells) -1
+For $i = 0 To UBound($MySpells) - 1
 	Assign("ichkPre" & $MySpells[$i][0],  $MySpellSetting[$icmbTroopSetting][$i][2])
 	$g_bDoPrebrewspell = BitOR($g_bDoPrebrewspell, $MySpellSetting[$icmbTroopSetting][$i][2])
 	$MySpells[$i][3] =  $MySpellSetting[$icmbTroopSetting][$i][0]
 	$MySpells[$i][1] =  $MySpellSetting[$icmbTroopSetting][$i][1]
 Next
 ; ================================================== Sieges ================================ ;
-IniReadS($txtTotalCountSiege, $g_sProfileConfigPath, "MySieges", "Composition", "0", "Int")
-
-IniReadS($ichkMySiegesOrder, $g_sProfileConfigPath, "MySieges", "Order", "0","Int")
-IniReadS($ichkEnableDeleteExcessSieges, $g_sProfileConfigPath, "MySieges", "DeleteExcess", "0","Int")
-IniReadS($ichkForcePreBrewSiege, $g_sProfileConfigPath, "MySieges", "ForcePreBrewSiege", "0","Int")
-
-For $j = 0 To UBound($MySiegeSetting) -1 
-	For $i = 0 To UBound($MySieges) -1 
-		IniReadS($MySiegeSetting[$j][$i][0], $g_sProfileConfigPath, "MySieges", $MySieges[$i][0] & $j, "0", "Int")
-		IniReadS($MySiegeSetting[$j][$i][1],$g_sProfileConfigPath, "MySieges", $MySieges[$i][0] & "Order" & $j, $i + 1,"Int")
-		IniReadS($MySiegeSetting[$j][$i][2], $g_sProfileConfigPath, "MySieges", $MySieges[$i][0] & "Pre" & $j, "0", "Int")
-	Next
-Next
-
-$g_bDoPrebrewSiege = 0
-	For $iMySiegeSpre = 0 To UBound($MySieges) -1 
-	Assign("ichkPre" & $MySieges[$iMySiegeSpre][0],  $MySiegeSetting[$icmbTroopSetting][$iMySiegeSpre][2])
-	$g_bDoPrebrewSiege = BitOR($g_bDoPrebrewSiege, $MySiegeSetting[$icmbTroopSetting][$iMySiegeSpre][2])
-	$MySieges[$iMySiegeSpre][3] =  $MySiegeSetting[$icmbTroopSetting][$iMySiegeSpre][0]
-	$MySieges[$iMySiegeSpre][1] =  $MySiegeSetting[$icmbTroopSetting][$iMySiegeSpre][1]
-Next
+;IniReadS($txtTotalCountSiege, $g_sProfileConfigPath, "MySieges", "Composition", "0", "Int")
+;IniReadS($ichkMySiegesOrder, $g_sProfileConfigPath, "MySieges", "Order", "0","Int")
+;IniReadS($ichkEnableDeleteExcessSieges, $g_sProfileConfigPath, "MySieges", "DeleteExcess", "0","Int")
+;IniReadS($ichkForcePreBrewSiege, $g_sProfileConfigPath, "MySieges", "ForcePreBrewSiege", "0","Int")
+;
+;For $j = 0 To UBound($MySiegeSetting) -1 
+;	For $i = 0 To UBound($MySieges) -1 
+;		IniReadS($MySiegeSetting[$j][$i][0], $g_sProfileConfigPath, "MySieges", $MySieges[$i][0] & $j, "0", "Int")
+;		IniReadS($MySiegeSetting[$j][$i][1],$g_sProfileConfigPath, "MySieges", $MySieges[$i][0] & "Order" & $j, $i + 1,"Int")
+;		IniReadS($MySiegeSetting[$j][$i][2], $g_sProfileConfigPath, "MySieges", $MySieges[$i][0] & "Pre" & $j, "0", "Int")
+;	Next
+;Next
+;
+;$g_bDoPrebrewSiege = 0
+;	For $iMySiegeSpre = 0 To UBound($MySieges) -1 
+;	Assign("ichkPre" & $MySieges[$iMySiegeSpre][0],  $MySiegeSetting[$icmbTroopSetting][$iMySiegeSpre][2])
+;	$g_bDoPrebrewSiege = BitOR($g_bDoPrebrewSiege, $MySiegeSetting[$icmbTroopSetting][$iMySiegeSpre][2])
+;	$MySieges[$iMySiegeSpre][3] =  $MySiegeSetting[$icmbTroopSetting][$iMySiegeSpre][0]
+;	$MySieges[$iMySiegeSpre][1] =  $MySiegeSetting[$icmbTroopSetting][$iMySiegeSpre][1]
+;Next
 	; ================================================== FriendlyChallenge ==================================== ;
-
-	$g_abFriendlyChallengehours = StringSplit(IniRead($g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengePlannedRequestHours", "1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1"), "|", $STR_NOCOUNT)
-	$ichkFriendlyChallengeBase = StringSplit(IniRead($g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeBaseForShare", "0|0|0|0|0|0"), "|", $STR_NOCOUNT)
-	IniReadS($ichkEnableFriendlyChallenge, $g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeEnable", "0", "Int")
-	IniReadS($ichkOnlyOnRequest, $g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeEnableOnlyOnRequest", "0", "Int")
-	$stxtKeywordForRequest = StringReplace(IniRead($g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeKeyword", "friendly|challenge"), "|", @CRLF)
-	$stxtChallengeText = StringReplace(IniRead($g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeText", ""), "|", @CRLF)
-	IniReadS($itxtFriendlyChallengeCoolDownTime, $g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeCoolDownTime", "5", "Int")
-
-	; ================================================== Super XP ==================================== ;
-
-	IniReadS($g_bEnableSuperXP, $g_sProfileConfigPath, "GoblinXP", "EnableSuperXP", $g_bEnableSuperXP, "Bool")
-	IniReadS($g_bSkipZoomOutXP, $g_sProfileConfigPath, "GoblinXP", "SkipZoomOutXP", $g_bSkipZoomOutXP, "Bool")
-	IniReadS($g_bFastGoblinXP, $g_sProfileConfigPath, "GoblinXP", "FastGoblinXP", $g_bFastGoblinXP, "Bool")
-	IniReadS($g_bSkipDragToEndXP, $g_sProfileConfigPath, "GoblinXP", "SkipDragToEndXP", $g_bSkipDragToEndXP, "Bool")
-	IniReadS($g_irbSXTraining, $g_sProfileConfigPath, "GoblinXP", "SXTraining", $g_irbSXTraining, "int")
-	IniReadS($g_irbSXTraining, $g_sProfileConfigPath, "GoblinXP", "SXIAttacking", $g_irbSXTraining, "int")
-	IniReadS($g_iTxtMaxXPtoGain, $g_sProfileConfigPath, "GoblinXP", "MaxXptoGain", $g_iTxtMaxXPtoGain, "int")
-	IniReadS($g_bSXBK, $g_sProfileConfigPath, "GoblinXP", "SXBK", $eHeroNone)
-	IniReadS($g_bSXAQ, $g_sProfileConfigPath, "GoblinXP", "SXAQ", $eHeroNone)
-	IniReadS($g_bSXGW, $g_sProfileConfigPath, "GoblinXP", "SXGW", $eHeroNone)
-
+;
+;	$g_abFriendlyChallengehours = StringSplit(IniRead($g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengePlannedRequestHours", "1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1"), "|", $STR_NOCOUNT)
+;	$ichkFriendlyChallengeBase = StringSplit(IniRead($g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeBaseForShare", "0|0|0|0|0|0"), "|", $STR_NOCOUNT)
+;	IniReadS($ichkEnableFriendlyChallenge, $g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeEnable", "0", "Int")
+;	IniReadS($ichkOnlyOnRequest, $g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeEnableOnlyOnRequest", "0", "Int")
+;	$stxtKeywordForRequest = StringReplace(IniRead($g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeKeyword", "friendly|challenge"), "|", @CRLF)
+;	$stxtChallengeText = StringReplace(IniRead($g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeText", ""), "|", @CRLF)
+;	IniReadS($itxtFriendlyChallengeCoolDownTime, $g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeCoolDownTime", "5", "Int")
+;
+;	; ================================================== Super XP ==================================== ;
+;
+;	IniReadS($g_bEnableSuperXP, $g_sProfileConfigPath, "GoblinXP", "EnableSuperXP", $g_bEnableSuperXP, "Bool")
+;	IniReadS($g_bSkipZoomOutXP, $g_sProfileConfigPath, "GoblinXP", "SkipZoomOutXP", $g_bSkipZoomOutXP, "Bool")
+;	IniReadS($g_bFastGoblinXP, $g_sProfileConfigPath, "GoblinXP", "FastGoblinXP", $g_bFastGoblinXP, "Bool")
+;	IniReadS($g_bSkipDragToEndXP, $g_sProfileConfigPath, "GoblinXP", "SkipDragToEndXP", $g_bSkipDragToEndXP, "Bool")
+;	IniReadS($g_irbSXTraining, $g_sProfileConfigPath, "GoblinXP", "SXTraining", $g_irbSXTraining, "int")
+;	IniReadS($g_irbSXTraining, $g_sProfileConfigPath, "GoblinXP", "SXIAttacking", $g_irbSXTraining, "int")
+;	IniReadS($g_iTxtMaxXPtoGain, $g_sProfileConfigPath, "GoblinXP", "MaxXptoGain", $g_iTxtMaxXPtoGain, "int")
+;	IniReadS($g_bSXBK, $g_sProfileConfigPath, "GoblinXP", "SXBK", $eHeroNone)
+;	IniReadS($g_bSXAQ, $g_sProfileConfigPath, "GoblinXP", "SXAQ", $eHeroNone)
+;	IniReadS($g_bSXGW, $g_sProfileConfigPath, "GoblinXP", "SXGW", $eHeroNone)
+;
