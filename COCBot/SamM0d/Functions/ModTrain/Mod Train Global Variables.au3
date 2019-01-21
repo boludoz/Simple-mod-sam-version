@@ -49,16 +49,63 @@ Global $OnTMini = 0, $OnTHogs = 0, $OnTValk = 0, $OnTGole = 0, $OnTWitc = 0, $On
 Global $ReadyBarb = 0, $ReadyArch = 0, $ReadyGiant = 0, $ReadyGobl = 0, $ReadyWall = 0, $ReadyBall = 0, $ReadyWiza = 0, $ReadyHeal = 0
 Global $ReadyMini = 0, $ReadyHogs = 0, $ReadyValk = 0, $ReadyGole = 0, $ReadyWitc = 0, $ReadyLava = 0, $ReadyBowl = 0, $ReadyDrag = 0, $ReadyPekk = 0, $ReadyBabyD = 0, $ReadyMine = 0, $ReadyEDrag = 0, $ReadyIceG = 0
 
-
+ ; Ejercito|Tipo de tropa|Settings
 Global $MyTroopsSetting[3][21][2]= _
 [[[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]], _
  [[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]], _
  [[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]]
 
+ ; Ejercito|Tipo de tropa|Settings
 Global $MySpellSetting[3][11][3] = _
 [[[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]], _
  [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]], _
  [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]]
+ ; ---------------------
+ Global $g_iTotalSiegeValue = 0
+
+Global $btnResetSieges, $btnResetSiegeOrder
+Global $g_bDoPrebreSiege = 0
+
+Global $grpSieges, $lblTotalSiege
+;WallW - BattleB - StoneS
+Global $lblWallWIcon,$lblBattleBIcon,$lblStoneSIcon
+Global $lblWallWSiege,$lblBattleBSiege,$lblStoneSSiege
+Global $txtNumWallWSiege,$txtNumBattleBSiege,$txtNumStoneSSiege
+Global $lblTimesWallWW, $lblTimesBattleBW,$lblTimesStoneSW
+
+ ; Ejercito|Tipo de tropa|Settings
+Global $MySiegeSetting[3][4][3] = _
+[[[0,0,0],[0,0,0],[0,0,0]], _
+ [[0,0,0],[0,0,0],[0,0,0]], _
+ [[0,0,0],[0,0,0],[0,0,0]]]
+ 
+ Global $g_bDoPrebrewSiege = 0
+ Global $g_iMySiegesSize = 0
+Global $MySieges[3][5] = _
+[["WallW",1,1,0,0], _
+["BattleB",2,1,0,0], _
+["StoneS",3,1,0, 0]]
+
+
+Global $g_hTxtTotalCountSiege, $txtTotalCountSiege
+Global $chkMySiegesOrder, $ichkMySiegesOrder
+Global $chkEnableDeleteExcessSieges, $ichkEnableDeleteExcessSieges
+Global $chkForcePreBrewSiege, $ichkForcePreBrewSiege
+Global $cmbMyWallWSiegeOrder, $cmbMyBattleBSiegeOrder, $cmbMyStoneSSiegeOrder
+Global $lblTimesWallWS, $lblTimesBattleBS, $lblTimesStoneSS
+
+Global $chkPreWallW = 0
+Global $chkPreBattleB = 0
+Global $chkPreStoneS = 0
+
+Global $tempDisableBrewSiege = False
+Global $g_iTotalSiegeCampSpace = 0
+
+Global $ichkPreWallW = 0
+Global $ichkPreBattleB = 0
+Global $ichkPreStoneS = 0
+
+ ; ---------------------
 
 Global $g_iMyTroopsSize = 0
 Global $MyTroopsIcon[21] = [$eIcnBarbarian, $eIcnArcher, $eIcnGiant, $eIcnGoblin, $eIcnWallBreaker, $eIcnBalloon, $eIcnWizard, $eIcnHealer, $eIcnDragon, $eIcnPekka, $eIcnBabyDragon, $eIcnMiner, $eIcnElectroDragon,$eIcnMinion, $eIcnHogRider, $eIcnValkyrie, $eIcnGolem, $eIcnWitch, $eIcnLavaHound, $eIcnBowler, $eIcnIceGolem]

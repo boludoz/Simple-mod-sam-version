@@ -630,8 +630,9 @@ Func DoSwitchAcc()
 							Local $bShare_replay = $g_bIsFullArmywithHeroesAndSpells
 							SetLog("Check train before switch account...",$COLOR_ACTION)
 							If $ichkModTrain = 1 Then
-								ModTrain($ichkForcePreTrainB4Switch = 1)
+								If $ichkForcePreTrainB4Switch = 1 Then ModTrain(True)
 							Else
+								$g_bDoubleTrain = True
 								TrainSystem()
 							EndIf
 							If $bShare_replay = True Then

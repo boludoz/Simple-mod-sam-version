@@ -164,20 +164,6 @@ IniReadS($icmbTroopSetting, $g_sProfileConfigPath, "MyTroops", "Composition", "0
 ;$icmbCoCVersion = IniRead($g_sProfileConfigPath, "COCVer", "CoCVersion", "0")
 
 IniReadS($ichkDisablePretrainTroops, $g_sProfileConfigPath, "MyTroops", "NoPreTrain", "0", "Int")
-
-	; ================================================== Super XP ==================================== ;
-
-	IniReadS($g_bEnableSuperXP, $g_sProfileConfigPath, "GoblinXP", "EnableSuperXP", $g_bEnableSuperXP, "Bool")
-	IniReadS($g_bSkipZoomOutXP, $g_sProfileConfigPath, "GoblinXP", "SkipZoomOutXP", $g_bSkipZoomOutXP, "Bool")
-	IniReadS($g_bFastGoblinXP, $g_sProfileConfigPath, "GoblinXP", "FastGoblinXP", $g_bFastGoblinXP, "Bool")
-	IniReadS($g_bSkipDragToEndXP, $g_sProfileConfigPath, "GoblinXP", "SkipDragToEndXP", $g_bSkipDragToEndXP, "Bool")
-	IniReadS($g_irbSXTraining, $g_sProfileConfigPath, "GoblinXP", "SXTraining", $g_irbSXTraining, "int")
-	IniReadS($g_irbSXTraining, $g_sProfileConfigPath, "GoblinXP", "SXIAttacking", $g_irbSXTraining, "int")
-	IniReadS($g_iTxtMaxXPtoGain, $g_sProfileConfigPath, "GoblinXP", "MaxXptoGain", $g_iTxtMaxXPtoGain, "int")
-	IniReadS($g_bSXBK, $g_sProfileConfigPath, "GoblinXP", "SXBK", $eHeroNone)
-	IniReadS($g_bSXAQ, $g_sProfileConfigPath, "GoblinXP", "SXAQ", $eHeroNone)
-	IniReadS($g_bSXGW, $g_sProfileConfigPath, "GoblinXP", "SXGW", $eHeroNone)
-
 For $j = 0 To 2
 	For $i = 0 To UBound($MyTroops) - 1
 		IniReadS($MyTroopsSetting[$j][$i][0],$g_sProfileConfigPath, "MyTroops", $MyTroops[$i][0] & $j, "0","Int")
@@ -208,5 +194,41 @@ For $i = 0 To UBound($MySpells) - 1
 	$MySpells[$i][3] =  $MySpellSetting[$icmbTroopSetting][$i][0]
 	$MySpells[$i][1] =  $MySpellSetting[$icmbTroopSetting][$i][1]
 Next
+; ================================================== Sieges ================================ ;
+IniReadS($txtTotalCountSiege, $g_sProfileConfigPath, "MySieges", "Composition", "0", "Int")
+
+IniReadS($ichkMySiegesOrder, $g_sProfileConfigPath, "MySieges", "Order", "0","Int")
+IniReadS($ichkEnableDeleteExcessSieges, $g_sProfileConfigPath, "MySieges", "DeleteExcess", "0","Int")
+IniReadS($ichkForcePreBrewSiege, $g_sProfileConfigPath, "MySieges", "ForcePreBrewSiege", "0","Int")
+
+
+For $iSg = 0 To 2
+	For $iMySiegeS = 0 To UBound($MySieges) -1 
+		IniReadS($MySiegeSetting[$iSg][$iMySiegeS][0], $g_sProfileConfigPath, "MySieges", $MySieges[$iMySiegeS][0] & $iSg, "0", "Int")
+		IniReadS($MySiegeSetting[$iSg][$iMySiegeS][1],$g_sProfileConfigPath, "MySieges", $MySieges[$iMySiegeS][0] & "Order" & $iSg, $iMySiegeS + 1,"Int")
+		IniReadS($MySiegeSetting[$iSg][$iMySiegeS][2], $g_sProfileConfigPath, "MySieges", $MySieges[$iMySiegeS][0] & "Pre" & $iSg, "0", "Int")
+	Next
+Next
+
+$g_bDoPrebrewSiege = 0
+	For $iMySiegeSpre = 0 To UBound($MySieges) -1 
+	Assign("ichkPre" & $MySieges[$iMySiegeSpre][0],  $MySiegeSetting[$icmbTroopSetting][$iMySiegeSpre][2])
+	$g_bDoPrebrewSiege = BitOR($g_bDoPrebrewSiege, $MySiegeSetting[$icmbTroopSetting][$iMySiegeSpre][2])
+	$MySieges[$iMySiegeSpre][3] =  $MySiegeSetting[$icmbTroopSetting][$iMySiegeSpre][0]
+	$MySieges[$iMySiegeSpre][1] =  $MySiegeSetting[$icmbTroopSetting][$iMySiegeSpre][1]
+Next
+
+	; ================================================== Super XP ==================================== ;
+
+	IniReadS($g_bEnableSuperXP, $g_sProfileConfigPath, "GoblinXP", "EnableSuperXP", $g_bEnableSuperXP, "Bool")
+	IniReadS($g_bSkipZoomOutXP, $g_sProfileConfigPath, "GoblinXP", "SkipZoomOutXP", $g_bSkipZoomOutXP, "Bool")
+	IniReadS($g_bFastGoblinXP, $g_sProfileConfigPath, "GoblinXP", "FastGoblinXP", $g_bFastGoblinXP, "Bool")
+	IniReadS($g_bSkipDragToEndXP, $g_sProfileConfigPath, "GoblinXP", "SkipDragToEndXP", $g_bSkipDragToEndXP, "Bool")
+	IniReadS($g_irbSXTraining, $g_sProfileConfigPath, "GoblinXP", "SXTraining", $g_irbSXTraining, "int")
+	IniReadS($g_irbSXTraining, $g_sProfileConfigPath, "GoblinXP", "SXIAttacking", $g_irbSXTraining, "int")
+	IniReadS($g_iTxtMaxXPtoGain, $g_sProfileConfigPath, "GoblinXP", "MaxXptoGain", $g_iTxtMaxXPtoGain, "int")
+	IniReadS($g_bSXBK, $g_sProfileConfigPath, "GoblinXP", "SXBK", $eHeroNone)
+	IniReadS($g_bSXAQ, $g_sProfileConfigPath, "GoblinXP", "SXAQ", $eHeroNone)
+	IniReadS($g_bSXGW, $g_sProfileConfigPath, "GoblinXP", "SXGW", $eHeroNone)
 
 readFriendlyChallengeSetting()

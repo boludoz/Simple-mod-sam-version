@@ -167,6 +167,46 @@ GUICtrlSetState($chkDisablePretrainTroops, ($ichkDisablePretrainTroops = 1 ? $GU
 ; My Troops
 GUICtrlSetState($chkMyTroopsOrder, ($ichkMyTroopsOrder = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
 GUICtrlSetState($chkEnableDeleteExcessTroops, ($ichkEnableDeleteExcessTroops = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+$g_iMyTroopsSize = 0
+For $i = 0 To UBound($MyTroops)-1
+	GUICtrlSetData(Eval("txtMy" & $MyTroops[$i][0]), $MyTroops[$i][3])
+	_GUICtrlComboBox_SetCurSel(Eval("cmbMy" & $MyTroops[$i][0] & "Order"), $MyTroops[$i][1]-1)
+	$g_iMyTroopsSize += $MyTroops[$i][3] * $MyTroops[$i][2]
+Next
+
+UpdateTroopSize()
+
+;cmbMyTroopOrder()
+
+GUICtrlSetState($chkMySpellsOrder, ($ichkMySpellsOrder = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+GUICtrlSetState($chkEnableDeleteExcessSpells, ($ichkEnableDeleteExcessSpells = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+GUICtrlSetState($chkForcePreBrewSpell, ($ichkForcePreBrewSpell = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+
+For $i = 0 To UBound($MySpells) - 1
+	GUICtrlSetState(Eval("chkPre" & $MySpells[$i][0]), (Eval("ichkPre" & $MySpells[$i][0]) = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+	GUICtrlSetData(Eval("txtNum" & $MySpells[$i][0] & "Spell"), $MySpells[$i][3])
+	_GUICtrlComboBox_SetCurSel(Eval("cmbMy" & $MySpells[$i][0] & "SpellOrder"), $MySpells[$i][1]-1)
+Next
+
+;cmbMySpellOrder()
+
+GUICtrlSetData($txtTotalCountSpell2, $g_iTotalSpellValue)
+
+
+; ================================================== Sieges ================================ ;
+_GUICtrlComboBox_SetCurSel($g_hTxtTotalCountSiege, $txtTotalCountSiege)
+GUICtrlSetState($chkMySiegesOrder, ($ichkMySiegesOrder = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+GUICtrlSetState($chkEnableDeleteExcessSieges, ($ichkEnableDeleteExcessSieges = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+GUICtrlSetState($chkForcePreBrewSiege, ($ichkForcePreBrewSiege = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+
+For $iSg = 0 To UBound($MySieges)-1
+	GUICtrlSetState(Eval("chkPre" & $MySieges[$iSg][0]), (Eval("ichkPre" & $MySieges[$iSg][0]) = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+	GUICtrlSetData(Eval("txtNum" & $MySieges[$iSg][0] & "Siege"), $MySieges[$iSg][3])
+	_GUICtrlComboBox_SetCurSel(Eval("cmbMy" & $MySieges[$iSg][0] & "SiegeOrder"), $MySieges[$iSg][1]-1)
+Next
+
+lblMyTotalCountSpell()
+lblMyTotalCountSiege()
 
 ; ================================================== Super XP ============================== ;
 
@@ -201,33 +241,6 @@ GUICtrlSetState($g_hChkSXGW, $g_bSXGW = $eHeroWarden ? $GUI_CHECKED : $GUI_UNCHE
 		GUICtrlSetState($g_hChkSXGW, $GUI_DISABLE)
 		GUICtrlSetState($g_hTxtMaxXPtoGain, $GUI_DISABLE)
 	EndIf
-
-$g_iMyTroopsSize = 0
-For $i = 0 To UBound($MyTroops)-1
-	GUICtrlSetData(Eval("txtMy" & $MyTroops[$i][0]), $MyTroops[$i][3])
-	_GUICtrlComboBox_SetCurSel(Eval("cmbMy" & $MyTroops[$i][0] & "Order"), $MyTroops[$i][1]-1)
-	$g_iMyTroopsSize += $MyTroops[$i][3] * $MyTroops[$i][2]
-Next
-
-UpdateTroopSize()
-
-;cmbMyTroopOrder()
-
-GUICtrlSetState($chkMySpellsOrder, ($ichkMySpellsOrder = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
-GUICtrlSetState($chkEnableDeleteExcessSpells, ($ichkEnableDeleteExcessSpells = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
-GUICtrlSetState($chkForcePreBrewSpell, ($ichkForcePreBrewSpell = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
-
-For $i = 0 To UBound($MySpells)-1
-	GUICtrlSetState(Eval("chkPre" & $MySpells[$i][0]), (Eval("ichkPre" & $MySpells[$i][0]) = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
-	GUICtrlSetData(Eval("txtNum" & $MySpells[$i][0] & "Spell"), $MySpells[$i][3])
-	_GUICtrlComboBox_SetCurSel(Eval("cmbMy" & $MySpells[$i][0] & "SpellOrder"), $MySpells[$i][1]-1)
-Next
-
-;cmbMySpellOrder()
-
-GUICtrlSetData($txtTotalCountSpell2, $g_iTotalSpellValue)
-
-lblMyTotalCountSpell()
 
 _GUI_Value_STATE("HIDE",$g_aGroupListTHLevels)
 If $g_iTownHallLevel >= 4 And $g_iTownHallLevel <= 12 Then

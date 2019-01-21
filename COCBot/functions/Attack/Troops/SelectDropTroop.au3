@@ -6,17 +6,19 @@
 ; Parameters ....: $iTroopIndex : Index of any Troop from Barbarian to Siege Machines
 ; Return values .: None
 ; Author ........:
-; Modified ......: Fliegerfaust (12/2018)
+; Modified ......: Fliegerfaust (12/2018) / CUSTOM SIMPLE MOD (BLD)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2018
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func SelectDropTroop($iSlotIndex, $iClicks = 1, $iDelay = Default, $bCheckAttackPage = Default)
-	If $iDelay = Default Then $iDelay = 0
-	If $bCheckAttackPage = Default Then $bCheckAttackPage = True
-	If Not $bCheckAttackPage Or IsAttackPage() Then ClickP(GetSlotPosition($iSlotIndex), $iClicks, $iDelay, "#0111")
+Func SelectDropTroop($iSlotIndex, $iClicks = 1, $iDelay = 0, $bCheckAttackPage = True)
+	If $bCheckAttackPage = False Then 
+		ClickP(GetSlotPosition($iSlotIndex), $iClicks, $iDelay, "#0111")
+	Else
+		If IsAttackPage() = True Then ClickP(GetSlotPosition($iSlotIndex), $iClicks, $iDelay, "#0111")
+	EndIf
 EndFunc   ;==>SelectDropTroop
 
 Func GetSlotPosition($iSlotIndex, $bOCRPosition = False)
@@ -24,7 +26,7 @@ Func GetSlotPosition($iSlotIndex, $bOCRPosition = False)
 
 	If $iSlotIndex < 0 Or $iSlotIndex + 1 > UBound($g_avAttackTroops, 1) Then Return $aiReturnPosition ;Invalid Slot Index returns Click Position X: 0 And Y:0
 
-	If Not $bOCRPosition Then
+	If $bOCRPosition = False Then
 		$aiReturnPosition[0] = $g_avAttackTroops[$iSlotIndex][2]
 		$aiReturnPosition[1] = $g_avAttackTroops[$iSlotIndex][3]
 	Else

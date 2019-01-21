@@ -55,12 +55,12 @@ Func UpdateTroopSize()
 		GUICtrlSetData(Eval("txtMy" & $MyTroops[1][0]), 0)
 		$MyTroops[1][3] = 0
 	EndIf
-	
+
 	$g_iMyTroopsSize = 0
 	For $i = 0 To UBound($MyTroops) - 1
 		$g_iMyTroopsSize += $MyTroops[$i][3] * $MyTroops[$i][2]
 	Next
-	
+
 	Local $iTempCampSize = 0
 	If $g_iTotalCampSpace = 0 Then
 		If GUICtrlRead($g_hChkTotalCampForced) = $GUI_CHECKED Then
@@ -87,7 +87,7 @@ Func UpdateTroopSize()
 EndFunc
 
 Func cmbMySpellOrder()
-	Local $tempOrder[10]
+	Local $tempOrder[UBound($MySpells)]
 
 	For $i = 0 To UBound($MySpells) - 1
 		$tempOrder[$i] = Int(GUICtrlRead(Eval("cmbMy" & $MySpells[$i][0] & "SpellOrder")))
@@ -184,6 +184,16 @@ Func cmbTroopSetting()
 		$MySpellSetting[$icmbTroopSetting][$i][0] = Int(GUICtrlRead(Eval("txtNum" & $MySpells[$i][0] & "Spell")))
 		$MySpellSetting[$icmbTroopSetting][$i][1] = Int(GUICtrlRead(Eval("cmbMy" & $MySpells[$i][0] & "SpellOrder")))
 	Next
+	;============================ Siege
+		For $i = 0 To UBound($MySieges) - 1
+		If GUICtrlRead(Eval("chkPre" & $MySieges[$i][0])) = $GUI_CHECKED Then
+			$MySiegeSetting[$icmbTroopSetting][$i][2] = 1
+		Else
+			$MySiegeSetting[$icmbTroopSetting][$i][2] = 0
+		EndIf
+		$MySiegeSetting[$icmbTroopSetting][$i][0] = Int(GUICtrlRead(Eval("txtNum" & $MySieges[$i][0] & "Siege")))
+		$MySiegeSetting[$icmbTroopSetting][$i][1] = Int(GUICtrlRead(Eval("cmbMy" & $MySieges[$i][0] & "SiegeOrder")))
+	Next
 
 	$icmbTroopSetting = _GUICtrlComboBox_GetCurSel($cmbTroopSetting)
 
@@ -200,6 +210,14 @@ Func cmbTroopSetting()
 		$MySpells[$i][3] =  $MySpellSetting[$icmbTroopSetting][$i][0]
 		$MySpells[$i][1] =  $MySpellSetting[$icmbTroopSetting][$i][1]
 	Next
+	;============================ Siege
+	$g_bDoPrebrewSiege = 0
+	For $i = 0 To UBound($MySieges) - 1
+		Assign("ichkPre" & $MySieges[$i][0], $MySiegeSetting[$icmbTroopSetting][$i][2])
+		$g_bDoPrebrewSiege = BitOR($g_bDoPrebrewSiege, $MySiegeSetting[$icmbTroopSetting][$i][2])
+		$MySieges[$i][3] =  $MySiegeSetting[$icmbTroopSetting][$i][0]
+		$MySieges[$i][1] =  $MySiegeSetting[$icmbTroopSetting][$i][1]
+	Next
 
 	For $i = 0 To UBound($MyTroops)-1
 		GUICtrlSetData(Eval("txtMy" & $MyTroops[$i][0]), $MyTroops[$i][3])
@@ -215,11 +233,24 @@ Func cmbTroopSetting()
 		GUICtrlSetData(Eval("txtNum" & $MySpells[$i][0] & "Spell"), $MySpells[$i][3])
 		_GUICtrlComboBox_SetCurSel(Eval("cmbMy" & $MySpells[$i][0] & "SpellOrder"), $MySpells[$i][1]-1)
 	Next
+	;============================ Siege
+	For $i = 0 To UBound($MySieges)-1
+		If Eval("ichkPre" & $MySieges[$i][0]) = 1 Then
+			GUICtrlSetState(Eval("chkPre" & $MySieges[$i][0]), $GUI_CHECKED)
+		Else
+			GUICtrlSetState(Eval("chkPre" & $MySieges[$i][0]), $GUI_UNCHECKED)
+		EndIf
+		GUICtrlSetData(Eval("txtNum" & $MySieges[$i][0] & "Siege"), $MySieges[$i][3])
+		_GUICtrlComboBox_SetCurSel(Eval("cmbMy" & $MySieges[$i][0] & "SiegeOrder"), $MySieges[$i][1]-1)
+	Next
+
 
 	;cmbMyTroopOrder()
 	;cmbMySpellOrder()
 	UpdateTroopSize()
 	lblMyTotalCountSpell()
+	lblMyTotalCountSiege()
+
 EndFunc
 
 Func cmbMyQuickTrain()
@@ -308,7 +339,9 @@ EndFunc
 Func chkForcePreBrewSpell()
 	If GUICtrlRead($chkForcePreBrewSpell) = $GUI_CHECKED Then
 		$ichkForcePreBrewSpell = 1
+		$g_bDoPrebrewspell = 1
 	Else
+		$g_bDoPrebrewspell = 0
 		$ichkForcePreBrewSpell = 0
 	EndIf
 EndFunc
@@ -904,3 +937,125 @@ Func chkEnableSuperXP3()
 	;chkEnableSuperXP()
 EndFunc   ;==>chkEnableSuperXP3
 
+;-------------------
+Func cmbMySiegeOrder()
+	Local $tempOrder[UBound($MySieges)]
+
+	For $i = 0 To UBound($MySieges) - 1
+		$tempOrder[$i] = Int(GUICtrlRead(Eval("cmbMy" & $MySieges[$i][0] & "SiegeOrder")))
+	Next
+	For $i = 0 To UBound($MySieges) - 1
+		If $tempOrder[$i] <> $MySieges[$i][1] Then
+			For $j = 0 To UBound($MySieges) - 1
+				If $MySieges[$j][1] = $tempOrder[$i] Then
+					$tempOrder[$j] = Int($MySieges[$i][1])
+					ExitLoop
+				EndIf
+			Next
+			ExitLoop
+		EndIf
+	Next
+	For $i = 0 To UBound($MySieges) - 1
+		$MySiegeSetting[$icmbTroopSetting][$i][1] = Int($tempOrder[$i])
+		$MySieges[$i][1] =  $MySiegeSetting[$icmbTroopSetting][$i][1]
+		_GUICtrlComboBox_SetCurSel(Eval("cmbMy" & $MySieges[$i][0] & "SiegeOrder"), $MySieges[$i][1]-1)
+	Next
+EndFunc
+
+Func UpdatePreSiegeSetting()
+	$g_bDoPrebrewSiege = 0
+	For $i = 0 To UBound($MySieges) - 1
+		If GUICtrlRead(Eval("chkPre" & $MySieges[$i][0])) = $GUI_CHECKED Then
+			$MySiegeSetting[$icmbTroopSetting][$i][2] = 1
+		Else
+			$MySiegeSetting[$icmbTroopSetting][$i][2] = 0
+		EndIf
+		Assign("ichkPre" & $MySieges[$i][0],  $MySiegeSetting[$icmbTroopSetting][$i][2])
+		$g_bDoPrebrewSiege = BitOR($g_bDoPrebrewSiege, $MySiegeSetting[$icmbTroopSetting][$i][2])
+	Next
+EndFunc
+
+Func UpdateSiegeSetting()
+	$g_iMySiegesSize = 0
+	For $i = 0 To UBound($MySieges) - 1
+		$MySiegeSetting[$icmbTroopSetting][$i][0] = Int(GUICtrlRead(Eval("txtNum" & $MySieges[$i][0] & "Siege")))
+		$MySieges[$i][3] = $MySiegeSetting[$icmbTroopSetting][$i][0]
+		$g_iMySiegesSize += $MySieges[$i][3] * $MySieges[$i][2]
+	Next
+  	If $g_iMySiegesSize < GUICtrlRead($g_hTxtTotalCountSiege) + 1 Then
+  		GUICtrlSetBkColor($txtNumWallWSiege, $COLOR_MONEYGREEN)
+  		GUICtrlSetBkColor($txtNumBattleBSiege, $COLOR_MONEYGREEN)
+  		GUICtrlSetBkColor($txtNumStoneSSiege, $COLOR_MONEYGREEN)
+  	Else
+  		GUICtrlSetBkColor($txtNumWallWSiege, $COLOR_RED)
+  		GUICtrlSetBkColor($txtNumBattleBSiege, $COLOR_RED)
+  		GUICtrlSetBkColor($txtNumStoneSSiege, $COLOR_RED)
+  	EndIf
+	If $g_iSamM0dDebug = 1 Then SetLog("$g_iMySiegesSize: " & $g_iMySiegesSize)
+EndFunc
+
+Func btnResetSieges()
+	For $i = 0 To UBound($MySieges)-1
+		GUICtrlSetData(Eval("txtNum" & $MySieges[$i][0] & "Siege"),"0")
+		$MySieges[$i][3] = 0
+	Next
+EndFunc
+
+Func btnResetSiegeOrder()
+	For $i = 0 To UBound($MySieges)-1
+		_GUICtrlComboBox_SetCurSel(Eval("cmbMy" & $MySieges[$i][0] & "SiegeOrder"), $i)
+		$MySieges[$i][1] = $i + 1
+	Next
+EndFunc
+
+Func chkEnableDeleteExcessSieges()
+	If GUICtrlRead($chkEnableDeleteExcessSieges) = $GUI_CHECKED Then
+		$ichkEnableDeleteExcessSieges = 1
+	Else
+		$ichkEnableDeleteExcessSieges = 0
+	EndIf
+EndFunc
+
+Func chkForcePreBrewSiege()
+	If GUICtrlRead($chkForcePreBrewSiege) = $GUI_CHECKED Then
+		$ichkForcePreBrewSiege = 1
+	Else
+		$ichkForcePreBrewSiege = 0
+	EndIf
+EndFunc
+
+Func lblMyTotalCountSiege()
+Local $g_iSamM0dDebug = 0
+	_GUI_Value_STATE("HIDE", $groupListMySieges)
+	; calculate $iTotalTrainSpaceSiege value
+	$g_iMySiegesSize = 0
+	For $i = 0 To UBound($MySieges) - 1
+		$g_iMySiegesSize += Int(GUICtrlRead(Eval("txtNum" & $MySieges[$i][0] & "Siege"))) * $MySieges[$i][2]
+	Next
+    $txtTotalCountSiege = GuiCtrlRead($g_hTxtTotalCountSiege)
+	If $g_iSamM0dDebug = 1 Then SetLog("$txtTotalCountSiege: " & $txtTotalCountSiege)
+ 
+	;_GUICtrlComboBox_SetCurSel($g_hTxtTotalCountSiege, $txtTotalCountSiege)
+
+  	If $g_iMySiegesSize < GUICtrlRead($g_hTxtTotalCountSiege) + 1 Then
+  		GUICtrlSetBkColor($txtNumWallWSiege, $COLOR_MONEYGREEN)
+  		GUICtrlSetBkColor($txtNumBattleBSiege, $COLOR_MONEYGREEN)
+  		GUICtrlSetBkColor($txtNumStoneSSiege, $COLOR_MONEYGREEN)
+  	Else
+  		GUICtrlSetBkColor($txtNumWallWSiege, $COLOR_RED)
+  		GUICtrlSetBkColor($txtNumBattleBSiege, $COLOR_RED)
+  		GUICtrlSetBkColor($txtNumStoneSSiege, $COLOR_RED)
+  	EndIf
+  	$g_iTownHallLevel = Int($g_iTownHallLevel)
+  	If $g_iTownHallLevel > 11 Or $g_iTownHallLevel = 0 Then
+  		_GUI_Value_STATE("SHOW", $groupMyWallW)
+  		_GUI_Value_STATE("SHOW", $groupMyBattleB)
+  		_GUI_Value_STATE("SHOW", $groupMyStoneS)
+  	Else
+  		GUICtrlSetData($txtNumWallWSiege, 0)
+  		GUICtrlSetData($txtNumBattleBSiege, 0)
+  		GUICtrlSetData($txtNumStoneSSiege, 0)
+  	EndIf
+	If $g_iSamM0dDebug = 1 Then SetLog("$g_iMySiegesSize: " & $g_iMySiegesSize)
+
+EndFunc   ;==>lblTotalCountSiege

@@ -735,6 +735,8 @@ Func runBot() ;Bot that runs everything in order
 		SwitchCoCAcc($g_iNextAccount)
 	EndIf
 
+	ModTrain()
+
 	While 1
 		; samm0d
 		If $g_iSamM0dDebug = 1 And $g_bRestart Then SetLog("Continue loop with restart", $COLOR_DEBUG)
@@ -1236,7 +1238,7 @@ EndFunc   ;==>_Idle
 Func AttackMain() ;Main control for attack functions
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 	; samm0d
-	MainSuperXPHandler()
+	If $g_bEnableSuperXP = True Then MainSuperXPHandler()
 
 	;getArmyCapacity(True, True)
 	; getArmyTroopCapacity(True, True)

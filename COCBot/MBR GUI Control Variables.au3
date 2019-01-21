@@ -222,6 +222,12 @@ Func InitializeControlVariables()
 	Global $groupMyBat =$lblBatIcon&"#"&$lblBatSpell&"#"&$txtNumBatSpell&"#"&$lblTimesBatS&"#"&$chkPreBat
 	Global $groupListMySpells=$groupMyLightning&"#"&$groupMyHeal&"#"&$groupMyRage&"#"&$groupMyJumpSpell&"#"&$groupMyFreeze&"#"&$groupMyClone&"#"&$groupMyPoison&"#"&$groupMyEarthquake&"#"&$groupMyHaste&"#"&$groupMySkeleton&"#"&$groupMyBat
 
+	;Siege / WallW - StoneStleB - StoneS
+    Global $groupMyWallW =$lblWallWIcon&"#"&$lblWallWSiege&"#"&$txtNumWallWSiege&"#"&$lblTimesWallWS&"#"&$chkPreWallW
+    Global $groupMyBattleB =$lblBattleBIcon&"#"&$lblBattleBSiege&"#"&$txtNumBattleBSiege&"#"&$lblTimesBattleBS&"#"&$chkPreBattleB
+	Global $groupMyStoneS =$lblStoneSIcon&"#"&$lblStoneSSiege&"#"&$txtNumStoneSSiege&"#"&$lblTimesStoneSS&"#"&$chkPreStoneS
+	Global $groupListMySieges=$groupMyWallW&"#"&$groupMyBattleB&"#"&$groupMyStoneS
+
    ; Groups of controls
    Dim $aTabControlsVillage = [$g_hGUI_VILLAGE_TAB, $g_hGUI_VILLAGE_TAB_ITEM1, $g_hGUI_VILLAGE_TAB_ITEM2, $g_hGUI_VILLAGE_TAB_ITEM3, $g_hGUI_VILLAGE_TAB_ITEM4, $g_hGUI_VILLAGE_TAB_ITEM5]
    Dim $aTabControlsMisc = [$g_hGUI_MISC_TAB, $g_hGUI_MISC_TAB_ITEM1, $g_hGUI_MISC_TAB_ITEM2]
