@@ -31,14 +31,14 @@ Local $iMySiegesSize
 	For $i = 0 To UBound($MySieges) - 1
 		$iMySiegesSize = Int(GUICtrlRead(Eval("txtNum" & $MySieges[$i][0] & "Siege"))) * $MySieges[$i][2]
 		SiegeClick(110 + ($MySieges[$i][1] - 1) * 175,545, $iMySiegesSize)
-		Setlog("- Training " & $iTimes & " " & $MySieges[$i][0] & " Siege/s." , $COLOR_YELLOW)
+		;Setlog("- Training " & $iTimes & " " & $MySieges[$i][0] & " Siege/s." , $COLOR_YELLOW)
 	Next
 
 EndFunc
 
 Func SiegeClick($x, $y, $iTimes = 0, $iSpeed = 500)
 If $iTimes = 0 Then Return
-	For $i = 0 To $iTimes 
+	For $i = 0 To $iTimes -1
 		Click(Random($x-50,$x+50), Random($y-50,$y+50))
 		If _Sleep(Random(200,$iSpeed)) Then Return
 	Next

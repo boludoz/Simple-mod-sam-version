@@ -18,7 +18,7 @@ Func DoRevampSpells($bDoPreTrain = False)
 	If _Sleep(500) Then Return
 	Local $bReVampFlag = False
 	; start brew
-	Local $tempSpells[10][5]
+	Local $tempSpells[UBound($MySpells)][5]
 	$tempSpells	= $MySpells
 
 	If $ichkMySpellsOrder Then
