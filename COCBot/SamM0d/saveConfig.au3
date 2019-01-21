@@ -113,36 +113,6 @@ _Ini_Add("attack", "CSVSpeedDB", $isldSelectedCSVSpeed[$DB])
 _Ini_Add("attack", "CSVSpeedAB", $isldSelectedCSVSpeed[$LB])
 _Ini_Add("attack", "SpeedWaitCVS", $isldSelectedSpeedWaitCVS)
 
-; Wait 4 CC
-_Ini_Add("Wait4CC", "Enable", (GUICtrlRead($chkWait4CC) = $GUI_CHECKED ? 1 : 0))
-_Ini_Add("Wait4CC", "CCTroopSlot1", _GUICtrlComboBox_GetCurSel($cmbCCTroopSlot1))
-_Ini_Add("Wait4CC", "CCTroopSlot2", _GUICtrlComboBox_GetCurSel($cmbCCTroopSlot2))
-_Ini_Add("Wait4CC", "CCTroopSlot3", _GUICtrlComboBox_GetCurSel($cmbCCTroopSlot3))
-_Ini_Add("Wait4CC", "CCTroopSlotQty1", GUICtrlRead($txtCCTroopSlotQty1))
-_Ini_Add("Wait4CC", "CCTroopSlotQty2", GUICtrlRead($txtCCTroopSlotQty2))
-_Ini_Add("Wait4CC", "CCTroopSlotQty3", GUICtrlRead($txtCCTroopSlotQty3))
-_Ini_Add("Wait4CC", "CCStrength", GUICtrlRead($txtCCStrength))
-
-; wait for cc spell
-_Ini_Add("Wait4CCSpell", "Enable", (GUICtrlRead($chkWait4CCSpell) = $GUI_CHECKED ? 1 : 0))
-_Ini_Add("Wait4CCSpell", "CCSpellSlot1", _GUICtrlComboBox_GetCurSel($cmbCCSpellSlot1))
-_Ini_Add("Wait4CCSpell", "CCSpellSlot2", _GUICtrlComboBox_GetCurSel($cmbCCSpellSlot2))
-_Ini_Add("Wait4CCSpell", "CCSpellSlotQty1", GUICtrlRead($txtCCSpellSlotQty1))
-_Ini_Add("Wait4CCSpell", "CCSpellSlotQty2", GUICtrlRead($txtCCSpellSlotQty2))
-
-; check 4 cc
-_Ini_Add("Check4CC", "Enable", (GUICtrlRead($chkCheck4CC) = $GUI_CHECKED ? 1 : 0))
-_Ini_Add("Check4CC", "WaitTime", GUICtrlRead($txtCheck4CCWaitTime))
-
-; request cc
-_Ini_Add("RequestCC4Troop", "Enable", (GUICtrlRead($chkRequestCC4Troop) = $GUI_CHECKED ? 1 : 0))
-_Ini_Add("RequestCC4Spell", "Enable", (GUICtrlRead($chkRequestCC4Spell) = $GUI_CHECKED ? 1 : 0))
-_Ini_Add("RequestCC4SeigeMachine", "Enable", (GUICtrlRead($chkRequestCC4SeigeMachine) = $GUI_CHECKED ? 1 : 0))
-_Ini_Add("RequestCC4Troop", "CCStrength", GUICtrlRead($txtRequestCC4Troop))
-_Ini_Add("RequestCC4Spell", "SpellHousing", GUICtrlRead($txtRequestCC4Spell))
-_Ini_Add("RequestCC4SeigeMachine", "SiegeMachineHousing", GUICtrlRead($txtRequestCC4SeigeMachine))
-
-
 ; global delay increse
 _Ini_Add("GlobalDelay", "Enable", (GUICtrlRead($chkIncreaseGlobalDelay) = $GUI_CHECKED ? 1 : 0))
 _Ini_Add("GlobalDelay", "DelayPercentage", GUICtrlRead($txtIncreaseGlobalDelay))

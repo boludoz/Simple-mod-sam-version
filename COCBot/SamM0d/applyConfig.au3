@@ -116,38 +116,6 @@ GUICtrlSetData($sldSelectedSpeedWaitCVS, $isldSelectedSpeedWaitCVS)
 ;sldSelectedSpeedDB()
 ;sldSelectedSpeedAB()
 
-; wait 4 cc
-GUICtrlSetState($chkWait4CC, ($g_iChkWait4CC = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
-GUICtrlSetData($txtCCStrength, $CCStrength)
-_GUICtrlComboBox_SetCurSel($cmbCCTroopSlot1,$iCCTroopSlot1)
-_GUICtrlComboBox_SetCurSel($cmbCCTroopSlot2,$iCCTroopSlot2)
-_GUICtrlComboBox_SetCurSel($cmbCCTroopSlot3,$iCCTroopSlot3)
-GUICtrlSetData($txtCCTroopSlotQty1,$iCCTroopSlotQty1)
-GUICtrlSetData($txtCCTroopSlotQty2,$iCCTroopSlotQty2)
-GUICtrlSetData($txtCCTroopSlotQty3,$iCCTroopSlotQty3)
-chkWait4CC()
-; wait for cc spell
-GUICtrlSetState($chkWait4CCSpell, ($g_iChkWait4CCSpell = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
-_GUICtrlComboBox_SetCurSel($cmbCCSpellSlot1,$iCCSpellSlot1)
-_GUICtrlComboBox_SetCurSel($cmbCCSpellSlot2,$iCCSpellSlot2)
-GUICtrlSetData($txtCCSpellSlotQty1,$iCCSpellSlotQty1)
-GUICtrlSetData($txtCCSpellSlotQty2,$iCCSpellSlotQty2)
-chkWait4CCSpell()
-
-; request cc
-GUICtrlSetState($chkRequestCC4Troop, ($ichkRequestCC4Troop = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
-GUICtrlSetState($chkRequestCC4Spell, ($ichkRequestCC4Spell = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
-GUICtrlSetState($chkRequestCC4SeigeMachine, ($ichkRequestCC4SeigeMachine = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
-GUICtrlSetData($txtRequestCC4Troop, $itxtRequestCC4Troop)
-GUICtrlSetData($txtRequestCC4Spell, $itxtRequestCC4Spell)
-GUICtrlSetData($txtRequestCC4SeigeMachine, $itxtRequestCC4SeigeMachine)
-chkRequestCC4Troop()
-
-; check 4 cc
-GUICtrlSetState($chkCheck4CC, ($ichkCheck4CC = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
-GUICtrlSetData($txtCheck4CCWaitTime, $itxtCheck4CCWaitTime)
-chkCheck4CC()
-
 ; global delay increse
 GUICtrlSetState($chkIncreaseGlobalDelay, ($ichkIncreaseGlobalDelay = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
 GUICtrlSetData($txtIncreaseGlobalDelay, $itxtIncreaseGlobalDelay)

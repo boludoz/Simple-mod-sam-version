@@ -117,33 +117,6 @@ IniReadS($isldSelectedCSVSpeed[$DB], $g_sProfileConfigPath, "attack", "CSVSpeedD
 IniReadS($isldSelectedCSVSpeed[$LB], $g_sProfileConfigPath, "attack", "CSVSpeedAB", 3)
 IniReadS($isldSelectedSpeedWaitCVS, $g_sProfileConfigPath, "attack", "SpeedWaitCVS", 3)
 
-; Wait 4 CC
-IniReadS($g_iChkWait4CC, $g_sProfileConfigPath, "Wait4CC", "Enable", "0", "Int")
-IniReadS($CCStrength, $g_sProfileConfigPath, "Wait4CC", "CCStrength", "100", "Int")
-IniReadS($iCCTroopSlot1, $g_sProfileConfigPath, "Wait4CC", "CCTroopSlot1", "0", "Int")
-IniReadS($iCCTroopSlot2, $g_sProfileConfigPath, "Wait4CC", "CCTroopSlot2", "0", "Int")
-IniReadS($iCCTroopSlot3, $g_sProfileConfigPath, "Wait4CC", "CCTroopSlot3", "0", "Int")
-IniReadS($iCCTroopSlotQty1, $g_sProfileConfigPath, "Wait4CC", "CCTroopSlotQty1", "0", "Int")
-IniReadS($iCCTroopSlotQty2, $g_sProfileConfigPath, "Wait4CC", "CCTroopSlotQty2", "0", "Int")
-IniReadS($iCCTroopSlotQty3, $g_sProfileConfigPath, "Wait4CC", "CCTroopSlotQty3", "0", "Int")
-IniReadS($g_iChkWait4CCSpell, $g_sProfileConfigPath, "Wait4CCSpell", "Enable", "0", "Int")
-IniReadS($iCCSpellSlot1, $g_sProfileConfigPath, "Wait4CCSpell", "CCSpellSlot1", "0", "Int")
-IniReadS($iCCSpellSlot2, $g_sProfileConfigPath, "Wait4CCSpell", "CCSpellSlot2", "0", "Int")
-IniReadS($iCCSpellSlotQty1, $g_sProfileConfigPath, "Wait4CCSpell", "CCSpellSlotQty1", "0", "Int")
-IniReadS($iCCSpellSlotQty2, $g_sProfileConfigPath, "Wait4CCSpell", "CCSpellSlotQty2", "0", "Int")
-
-; check 4 cc
-IniReadS($ichkCheck4CC, $g_sProfileConfigPath, "Check4CC", "Enable", "0", "Int")
-IniReadS($itxtCheck4CCWaitTime, $g_sProfileConfigPath, "Check4CC", "WaitTime", "7", "Int")
-
-; request cc
-IniReadS($ichkRequestCC4Troop, $g_sProfileConfigPath, "RequestCC4Troop", "Enable", "0", "Int")
-IniReadS($ichkRequestCC4Spell, $g_sProfileConfigPath, "RequestCC4Spell", "Enable", "0", "Int")
-IniReadS($ichkRequestCC4SeigeMachine, $g_sProfileConfigPath, "RequestCC4SeigeMachine", "Enable", "0", "Int")
-IniReadS($itxtRequestCC4Troop, $g_sProfileConfigPath, "RequestCC4Troop", "CCStrength", "100", "Int")
-IniReadS($itxtRequestCC4Spell, $g_sProfileConfigPath, "RequestCC4Spell", "SpellHousing", "2", "Int")
-IniReadS($itxtRequestCC4SeigeMachine, $g_sProfileConfigPath, "RequestCC4SeigeMachine", "SiegeMachineHousing", "1", "Int")
-
 ; global delay increse
 IniReadS($ichkIncreaseGlobalDelay, $g_sProfileConfigPath, "GlobalDelay", "Enable", "0", "Int")
 IniReadS($itxtIncreaseGlobalDelay, $g_sProfileConfigPath, "GlobalDelay", "DelayPercentage", "10", "Int")
