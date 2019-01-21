@@ -6,7 +6,7 @@
 ; Return values .: None
 ; Author ........: summoner
 ; Modified ......: KnowJack (2015-06), Sardo (2015-08), Monkeyhunter(2016-02,2016-04), MMHK(2018-06)
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2018
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
