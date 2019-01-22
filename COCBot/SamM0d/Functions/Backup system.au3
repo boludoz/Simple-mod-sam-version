@@ -1,6 +1,7 @@
 #include <WinAPIFiles.au3>
 
 Func BackupSystem()
+Return
 Sleep(50)
 ;SetupProfileFolder()
 ;Local $bInfoState = ;$g_bRunState

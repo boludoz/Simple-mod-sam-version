@@ -96,11 +96,6 @@ chkEnableHLFClick()
 sldHLFClickDelayTime()
 GUICtrlSetState($chkEnableHLFClickSetlog, ($EnableHMLSetLog = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
 
-;~ ; advanced update for wall by Samkie
-;~ GUICtrlSetState($chkSmartUpdateWall, ($ichkSmartUpdateWall = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
-;~ GUICtrlSetData($txtClickWallDelay, $itxtClickWallDelay)
-;~ chkSmartUpdateWall()
-
 ; samm0d ocr
 GUICtrlSetState($chkEnableCustomOCR4CCRequest, ($ichkEnableCustomOCR4CCRequest = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
 
@@ -115,6 +110,11 @@ GUICtrlSetData($sldSelectedSpeedAB, $isldSelectedCSVSpeed[$LB])
 GUICtrlSetData($sldSelectedSpeedWaitCVS, $isldSelectedSpeedWaitCVS)
 ;sldSelectedSpeedDB()
 ;sldSelectedSpeedAB()
+
+; check 4 cc
+GUICtrlSetState($chkCheck4CC, ($ichkCheck4CC = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+GUICtrlSetData($txtCheck4CCWaitTime, $itxtCheck4CCWaitTime)
+chkCheck4CC()
 
 ; global delay increse
 GUICtrlSetState($chkIncreaseGlobalDelay, ($ichkIncreaseGlobalDelay = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
@@ -162,71 +162,55 @@ GUICtrlSetData($txtTotalCountSpell2, $g_iTotalSpellValue)
 lblMyTotalCountSpell()
 
 
-; ================================================== Sieges ================================ ;
-;	_GUICtrlComboBox_SetCurSel($g_hTxtTotalCountSiege, $txtTotalCountSiege)
-;	GUICtrlSetState($chkMySiegesOrder, ($ichkMySiegesOrder = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
-;	GUICtrlSetState($chkEnableDeleteExcessSieges, ($ichkEnableDeleteExcessSieges = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
-;	GUICtrlSetState($chkForcePreBrewSiege, ($ichkForcePreBrewSiege = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
-;	
-;	For $i = 0 To UBound($MySieges)-1
-;		GUICtrlSetState(Eval("chkPre" & $MySieges[$i][0]), (Eval("ichkPre" & $MySieges[$i][0]) = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
-;		GUICtrlSetData(Eval("txtNum" & $MySieges[$i][0] & "Siege"), $MySieges[$i][3])
-;		_GUICtrlComboBox_SetCurSel(Eval("cmbMy" & $MySieges[$i][0] & "SiegeOrder"), $MySieges[$i][1]-1)
-;	Next
-;	
-;	lblMyTotalCountSiege()
+;  Friendly Challenge 
+For $i = 0 To 23
+	GUICtrlSetState($g_ahChkFriendlyChallengehours[$i], ($g_abFriendlyChallengehours[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+Next
+For $i = 0 To 5
+	GUICtrlSetState($chkFriendlyChallengeBase[$i], ($ichkFriendlyChallengeBase[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+Next
+GUICtrlSetState($chkEnableFriendlyChallenge, $ichkEnableFriendlyChallenge = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($chkOnlyOnRequest, $ichkOnlyOnRequest = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetData($txtKeywordForRequest, $stxtKeywordForRequest)
+GUICtrlSetData($txtChallengeText, $stxtChallengeText)
+GUICtrlSetData($txtFriendlyChallengeCoolDownTime, $itxtFriendlyChallengeCoolDownTime)
 
-;   ; ================================================== FriendlyChallenge ============================== ;
-;   	For $i = 0 To 23
-;   		GUICtrlSetState($g_ahChkFriendlyChallengehours[$i], ($g_abFriendlyChallengehours[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
-;   	Next
-;   	For $i = 0 To 5
-;   		GUICtrlSetState($chkFriendlyChallengeBase[$i], ($ichkFriendlyChallengeBase[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
-;   	Next
-;   	GUICtrlSetState($chkEnableFriendlyChallenge, $ichkEnableFriendlyChallenge = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
-;   	GUICtrlSetState($chkOnlyOnRequest, $ichkOnlyOnRequest = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
-;   	GUICtrlSetData($txtKeywordForRequest, $stxtKeywordForRequest)
-;   	GUICtrlSetData($txtChallengeText, $stxtChallengeText)
-;   	GUICtrlSetData($txtFriendlyChallengeCoolDownTime, $itxtFriendlyChallengeCoolDownTime)
-;   ; ================================================== Super XP ============================== ;
-;   
-;   GUICtrlSetState($g_hChkEnableSuperXP, $g_bEnableSuperXP ? $GUI_CHECKED : $GUI_UNCHECKED)
-;   GUICtrlSetState($g_hChkSkipZoomOutXP, $g_bSkipZoomOutXP ? $GUI_CHECKED : $GUI_UNCHECKED)
-;   GUICtrlSetState($g_hChkFastGoblinXP, $g_bFastGoblinXP ? $GUI_CHECKED : $GUI_UNCHECKED)
-;   GUICtrlSetState($g_hChkSkipDragToEndXP, $g_bSkipDragToEndXP ? $GUI_CHECKED : $GUI_UNCHECKED)
-;   GUICtrlSetState($rbSXTraining, $g_irbSXTraining ? $GUI_CHECKED : $GUI_UNCHECKED)
-;   GUICtrlSetState($rbSXIAttacking, $g_irbSXTraining ? $GUI_CHECKED : $GUI_UNCHECKED)
-;   GUICtrlSetData($g_hTxtMaxXPtoGain, $g_iTxtMaxXPtoGain)
-;   GUICtrlSetState($g_hChkSXBK, $g_bSXBK = $eHeroKing ? $GUI_CHECKED : $GUI_UNCHECKED)
-;   GUICtrlSetState($g_hChkSXAQ, $g_bSXAQ = $eHeroQueen ? $GUI_CHECKED : $GUI_UNCHECKED)
-;   GUICtrlSetState($g_hChkSXGW, $g_bSXGW = $eHeroWarden ? $GUI_CHECKED : $GUI_UNCHECKED)
-;   	If $g_bEnableSuperXP = True Then
-;   		GUICtrlSetState($rbSXTraining, $GUI_ENABLE)
-;   		GUICtrlSetState($rbSXIAttacking, $GUI_ENABLE)
-;   		GUICtrlSetState($g_hChkSkipZoomOutXP, $GUI_ENABLE)
-;   		GUICtrlSetState($g_hChkFastGoblinXP, $GUI_ENABLE)
-;   		GUICtrlSetState($g_hChkSkipDragToEndXP, $GUI_ENABLE)
-;   		GUICtrlSetState($g_hChkSXBK, $GUI_ENABLE)
-;   		GUICtrlSetState($g_hChkSXAQ, $GUI_ENABLE)
-;   		GUICtrlSetState($g_hChkSXGW, $GUI_ENABLE)
-;   		GUICtrlSetState($g_hTxtMaxXPtoGain, $GUI_ENABLE)
-;   	Else
-;   		GUICtrlSetState($rbSXTraining, $GUI_DISABLE)
-;   		GUICtrlSetState($rbSXIAttacking, $GUI_DISABLE)
-;   		GUICtrlSetState($g_hChkSkipZoomOutXP, $GUI_DISABLE)
-;   		GUICtrlSetState($g_hChkFastGoblinXP, $GUI_DISABLE)
-;   		GUICtrlSetState($g_hChkSkipDragToEndXP, $GUI_DISABLE)
-;   		GUICtrlSetState($g_hChkSXBK, $GUI_DISABLE)
-;   		GUICtrlSetState($g_hChkSXAQ, $GUI_DISABLE)
-;   		GUICtrlSetState($g_hChkSXGW, $GUI_DISABLE)
-;   		GUICtrlSetState($g_hTxtMaxXPtoGain, $GUI_DISABLE)
-;   	EndIf
-;   
-;   _GUI_Value_STATE("HIDE",$g_aGroupListTHLevels)
-;   If $g_iTownHallLevel >= 4 And $g_iTownHallLevel <= 12 Then
-;   	GUICtrlSetState($g_ahPicTHLevels[$g_iTownHallLevel], $GUI_SHOW)
-;   EndIf
-;   
-;   GUICtrlSetData($g_hLblTHLevels, $g_iTownHallLevel)
-;   
-;   
+;  Super XP 
+GUICtrlSetState($g_hChkEnableSuperXP, $g_bEnableSuperXP ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($g_hChkSkipZoomOutXP, $g_bSkipZoomOutXP ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($g_hChkFastGoblinXP, $g_bFastGoblinXP ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($g_hChkSkipDragToEndXP, $g_bSkipDragToEndXP ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($rbSXTraining, $g_irbSXTraining ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($rbSXIAttacking, $g_irbSXTraining ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetData($g_hTxtMaxXPtoGain, $g_iTxtMaxXPtoGain)
+GUICtrlSetState($g_hChkSXBK, $g_bSXBK = $eHeroKing ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($g_hChkSXAQ, $g_bSXAQ = $eHeroQueen ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($g_hChkSXGW, $g_bSXGW = $eHeroWarden ? $GUI_CHECKED : $GUI_UNCHECKED)
+If $g_bEnableSuperXP = True Then
+	GUICtrlSetState($rbSXTraining, $GUI_ENABLE)
+	GUICtrlSetState($rbSXIAttacking, $GUI_ENABLE)
+	GUICtrlSetState($g_hChkSkipZoomOutXP, $GUI_ENABLE)
+	GUICtrlSetState($g_hChkFastGoblinXP, $GUI_ENABLE)
+	GUICtrlSetState($g_hChkSkipDragToEndXP, $GUI_ENABLE)
+	GUICtrlSetState($g_hChkSXBK, $GUI_ENABLE)
+	GUICtrlSetState($g_hChkSXAQ, $GUI_ENABLE)
+	GUICtrlSetState($g_hChkSXGW, $GUI_ENABLE)
+	GUICtrlSetState($g_hTxtMaxXPtoGain, $GUI_ENABLE)
+Else
+	GUICtrlSetState($rbSXTraining, $GUI_DISABLE)
+	GUICtrlSetState($rbSXIAttacking, $GUI_DISABLE)
+	GUICtrlSetState($g_hChkSkipZoomOutXP, $GUI_DISABLE)
+	GUICtrlSetState($g_hChkFastGoblinXP, $GUI_DISABLE)
+	GUICtrlSetState($g_hChkSkipDragToEndXP, $GUI_DISABLE)
+	GUICtrlSetState($g_hChkSXBK, $GUI_DISABLE)
+	GUICtrlSetState($g_hChkSXAQ, $GUI_DISABLE)
+	GUICtrlSetState($g_hChkSXGW, $GUI_DISABLE)
+	GUICtrlSetState($g_hTxtMaxXPtoGain, $GUI_DISABLE)
+EndIf
+
+_GUI_Value_STATE("HIDE",$g_aGroupListTHLevels)
+If $g_iTownHallLevel >= 4 And $g_iTownHallLevel <= 12 Then
+	GUICtrlSetState($g_ahPicTHLevels[$g_iTownHallLevel], $GUI_SHOW)
+EndIf
+
+GUICtrlSetData($g_hLblTHLevels, $g_iTownHallLevel)

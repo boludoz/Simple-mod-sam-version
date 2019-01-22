@@ -102,6 +102,9 @@ IniReadS($isldSelectedCSVSpeed[$DB], $g_sProfileConfigPath, "attack", "CSVSpeedD
 IniReadS($isldSelectedCSVSpeed[$LB], $g_sProfileConfigPath, "attack", "CSVSpeedAB", 3)
 IniReadS($isldSelectedSpeedWaitCVS, $g_sProfileConfigPath, "attack", "SpeedWaitCVS", 3)
 
+; check 4 cc
+IniReadS($ichkCheck4CC, $g_sProfileConfigPath, "Check4CC", "Enable", "0", "Int")
+IniReadS($itxtCheck4CCWaitTime, $g_sProfileConfigPath, "Check4CC", "WaitTime", "7", "Int")
 ; global delay increse
 IniReadS($ichkIncreaseGlobalDelay, $g_sProfileConfigPath, "GlobalDelay", "Enable", "0", "Int")
 IniReadS($itxtIncreaseGlobalDelay, $g_sProfileConfigPath, "GlobalDelay", "DelayPercentage", "10", "Int")
@@ -114,7 +117,6 @@ $ichkModTrain = 1
 ;IniReadS($ichkModTrain, $g_sProfileConfigPath, "MyTroops", "EnableModTrain", "1","Int")
 IniReadS($ichkMyTroopsOrder, $g_sProfileConfigPath, "MyTroops", "Order", "0","Int")
 IniReadS($ichkEnableDeleteExcessTroops, $g_sProfileConfigPath, "MyTroops", "DeleteExcess", "0","Int")
-
 IniReadS($ichkForcePreTrainTroops, $g_sProfileConfigPath, "MyTroops", "ForcePreTrainTroop", "0","Int")
 IniReadS($itxtForcePreTrainStrength, $g_sProfileConfigPath, "MyTroops", "ForcePreTrainStrength", "95","Int")
 IniReadS($icmbMyQuickTrain, $g_sProfileConfigPath, "MyTroops", "TrainCombo", "0", "Int")
@@ -152,47 +154,25 @@ For $i = 0 To UBound($MySpells) - 1
 	$MySpells[$i][3] =  $MySpellSetting[$icmbTroopSetting][$i][0]
 	$MySpells[$i][1] =  $MySpellSetting[$icmbTroopSetting][$i][1]
 Next
-; ================================================== Sieges ================================ ;
-;IniReadS($txtTotalCountSiege, $g_sProfileConfigPath, "MySieges", "Composition", "0", "Int")
-;IniReadS($ichkMySiegesOrder, $g_sProfileConfigPath, "MySieges", "Order", "0","Int")
-;IniReadS($ichkEnableDeleteExcessSieges, $g_sProfileConfigPath, "MySieges", "DeleteExcess", "0","Int")
-;IniReadS($ichkForcePreBrewSiege, $g_sProfileConfigPath, "MySieges", "ForcePreBrewSiege", "0","Int")
-;
-;For $j = 0 To UBound($MySiegeSetting) -1 
-;	For $i = 0 To UBound($MySieges) -1 
-;		IniReadS($MySiegeSetting[$j][$i][0], $g_sProfileConfigPath, "MySieges", $MySieges[$i][0] & $j, "0", "Int")
-;		IniReadS($MySiegeSetting[$j][$i][1],$g_sProfileConfigPath, "MySieges", $MySieges[$i][0] & "Order" & $j, $i + 1,"Int")
-;		IniReadS($MySiegeSetting[$j][$i][2], $g_sProfileConfigPath, "MySieges", $MySieges[$i][0] & "Pre" & $j, "0", "Int")
-;	Next
-;Next
-;
-;$g_bDoPrebrewSiege = 0
-;	For $iMySiegeSpre = 0 To UBound($MySieges) -1 
-;	Assign("ichkPre" & $MySieges[$iMySiegeSpre][0],  $MySiegeSetting[$icmbTroopSetting][$iMySiegeSpre][2])
-;	$g_bDoPrebrewSiege = BitOR($g_bDoPrebrewSiege, $MySiegeSetting[$icmbTroopSetting][$iMySiegeSpre][2])
-;	$MySieges[$iMySiegeSpre][3] =  $MySiegeSetting[$icmbTroopSetting][$iMySiegeSpre][0]
-;	$MySieges[$iMySiegeSpre][1] =  $MySiegeSetting[$icmbTroopSetting][$iMySiegeSpre][1]
-;Next
-	; ================================================== FriendlyChallenge ==================================== ;
-;
-;	$g_abFriendlyChallengehours = StringSplit(IniRead($g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengePlannedRequestHours", "1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1"), "|", $STR_NOCOUNT)
-;	$ichkFriendlyChallengeBase = StringSplit(IniRead($g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeBaseForShare", "0|0|0|0|0|0"), "|", $STR_NOCOUNT)
-;	IniReadS($ichkEnableFriendlyChallenge, $g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeEnable", "0", "Int")
-;	IniReadS($ichkOnlyOnRequest, $g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeEnableOnlyOnRequest", "0", "Int")
-;	$stxtKeywordForRequest = StringReplace(IniRead($g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeKeyword", "friendly|challenge"), "|", @CRLF)
-;	$stxtChallengeText = StringReplace(IniRead($g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeText", ""), "|", @CRLF)
-;	IniReadS($itxtFriendlyChallengeCoolDownTime, $g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeCoolDownTime", "5", "Int")
-;
-;	; ================================================== Super XP ==================================== ;
-;
-;	IniReadS($g_bEnableSuperXP, $g_sProfileConfigPath, "GoblinXP", "EnableSuperXP", $g_bEnableSuperXP, "Bool")
-;	IniReadS($g_bSkipZoomOutXP, $g_sProfileConfigPath, "GoblinXP", "SkipZoomOutXP", $g_bSkipZoomOutXP, "Bool")
-;	IniReadS($g_bFastGoblinXP, $g_sProfileConfigPath, "GoblinXP", "FastGoblinXP", $g_bFastGoblinXP, "Bool")
-;	IniReadS($g_bSkipDragToEndXP, $g_sProfileConfigPath, "GoblinXP", "SkipDragToEndXP", $g_bSkipDragToEndXP, "Bool")
-;	IniReadS($g_irbSXTraining, $g_sProfileConfigPath, "GoblinXP", "SXTraining", $g_irbSXTraining, "int")
-;	IniReadS($g_irbSXTraining, $g_sProfileConfigPath, "GoblinXP", "SXIAttacking", $g_irbSXTraining, "int")
-;	IniReadS($g_iTxtMaxXPtoGain, $g_sProfileConfigPath, "GoblinXP", "MaxXptoGain", $g_iTxtMaxXPtoGain, "int")
-;	IniReadS($g_bSXBK, $g_sProfileConfigPath, "GoblinXP", "SXBK", $eHeroNone)
-;	IniReadS($g_bSXAQ, $g_sProfileConfigPath, "GoblinXP", "SXAQ", $eHeroNone)
-;	IniReadS($g_bSXGW, $g_sProfileConfigPath, "GoblinXP", "SXGW", $eHeroNone)
-;
+
+; Friendly Challenge
+$g_abFriendlyChallengehours = StringSplit(IniRead($g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengePlannedRequestHours", "1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1"), "|", $STR_NOCOUNT)
+$ichkFriendlyChallengeBase = StringSplit(IniRead($g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeBaseForShare", "0|0|0|0|0|0"), "|", $STR_NOCOUNT)
+IniReadS($ichkEnableFriendlyChallenge, $g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeEnable", "0", "Int")
+IniReadS($ichkOnlyOnRequest, $g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeEnableOnlyOnRequest", "0", "Int")
+$stxtKeywordForRequest = StringReplace(IniRead($g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeKeyword", "friendly|challenge"), "|", @CRLF)
+$stxtChallengeText = StringReplace(IniRead($g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeText", ""), "|", @CRLF)
+IniReadS($itxtFriendlyChallengeCoolDownTime, $g_sProfileConfigPath, "FriendlyChallenge", "FriendlyChallengeCoolDownTime", "5", "Int")
+
+; Super XP
+IniReadS($g_bEnableSuperXP, $g_sProfileConfigPath, "GoblinXP", "EnableSuperXP", $g_bEnableSuperXP, "Bool")
+IniReadS($g_bSkipZoomOutXP, $g_sProfileConfigPath, "GoblinXP", "SkipZoomOutXP", $g_bSkipZoomOutXP, "Bool")
+IniReadS($g_bFastGoblinXP, $g_sProfileConfigPath, "GoblinXP", "FastGoblinXP", $g_bFastGoblinXP, "Bool")
+IniReadS($g_bSkipDragToEndXP, $g_sProfileConfigPath, "GoblinXP", "SkipDragToEndXP", $g_bSkipDragToEndXP, "Bool")
+IniReadS($g_irbSXTraining, $g_sProfileConfigPath, "GoblinXP", "SXTraining", $g_irbSXTraining, "int")
+IniReadS($g_irbSXTraining, $g_sProfileConfigPath, "GoblinXP", "SXIAttacking", $g_irbSXTraining, "int")
+IniReadS($g_iTxtMaxXPtoGain, $g_sProfileConfigPath, "GoblinXP", "MaxXptoGain", $g_iTxtMaxXPtoGain, "int")
+IniReadS($g_bSXBK, $g_sProfileConfigPath, "GoblinXP", "SXBK", $eHeroNone)
+IniReadS($g_bSXAQ, $g_sProfileConfigPath, "GoblinXP", "SXAQ", $eHeroNone)
+IniReadS($g_bSXGW, $g_sProfileConfigPath, "GoblinXP", "SXGW", $eHeroNone)
+
