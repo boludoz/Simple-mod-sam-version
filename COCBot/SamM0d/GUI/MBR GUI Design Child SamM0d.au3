@@ -469,22 +469,18 @@ $cmbMyQuickTrain = GUICtrlCreateCombo("", $x+300, $y+20, 130, 20, BitOR($CBS_DRO
 
 
 Local $sComboData= ""
-Local $sEvalString
-Local $iTotalT = UBound($MyTroops)
-Local $aTroopOrderList[$iTotalT + 1]
+Local $sEvalStringTroops
+Local $aTroopOrderList[UBound($MyTroops) + 1]
 
-For $iTropOrd = 1 To $iTotalT
-	; Assign the variable string sString with data.
-	Assign("sTString", $iTropOrd)
-	
-	; Find the value of the variable string sTString and assign to the variable $sEvalString.
-	Local $sEvalString = Eval("sTString")
+For $iTroopOrd = 1 To UBound($MyTroops)
+	; Assign the variable string sSSring with data.
+	Assign("sTroopString", $iTroopOrd)
 
-	$aTroopOrderList[$iTropOrd] = $sEvalString
-Next 
+	$aTroopOrderList[$iTroopOrd] = Eval("sTroopString")
+Next
 
-For $j = 0 To ($iTotalT)
-	$sComboData &= $aTroopOrderList[$j] & "|"
+For $h = 0 To UBound($MyTroops)
+	$sComboData &= $aTroopOrderList[$h] & "|"
 Next
 
 $xStart = 10
@@ -570,6 +566,7 @@ GUICtrlSetOnEvent(-1, "ForcePretrainTroops")
 
 
 GUICtrlCreateGroup("", -99, -99, 1, 1)
+; Spells 
 SplashStep("Loading M0d - My Spells tab...")
 GUICtrlCreateTabItem(GetTranslatedFileIni("sam m0d", 65, "My Spells"))
 
@@ -700,24 +697,19 @@ Local $x = 190, $y = 110
 $chkMySpellsOrder = GUICtrlCreateCheckbox(GetTranslatedFileIni("sam m0d", "Order", "Order"), $x, $y - 25 , -1, -1)
 
 Local $sComboSpellData= ""
-Local $sEvalStringS
-Local $iTotalS = UBound($MySpells)
-Local $aSpellOrderList[$iTotalS + 1]
+Local $sEvalStringSpells
+Local $aSpellOrderList[UBound($MySpells) + 1]
 
-For $iSpellOrd = 1 To $iTotalS
+For $iSpellOrd = 1 To UBound($MySpells)
 	; Assign the variable string sSSring with data.
-	Assign("sSString", $iSpellOrd)
-	
-	; Find the value of the variable string sTString and assign to the variable $sEvalString.
-	Local $sEvalStringS = Eval("sSString")
+	Assign("sSpellString", $iSpellOrd)
 
-	$aSpellOrderList[$iSpellOrd] = $sEvalStringS
-Next 
-
-For $j = 0 To ($iTotalS)
-	$sComboSpellData &= $aSpellOrderList[$j] & "|"
+	$aSpellOrderList[$iSpellOrd] = Eval("sSpellString")
 Next
 
+For $h = 0 To UBound($MySpells) 
+	$sComboSpellData &= $aSpellOrderList[$h] & "|"
+Next
 
 	For $i = 0 To UBound($MySpells) - 1
 		Assign("chkPre" & $MySpells[$i][0], GUICtrlCreateCheckbox(GetTranslatedFileIni("sam m0d", 77 + $i, "Pre-Brew " & $MySpells[$i][0]) , $x + 40, $y, -1, -1))
@@ -745,7 +737,7 @@ $chkForcePreBrewSpell = GUICtrlCreateCheckbox(GetTranslatedFileIni("sam m0d", "F
 
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-;========== Siege ====================
+; Siege 
 SplashStep("Loading M0d - My Siege tab...")
 GUICtrlCreateTabItem(GetTranslatedFileIni("sam m0d", 65, "My Siege"))
 
@@ -805,20 +797,16 @@ $chkMySiegesOrder = GUICtrlCreateCheckbox(GetTranslatedFileIni("sam m0d", "Order
 
 Local $sComboSiegeData= ""
 Local $sEvalStringSieges
-Local $iTotalSieges = UBound($MySieges)
-Local $aSiegeOrderList[$iTotalSieges + 1]
+Local $aSiegeOrderList[UBound($MySieges) + 1]
 
-For $iSiegeOrd = 1 To $iTotalSieges
+For $iSiegeOrd = 1 To UBound($MySieges)
 	; Assign the variable string sSSring with data.
-	Assign("sSString", $iSiegeOrd)
-	
-	; Find the value of the variable string sTString and assign to the variable $sEvalString.
-	Local $sEvalStringSieges = Eval("sSString")
+	Assign("sSiegeString", $iSiegeOrd)
 
-	$aSiegeOrderList[$iSiegeOrd] = $sEvalStringSieges
-Next 
+	$aSiegeOrderList[$iSiegeOrd] = Eval("sSiegeString")
+Next
 
-For $h = 0 To ($iTotalSieges)
+For $h = 0 To UBound($MySieges)
 	$sComboSiegeData &= $aSiegeOrderList[$h] & "|"
 Next
 

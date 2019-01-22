@@ -87,7 +87,7 @@ Func UpdateTroopSize()
 EndFunc
 
 Func cmbMySpellOrder()
-	Local $tempOrder[10]
+	Local $tempOrder[UBound($MySpells)]
 
 	For $i = 0 To UBound($MySpells) - 1
 		$tempOrder[$i] = Int(GUICtrlRead(Eval("cmbMy" & $MySpells[$i][0] & "SpellOrder")))
