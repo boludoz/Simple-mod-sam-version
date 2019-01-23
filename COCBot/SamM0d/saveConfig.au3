@@ -127,7 +127,6 @@ _Ini_Add("MyTroops", "TrainCombo", _GUICtrlComboBox_GetCurSel($cmbMyQuickTrain))
 Local $itempcmbTroopSetting = _GUICtrlComboBox_GetCurSel($cmbTroopSetting)
 
 _Ini_Add("MyTroops", "Composition", $itempcmbTroopSetting)
-
 cmbTroopSetting()
 
 For $j = 0 To 2
@@ -137,29 +136,60 @@ For $j = 0 To 2
 	Next
 Next
 
-If GUICtrlRead($chkEnableDeleteExcessSpells) = $GUI_CHECKED Then
-	_Ini_Add("MySpells", "DeleteExcess", 1)
+; Spells
+;If GUICtrlRead($chkEnableDeleteExcessSpells) = $GUI_CHECKED Then
+;	_Ini_Add("MySpells", "DeleteExcess", 1)
+;Else
+;	_Ini_Add("MySpells", "DeleteExcess", 0)
+;EndIf
+;
+;If GUICtrlRead($chkForcePreBrewSpell) = $GUI_CHECKED Then
+;	_Ini_Add("MySpells", "ForcePreBrewSpell", 1)
+;Else
+;	_Ini_Add("MySpells", "ForcePreBrewSpell", 0)
+;EndIf
+;
+;If GUICtrlRead($chkMySpellsOrder) = $GUI_CHECKED Then
+;	_Ini_Add("MySpells", "Order", 1)
+;Else
+;	_Ini_Add("MySpells", "Order", 0)
+;EndIf
+;
+;For $j = 0 To 2
+;	For $i = 0 To UBound($MySpells) - 1
+;		_Ini_Add("MySpells", $MySpells[$i][0] & $j, $MySpellSetting[$j][$i][0])
+;		_Ini_Add("MySpells", $MySpells[$i][0] & "Order" & $j, $MySpellSetting[$j][$i][1])
+;		_Ini_Add("MySpells", $MySpells[$i][0] & "Pre" & $j, $MySpellSetting[$j][$i][2])
+;	Next
+;Next
+
+; Sieges
+
+_Ini_Add("MySieges", "TotalCountSiege", _GUICtrlComboBox_GetCurSel($g_hTxtTotalCountSiege))
+
+If GUICtrlRead($chkEnableDeleteExcessSieges) = $GUI_CHECKED Then
+	_Ini_Add("MySieges", "DeleteExcess", 1)
 Else
-	_Ini_Add("MySpells", "DeleteExcess", 0)
+	_Ini_Add("MySieges", "DeleteExcess", 0)
 EndIf
 
-If GUICtrlRead($chkForcePreBrewSpell) = $GUI_CHECKED Then
-	_Ini_Add("MySpells", "ForcePreBrewSpell", 1)
+If GUICtrlRead($chkForcePreBrewSiege) = $GUI_CHECKED Then
+	_Ini_Add("MySieges", "ForcePreBrewSiege", 1)
 Else
-	_Ini_Add("MySpells", "ForcePreBrewSpell", 0)
+	_Ini_Add("MySieges", "ForcePreBrewSiege", 0)
 EndIf
 
-If GUICtrlRead($chkMySpellsOrder) = $GUI_CHECKED Then
-	_Ini_Add("MySpells", "Order", 1)
+If GUICtrlRead($chkMySiegesOrder) = $GUI_CHECKED Then
+	_Ini_Add("MySieges", "Order", 1)
 Else
-	_Ini_Add("MySpells", "Order", 0)
+	_Ini_Add("MySieges", "Order", 0)
 EndIf
 
 For $j = 0 To 2
-	For $i = 0 To UBound($MySpells) - 1
-		_Ini_Add("MySpells", $MySpells[$i][0] & $j, $MySpellSetting[$j][$i][0])
-		_Ini_Add("MySpells", $MySpells[$i][0] & "Order" & $j, $MySpellSetting[$j][$i][1])
-		_Ini_Add("MySpells", $MySpells[$i][0] & "Pre" & $j, $MySpellSetting[$j][$i][2])
+	For $i = 0 To UBound($MySieges) - 1
+		_Ini_Add("MySieges", $MySieges[$i][0] & $j, $MySiegeSetting[$j][$i][0])
+		_Ini_Add("MySieges", $MySieges[$i][0] & "Order" & $j, $MySiegeSetting[$j][$i][1])
+		_Ini_Add("MySieges", $MySieges[$i][0] & "Pre" & $j, $MySiegeSetting[$j][$i][2])
 	Next
 Next
 
@@ -191,4 +221,3 @@ _Ini_Add("GoblinXP", "SXBK", $g_bSXBK)
 _Ini_Add("GoblinXP", "SXAQ", $g_bSXAQ)
 _Ini_Add("GoblinXP", "SXGW", $g_bSXGW)
 _Ini_Add("GoblinXP", "MaxXptoGain", GUICtrlRead($g_hTxtMaxXPtoGain))
-

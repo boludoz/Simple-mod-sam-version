@@ -146,6 +146,7 @@ UpdateTroopSize()
 
 ;cmbMyTroopOrder()
 
+; Spells
 GUICtrlSetState($chkMySpellsOrder, ($ichkMySpellsOrder = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
 GUICtrlSetState($chkEnableDeleteExcessSpells, ($ichkEnableDeleteExcessSpells = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
 GUICtrlSetState($chkForcePreBrewSpell, ($ichkForcePreBrewSpell = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
@@ -155,13 +156,29 @@ For $i = 0 To UBound($MySpells)-1
 	GUICtrlSetData(Eval("txtNum" & $MySpells[$i][0] & "Spell"), $MySpells[$i][3])
 	_GUICtrlComboBox_SetCurSel(Eval("cmbMy" & $MySpells[$i][0] & "SpellOrder"), $MySpells[$i][1]-1)
 Next
-
+;
 ;cmbMySpellOrder()
-
-GUICtrlSetData($txtTotalCountSpell2, $g_iTotalSpellValue)
+;
+;GUICtrlSetData($txtTotalCountSpell2, $g_iTotalSpellValue)
 lblMyTotalCountSpell()
 
+; Sieges
+GUICtrlSetData($g_hTxtTotalCountSiege, $txtTotalCountSiege)
 
+GUICtrlSetState($chkMySiegesOrder, ($ichkMySiegesOrder = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+GUICtrlSetState($chkEnableDeleteExcessSieges, ($ichkEnableDeleteExcessSieges = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+GUICtrlSetState($chkForcePreBrewSiege, ($ichkForcePreBrewSiege = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+
+For $i = 0 To UBound($MySieges)-1
+	GUICtrlSetState(Eval("chkPreSiege" & $MySieges[$i][0]), (Eval("ichkPreSiege" & $MySieges[$i][0]) = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+	GUICtrlSetData(Eval("txtNumSiege" & $MySieges[$i][0] & "Siege"), $MySieges[$i][3])
+	_GUICtrlComboBox_SetCurSel(Eval("cmbMySiege" & $MySieges[$i][0] & "SiegeOrder"), $MySieges[$i][1]-1)
+Next
+
+;cmbMySiegeSiegeOrder()
+
+lblMyTotalCountSiege()
+;
 ;  Friendly Challenge 
 For $i = 0 To 23
 	GUICtrlSetState($g_ahChkFriendlyChallengehours[$i], ($g_abFriendlyChallengehours[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))

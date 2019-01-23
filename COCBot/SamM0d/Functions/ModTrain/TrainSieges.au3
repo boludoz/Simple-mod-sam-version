@@ -29,7 +29,7 @@ If $bOpenSiegeArmy = True Then Click(604, 132)
 Local $iMySiegesSize
 
 	For $i = 0 To UBound($MySieges) - 1
-		$iMySiegesSize = Int(GUICtrlRead(Eval("txtNum" & $MySieges[$i][0] & "Siege"))) * $MySieges[$i][2]
+		$iMySiegesSize = Int(GUICtrlRead(Eval("txtNumSiege" & $MySieges[$i][0] & "Siege"))) * $MySieges[$i][2]
 		SiegeClick(110 + ($MySieges[$i][1] - 1) * 175,545, $iMySiegesSize)
 		;Setlog("- Training " & $iTimes & " " & $MySieges[$i][0] & " Siege/s." , $COLOR_YELLOW)
 	Next

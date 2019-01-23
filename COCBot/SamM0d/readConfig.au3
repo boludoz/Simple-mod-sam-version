@@ -135,6 +135,7 @@ For $i = 0 To UBound($MyTroops) - 1
 	$MyTroops[$i][1] =  $MyTroopsSetting[$icmbTroopSetting][$i][1]
 Next
 
+; Spells
 IniReadS($ichkMySpellsOrder, $g_sProfileConfigPath, "MySpells", "Order", "0","Int")
 IniReadS($ichkEnableDeleteExcessSpells, $g_sProfileConfigPath, "MySpells", "DeleteExcess", "0","Int")
 IniReadS($ichkForcePreBrewSpell, $g_sProfileConfigPath, "MySpells", "ForcePreBrewSpell", "0","Int")
@@ -153,6 +154,28 @@ For $i = 0 To UBound($MySpells) - 1
 	$g_bDoPrebrewspell = BitOR($g_bDoPrebrewspell, $MySpellSetting[$icmbTroopSetting][$i][2])
 	$MySpells[$i][3] =  $MySpellSetting[$icmbTroopSetting][$i][0]
 	$MySpells[$i][1] =  $MySpellSetting[$icmbTroopSetting][$i][1]
+Next
+
+; Sieges
+IniReadS($ichkMySiegesOrder, $g_sProfileConfigPath, "MySieges", "Order", "0","Int")
+IniReadS($ichkEnableDeleteExcessSieges, $g_sProfileConfigPath, "MySieges", "DeleteExcess", "0","Int")
+IniReadS($ichkForcePreBrewSiege, $g_sProfileConfigPath, "MySieges", "ForcePreBrewSiege", "0","Int")
+IniReadS($txtTotalCountSiege, $g_sProfileConfigPath, "MySieges", "TotalCountSiege", "0","Int")
+
+For $j = 0 To 2
+	For $i = 0 To UBound($MySieges) - 1
+		IniReadS($MySiegeSetting[$j][$i][0], $g_sProfileConfigPath, "MySieges", $MySieges[$i][0] & $j, "0", "Int")
+		IniReadS($MySiegeSetting[$j][$i][1],$g_sProfileConfigPath, "MySieges", $MySieges[$i][0] & "Order" & $j, $i + 1,"Int")
+		IniReadS($MySiegeSetting[$j][$i][2], $g_sProfileConfigPath, "MySieges", $MySieges[$i][0] & "Pre" & $j, "0", "Int")
+	Next
+Next
+
+$g_bDoPrebrewSiege = 0
+For $i = 0 To UBound($MySieges) - 1
+	Assign("ichkPreSiege" & $MySieges[$i][0],  $MySiegeSetting[$icmbTroopSetting][$i][2])
+	$g_bDoPrebrewSiege = BitOR($g_bDoPrebrewSiege, $MySiegeSetting[$icmbTroopSetting][$i][2])
+	$MySieges[$i][3] =  $MySiegeSetting[$icmbTroopSetting][$i][0]
+	$MySieges[$i][1] =  $MySiegeSetting[$icmbTroopSetting][$i][1]
 Next
 
 ; Friendly Challenge

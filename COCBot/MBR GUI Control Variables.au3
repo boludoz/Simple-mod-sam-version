@@ -223,9 +223,9 @@ Func InitializeControlVariables()
 	Global $groupListMySpells=$groupMyLightning&"#"&$groupMyHeal&"#"&$groupMyRage&"#"&$groupMyJumpSpell&"#"&$groupMyFreeze&"#"&$groupMyClone&"#"&$groupMyPoison&"#"&$groupMyEarthquake&"#"&$groupMyHaste&"#"&$groupMySkeleton&"#"&$groupMyBat
 
 	;Siege / WallW - StoneStleB - StoneS
-    Global $groupMyWallW =$lblWallWIcon&"#"&$lblWallWSiege&"#"&$txtNumWallWSiege&"#"&$lblTimesWallW&"#"&$chkPreWallW
-    Global $groupMyBattleB =$lblBattleBIcon&"#"&$lblBattleBSiege&"#"&$txtNumBattleBSiege&"#"&$lblTimesBattleB&"#"&$chkPreBattleB
-	Global $groupMyStoneS =$lblStoneSIcon&"#"&$lblStoneSSiege&"#"&$txtNumStoneSSiege&"#"&$lblTimesStoneS&"#"&$chkPreStoneS
+    Global $groupMyWallW =$lblWallWIcon&"#"&$lblWallWSiege&"#"&$txtNumSiegeWallWSiege&"#"&$lblTimesWallW&"#"&$chkPreSiegeWallW
+    Global $groupMyBattleB =$lblBattleBIcon&"#"&$lblBattleBSiege&"#"&$txtNumSiegeBattleBSiege&"#"&$lblTimesBattleB&"#"&$chkPreSiegeBattleB
+	Global $groupMyStoneS =$lblStoneSIcon&"#"&$lblStoneSSiege&"#"&$txtNumSiegeStoneSSiege&"#"&$lblTimesStoneS&"#"&$chkPreSiegeStoneS
 	Global $groupListMySieges=$groupMyWallW&"#"&$groupMyBattleB&"#"&$groupMyStoneS
 
    ; Groups of controls
