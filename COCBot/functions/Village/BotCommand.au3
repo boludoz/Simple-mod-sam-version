@@ -98,7 +98,7 @@ Func BotCommand()
 				EndIf
 		EndSwitch
 
-		If $g_bMeetCondStop Then
+		If $g_bMeetCondStop = True Then
 			Switch $iCmbBotCommand
 				Case 0
 					If $g_bDonationEnabled = False Then
@@ -112,24 +112,28 @@ Func BotCommand()
 					If _Sleep($DELAYBOTCOMMAND1) Then Return
 				Case 1
 					SetLog("MyBot.run Bot Stop as requested!!", $COLOR_INFO)
-					If _Sleep($DELAYBOTCOMMAND1) Then Return
-					Return True
+				;	If _Sleep($DELAYBOTCOMMAND1) Then Return
+				;	Return True
+					Return False
 				Case 2
 					SetLog("MyBot.run Close Bot as requested!!", $COLOR_INFO)
 					If _Sleep($DELAYBOTCOMMAND1) Then Return
-					BotClose()
-					Return True ; HaHa - No Return possible!
+					;BotClose()
+					;Return True ; HaHa - No Return possible!
+					Return False
 				Case 3
 					SetLog("Close Android and Bot as requested!!", $COLOR_INFO)
 					If _Sleep($DELAYBOTCOMMAND1) Then Return
-					CloseAndroid("BotCommand")
-					BotClose()
-					Return True ; HaHa - No Return possible!
+					;CloseAndroid("BotCommand")
+					;BotClose()
+					;Return True ; HaHa - No Return possible!
+					Return False
 				Case 4
 					SetLog("Force Shutdown of PC...", $COLOR_INFO)
 					If _Sleep($DELAYBOTCOMMAND1) Then Return
 					Shutdown(BitOR($SD_SHUTDOWN, $SD_FORCE)) ; Force Shutdown
 					Return True ; HaHa - No Return possible!
+					Return False
 				Case 5
 					SetLog("PC Sleep Mode Start now ...", $COLOR_INFO)
 					If _Sleep($DELAYBOTCOMMAND1) Then Return

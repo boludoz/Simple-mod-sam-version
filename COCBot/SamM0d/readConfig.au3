@@ -124,12 +124,23 @@ IniReadS($icmbTroopSetting, $g_sProfileConfigPath, "MyTroops", "Composition", "0
 
 IniReadS($ichkDisablePretrainTroops, $g_sProfileConfigPath, "MyTroops", "NoPreTrain", "0", "Int")
 
+Local $sTextTroops
+Local $sTextTroopsString
+
 For $j = 0 To 2
 	For $i = 0 To UBound($MyTroops) - 1
-		IniReadS($MyTroopsSetting[$j][$i][0],$g_sProfileConfigPath, "MyTroops", $MyTroops[$i][0] & $j, "0","Int")
-		IniReadS($MyTroopsSetting[$j][$i][1],$g_sProfileConfigPath, "MyTroops", $MyTroops[$i][0] & "Order" & $j, $i + 1,"Int")
+	 $sTextTroopsString = IniRead($g_sProfileConfigPath, "MyTroops", $MyTroops[$i][0]&$j, "0|"&$i + 1)
+	If Not StringInStr($sTextTroopsString, "|") = 0 Then 
+	$sTextTroops = StringSplit($sTextTroopsString, "|", $STR_NOCOUNT)
+		$MyTroopsSetting[$j][$i][0] = Int($sTextTroops[0])
+		$MyTroopsSetting[$j][$i][1] = Int($sTextTroops[1])	
+		Else
+		$MyTroopsSetting[$j][$i][0] = Int($sTextTroopsString)
+		$MyTroopsSetting[$j][$i][1] = $i + 1
+		Endif
 	Next
 Next
+
 For $i = 0 To UBound($MyTroops) - 1
 	$MyTroops[$i][3] =  $MyTroopsSetting[$icmbTroopSetting][$i][0]
 	$MyTroops[$i][1] =  $MyTroopsSetting[$icmbTroopSetting][$i][1]
@@ -140,11 +151,22 @@ IniReadS($ichkMySpellsOrder, $g_sProfileConfigPath, "MySpells", "Order", "0","In
 IniReadS($ichkEnableDeleteExcessSpells, $g_sProfileConfigPath, "MySpells", "DeleteExcess", "0","Int")
 IniReadS($ichkForcePreBrewSpell, $g_sProfileConfigPath, "MySpells", "ForcePreBrewSpell", "0","Int")
 
+Local $sTextSpells
+Local $sTextSpellsString
+
 For $j = 0 To 2
 	For $i = 0 To UBound($MySpells) - 1
-		IniReadS($MySpellSetting[$j][$i][0], $g_sProfileConfigPath, "MySpells", $MySpells[$i][0] & $j, "0", "Int")
-		IniReadS($MySpellSetting[$j][$i][1],$g_sProfileConfigPath, "MySpells", $MySpells[$i][0] & "Order" & $j, $i + 1,"Int")
-		IniReadS($MySpellSetting[$j][$i][2], $g_sProfileConfigPath, "MySpells", $MySpells[$i][0] & "Pre" & $j, "0", "Int")
+	 $sTextSpellsString = IniRead($g_sProfileConfigPath, "MySpells", $MySpells[$i][0]&$j, "0|"&$i + 1&"|0")
+	If Not StringInStr($sTextSpellsString, "|") = 0 Then 
+	$sTextSpells = StringSplit($sTextSpellsString, "|", $STR_NOCOUNT)
+		$MySpellSetting[$j][$i][0] = Int($sTextSpells[0])
+		$MySpellSetting[$j][$i][1] = Int($sTextSpells[1])	
+		$MySpellSetting[$j][$i][2] = Int($sTextSpells[2])
+		Else
+		$MySpellSetting[$j][$i][0] = Int($sTextSpellsString)
+		$MySpellSetting[$j][$i][1] = $i + 1
+		$MySpellSetting[$j][$i][2] = 0
+		Endif
 	Next
 Next
 
@@ -157,23 +179,34 @@ For $i = 0 To UBound($MySpells) - 1
 Next
 
 ; Sieges
-IniReadS($ichkMySiegesOrder, $g_sProfileConfigPath, "MySieges", "Order", "0","Int")
+IniReadS($ichkMySiegesSiegeOrder, $g_sProfileConfigPath, "MySieges", "SiegeOrder", "0","Int")
 IniReadS($ichkEnableDeleteExcessSieges, $g_sProfileConfigPath, "MySieges", "DeleteExcess", "0","Int")
-IniReadS($ichkForcePreBrewSiege, $g_sProfileConfigPath, "MySieges", "ForcePreBrewSiege", "0","Int")
+IniReadS($ichkForcePreSiegeBrewSiege, $g_sProfileConfigPath, "MySieges", "ForcePreSiegeBrewSiege", "0","Int")
 IniReadS($txtTotalCountSiege, $g_sProfileConfigPath, "MySieges", "TotalCountSiege", "0","Int")
+
+Local $sTextSieges
+Local $sTextSiegesString
 
 For $j = 0 To 2
 	For $i = 0 To UBound($MySieges) - 1
-		IniReadS($MySiegeSetting[$j][$i][0], $g_sProfileConfigPath, "MySieges", $MySieges[$i][0] & $j, "0", "Int")
-		IniReadS($MySiegeSetting[$j][$i][1],$g_sProfileConfigPath, "MySieges", $MySieges[$i][0] & "Order" & $j, $i + 1,"Int")
-		IniReadS($MySiegeSetting[$j][$i][2], $g_sProfileConfigPath, "MySieges", $MySieges[$i][0] & "Pre" & $j, "0", "Int")
+	 $sTextSiegesString = IniRead($g_sProfileConfigPath, "MySieges", $MySieges[$i][0]&$j, "0|"&$i + 1&"|0")
+	If Not StringInStr($sTextSiegesString, "|") = 0 Then 
+	$sTextSieges = StringSplit($sTextSiegesString, "|", $STR_NOCOUNT)
+		$MySiegeSetting[$j][$i][0] = Int($sTextSieges[0])
+		$MySiegeSetting[$j][$i][1] = Int($sTextSieges[1])	
+		$MySiegeSetting[$j][$i][2] = Int($sTextSieges[2])
+		Else
+		$MySiegeSetting[$j][$i][0] = Int($sTextSiegesString)
+		$MySiegeSetting[$j][$i][1] = $i + 1
+		$MySiegeSetting[$j][$i][2] = 0
+		Endif
 	Next
 Next
 
-$g_bDoPrebrewSiege = 0
+$g_bDoPreSiegebrewSiege = 0
 For $i = 0 To UBound($MySieges) - 1
 	Assign("ichkPreSiege" & $MySieges[$i][0],  $MySiegeSetting[$icmbTroopSetting][$i][2])
-	$g_bDoPrebrewSiege = BitOR($g_bDoPrebrewSiege, $MySiegeSetting[$icmbTroopSetting][$i][2])
+	$g_bDoPreSiegebrewSiege = BitOR($g_bDoPreSiegebrewSiege, $MySiegeSetting[$icmbTroopSetting][$i][2])
 	$MySieges[$i][3] =  $MySiegeSetting[$icmbTroopSetting][$i][0]
 	$MySieges[$i][1] =  $MySiegeSetting[$icmbTroopSetting][$i][1]
 Next

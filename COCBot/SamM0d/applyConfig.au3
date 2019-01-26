@@ -156,18 +156,18 @@ For $i = 0 To UBound($MySpells)-1
 	GUICtrlSetData(Eval("txtNum" & $MySpells[$i][0] & "Spell"), $MySpells[$i][3])
 	_GUICtrlComboBox_SetCurSel(Eval("cmbMy" & $MySpells[$i][0] & "SpellOrder"), $MySpells[$i][1]-1)
 Next
-;
+
 ;cmbMySpellOrder()
-;
-;GUICtrlSetData($txtTotalCountSpell2, $g_iTotalSpellValue)
+
+GUICtrlSetData($txtTotalCountSpell2, $g_iTotalSpellValue)
 lblMyTotalCountSpell()
 
 ; Sieges
-GUICtrlSetData($g_hTxtTotalCountSiege, $txtTotalCountSiege)
+_GUICtrlComboBox_SetCurSel($g_hTxtTotalCountSiege, $txtTotalCountSiege)
 
-GUICtrlSetState($chkMySiegesOrder, ($ichkMySiegesOrder = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+GUICtrlSetState($chkMySiegesSiegeOrder, ($ichkMySiegesSiegeOrder = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
 GUICtrlSetState($chkEnableDeleteExcessSieges, ($ichkEnableDeleteExcessSieges = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
-GUICtrlSetState($chkForcePreBrewSiege, ($ichkForcePreBrewSiege = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+GUICtrlSetState($chkForcePreSiegeBrewSiege, ($ichkForcePreSiegeBrewSiege = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
 
 For $i = 0 To UBound($MySieges)-1
 	GUICtrlSetState(Eval("chkPreSiege" & $MySieges[$i][0]), (Eval("ichkPreSiege" & $MySieges[$i][0]) = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
@@ -175,7 +175,7 @@ For $i = 0 To UBound($MySieges)-1
 	_GUICtrlComboBox_SetCurSel(Eval("cmbMySiege" & $MySieges[$i][0] & "SiegeOrder"), $MySieges[$i][1]-1)
 Next
 
-;cmbMySiegeSiegeOrder()
+;cmbMySiegeOrder()
 
 lblMyTotalCountSiege()
 ;

@@ -91,6 +91,7 @@ Func _Sleep($iDelay, $iSleep = True, $CheckRunState = True, $SleepWhenPaused = T
 			If BotCloseRequestProcessed() Then
 				BotClose() ; improve responsive bot close
 				$b_Sleep_Active = False
+				_WinAPI_EmptyWorkingSet()
 				Return True
 			EndIf
 		EndIf
@@ -99,6 +100,7 @@ Func _Sleep($iDelay, $iSleep = True, $CheckRunState = True, $SleepWhenPaused = T
 	If $CheckRunState And Not $g_bRunState Then
 		ResumeAndroid()
 		$b_Sleep_Active = False
+		_WinAPI_EmptyWorkingSet()
 		Return True
 	EndIf
 	Local $iRemaining = $iDelay - __TimerDiff($iBegin)
@@ -107,6 +109,7 @@ Func _Sleep($iDelay, $iSleep = True, $CheckRunState = True, $SleepWhenPaused = T
 		If $CheckRunState = True And $g_bRunState = False Then
 			ResumeAndroid()
 			$b_Sleep_Active = False
+			_WinAPI_EmptyWorkingSet()
 			Return True
 		EndIf
 		If SetCriticalMessageProcessing() = False Then
@@ -138,6 +141,7 @@ Func _Sleep($iDelay, $iSleep = True, $CheckRunState = True, $SleepWhenPaused = T
 		CheckBotRequests() ; check if bot window should be moved
 	WEnd
 	$b_Sleep_Active = False
+	_WinAPI_EmptyWorkingSet()
 	Return False
 EndFunc   ;==>_Sleep
 

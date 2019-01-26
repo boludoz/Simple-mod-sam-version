@@ -169,8 +169,19 @@ Func AttackReport()
 	If _ColorCheck(_GetPixelColor($aWonThreeStarAtkRprt[0], $aWonThreeStarAtkRprt[1], True), Hex($aWonThreeStarAtkRprt[2], 6), $aWonThreeStarAtkRprt[3]) Then $starsearned += 1
 	SetLog("Stars earned: " & $starsearned)
 
+    ; samm0d
+    If $ichkEnableMySwitch = 1 Then
+        If $iCurActiveAcc <> - 1 Then
+            $sAccAct = String($iCurActiveAcc + 1)
+        Else
+            $sAccAct = String("-")
+        EndIf
+    Else
+        $sAccAct = String($g_iCurAccount + 1)
+    EndIf
+
 	Local $AtkLogTxt
-	$AtkLogTxt = "  " & String($g_iCurAccount + 1) & "|" & _NowTime(4) & "|"
+	$AtkLogTxt = "  " & $sAccAct & "|" & _NowTime(4) & "|"
 	$AtkLogTxt &= StringFormat("%5d", $g_aiCurrentLoot[$eLootTrophy]) & "|"
 	$AtkLogTxt &= StringFormat("%3d", $g_iSearchCount) & "|"
 	$AtkLogTxt &= StringFormat("%2d", $g_iSidesAttack) & "|"

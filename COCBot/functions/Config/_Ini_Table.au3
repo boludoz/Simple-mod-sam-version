@@ -79,6 +79,8 @@ Func CheckSamM0dStrategiesSection($sCurrentSection)
             Return True
         Case "MySpells"
             Return True
+        Case "MySieges"
+            Return True
     EndSwitch
     Return False
 EndFunc

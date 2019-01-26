@@ -64,7 +64,7 @@ Global $g_iDebugWindowMessages = 0
 
 Global $hStruct_SleepMicro = DllStructCreate("int64 time;")
 Global $pStruct_SleepMicro = DllStructGetPtr($hStruct_SleepMicro)
-Global $DELAYSLEEP = 500
+Global $DELAYSLEEP = 25000
 Global $g_bDebugSetlog = False
 Global $g_bDebugAndroid = False
 Global $g_asCmdLine = [0]
@@ -157,6 +157,7 @@ $hTimeoutAutoClose = $hStarted
 Local $iExitCode = 0
 Local $iActiveBots = 0
 While 1
+	_Sleep($DELAYSLEEP)
 	$iActiveBots = UBound(GetManagedMyBotDetails())
 	SetDebugLog("Broadcast query bot state, registered bots: " & $iActiveBots)
 	_WinAPI_BroadcastSystemMessage($WM_MYBOTRUN_API, 0x0100 + $iActiveBots, $g_hFrmBot, $BSF_POSTMESSAGE + $BSF_IGNORECURRENTTASK, $BSM_APPLICATIONS)

@@ -65,7 +65,7 @@ Global $MySpellSetting[3][11][3] = _
 Global $g_iTotalSiegeValue = 0
 
 Global $btnResetSieges, $btnResetSiegeOrder
-Global $g_bDoPrebreSiege = 0
+Global $g_bDoPreSiegebreSiege = 0
 
 Global $grpSieges, $lblTotalSiege
 ;WallW - BattleB - StoneS
@@ -75,18 +75,18 @@ Global $txtNumSiegeWallWSiege,$txtNumSiegeBattleBSiege,$txtNumSiegeStoneSSiege
 Global $lblTimesWallW, $lblTimesBattleB,$lblTimesStoneS
 
 Global $g_hTxtTotalCountSiege, $txtTotalCountSiege
-Global $chkMySiegesOrder, $ichkMySiegesOrder
+Global $chkMySiegesSiegeOrder, $ichkMySiegesSiegeOrder
 Global $chkEnableDeleteExcessSieges, $ichkEnableDeleteExcessSieges
-Global $chkForcePreBrewSiege, $ichkForcePreBrewSiege
+Global $chkForcePreSiegeBrewSiege, $ichkForcePreSiegeBrewSiege
 Global $cmbMySiegeWallWSiegeOrder, $cmbMySiegeBattleBSiegeOrder, $cmbMySiegeStoneSSiegeOrder
+Global $chkMySiegesOrder, $ichkMySiegesOrder
 
  ; Ejercito|Tipo de tropa|Settings
 Global $MySiegeSetting[3][4][3] = _
 [[[0,0,0],[0,0,0],[0,0,0]], _
  [[0,0,0],[0,0,0],[0,0,0]], _
  [[0,0,0],[0,0,0],[0,0,0]]]
- 
- Global $g_bDoPrebrewSiege = 0
+ Global $g_bDoPreSiegebrewSiege = 0
  Global $g_iMySiegesSize = 0
 Global $MySieges[3][5] = _
 [["WallW",1,1,0,0], _

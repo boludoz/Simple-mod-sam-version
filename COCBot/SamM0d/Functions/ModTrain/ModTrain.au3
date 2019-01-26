@@ -127,23 +127,7 @@ Func ModTrain($ForcePreTrain = False)
 		
 		Local $iWaitMax = _ArrayMax($iKTime, 1)
 		
-		;; No kings
-		;Local $iTTime = $iKTime
-		;For $i = 0 To 2
-		;	_ArrayDelete($iTTime, $i)
-		;Next
-		;Local $iMaxVt = _ArrayMax($iKTime, 1)
-        ;
-		;; No Troops and Spells
-		;Local $iTKTime = $iKTime
-		;For $h = 2 To 3
-		;	_ArrayDelete($iTKTime, $i)
-		;Next
-		;Local $iMaxVk = _ArrayMax($iKTime, 1)
-        ;
-		;Local $iMaxV = _ArrayMax($iKTime, 1)
-		
-		If $g_iSamM0dDebug = 1 Then SetLog("$iMaxV: " & $iMaxV)
+		If $g_iSamM0dDebug = 1 Then SetLog("$iKTime: " & $iKTime)
 		
 	If $ichkEnableMySwitch = 1 Then
 
@@ -152,8 +136,8 @@ Func ModTrain($ForcePreTrain = False)
 			For $i = 0 To UBound($aSwitchList) - 1
 				If $aSwitchList[$i][4] = $iCurActiveAcc Then
 					;$aSwitchList[$i][0] = _DateAdd('n', $iKTime[0], _NowCalc())
-					$aSwitchList[$i][0] = _DateAdd('n', $iMaxV, _NowCalc())
-					If $iMaxV Then
+					$aSwitchList[$i][0] = _DateAdd('n', $iWaitMax, _NowCalc())
+					If $iWaitMax Then
 						SetLog("Army Ready Time: " & $aSwitchList[$i][0], $COLOR_INFO)
 					EndIf
 					If $aSwitchList[$i][2] <> 1 Then
@@ -168,13 +152,13 @@ Func ModTrain($ForcePreTrain = False)
 			If $bIsAttackType Then
 				If $g_iSamM0dDebug = 1 Then SetLog("$itxtTrainTimeLeft: " & $itxtTrainTimeLeft)
 				;If $g_iSamM0dDebug = 1 Then SetLog("$iKTime[0]: " & $iKTime[0])
-				If $g_iSamM0dDebug = 1 Then SetLog("$iMaxV: " & $iMaxV)
+				If $g_iSamM0dDebug = 1 Then SetLog("$iWaitMax: " & $iWaitMax)
 				If $g_iSamM0dDebug = 1 Then SetLog("Before $bAvoidSwitch: " & $bAvoidSwitch)
 				$bAvoidSwitch = False
-				If $iMaxV <= 0 Then
+				If $iWaitMax <= 0 Then
 					$bAvoidSwitch = True
 				Else
-					If $itxtTrainTimeLeft >= $iMaxV Then
+					If $itxtTrainTimeLeft >= $iWaitMax Then
 						$bAvoidSwitch = True
 					EndIf
 				EndIf
@@ -193,15 +177,37 @@ Func ModTrain($ForcePreTrain = False)
 	If $g_iSamM0dDebug = 1 Then Setlog("Fullarmy = " & $g_bFullArmy & " CurCamp = " & $g_CurrentCampUtilization & " TotalCamp = " & $g_iTotalCampSpace & " - result = " & ($g_bFullArmy = True And $g_CurrentCampUtilization = $g_iTotalCampSpace), $COLOR_DEBUG)
 	;$chkForcePreTrainTroops
 	;$itxtForcePreTrainStrength
-	If Not  $iWaitMax > $itxtStickToTrainWindow + 1 Then SmartWait4TrainMini((Number($iMaxVt)*60))
-
 	$g_bFirstStart = False
 
 	;;;;;; Protect Army cost stats from being missed up by DC and other errors ;;;;;;;
 	ClickP($aAway, 1, 250, "#0504")
 	If _Sleep(250) Then Return
+	Local $iWaitS = 0
+	Local $iCanSmart = 0 
+	$iCanSmart = CheckIsReady()
+	Local $iSmartTime
+	Local $iDateCalc
+	Local $aSmartTimeActual
+	If $ichkEnableMySwitch = 1 Then
+			If $iCurActiveAcc <> -1 Then
+				For $i = 0 To UBound($aSwitchList) - 1
+				If $aSwitchList[$i][4] = $iCurActiveAcc Then
+					$aSmartTimeActual = $aSwitchList[$iCurActiveAcc][0]
+					$aSmartTimeActual = _DateAdd('n', $aSwitchList[$iCurActiveAcc][6], $aSmartTimeActual)
+					Setlog("Switch: " & $aSmartTimeActual, $COLOR_GREEN)
+					$iSmartTime = _DateAdd('n', $iWaitMax, _NowCalc())
+					$iDateCalc = _DateDiff('s', $aSmartTimeActual, $iSmartTime)
+					ExitLoop
+				EndIf
+			Next
+			EndIf
+	EndIf
 
-    CheckIsReady()
+	$iWaitS = Number($iWaitMax)*60
+	If $ichkEnableMySwitch = 1 and Not $iCanSmart = 1 And $iDateCalc > 0 Then $iWaitS -= $iDateCalc
+		
+	If $iWaitS >= 60 Then SmartWait4TrainMini($iWaitS)
+	
 	If _Sleep(250) Then Return
 
 	ClickP($aAway, 1, 250, "#0504")
@@ -215,22 +221,6 @@ Func ModTrain($ForcePreTrain = False)
 	If $g_iSamM0dDebug = 1 Then SetLog("$g_bFullArmySpells: " & $g_bFullArmySpells)
 	If $g_iSamM0dDebug = 1 Then SetLog("$g_bFullCCSpells: " & $g_bFullCCSpells)
 	If $g_iSamM0dDebug = 1 Then SetLog("$g_FullCCTroops: " & $g_FullCCTroops)
-
-	If $g_FullCCTroops = False Or $g_bFullCCSpells = False Then
-		If $ichkEnableMySwitch = 1 Then
-			; If waiting for cc or cc spell, ignore stay to the account, cause you don't know when the cc or spell will be ready.
-			If $g_iSamM0dDebug = 1 Then SetLog("Disable Avoid Switch cause of waiting cc or cc spell enable.")
-			$bAvoidSwitch = False
-		EndIf
-	EndIf
-	
-	
-	;If $g_bFullArmy = True And $g_bFullArmyHero = True And $g_bFullArmySpells = True And $g_bFullCCSpells = True And $g_FullCCTroops = True Then
-	;	$g_bIsFullArmywithHeroesAndSpells = True
-	;Else
-	;	$g_bIsFullArmywithHeroesAndSpells = False
-	;EndIf
-
 	If $g_iSamM0dDebug = 1 Then SetLog("$g_bIsFullArmywithHeroesAndSpells: " & $g_bIsFullArmywithHeroesAndSpells)
 
 EndFunc   ;==>CustomTrain
@@ -243,6 +233,7 @@ Func CheckIsReady()
 	Local $iTotalSpellsToBrew = 0
 	Local $bFullArmyHero = False
 	Local $bFullSiege = False
+	Local $iSmartWait = 0
 	$g_bWaitForCCTroopSpell = False ; reset for waiting CC in SwitchAcc
 
 	If Not OpenArmyOverview(False, "CheckIfArmyIsReady()") Then Return
@@ -301,12 +292,24 @@ Func CheckIsReady()
 	If $g_bIsFullArmywithHeroesAndSpells Then
 		If $g_bNotifyTGEnable And $g_bNotifyAlertCampFull Then PushMsg("CampFull")
 		SetLog("Chief, is your Army ready? Yes, it is!", $COLOR_SUCCESS)
+		$iSmartWait = 0
 	Else
 		SetLog("Chief, is your Army ready? No, not yet!", $COLOR_ACTION)
+		$iSmartWait = 1
 	EndIf
 
 	; Force to Request CC troops or Spells
 	If Not $bFullArmyCC Then $g_bCanRequestCC = True
+	
+	If $g_FullCCTroops = False Or $g_bFullCCSpells = False Or $bFullArmyCC = False Then
+		If $ichkEnableMySwitch = 1 Then
+			; If waiting for cc or cc spell, ignore stay to the account, cause you don't know when the cc or spell will be ready.
+			If $g_iSamM0dDebug = 1 Then SetLog("Disable Avoid Switch cause of waiting cc or cc spell enable.")
+			$bAvoidSwitch = False
+		EndIf
+	EndIf
+
+	Return $iSmartWait
 
 EndFunc   ;==>CheckIsReady
 

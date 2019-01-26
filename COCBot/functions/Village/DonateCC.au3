@@ -22,7 +22,7 @@ Global $g_bSkipDonTroops = False, $g_bSkipDonSpells = False, $g_bSkipDonSiege = 
 Global $g_bDonateAllRespectBlk = False ; is turned on off durning donate all section, must be false all other times
 Global $g_aiDonatePixel ; array holding x, y position of donate button in chat window
 Global $g_aiAvailQueuedTroop[$eTroopCount], $g_aiAvailQueuedSpell[$eSpellCount]
-
+Global $g_aiDonatePixel
 Func PrepareDonateCC()
 	$g_aiPrepDon[0] = 0
 	$g_aiPrepDon[1] = 0
@@ -1198,6 +1198,7 @@ Func DonateWindow($bOpen = True)
 		If $g_bDebugSetlog Then SetDebugLog("DonateWindow Close Exit", $COLOR_DEBUG)
 		Return
 	EndIf
+	$g_aiDonatePixel = _MultiPixelSearch(200, $y, 230, 660 + $g_iBottomOffsetY, -2, 1, Hex(0x6da725, 6), $aChatDonateBtnColors, 20)
 
 	; Click on Donate Button and wait for the window
 	Local $iLeft = 0, $iTop = 0, $iRight = 0, $iBottom = 0, $i
@@ -1207,45 +1208,47 @@ Func DonateWindow($bOpen = True)
 		If $aChatDonateBtnColors[$i][2] < $iTop Then $iTop = $aChatDonateBtnColors[$i][2]
 		If $aChatDonateBtnColors[$i][2] > $iBottom Then $iBottom = $aChatDonateBtnColors[$i][2]
 	Next
-	$iLeft += $g_aiDonatePixel[0]
-	$iTop += $g_aiDonatePixel[1]
-	$iRight += $g_aiDonatePixel[0] + 1
-	$iBottom += $g_aiDonatePixel[1] + 1
-    ; samm0d
-    Local $iCount = 0
-    While $iCount < 8
-    If $g_bDebugSetlog Then SetLog("$iLeft: " & $iLeft & ",   $iTop: " & $iTop & ",   $iRight: " & $iRight & ",   $iBottom: " & $iBottom)
-    ForceCaptureRegion()
-	Local $g_aiDonatePixelCheck = _MultiPixelSearch($iLeft, $iTop, $iRight, $iBottom, -2, 1, Hex(0x6da725, 6), $aChatDonateBtnColors, 20)
-    
-	If IsArray($g_aiDonatePixelCheck) Then
-        Click($g_aiDonatePixel[0] + 50, $g_aiDonatePixel[1] + 10, 1, 0, "#0174")
-		ExitLoop
-    Else
-        If $g_bDebugSetlog Then SetDebugLog("Could not find the Donate Button!", $COLOR_DEBUG)
-	EndIf
-
-        ClickP($aAway, 1, 0, "#D05")
-        If _Sleep($DELAYDONATEWINDOW1) Then Return
-        $icount += 1
-		Sleep(50)
-    WEnd
-    If $iCount >= 8 Then
-        SetLog("Could not find the Donate Button!", $COLOR_ERROR)
-		Return False
-	EndIf
-	If _Sleep($DELAYDONATEWINDOW1) Then Return
-
-	;_CaptureRegion(0, 0, 320 + $g_iMidOffsetY, $g_aiDonatePixel[1] + 30 + $YComp)
-	Local $icount = 0
-	While Not (_ColorCheck(_GetPixelColor(331, $g_aiDonatePixel[1], True, "DonateWindow"), Hex(0xffffff, 6), 0))
-		If _Sleep($DELAYDONATEWINDOW2) Then Return
+	If IsArray($g_aiDonatePixel) Then
+	
+		$iLeft += $g_aiDonatePixel[0]
+		$iTop += $g_aiDonatePixel[1]
+		$iRight += $g_aiDonatePixel[0] + 1
+		$iBottom += $g_aiDonatePixel[1] + 1
+		; samm0d
+		Local $iCount = 0
+		While $iCount < 8
+		If $g_bDebugSetlog Then SetLog("$iLeft: " & $iLeft & ",   $iTop: " & $iTop & ",   $iRight: " & $iRight & ",   $iBottom: " & $iBottom)
 		ForceCaptureRegion()
+		Local $g_aiDonatePixelCheck = _MultiPixelSearch($iLeft, $iTop, $iRight, $iBottom, -2, 1, Hex(0x6da725, 6), $aChatDonateBtnColors, 20)
+		
+		If IsArray($g_aiDonatePixelCheck) Then
+			Click($g_aiDonatePixel[0] + 50, $g_aiDonatePixel[1] + 10, 1, 0, "#0174")
+			ExitLoop
+		Else
+			If $g_bDebugSetlog Then SetDebugLog("Could not find the Donate Button!", $COLOR_DEBUG)
+		EndIf
+	
+			ClickP($aAway, 1, 0, "#D05")
+			If _Sleep($DELAYDONATEWINDOW1) Then Return
+			$icount += 1
+			Sleep(50)
+		WEnd
+		If $iCount >= 8 Then
+			SetLog("Could not find the Donate Button!", $COLOR_ERROR)
+			Return False
+		EndIf
+		If _Sleep($DELAYDONATEWINDOW1) Then Return
+	
 		;_CaptureRegion(0, 0, 320 + $g_iMidOffsetY, $g_aiDonatePixel[1] + 30 + $YComp)
-		$icount += 1
-		If $icount = 20 Then ExitLoop
-	WEnd
-
+		Local $icount = 0
+		While Not (_ColorCheck(_GetPixelColor(331, $g_aiDonatePixel[1], True, "DonateWindow"), Hex(0xffffff, 6), 0))
+			If _Sleep($DELAYDONATEWINDOW2) Then Return
+			ForceCaptureRegion()
+			;_CaptureRegion(0, 0, 320 + $g_iMidOffsetY, $g_aiDonatePixel[1] + 30 + $YComp)
+			$icount += 1
+			If $icount = 20 Then ExitLoop
+		WEnd
+	EndIf
 	; Determinate the right position of the new Donation Window
 	; Will search in $Y column = 410 for the first pure white color and determinate that position the $DonationWindowTemp
 	$g_iDonationWindowY = 0
