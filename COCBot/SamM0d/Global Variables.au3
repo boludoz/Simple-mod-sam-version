@@ -19,6 +19,12 @@ Global $g_iScreenSizeErrorCount = 0
 
 Global $g_aiPrepDon[4] = [0, 0, 0, 0]
 
+; == train correction
+Global $g_bSmartQueueSystem = True
+Global $TroopsQueueFull = False
+Global $g_sImgArmyOverviewSpellQueued = @ScriptDir & "\COCBot\SamM0d\Images\Spells\Queue\"
+Global $g_sImgArmyOverviewTroopQueued = @ScriptDir & "\COCBot\SamM0d\Images\Troops\Queue\"
+
 ; ================================================== Attack PART ============================================ ;
 ;GUI
 Global $g_hGroup1  = 0

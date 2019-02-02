@@ -47,7 +47,18 @@ Func ModTrain($ForcePreTrain = False)
 			EndIf
 		EndIf
 	EndIf
+	
+	If _Sleep(250) Then Return
 
+	; Get Current available troops
+	getArmyTroops(False, False, False, False)
+	getArmySpells(False, False, False, False)
+
+	If _Sleep(250) Then Return
+	Local $TroopsToTrain = WhatToTrainSam(False, False)
+	_ArrayDisplay($TroopsToTrain)
+	Local $TroopsToRemove = WhatToTrainSam(True, False)
+	_ArrayDisplay($TroopsToTrain)
 	If _Sleep(250) Then Return
 
 	; 紧贴着造兵视窗
@@ -203,18 +214,23 @@ Func ModTrain($ForcePreTrain = False)
 			EndIf
 	EndIf
 
-	$iWaitS = Number($iWaitMax)*60
-	If $ichkEnableMySwitch = 1 and Not $iCanSmart = 1 And $iDateCalc > 0 Then $iWaitS -= $iDateCalc
-		
-	If $iWaitS >= 60 Then SmartWait4TrainMini($iWaitS)
 	
 	If _Sleep(250) Then Return
 
 	ClickP($aAway, 1, 250, "#0504")
 	If _Sleep(250) Then Return
+	; 	Local $bSmartQueueSystem = True
+	; 	If $bSmartQueueSystem Then
+			;TNRQT(False, True, True, True)
+	; 	EndIf
 
 	EndGainCost("Train")
 	UpdateStats()
+	
+	$iWaitS = Number($iWaitMax)*60
+	If $ichkEnableMySwitch = 1 and Not $iCanSmart = 1 And $iDateCalc > 0 Then $iWaitS -= $iDateCalc
+		
+	If $iWaitS >= 60 Then SmartWait4TrainMini($iWaitS)
 
 	If $g_iSamM0dDebug = 1 Then SetLog("$g_bfullArmy: " & $g_bfullArmy)
 	If $g_iSamM0dDebug = 1 Then SetLog("$g_bFullArmyHero: " & $g_bFullArmyHero)
@@ -224,6 +240,39 @@ Func ModTrain($ForcePreTrain = False)
 	If $g_iSamM0dDebug = 1 Then SetLog("$g_bIsFullArmywithHeroesAndSpells: " & $g_bIsFullArmywithHeroesAndSpells)
 
 EndFunc   ;==>CustomTrain
+
+Func GetResourcesTroopDiff()
+	Local $iNewCurElixir = 0
+	Local $iNewCurDarkElixir = 0
+	Local $bDarkTrue = False
+	Local $iDiffToReturn = 0
+	
+	; Let??s UPDATE the current Elixir and Dark elixir each Troop train on 'Bottom train Window Page'
+	If _ColorCheck(_GetPixelColor(223, 594, True), Hex(0xE8E8E0, 6), 20) Then ; Gray background window color
+		; Village without Dark Elixir
+		$iNewCurElixir = getResourcesValueTrainPage(315, 594) ; ELIXIR
+	Else
+		$bDarkTrue = True
+		; Village with Elixir and Dark Elixir
+		$iNewCurElixir = getResourcesValueTrainPage(230, 594) ; ELIXIR
+		$iNewCurDarkElixir = getResourcesValueTrainPage(382, 594) ; DARK ELIXIR
+	EndIf
+	
+	If $bDarkTrue = True Then
+			If Abs($g_iCurDarkElixir - $iNewCurDarkElixir) > Abs($g_iCurElixir - $iNewCurElixir) Then
+				$iDiffToReturn = Abs($g_iCurDarkElixir - $iNewCurDarkElixir)
+				Else
+				$iDiffToReturn = Abs($g_iCurElixir - $iNewCurElixir)
+			EndIf
+		Else
+			$iDiffToReturn = Abs($g_iCurElixir - $iNewCurElixir)
+	EndIf
+	
+	If $bDarkTrue = True Then $g_iCurDarkElixir = $iNewCurDarkElixir
+	$g_iCurElixir = $iNewCurElixir
+	
+	Return $iDiffToReturn  ; IA LOGIK
+EndFunc   ;==>GetResourcesTroopDiff
 
 Func CheckIsReady()
 

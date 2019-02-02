@@ -60,7 +60,10 @@ Global $MySpellSetting[3][11][3] = _
  [[[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]], _
   [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]], _
   [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]]
-
+;----------------------
+Global $g_iCurElixir = 0
+Global $g_iCurDarkElixir = 0
+Global $g_iCurGemAmount = 0
 ; ---------------------
 Global $g_iTotalSiegeValue = 0
 
@@ -263,18 +266,18 @@ Global $chkForcePreBrewSpell, $ichkForcePreBrewSpell
 Global $cmbMyLightningSpellOrder, $cmbMyHealSpellOrder, $cmbMyRageSpellOrder, $cmbMyJumpSpellOrder, $cmbMyFreezeSpellOrder, $cmbMyCloneSpellOrder, $cmbMyPoisonSpellOrder, $cmbMyEarthSpellOrder, $cmbMyHasteSpellOrder, $cmbMySkeletonSpellOrder, $cmbMyBatSpellOrder
 
 Global $g_iMySpellsSize = 0
-Global $MySpells[11][5] = _
-[["Lightning",  1,  2, 0, 0], _
-["Heal"	     ,  2,  2, 0, 0], _
-["Rage"      ,  3,  2, 0, 0], _
-["Jump"	     ,  4,  2, 0, 0], _
-["Freeze"	 ,  5,  1, 0, 0], _
-["Clone"	 ,  6,  3, 0, 0], _
-["Poison"	 ,  7,  1, 0, 0], _
-["Earth"	 ,  8,  1, 0, 0], _
-["Haste"	 ,  9,  1, 0, 0], _
-["Skeleton"	 , 10,  1, 0, 0], _
-["Bat"	 	 , 11,  1, 0, 0]]
+Global $MySpells[11][6] = _
+[["Lightning",  1,  2, 0, 0, "LSpell"], _
+["Heal"	     ,  2,  2, 0, 0, "HSpell"], _
+["Rage"      ,  3,  2, 0, 0, "RSpell"], _
+["Jump"	     ,  4,  2, 0, 0, "JSpell"], _
+["Freeze"	 ,  5,  1, 0, 0, "FSpell"], _
+["Clone"	 ,  6,  3, 0, 0, "CSpell"], _
+["Poison"	 ,  7,  1, 0, 0, "PSpell"], _
+["Earth"	 ,  8,  1, 0, 0, "ESpell"], _
+["Haste"	 ,  9,  1, 0, 0, "HaSpell"], _
+["Skeleton"	 , 10,  1, 0, 0, "SkSpell"], _
+["Bat"	 	 , 11,  1, 0, 0, "BtSpell"]]
 
 ; updated 28 Jun 2017
 Global $MySpellsCost[11][8] = _

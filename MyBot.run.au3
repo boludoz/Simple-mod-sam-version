@@ -734,8 +734,8 @@ Func runBot() ;Bot that runs everything in order
 		SetLog("Rematching Account [" & $g_iNextAccount + 1 & "] with Profile [" & GUICtrlRead($g_ahCmbProfile[$g_iNextAccount]) & "]")
 		SwitchCoCAcc($g_iNextAccount)
 	EndIf
-
-	ModTrain()
+	;If _Sleep(200) Then Return
+	;TNRQT(False, True, True, True)
 
 	while $g_bRunState = True
 		; samm0d

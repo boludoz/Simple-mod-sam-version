@@ -135,7 +135,7 @@ Func CheckAvailableCCUnit()
 			EndIf
 		Next
 
-		If $bDeletedExcess Then
+		If $bDeletedExcess = True Then
 			$bDeletedExcess = False
 			SetLog(" >>> remove excess cc troops.", $COLOR_RED)
 			If WaitforPixel($aButtonEditArmy2[4],$aButtonEditArmy2[5],$aButtonEditArmy2[4]+1,$aButtonEditArmy2[5]+1,Hex($aButtonEditArmy2[6], 6), $aButtonEditArmy2[7],20) Then

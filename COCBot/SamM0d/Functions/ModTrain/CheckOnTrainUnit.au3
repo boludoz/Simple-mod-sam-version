@@ -203,7 +203,7 @@ Func CheckOnTrainUnit($hHBitmap)
 		EndIf
 	Next
 
-	If $bDeletedExcess Then
+	If $bDeletedExcess = True Then
 		$bDeletedExcess = False
 		SetLog(" >>> Some troops over train, stop and remove excess troops.", $COLOR_RED)
 		If gotoTrainTroops() = False Then Return
@@ -267,7 +267,7 @@ Func CheckOnTrainUnit($hHBitmap)
 			EndIf
 			EndIf
 		EndIf
-		If $bDeletedExcess Then
+		If $bDeletedExcess = True Then
 			$bDeletedExcess = False
 			SetLog(" >>> Some troops over train, stop and remove excess pre-train troops.", $COLOR_RED)
 			If gotoTrainTroops() = False Then Return

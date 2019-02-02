@@ -923,39 +923,39 @@ Func IsGUICheckedForSpell($Spell, $Mode)
 	Return False
 EndFunc   ;==>IsGUICheckedForSpell
 
-Func DragIfNeeded($Troop)
-
-	If Not $g_bRunState Then Return
-	Local $bCheckPixel = False
-
-	If IsDarkTroop($Troop) Then
-		If _ColorCheck(_GetPixelColor(834, 403, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
-		If $g_bDebugSetlogTrain Then SetLog("DragIfNeeded Dark Troops: " & $bCheckPixel)
-		For $i = 1 To 3
-			If Not $bCheckPixel Then
-				ClickDrag(715, 445 + $g_iMidOffsetY, 220, 445 + $g_iMidOffsetY, 2000)
-				If _Sleep(1500) Then Return
-				If _ColorCheck(_GetPixelColor(834, 403, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
-			Else
-				Return True
-			EndIf
-		Next
-	Else
-		If _ColorCheck(_GetPixelColor(22, 403, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
-		If $g_bDebugSetlogTrain Then SetLog("DragIfNeeded Normal Troops: " & $bCheckPixel)
-		For $i = 1 To 3
-			If Not $bCheckPixel Then
-				ClickDrag(220, 445 + $g_iMidOffsetY, 725, 445 + $g_iMidOffsetY, 2000)
-				If _Sleep(1500) Then Return
-				If _ColorCheck(_GetPixelColor(22, 403, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
-			Else
-				Return True
-			EndIf
-		Next
-	EndIf
-	SetLog("Failed to Verify Troop " & $g_asTroopNames[TroopIndexLookup($Troop, "DragIfNeeded")] & " Position or Failed to Drag Successfully", $COLOR_ERROR)
-	Return False
-EndFunc   ;==>DragIfNeeded
+;Func DragIfNeeded($Troop)
+;
+;	If Not $g_bRunState Then Return
+;	Local $bCheckPixel = False
+;
+;	If IsDarkTroop($Troop) Then
+;		If _ColorCheck(_GetPixelColor(834, 403, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
+;		If $g_bDebugSetlogTrain Then SetLog("DragIfNeeded Dark Troops: " & $bCheckPixel)
+;		For $i = 1 To 3
+;			If Not $bCheckPixel Then
+;				ClickDrag(715, 445 + $g_iMidOffsetY, 220, 445 + $g_iMidOffsetY, 2000)
+;				If _Sleep(1500) Then Return
+;				If _ColorCheck(_GetPixelColor(834, 403, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
+;			Else
+;				Return True
+;			EndIf
+;		Next
+;	Else
+;		If _ColorCheck(_GetPixelColor(22, 403, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
+;		If $g_bDebugSetlogTrain Then SetLog("DragIfNeeded Normal Troops: " & $bCheckPixel)
+;		For $i = 1 To 3
+;			If Not $bCheckPixel Then
+;				ClickDrag(220, 445 + $g_iMidOffsetY, 725, 445 + $g_iMidOffsetY, 2000)
+;				If _Sleep(1500) Then Return
+;				If _ColorCheck(_GetPixelColor(22, 403, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
+;			Else
+;				Return True
+;			EndIf
+;		Next
+;	EndIf
+;	SetLog("Failed to Verify Troop " & $g_asTroopNames[TroopIndexLookup($Troop, "DragIfNeeded")] & " Position or Failed to Drag Successfully", $COLOR_ERROR)
+;	Return False
+;EndFunc   ;==>DragIfNeeded
 
 Func DoWhatToTrainContainSpell($rWTT)
 	For $i = 0 To (UBound($rWTT) - 1)

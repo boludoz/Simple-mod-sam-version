@@ -151,7 +151,7 @@ Func CheckAvailableUnit($hHBitmap)
 		EndIf
 	EndIf
 
-		If $bDeletedExcess Then
+		If $bDeletedExcess = True Then
 			$bDeletedExcess = False
 			If gotoTrainTroops() = False Then Return
 			If Not _ColorCheck(_GetPixelColor(823, 175 + $g_iMidOffsetY, True), Hex(0xCFCFC8, 6), 20) Then
@@ -161,6 +161,7 @@ Func CheckAvailableUnit($hHBitmap)
 			EndIf
 
 			If gotoArmy() = False Then Return
+
 			SetLog(" >>> remove excess troops.", $COLOR_RED)
 			If WaitforPixel($aButtonEditArmy2[4],$aButtonEditArmy2[5],$aButtonEditArmy2[4]+1,$aButtonEditArmy2[5]+1,Hex($aButtonEditArmy2[6], 6), $aButtonEditArmy2[7],20) Then
 				Click($aButtonEditArmy2[0],$aButtonEditArmy2[1],1,0,"#EditArmy")

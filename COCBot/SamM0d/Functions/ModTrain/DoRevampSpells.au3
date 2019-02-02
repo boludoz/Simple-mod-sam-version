@@ -94,79 +94,68 @@ Func DoRevampSpells($bDoPreTrain = False)
 					SetLog($CustomTrain_MSG_10 & " " & GetTroopName(Eval("enum" & $tempSpells[$i][0]) + $eLSpell, $iOnQQty) & " x" & $iOnQQty,$COLOR_ACTION)
 				EndIf
 			Next
-
-			Local $iCurElixir = $g_aiCurrentLoot[$eLootElixir]
-			Local $iCurDarkElixir = $g_aiCurrentLoot[$eLootDarkElixir]
-			Local $iCurGemAmount = $g_iGemAmount
-
-			SetLog("Elixir: " & $iCurElixir & "   Dark Elixir: " & $iCurDarkElixir & "   Gem: " & $iCurGemAmount, $COLOR_INFO)
+			
+			Local $iBuildCost = 0
+			Local $iCost = 0
+			Local $bGetCost = False
+			
+			GetResourcesTroopDiff()
+			
+			SetLog("Elixir: " & $g_iCurElixir & "   Dark Elixir: " & $g_iCurDarkElixir, $COLOR_INFO)
 
 			For $i = 0 To UBound($tempSpells) - 1
 				Local $tempSpell = Eval("Add" & $tempSpells[$i][0] & "Spell")
 				If $tempSpell > 0 And $iRemainSpellsCapacity > 0 Then
 
 					If LocateTroopButton($tempSpells[$i][0], True) Then
-					Local $iCost
-					; check train cost before click, incase use gem
-
-					If $ichkEnableMySwitch = 0 Then
-						If $tempSpells[$i][4] = 0 Then
-							$iCost = getMyOcr(0,$g_iTroopButtonX - 55,$g_iTroopButtonY + 26, 68, 18,"troopcost",True,False,True)
-							If $iCost = 0 Or $iCost >= $MySpellsCost[Eval("enum" & $tempSpells[$i][0])][0] Then
-								; cannot read train cost, use max level train cost
-								$iCost = $MySpellsCost[Eval("enum" & $tempSpells[$i][0])][0]
-							EndIf
-							$MySpells[Eval("enum" & $tempSpells[$i][0])][4] = $iCost
-						Else
-							$iCost = $tempSpells[$i][4]
-						EndIf
-					Else
-						$iCost = getMyOcr(0,$g_iTroopButtonX - 55,$g_iTroopButtonY + 26, 68, 18,"troopcost",True,False,True)
-						If $iCost = 0 Or $iCost >= $MySpellsCost[Eval("enum" & $tempSpells[$i][0])][0] Then
-							; cannot read train cost, use max level train cost
-							$iCost = $MySpellsCost[Eval("enum" & $tempSpells[$i][0])][0]
-						EndIf
-					EndIf
-
-					If $g_iSamM0dDebug = 1 Then SetLog("$iCost: " & $iCost)
-					Local $iBuildCost = (Eval("enum" & $tempSpells[$i][0]) > $iDarkFixSpell ? $iCurDarkElixir : $iCurElixir)
-
-					If $g_iSamM0dDebug = 1 Then SetLog("$BuildCost: " & $iBuildCost)
-					If $g_iSamM0dDebug = 1 Then SetLog("Total need: " & ($tempSpell * $iCost))
-					If ($tempSpell * $iCost) > $iBuildCost Then
-						$bFlagOutOfResource = True
-						; use eval and not $i to compare because of maybe after array sort $tempTroops
-						Setlog("Not enough " & (Eval("enum" & $tempSpells[$i][0]) > $iDarkFixSpell ? "Dark" : "") & " Elixir to brew " & GetTroopName(Eval("enum" & $tempSpells[$i][0])+ $eLSpell,0), $COLOR_ERROR)
-						SetLog("Current " & (Eval("enum" & $tempSpells[$i][0]) > $iDarkFixSpell ? "Dark" : "") & " Elixir: " & $iBuildCost, $COLOR_ERROR)
-						SetLog("Total need: " & $tempSpell * $iCost, $COLOR_ERROR)
-					EndIf
-					If $bFlagOutOfResource Then
-						$g_bOutOfElixir = 1
-						Setlog("Switching to Halt Attack, Stay Online Mode...", $COLOR_ERROR)
-						$g_bChkBotStop = True ; set halt attack variable
-						$g_icmbBotCond = 18; set stay online
-						If Not ($g_bfullarmy = True) Then $g_bRestart = True ;If the army camp is full, If yes then use it to refill storages
-						Return ; We are out of Elixir stop training.
-					EndIf
-
-					SetLog($CustomTrain_MSG_14 & " " & GetTroopName(Eval("enum" & $tempSpells[$i][0])+ $eLSpell,$tempSpell) & " x" & $tempSpell & " with total " & (Eval("enum" & $tempSpells[$i][0]) > $iDarkFixSpell ? $CustomTrain_MSG_DarkElixir : $CustomTrain_MSG_Elixir) & ": " & ($tempSpell * $iCost),(Eval("enum" & $tempSpells[$i][0]) > $iDarkFixSpell ? $COLOR_DARKELIXIR : $COLOR_ELIXIR))
-
-					If ($tempSpells[$i][2] * $tempSpell) <= $iRemainSpellsCapacity Then
-						If MyTrainClick($g_iTroopButtonX, $g_iTroopButtonY, $tempSpell, $g_iTrainClickDelay, "#BS01", True) Then
-							If Eval("enum" & $tempSpells[$i][0]) > $iDarkFixSpell Then
-								$iCurDarkElixir -= ($tempSpell * $iCost)
+							If ($tempSpells[$i][2] * $tempSpell) <= $iRemainSpellsCapacity Then
+								If MyTrainClick($g_iTroopButtonX, $g_iTroopButtonY, $tempSpell, $g_iTrainClickDelay, "#BS01", True) Then 
+										$bGetCost = True
+									Else
+										$bGetCost = False
+								EndIf
 							Else
-								$iCurElixir -= ($tempSpell * $iCost)
+								SetLog("Error: remaining space cannot fit to brew " & GetTroopName(Eval("enum" & $tempSpells[$i][0])+ $eLSpell,0), $COLOR_ERROR)
 							EndIf
-							$iRemainSpellsCapacity -= ($tempSpells[$i][2] * $tempSpell)
-						EndIf
-					Else
-						SetLog("Error: remaining space cannot fit to brew " & GetTroopName(Eval("enum" & $tempSpells[$i][0])+ $eLSpell,0), $COLOR_ERROR)
-					EndIf
-
+						$bGetCost = True
 					Else
 						SetLog("Cannot find button: " & $tempSpells[$i][0] & " for click", $COLOR_ERROR)
 					EndIf
+					
+					If $bGetCost = True Then
+						; reduce some speed
+						If _Sleep(250) Then Return
+	
+						$iCost = Int(GetResourcesTroopDiff())
+						
+						; reduce some speed
+						If _Sleep(750) Then Return
+
+						$iCost = $iCost / $tempSpell
+						Setlog(" - Spell Cost : " & $iCost ,$COLOR_GREEN)
+							; Boludoz cost Update.
+							$iBuildCost = (Eval("enum" & $tempSpells[$i][0]) > $iDarkFixSpell ? $g_iCurDarkElixir : $g_iCurElixir)
+							If ($tempSpell * $iCost) > $iBuildCost Then
+								$bFlagOutOfResource = True
+								; use eval and not $i to compare because of maybe after array sort $tempTroops
+								Setlog("Not enough " & (Eval("enum" & $tempSpells[$i][0]) > $iDarkFixSpell ? "Dark" : "") & " Elixir to brew " & GetTroopName(Eval("enum" & $tempSpells[$i][0])+ $eLSpell,0), $COLOR_ERROR)
+								SetLog("Current " & (Eval("enum" & $tempSpells[$i][0]) > $iDarkFixSpell ? "Dark" : "") & " Elixir: " & $iBuildCost, $COLOR_ERROR)
+								SetLog("Total need: " & $tempSpell * $iCost, $COLOR_ERROR)
+							EndIf
+							If $bFlagOutOfResource Then
+								$g_bOutOfElixir = 1
+								Setlog("Switching to Halt Attack, Stay Online Mode...", $COLOR_ERROR)
+								$g_bChkBotStop = True ; set halt attack variable
+								$g_icmbBotCond = 18; set stay online
+								If Not ($g_bfullarmy = True) Then $g_bRestart = True ;If the army camp is full, If yes then use it to refill storages
+								Return ; We are out of Elixir stop training.
+							EndIf
+							SetLog($CustomTrain_MSG_14 & " " & GetTroopName(Eval("enum" & $tempSpells[$i][0])+ $eLSpell,$tempSpell) & " x" & $tempSpell & " with total " & (Eval("enum" & $tempSpells[$i][0]) > $iDarkFixSpell ? $CustomTrain_MSG_DarkElixir : $CustomTrain_MSG_Elixir) & ": " & ($tempSpell * $iCost),(Eval("enum" & $tempSpells[$i][0]) > $iDarkFixSpell ? $COLOR_DARKELIXIR : $COLOR_ELIXIR))
+							Else 
+						; reduce some speed
+						If _Sleep(500) Then Return
+					EndIf
+					$bGetCost = False
 				EndIf
 			Next
 	EndIf

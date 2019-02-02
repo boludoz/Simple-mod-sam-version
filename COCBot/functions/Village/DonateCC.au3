@@ -1198,7 +1198,7 @@ Func DonateWindow($bOpen = True)
 		If $g_bDebugSetlog Then SetDebugLog("DonateWindow Close Exit", $COLOR_DEBUG)
 		Return
 	EndIf
-	$g_aiDonatePixel = _MultiPixelSearch(200, $y, 230, 660 + $g_iBottomOffsetY, -2, 1, Hex(0x6da725, 6), $aChatDonateBtnColors, 20)
+	Local $g_aiDonatePixel = _MultiPixelSearch(200, $y, 230, 660 + $g_iBottomOffsetY, -2, 1, Hex(0x6da725, 6), $aChatDonateBtnColors, 20)
 
 	; Click on Donate Button and wait for the window
 	Local $iLeft = 0, $iTop = 0, $iRight = 0, $iBottom = 0, $i

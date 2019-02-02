@@ -93,110 +93,86 @@ Func DoRevampTroops($bDoPreTrain = False)
 					SetLog($CustomTrain_MSG_5 & " " & GetTroopName(Eval("e" & $tempTroops[$i][0]), $iOnQQty) & " x" & $iOnQQty,$COLOR_ACTION)
 				EndIf
 			Next
+			
+			Local $iBuildCost = 0
+			Local $iCost = 0
+			Local $bGetCost = False
+			Local $fixRemain = 0
 
-			Local $iCurElixir = $g_aiCurrentLoot[$eLootElixir]
-			Local $iCurDarkElixir = $g_aiCurrentLoot[$eLootDarkElixir]
-			Local $iCurGemAmount = $g_iGemAmount
+			GetResourcesTroopDiff()
+			If _Sleep(750) Then Return
 
-			SetLog("Elixir: " & $iCurElixir & "   Dark Elixir: " & $iCurDarkElixir & "   Gem: " & $iCurGemAmount, $COLOR_INFO)
+			SetLog("Elixir: " & $g_iCurElixir & "   Dark Elixir: " & $g_iCurDarkElixir, $COLOR_INFO)
 
 			For $i = 0 To UBound($tempTroops) - 1
+				; Reset var
+				$iCost = 0
+				$bGetCost = False
+				$iBuildCost = 0
+				$fixRemain = 0
+				
 				Local $Troop4Add = Eval("Add" & $tempTroops[$i][0])
 				If $Troop4Add > 0 And $iRemainTroopsCapacity > 0 Then
 					; locate troop button
 					If LocateTroopButton($tempTroops[$i][0]) Then
-					Local $fixRemain = 0
-					Local $iCost
-					; check train cost before click, incase use gem
-
-					If $ichkEnableMySwitch = 0 Then
-						If $tempTroops[$i][4] = 0 Then
-							$iCost = getMyOcr(0,$g_iTroopButtonX - 55,$g_iTroopButtonY + 26, 68, 18,"troopcost",True,False,True)
-							If $iCost = 0 Or $iCost >= $MyTroopsCost[Eval("e" & $tempTroops[$i][0])][0] Then
-								; cannot read train cost, use max level train cost
-								$iCost = $MyTroopsCost[Eval("e" & $tempTroops[$i][0])][0]
-							EndIf
-							$MyTroops[Eval("e" & $tempTroops[$i][0])][4] = $iCost
-						Else
-							$iCost = $tempTroops[$i][4]
-						EndIf
-					Else
-						$iCost = getMyOcr(0,$g_iTroopButtonX - 55,$g_iTroopButtonY + 26, 68, 18,"troopcost",True,False,True)
-						If $iCost = 0 Or $iCost >= $MyTroopsCost[Eval("e" & $tempTroops[$i][0])][0] Then
-							; cannot read train cost, use max level train cost
-							$iCost = $MyTroopsCost[Eval("e" & $tempTroops[$i][0])][0]
-						EndIf
-					EndIf
-
-					If $g_iSamM0dDebug = 1 Then SetLog("$iCost: " & $iCost)
-					Local $iBuildCost = (Eval("e" & $tempTroops[$i][0]) > $iDarkFixTroop ? $iCurDarkElixir : $iCurElixir)
-
-					If $g_iSamM0dDebug = 1 Then SetLog("$iBuildCost: " & $iBuildCost)
-					If $g_iSamM0dDebug = 1 Then SetLog("Total need: " & ($Troop4Add * $iCost))
-					If ($Troop4Add * $iCost) > $iBuildCost Then
-						$bFlagOutOfResource = True
-						; use eval and not $i to compare because of maybe after array sort $tempTroops
-						Setlog($CustomTrain_MSG_8 & " " & (Eval("e" & $tempTroops[$i][0]) > $iDarkFixTroop ? $CustomTrain_MSG_DarkElixir : $CustomTrain_MSG_Elixir) & " " & $CustomTrain_MSG_9 & " " & GetTroopName(Eval("e" & $tempTroops[$i][0]),0), $COLOR_ERROR)
-						SetLog("Current " & (Eval("e" & $tempTroops[$i][0]) > $iDarkFixTroop ? $CustomTrain_MSG_DarkElixir : $CustomTrain_MSG_Elixir)  & ": " & $iBuildCost, $COLOR_ERROR)
-						SetLog("Total need: " & $Troop4Add * $iCost, $COLOR_ERROR)
-					EndIf
-
-					If $bFlagOutOfResource Then
-						$g_bOutOfElixir = 1
-						Setlog("Switching to Halt Attack, Stay Online Mode...", $COLOR_ERROR)
-						$g_bChkBotStop = True ; set halt attack variable
-						$g_iCmbBotCond = 18; set stay online
-						If Not ($g_bFullArmy = True) Then $g_bRestart = True ;If the army camp is full, If yes then use it to refill storages
-						Return ; We are out of Elixir stop training.
-					EndIf
-					; use eval and not $i to compare because of maybe after array sort $tempTroops
-					SetLog($CustomTrain_MSG_6 & " " & GetTroopName(Eval("e" & $tempTroops[$i][0]),$Troop4Add) & " x" & $Troop4Add & " " & $CustomTrain_MSG_7 & " " & (Eval("e" & $tempTroops[$i][0]) > $iDarkFixTroop ? $CustomTrain_MSG_DarkElixir : $CustomTrain_MSG_Elixir) & " : " & ($Troop4Add * $iCost),(Eval("e" & $tempTroops[$i][0]) > 12 ? $COLOR_DARKELIXIR : $COLOR_ELIXIR))
-
-					If ($tempTroops[$i][2] * $Troop4Add) <= $iRemainTroopsCapacity Then
-						If MyTrainClick($g_iTroopButtonX, $g_iTroopButtonY, $Troop4Add,$g_iTrainClickDelay, "#TT01") Then
-							If Eval("e" & $tempTroops[$i][0]) > $iDarkFixTroop Then
-								$iCurDarkElixir -= ($Troop4Add * $iCost)
-							Else
-								$iCurElixir -= ($Troop4Add * $iCost)
-							EndIf
-							$iRemainTroopsCapacity -= ($tempTroops[$i][2] * $Troop4Add)
-						EndIf
-					Else
-						Local $iReduceCap = Int($iRemainTroopsCapacity / $tempTroops[$i][2])
-						SetLog("troops above cannot fit to max capicity, reduce to train " & GetTroopName(Eval("e" & $tempTroops[$i][0]),$iReduceCap) & " x" & $iReduceCap,$COLOR_ERROR)
-						If MyTrainClick($g_iTroopButtonX, $g_iTroopButtonY,$iReduceCap ,$g_iTrainClickDelay, "#TT01") Then
-							If Eval("e" & $tempTroops[$i][0]) > $iDarkFixTroop Then
-								$iCurDarkElixir -= ($iReduceCap * $iCost)
-							Else
-								$iCurElixir -= ($iReduceCap * $iCost)
-							EndIf
-							$fixRemain = $iRemainTroopsCapacity - ($iReduceCap * $tempTroops[$i][2])
-							$iRemainTroopsCapacity -= ($iRemainTroopsCapacity - ($iReduceCap * $tempTroops[$i][2]))
-						EndIf
-					EndIf
-					If $fixRemain > 0 Then
-;~ 						CheckNeedSwipe($eArch)
-						SetLog("still got remain capacity, so train " & GetTroopName(Eval("eArch"),$fixRemain) & " x" & $fixRemain & " to fit it.",$COLOR_ERROR)
-						If LocateTroopButton("Arch") Then
-							If MyTrainClick($g_iTroopButtonX, $g_iTroopButtonY,$fixRemain,$g_iTrainClickDelay, "#TT01") Then
-								If Eval("e" & $tempTroops[$i][0]) > $iDarkFixTroop Then
-									$iCurDarkElixir -= ($fixRemain * $MyTroopsCost[$eArch][0])
-								Else
-									$iCurElixir -= ($fixRemain * $MyTroopsCost[$eArch][0])
+							If ($tempTroops[$i][2] * $Troop4Add) <= $iRemainTroopsCapacity Then
+								If MyTrainClick($g_iTroopButtonX, $g_iTroopButtonY, $Troop4Add,$g_iTrainClickDelay, "#TT01") Then 
+										$bGetCost = True
+										$iRemainTroopsCapacity -= ($tempTroops[$i][2] * $Troop4Add)
+									Else
+										$bGetCost = False
 								EndIf
-								$iRemainTroopsCapacity -= $fixRemain
+							Else
+								Local $iReduceCap = Int($iRemainTroopsCapacity / $tempTroops[$i][2])
+								SetLog("troops above cannot fit to max capicity, reduce to train " & GetTroopName(Eval("e" & $tempTroops[$i][0]),$iReduceCap) & " x" & $iReduceCap,$COLOR_ERROR)
+								If MyTrainClick($g_iTroopButtonX, $g_iTroopButtonY,$iReduceCap ,$g_iTrainClickDelay, "#TT01") Then 
+										$bGetCost = True
+										$fixRemain = $iRemainTroopsCapacity - ($iReduceCap * $tempTroops[$i][2])
+										$iRemainTroopsCapacity -= ($iRemainTroopsCapacity - ($iReduceCap * $tempTroops[$i][2]))
+									Else
+										$bGetCost = False
+								EndIf
 							EndIf
-						Else
-							SetLog("Cannot find button (1): " & $tempTroops[$i][0] & " for click", $COLOR_ERROR)
-						EndIf
-					EndIf
-
+						$bGetCost = True
 					Else
-						SetLog("Cannot find button (2): " & $tempTroops[$i][0] & " for click", $COLOR_ERROR)
+						SetLog("Cannot find button : " & $tempTroops[$i][0] & " for click", $COLOR_ERROR)
 					EndIf
+					
+					If $bGetCost = True Then
+						; reduce some speed
+						If _Sleep(750) Then Return
+	
+						$iCost = Int(GetResourcesTroopDiff())
+						
+						; reduce some speed
+						If _Sleep(750) Then Return
 
-					; reduce some speed
-					If _Sleep(500) Then Return
+							; Boludoz cost Update.
+							$iCost = $iCost / $Troop4Add
+							Setlog(" - Troop Cost : " & $iCost ,$COLOR_GREEN)
+		
+							$iBuildCost = (Eval("e" & $tempTroops[$i][0]) > $iDarkFixTroop ? $g_iCurDarkElixir : $g_iCurElixir)
+							If ($Troop4Add * $iCost) > $iBuildCost Then
+								$bFlagOutOfResource = True
+								; use eval and not $i to compare because of maybe after array sort $tempTroops
+								Setlog($CustomTrain_MSG_8 & " " & (Eval("e" & $tempTroops[$i][0]) > $iDarkFixTroop ? $CustomTrain_MSG_DarkElixir : $CustomTrain_MSG_Elixir) & " " & $CustomTrain_MSG_9 & " " & GetTroopName(Eval("e" & $tempTroops[$i][0]),0), $COLOR_ERROR)
+								SetLog("Current " & (Eval("e" & $tempTroops[$i][0]) > $iDarkFixTroop ? $CustomTrain_MSG_DarkElixir : $CustomTrain_MSG_Elixir)  & ": " & $iBuildCost, $COLOR_ERROR)
+								SetLog("Total need: " & $Troop4Add * $iCost, $COLOR_ERROR)
+							EndIf
+							
+							If $bFlagOutOfResource Then
+								$g_bOutOfElixir = 1
+								Setlog("Switching to Halt Attack, Stay Online Mode...", $COLOR_ERROR)
+								$g_bChkBotStop = True ; set halt attack variable
+								$g_iCmbBotCond = 18; set stay online
+								If Not ($g_bFullArmy = True) Then $g_bRestart = True ;If the army camp is full, If yes then use it to refill storages
+								Return ; We are out of Elixir stop training.
+							EndIf
+							SetLog($CustomTrain_MSG_6 & " " & GetTroopName(Eval("e" & $tempTroops[$i][0]),$Troop4Add) & " x" & $Troop4Add & " " & $CustomTrain_MSG_7 & " " & (Eval("e" & $tempTroops[$i][0]) > $iDarkFixTroop ? $CustomTrain_MSG_DarkElixir : $CustomTrain_MSG_Elixir) & " : " & ($Troop4Add * $iCost),(Eval("e" & $tempTroops[$i][0]) > 12 ? $COLOR_DARKELIXIR : $COLOR_ELIXIR))
+							Else 
+						; reduce some speed
+						If _Sleep(500) Then Return
+					EndIf
 				EndIf
 			Next
 	EndIf

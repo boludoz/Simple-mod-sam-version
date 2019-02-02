@@ -125,7 +125,7 @@ Func CheckAvailableSpellUnit($hHBitmap)
 		$g_bRestartCheckTroop = True
 		Return False
 	Else
-		If $bDeletedExcess Then
+		If $bDeletedExcess = True Then
 			$bDeletedExcess = False
 
 			If gotoBrewSpells() = False Then Return False
@@ -137,6 +137,7 @@ Func CheckAvailableSpellUnit($hHBitmap)
 
 			If gotoArmy() = False Then Return
 			SetLog(" >>> remove excess spells.", $COLOR_RED)
+			
 			If WaitforPixel($aButtonEditArmy2[4],$aButtonEditArmy2[5],$aButtonEditArmy2[4]+1,$aButtonEditArmy2[5]+1,Hex($aButtonEditArmy2[6], 6), $aButtonEditArmy2[7],20) Then
 				Click($aButtonEditArmy2[0],$aButtonEditArmy2[1],1,0,"#EditArmy")
 			Else

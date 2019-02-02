@@ -14,26 +14,46 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func TrainSiegesM($iCapacity = 0, $bOpenSiegeArmy = True, $ForceDoubleTrain = False)
-Local $aOcrSg[2] = [63, 545]
-If Int(GuiCtrlRead($g_hTxtTotalCountSiege)) = 0 Then Return
-If $iCapacity[0] = $iCapacity[1] and $ForceDoubleTrain = False Then Return
+Func TrainSiegesM($iCapacity = 0, $bOpenSiegeArmy = True)
+Local $tempSieges = $MySieges
+;Local $aOcrSg[2] = [63, 545]
+	If $ichkMySiegesOrder Then
+		_ArraySort($tempSieges,0,0,0,1)
+	EndIf
+
+If Not IsArray($iCapacity) Then	Return
+If Int(_GUICtrlComboBox_GetCurSel($g_hTxtTotalCountSiege)) = 0 Then Return
+_GUICtrlComboBox_SetCurSel($g_hTxtTotalCountSiege, $iCapacity[1])
+
+If $iCapacity[0] = $iCapacity[1] and $ichkForcePreSiegeBrewSiege = 0 Then Return
 Setlog("Training SG", $COLOR_YELLOW)
-If Not IsArray($iCapacity) Then
-	Return
- Else
-EndIf
 
 If $bOpenSiegeArmy = True Then Click(604, 132)
-
-Local $iMySiegesSize
+Local $iTotalClickSiege = $iCapacity[0] - $iCapacity[1]
+Local $iMySiegesSizeToTrain = 0
+Local $iMySiegesSize = 0
 
 	For $i = 0 To UBound($MySieges) - 1
-		$iMySiegesSize = Int(GUICtrlRead(Eval("txtNumSiege" & $MySieges[$i][0] & "Siege"))) * $MySieges[$i][2]
-		SiegeClick(110 + ($MySieges[$i][1] - 1) * 175,545, $iMySiegesSize)
-		;Setlog("- Training " & $iTimes & " " & $MySieges[$i][0] & " Siege/s." , $COLOR_YELLOW)
+		$iMySiegesSizeToTrain += Int(GUICtrlRead(Eval("txtNumSiege" & $tempSieges[$i][0] & "Siege"))) * $tempSieges[$i][2]
 	Next
-
+	$iTotalClickSiege = Abs($iTotalClickSiege)
+	$iTotalClickSiege -= Abs($iMySiegesSizeToTrain)
+	$iTotalClickSiege = $iCapacity[1] - Abs($iTotalClickSiege)
+	$iTotalClickSiege = Abs($iTotalClickSiege)
+	Setlog($iTotalClickSiege)
+	
+	For $i = 0 To $iTotalClickSiege - 1
+		$iMySiegesSize = Int(GUICtrlRead(Eval("txtNumSiege" & $tempSieges[$i][0] & "Siege"))) * $tempSieges[$i][2]
+		SiegeClick(110 + ($MySieges[$i][1] - 1) * 175,545, $iMySiegesSize)
+		;Setlog("- Training " & $iTimes & " " & $tempSieges[$i][0] & " Siege/s." , $COLOR_YELLOW)
+	Next
+	If $ichkForcePreSiegeBrewSiege = 1 Then	
+		For $i = 0 To UBound($MySieges) - 1
+			$iMySiegesSize = Int(GUICtrlRead(Eval("txtNumSiege" & $tempSieges[$i][0] & "Siege"))) * $tempSieges[$i][2]
+			SiegeClick(110 + ($MySieges[$i][1] - 1) * 175,545, $iMySiegesSize)
+			;Setlog("- Training " & $iTimes & " " & $tempSieges[$i][0] & " Siege/s." , $COLOR_YELLOW)
+		Next
+	EndIf
 EndFunc
 
 Func SiegeClick($x, $y, $iTimes = 0, $iSpeed = 500)

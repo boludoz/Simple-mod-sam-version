@@ -343,23 +343,23 @@ Func CheckOnBrewUnit($hHBitmap)
 		EndIf
 	EndIf
 
-	If $g_abAttackTypeEnable[$DB] = True And $g_abSearchSpellsWaitEnable[$DB] = True Then
-		For $i = $enumLightning To $enumSkeleton
-			If Eval("Cur" & $MySpells[$i][0] & "Spell") < $MySpells[$i][3] Then
-				SETLOG(" Dead Base - Waiting " & GetTroopName($i+ $eLSpell, $MySpells[$i][3] - Eval("Cur" & $MySpells[$i][0] & "Spell")) & _
-				" to brew finish before start next attack.", $COLOR_ACTION)
-			EndIf
-		Next
-	EndIf
-
-	If $g_abAttackTypeEnable[$LB] = True And $g_abSearchSpellsWaitEnable[$LB] = True Then
-		For $i = $enumLightning To $enumSkeleton
-			If Eval("Cur" & $MySpells[$i][0] & "Spell") < $MySpells[$i][3] Then
-				SETLOG(" Live Base - Waiting " & GetTroopName($i+ $eLSpell+ $eLSpell, $MySpells[$i][3] - Eval("Cur" & $MySpells[$i][0] & "Spell")) & _
-				" to brew finish before start next attack.", $COLOR_ACTION)
-			EndIf
-		Next
-	EndIf
+	; 	If $g_abAttackTypeEnable[$DB] = True And $g_abSearchSpellsWaitEnable[$DB] = True Then
+	; 		For $i = $enumLightning To $enumSkeleton
+	; 			If Eval("Cur" & $MySpells[$i][0] & "Spell") < $MySpells[$i][3] Then
+	; 				SETLOG(" Dead Base - Waiting " & GetTroopName($i+ $eLSpell, $MySpells[$i][3] - Eval("Cur" & $MySpells[$i][0] & "Spell")) & _
+	; 				" to brew finish before start next attack.", $COLOR_ACTION)
+	; 			EndIf
+	; 		Next
+	; 	EndIf
+    ; 	
+	; 	If $g_abAttackTypeEnable[$LB] = True And $g_abSearchSpellsWaitEnable[$LB] = True Then
+	; 		For $i = $enumLightning To $enumSkeleton
+	; 			If Eval("Cur" & $MySpells[$i][0] & "Spell") < $MySpells[$i][3] Then
+	; 				SETLOG(" Live Base - Waiting " & GetTroopName($i+ $eLSpell+ $eLSpell, $MySpells[$i][3] - Eval("Cur" & $MySpells[$i][0] & "Spell")) & _
+	; 				" to brew finish before start next attack.", $COLOR_ACTION)
+	; 			EndIf
+	; 		Next
+	; 	EndIf
 
 	If $g_iSamM0dDebug = 1 Then SETLOG("$bFullArmySpells: " & $g_bFullArmySpells & ", $iTotalSpellSpace:$iMyTotalTrainSpaceSpell " & $iAvailableCamp & "|" & $g_iMySpellsSize, $COLOR_DEBUG)
 

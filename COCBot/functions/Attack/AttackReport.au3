@@ -168,14 +168,10 @@ Func AttackReport()
 	If _ColorCheck(_GetPixelColor($aWonTwoStarAtkRprt[0], $aWonTwoStarAtkRprt[1], True), Hex($aWonTwoStarAtkRprt[2], 6), $aWonTwoStarAtkRprt[3]) Then $starsearned += 1
 	If _ColorCheck(_GetPixelColor($aWonThreeStarAtkRprt[0], $aWonThreeStarAtkRprt[1], True), Hex($aWonThreeStarAtkRprt[2], 6), $aWonThreeStarAtkRprt[3]) Then $starsearned += 1
 	SetLog("Stars earned: " & $starsearned)
-
+Local $sAccAct = "-"
     ; samm0d
     If $ichkEnableMySwitch = 1 Then
-        If $iCurActiveAcc <> - 1 Then
-            $sAccAct = String($iCurActiveAcc + 1)
-        Else
-            $sAccAct = String("-")
-        EndIf
+        If $iCurActiveAcc <> - 1 Then $sAccAct = String($iCurActiveAcc + 1)
     Else
         $sAccAct = String($g_iCurAccount + 1)
     EndIf
