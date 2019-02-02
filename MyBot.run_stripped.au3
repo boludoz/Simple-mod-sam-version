@@ -4,12 +4,12 @@
 #pragma compile(Out, MyBot.run.exe) ; Required
 #pragma compile(Icon, "Images\MyBot.ico")
 #pragma compile(FileDescription, Clash of Clans Bot - A Free Clash of Clans bot - https://mybot.run)
-#pragma compile(ProductVersion, 7.6)
-#pragma compile(FileVersion, 7.6.6)
+#pragma compile(ProductVersion, 7.7)
+#pragma compile(FileVersion, 7.7.0)
 #pragma compile(LegalCopyright, © https://mybot.run)
 #Au3Stripper_Off
 #Au3Stripper_On
-Global $g_sBotVersion = "v7.6.6"
+Global $g_sBotVersion = "v7.7.0"
 Opt("MustDeclareVars", 1)
 Global $g_sBotTitle = ""
 Global $g_hFrmBot = 0
@@ -20507,7 +20507,7 @@ $sText = "Fliegerfaust, MMHK and TripleM"
 GUICtrlCreateLabel($sText, $x + 5, $y + 15, 410, 50, BitOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT), 0)
 GUICtrlSetFont(-1, 9, $FW_MEDIUM, Default, "Arial")
 $y += 35
-$sText = "Special participation at v7.6: "
+$sText = "Special participation at v7.7: "
 GUICtrlCreateLabel($sText, $x - 5, $y, 410, 20, BitOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT), 0)
 GUICtrlSetFont(-1, 9.5, $FW_BOLD, Default, "Arial")
 GUICtrlSetColor(-1, $COLOR_NAVY)

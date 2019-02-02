@@ -127,10 +127,8 @@ IniReadS($ichkDisablePretrainTroops, $g_sProfileConfigPath, "MyTroops", "NoPreTr
 Local $sTextTroops
 Local $sTextTroopsString
 Local $sGiants
-;(Eval("e" & $tempTroops[$i][0]) > $iDarkFixTroop ? $CustomTrain_MSG_DarkElixir : $CustomTrain_MSG_Elixir)
 For $j = 0 To 2
 	For $i = 0 To UBound($MyTroops) - 1
-	;If Not $i = 2 Then
 		$sTextTroopsString = IniRead($g_sProfileConfigPath, "MyTroops", $MyTroops[$i][0]&$j, 2 <> $i ? 0 : 16 &"|"&$i + 1)
 		If Not StringInStr($sTextTroopsString, "|") = 0 Then 
 		$sTextTroops = StringSplit($sTextTroopsString, "|", $STR_NOCOUNT)
@@ -140,18 +138,6 @@ For $j = 0 To 2
 			$MyTroopsSetting[$j][$i][0] = Int($sTextTroopsString)
 			$MyTroopsSetting[$j][$i][1] = $i + 1
 		Endif
-		;Else
-		;	$sTextTroopsString = IniRead($g_sProfileConfigPath, "MyTroops", $MyTroops[$i][0]&$j, "16|"&$i + 1)
-		;	If Not StringInStr($sTextTroopsString, "|") = 0 Then 
-		;	$sTextTroops = StringSplit($sTextTroopsString, "|", $STR_NOCOUNT)
-		;		$MyTroopsSetting[$j][$i][0] = Int($sTextTroops[0])
-		;		$MyTroopsSetting[$j][$i][1] = Int($sTextTroops[1])	
-		;		Else
-		;		$MyTroopsSetting[$j][$i][0] = Int($sTextTroopsString)
-		;		$MyTroopsSetting[$j][$i][1] = $i + 1
-		;	Endif
-		;ContinueLoop
-		;EndIf
 	Next
 Next
 

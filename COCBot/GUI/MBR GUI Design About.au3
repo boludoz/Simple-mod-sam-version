@@ -55,7 +55,7 @@ Func CreateAboutTab()
 	GUICtrlSetFont(-1, 9, $FW_MEDIUM, Default, "Arial")
 
 	$y += 35
-	$sText = "Special participation at v7.6.6: "
+	$sText = "Special participation at v7.7.0: "
 	GUICtrlCreateLabel($sText, $x - 5, $y, 410, 20, BitOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT), 0)
 	GUICtrlSetFont(-1, 9.5, $FW_BOLD, Default, "Arial")
 	GUICtrlSetColor(-1, $COLOR_NAVY)
