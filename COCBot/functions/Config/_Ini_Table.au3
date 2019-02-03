@@ -89,10 +89,10 @@ Func _Ini_Save($filename)
 	ReDim $g_asIniTable[$g_iIniLineCount][3]
 	_ArraySort($g_asIniTable) ; sort on section|key
 
-	FileCopy($filename, $filename & ".bak", $FC_OVERWRITE)
+    FileCopy($filename, $filename & ".bak", $FC_OVERWRITE)
 
-	Local $hFile = FileOpen($filename, $FO_OVERWRITE + $FO_UTF16_LE)
-
+    Local $hFile = FileOpen($filename, $FO_OVERWRITE + $FO_UTF16_LE)
+    FileWriteLine($hFile, ";" & TimeDebug() & "MyBot.run configuration saved: " & $filename)
 	Local $sCurrentSection = ""
 
 	For $i = 0 To $g_iIniLineCount - 1

@@ -16,6 +16,8 @@
 #include-once
 
 Func SmartWait4Train($iTestSeconds = Default)
+    If Not $g_bRunState Then Return
+    
 	Static $ichkCloseWaitSpell = 0, $ichkCloseWaitHero = 0
 	Local $bTest = ($iTestSeconds <> Default)
 

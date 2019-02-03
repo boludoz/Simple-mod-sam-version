@@ -1331,7 +1331,8 @@ Func BotClose($SaveConfig = Default, $bExit = True)
 	__GDIPlus_Shutdown()
 	_Crypt_Shutdown()
 	_GUICtrlRichEdit_Destroy($g_hTxtLog)
-	_GUICtrlRichEdit_Destroy($g_hTxtAtkLog)
+    _GUICtrlRichEdit_Destroy($g_hTxtAtkLog)
+    TCPShutdown() ; Close the TCP service.
 
 	_WinAPI_DeregisterShellHookWindow($g_hFrmBot)
 	If $g_hAndroidWindow <> 0 Then ControlFocus($g_hAndroidWindow, "", $g_hAndroidWindow) ; show Android in taskbar again

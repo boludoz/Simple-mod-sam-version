@@ -125,34 +125,45 @@ Func AttackReport()
 			EndIf
 		EndIf
 		;Display League in Stats ==>
-		GUICtrlSetData($g_hLblLeague, "")
-
+		;samm0d
 		If StringInStr($g_asLeagueDetailsShort, "1") > 1 Then
 			GUICtrlSetData($g_hLblLeague, "1")
+			$aProfileStats[27][$iCurActiveAcc+1] = 1
 		ElseIf StringInStr($g_asLeagueDetailsShort, "2") > 1 Then
 			GUICtrlSetData($g_hLblLeague, "2")
+			$aProfileStats[27][$iCurActiveAcc+1] = 2
 		ElseIf StringInStr($g_asLeagueDetailsShort, "3") > 1 Then
 			GUICtrlSetData($g_hLblLeague, "3")
+			$aProfileStats[27][$iCurActiveAcc+1] = 3
 		EndIf
 		_GUI_Value_STATE("HIDE", $g_aGroupLeague)
 		If StringInStr($g_asLeagueDetailsShort, "B") > 0 Then
 			GUICtrlSetState($g_ahPicLeague[$eLeagueBronze], $GUI_SHOW)
+			$aProfileStats[26][$iCurActiveAcc+1] = "B"
 		ElseIf StringInStr($g_asLeagueDetailsShort, "S") > 0 Then
 			GUICtrlSetState($g_ahPicLeague[$eLeagueSilver], $GUI_SHOW)
+			$aProfileStats[26][$iCurActiveAcc+1] = "S"
 		ElseIf StringInStr($g_asLeagueDetailsShort, "G") > 0 Then
 			GUICtrlSetState($g_ahPicLeague[$eLeagueGold], $GUI_SHOW)
+			$aProfileStats[26][$iCurActiveAcc+1] = "G"
 		ElseIf StringInStr($g_asLeagueDetailsShort, "c", $STR_CASESENSE) > 0 Then
 			GUICtrlSetState($g_ahPicLeague[$eLeagueCrystal], $GUI_SHOW)
+			$aProfileStats[26][$iCurActiveAcc+1] = "c"
 		ElseIf StringInStr($g_asLeagueDetailsShort, "M") > 0 Then
 			GUICtrlSetState($g_ahPicLeague[$eLeagueMaster], $GUI_SHOW)
+			$aProfileStats[26][$iCurActiveAcc+1] = "M"
 		ElseIf StringInStr($g_asLeagueDetailsShort, "C", $STR_CASESENSE) > 0 Then
 			GUICtrlSetState($g_ahPicLeague[$eLeagueChampion], $GUI_SHOW)
+			$aProfileStats[26][$iCurActiveAcc+1] = "C"
 		ElseIf StringInStr($g_asLeagueDetailsShort, "T") > 0 Then
 			GUICtrlSetState($g_ahPicLeague[$eLeagueTitan], $GUI_SHOW)
+			$aProfileStats[26][$iCurActiveAcc+1] = "T"
 		ElseIf StringInStr($g_asLeagueDetailsShort, "LE") > 0 Then
 			GUICtrlSetState($g_ahPicLeague[$eLeagueLegend], $GUI_SHOW)
+			$aProfileStats[26][$iCurActiveAcc+1] = "LE"
 		Else
 			GUICtrlSetState($g_ahPicLeague[$eLeagueUnranked], $GUI_SHOW)
+			$aProfileStats[26][$iCurActiveAcc+1] = 0
 		EndIf
 		;==> Display League in Stats
 	Else
@@ -182,8 +193,13 @@ Local $sAccAct = "-"
 	$AtkLogTxt &= StringFormat("%3d", $g_iSearchCount) & "|"
 	$AtkLogTxt &= StringFormat("%2d", $g_iSidesAttack) & "|"
 	$AtkLogTxt &= StringFormat("%7d", $g_iStatsLastAttack[$eLootGold]) & "|"
-	$AtkLogTxt &= StringFormat("%7d", $g_iStatsLastAttack[$eLootElixir]) & "|"
-	$AtkLogTxt &= StringFormat("%4d", $g_iStatsLastAttack[$eLootDarkElixir]) & "|"
+ 	$AtkLogTxt &= StringFormat("%7d", $g_iStatsLastAttack[$eLootElixir]) & "|"
+     If $numLSpellDrop > 0 Then ;samm0d
+         $AtkLogTxt &=  "z" & $numLSpellDrop & StringFormat("%5d",$g_iStatsLastAttack[$eLootDarkElixir]) & "|"
+         $numLSpellDrop = 0
+     Else
+         $AtkLogTxt &= StringFormat("%7d", $g_iStatsLastAttack[$eLootDarkElixir]) & "|"
+     EndIf
 	$AtkLogTxt &= StringFormat("%3d", $g_iStatsLastAttack[$eLootTrophy]) & "|"
 	$AtkLogTxt &= StringFormat("%1d", $starsearned) & "|"
 	$AtkLogTxt &= StringFormat("%3d", $g_iPercentageDamage) & "|"
@@ -201,7 +217,8 @@ Local $sAccAct = "-"
 	$g_sLeague = $g_asLeagueDetailsShort
 	$g_sBonusGold = $g_iStatsBonusLast[$eLootGold]
 	$g_sBonusElixir = $g_iStatsBonusLast[$eLootElixir]
-	$g_sBonusDE = $g_iStatsBonusLast[$eLootDarkElixir]
+    $g_sBonusDE = $g_iStatsBonusLast[$eLootDarkElixir]
+    $g_sStarsEarned = $starsearned
 
 	Local $AtkLogTxtExtend
 	$AtkLogTxtExtend = "|"

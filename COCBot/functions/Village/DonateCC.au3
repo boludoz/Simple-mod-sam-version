@@ -22,7 +22,7 @@ Global $g_bSkipDonTroops = False, $g_bSkipDonSpells = False, $g_bSkipDonSiege = 
 Global $g_bDonateAllRespectBlk = False ; is turned on off durning donate all section, must be false all other times
 Global $g_aiDonatePixel ; array holding x, y position of donate button in chat window
 Global $g_aiAvailQueuedTroop[$eTroopCount], $g_aiAvailQueuedSpell[$eSpellCount]
-Global $g_aiDonatePixel
+
 Func PrepareDonateCC()
 	$g_aiPrepDon[0] = 0
 	$g_aiPrepDon[1] = 0
@@ -1198,7 +1198,6 @@ Func DonateWindow($bOpen = True)
 		If $g_bDebugSetlog Then SetDebugLog("DonateWindow Close Exit", $COLOR_DEBUG)
 		Return
 	EndIf
-	Local $g_aiDonatePixel = _MultiPixelSearch(200, $y, 230, 660 + $g_iBottomOffsetY, -2, 1, Hex(0x6da725, 6), $aChatDonateBtnColors, 20)
 
 	; Click on Donate Button and wait for the window
 	Local $iLeft = 0, $iTop = 0, $iRight = 0, $iBottom = 0, $i
@@ -1208,6 +1207,9 @@ Func DonateWindow($bOpen = True)
 		If $aChatDonateBtnColors[$i][2] < $iTop Then $iTop = $aChatDonateBtnColors[$i][2]
 		If $aChatDonateBtnColors[$i][2] > $iBottom Then $iBottom = $aChatDonateBtnColors[$i][2]
 	Next
+	
+	$g_aiDonatePixel = _MultiPixelSearch(200, $y, 230, 660 + $g_iBottomOffsetY, -2, 1, Hex(0x6da725, 6), $aChatDonateBtnColors, 20)
+
 	If IsArray($g_aiDonatePixel) Then
 	
 		$iLeft += $g_aiDonatePixel[0]

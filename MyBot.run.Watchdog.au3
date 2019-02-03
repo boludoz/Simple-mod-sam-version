@@ -9,13 +9,13 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-
+; samm0d
 #NoTrayIcon
 #RequireAdmin
-#AutoIt3Wrapper_UseX64=7n
-#AutoIt3Wrapper_Run_Au3Stripper=y
+;#AutoIt3Wrapper_UseX64=7n
+;#AutoIt3Wrapper_Run_Au3Stripper=y
 #Au3Stripper_Parameters=/rsln
-#AutoIt3Wrapper_Change2CUI=y
+;#AutoIt3Wrapper_Change2CUI=y
 ;#pragma compile(Console, true)
 #include "MyBot.run.version.au3"
 #pragma compile(ProductName, My Bot Watchdog)
@@ -61,7 +61,7 @@ Global $iTimeoutAutoClose = 60000 ; Milliseconds watchdog automatically closed w
 Global $hTimeoutAutoClose = 0 ; Timer Handle for $iTimeoutAutoClose
 Global $g_bBotLaunchOption_NoBotSlot = True
 Global $g_iDebugWindowMessages = 0
-
+; samm0d
 Global $hStruct_SleepMicro = DllStructCreate("int64 time;")
 Global $pStruct_SleepMicro = DllStructGetPtr($hStruct_SleepMicro)
 Global $DELAYSLEEP = 25000

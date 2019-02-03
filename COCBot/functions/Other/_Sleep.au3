@@ -15,8 +15,8 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #include-once
-
-Func _Sleep($iDelay, $iSleep = True, $CheckRunState = True, $SleepWhenPaused = True)
+; samm0d 
+Func _Sleep($iDelay, $iSleep = 0, $CheckRunState = True, $SleepWhenPaused = True)
 	Static $hTimer_SetTime = 0
 	Static $hTimer_PBRemoteControlInterval = 0
 	;Static $hTimer_PBDeleteOldPushesInterval = 0
@@ -78,11 +78,13 @@ Func _Sleep($iDelay, $iSleep = True, $CheckRunState = True, $SleepWhenPaused = T
 
 			; Android & Bot Stuff
 			If (($g_iEmptyWorkingSetAndroid > 0 And __TimerDiff($hTimer_EmptyWorkingSetAndroid) >= $g_iEmptyWorkingSetAndroid * 1000) Or $hTimer_EmptyWorkingSetAndroid = 0) And $g_bRunState And TestCapture() = False Then
-				If IsArray(getAndroidPos(True)) = 1 Then _WinAPI_EmptyWorkingSet(GetAndroidPid()) ; Reduce Working Set of Android Process
+				; samm0d
+				ReduceBotAndAndroidMemory() ; Reduce Working Set of Android Process
 				$hTimer_EmptyWorkingSetAndroid = __TimerInit()
 			EndIf
 			If ($g_iEmptyWorkingSetBot > 0 And __TimerDiff($hTimer_EmptyWorkingSetBot) >= $g_iEmptyWorkingSetBot * 1000) Or $hTimer_EmptyWorkingSetBot = 0 Then
-				ReduceBotMemory(False)
+				; samm0d
+				ReduceBotAndAndroidMemory()
 				$hTimer_EmptyWorkingSetBot = __TimerInit()
 			EndIf
 
@@ -91,7 +93,8 @@ Func _Sleep($iDelay, $iSleep = True, $CheckRunState = True, $SleepWhenPaused = T
 			If BotCloseRequestProcessed() Then
 				BotClose() ; improve responsive bot close
 				$b_Sleep_Active = False
-				_WinAPI_EmptyWorkingSet()
+				; samm0d
+				ReduceBotAndAndroidMemory()
 				Return True
 			EndIf
 		EndIf
@@ -100,7 +103,8 @@ Func _Sleep($iDelay, $iSleep = True, $CheckRunState = True, $SleepWhenPaused = T
 	If $CheckRunState And Not $g_bRunState Then
 		ResumeAndroid()
 		$b_Sleep_Active = False
-		_WinAPI_EmptyWorkingSet()
+		; samm0d - Reduce mem android and bot by Boludoz
+		ReduceBotAndAndroidMemory()
 		Return True
 	EndIf
 	Local $iRemaining = $iDelay - __TimerDiff($iBegin)
@@ -109,7 +113,8 @@ Func _Sleep($iDelay, $iSleep = True, $CheckRunState = True, $SleepWhenPaused = T
 		If $CheckRunState = True And $g_bRunState = False Then
 			ResumeAndroid()
 			$b_Sleep_Active = False
-			_WinAPI_EmptyWorkingSet()
+			; samm0d - Reduce mem android and bot by Boludoz
+			ReduceBotAndAndroidMemory()
 			Return True
 		EndIf
 		If SetCriticalMessageProcessing() = False Then
@@ -141,7 +146,8 @@ Func _Sleep($iDelay, $iSleep = True, $CheckRunState = True, $SleepWhenPaused = T
 		CheckBotRequests() ; check if bot window should be moved
 	WEnd
 	$b_Sleep_Active = False
-	_WinAPI_EmptyWorkingSet()
+	; samm0d - Reduce mem android and bot by Boludoz
+	ReduceBotAndAndroidMemory()
 	Return False
 EndFunc   ;==>_Sleep
 
@@ -153,3 +159,12 @@ EndFunc   ;==>_SleepMicro
 Func _SleepMilli($iMilliSec)
 	_SleepMicro(Int($iMilliSec * 1000))
 EndFunc   ;==>_SleepMilli
+
+; samm0d (deprecated / only compatibility)
+Func randomSleep($SleepTime, $Range = 0)
+	If $g_bRunState = False Then Return
+	If $Range = 0 Then $Range = Round($SleepTime / 5)
+	Local $SleepTimeF = Random($SleepTime - $Range, $SleepTime + $Range, 1)
+	If $g_bDebugClick Then SetLog("Default sleep : " & $SleepTime & " - Random sleep : " & $SleepTimeF, $COLOR_ORANGE)
+	If _Sleep($SleepTimeF) Then Return
+EndFunc   ;==>randomSleep

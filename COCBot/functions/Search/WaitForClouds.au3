@@ -16,7 +16,9 @@
 Func WaitForClouds()
 
 	If $g_bDebugSetlog Then SetDebugLog("Begin WaitForClouds:", $COLOR_DEBUG1)
-
+    
+	$g_bCloudsActive = True
+    
 	Local $iCount = 0
 	Local $bigCount = 0, $iLastTime = 0
 	Local $hMinuteTimer, $iSearchTime
@@ -24,7 +26,7 @@ Func WaitForClouds()
 
     ; samm0d
     ;===============
-    Local $maxSearchCount = 40 ; 10 seconds for initialize long search, check chat button, after will random 1-2 minutes for checking 1 time
+	Local $maxSearchCount = 60 ; $maxSearchCount * 250ms ($DELAYGETRESOURCES1) = seconds wait time before reset in lower leagues: 720*250ms = 3 minutes
 	Local $maxLongSearchCount = 7 ; $maxLongSearchCount * $maxSearchCount = seconds total wait time in higher leagues: ; 21 minutes, set a value here but is never used unless error
 
 	Switch Int($g_aiCurrentLoot[$eLootTrophy]) ; add randomization to SearchCounters (long cloud keep alive time) for higher leagues
@@ -50,11 +52,12 @@ Func WaitForClouds()
 	Local $hMinuteTimer = __TimerInit() ; initialize timer for tracking search time
 
 	While $g_bRestart = False And _CaptureRegions() And _CheckPixel($aNoCloudsAttack) = False ; loop to wait for clouds to disappear
-		If _Sleep($DELAYGETRESOURCES1) Then Return
+        ; notice: don't exit function with return in this loop, use ExitLoop ! ! !
+        If _Sleep($DELAYGETRESOURCES1) Then ExitLoop
 		$iCount += 1
 		If isProblemAffect(True) Then ; check for reload error messages and restart search if needed
 			resetAttackSearch()
-			Return
+			ExitLoop
 		EndIf
         If $iCount >= $maxSearchCount Then ; If clouds do not clear in alloted time do something
             $maxSearchCount = Random(240,480,1) ; $maxSearchCount * 250ms ($DELAYGETRESOURCES1) = seconds wait time before reset in lower leagues: 240*250ms = 1 minutes, 480*250ms = 2 minutes
@@ -70,7 +73,7 @@ Func WaitForClouds()
                     ;$g_bIsClientSyncError = False ; disable fast OOS restart if not simple error and restarting CoC
 					$g_bRestart = True
 					CloseCoC(True)
-					Return
+					ExitLoop
 				EndIf
 				$iCount = 0 ; reset outer loop value
 			EndIf
@@ -80,7 +83,7 @@ Func WaitForClouds()
 			$g_bIsClientSyncError = True
 			$g_bRestart = True
 			CloseCoC(True)
-			Return
+			ExitLoop
 		EndIf
 		If $g_bDebugSetlog Then _GUICtrlStatusBar_SetTextEx($g_hStatusBar, " Status: Loop to clean screen without Clouds, # " & $iCount)
 		$iSearchTime = __TimerDiff($hMinuteTimer) / 60000 ;get time since minute timer start in minutes
@@ -103,7 +106,7 @@ Func WaitForClouds()
             ; samm0d
             If chkAttackSearchFail() = 2 Or GetAndroidProcessPID() = 0 Then
 				resetAttackSearch()
-				Return
+				ExitLoop
 			EndIf
 			; Check if CoC app restarted without notice (where android restarted app automatically with same PID), and returned to main base
             If _CheckPixel($aIsMain, $g_bCapturePixel)  Then
@@ -143,8 +146,9 @@ Func EnableLongSearch()
 	; verifies that chat tab is active on cloud window due long search time, and open/closes chat window to avoid app closing while waiting for base to attack
 	; Also checks for common error events, search fail/retry, and Personal Break that happen during long searches
 	Local $result = ""
-    Local $iCount, $jCount, $kCount, $wCount
-
+	Local $iCount
+	Local $aSearchOpp[4][3] = [[0xFFF5AE, 1, 1], [0xFFF5AE, 2, 2], [0xFFF5AE, 3, 3], [0xFFF5AE, 4, 4]]
+	Local $iCountTrue = 0
 	If $g_bDebugSetlog Then SetDebugLog("Begin EnableLongSearch:", $COLOR_DEBUG1)
 
 	If Int($g_aiCurrentLoot[$eLootTrophy]) < 3700 Then ; If not searching Champion 1 or higher, skip long waiting to return and restart due error
@@ -152,71 +156,45 @@ Func EnableLongSearch()
 		Return False
 	EndIf
 
-    If chkSearchText() = True Then ;verify still in clouds by screen text and attempt to keep alive with chat tab
-        $iCount = 0 ; initialize safety loop counter #1
-        While 1
-            If _CheckPixel($aOpenChatTab, $g_bCapturePixel, Default, "OpenChatTab check", $COLOR_DEBUG) Then ; check for open chat tab
-                ClickP($aOpenChatTab, 1, 0, "#0510") ; Open chat tab
-                If _Sleep($DELAYGETRESOURCES1) Then Return
-                $jCount = 0 ; initialize safety loop counter #2
-                While 1 ; wait for close chat tab to appear
-                    If _CheckPixel($aCloseChat, $g_bCapturePixel, Default, "CloseChatTab check", $COLOR_DEBUG) Then ; check for close chat tab
-                        ClickP($aCloseChat, 1, 0, "#0511") ; close chat tab
-                        $kCount = 0 ; initialize safety loop counter #3
-                        While 1 ; paranoid verification that chat window has closed
-                            If _Sleep($DELAYSLEEP) Then Return
-                            $result = getCloudTextShort(260, 349 + $g_iMidOffsetY, "Cloud Search Text: sea=", $COLOR_DEBUG, Default) ; OCR "Searching for oponents..." partially blocked text
-                            If _CheckPixel($aCloseChat, $g_bCapturePixel, Default, "CloseChatTab check", $COLOR_DEBUG) Then ; check for close chat tab is still there
-                                $kCount += 1
-                            ElseIf $result <> "" And StringInStr($result, "sea", $STR_NOCASESENSEBASIC) > 0 Then ; found "sea" characters in "Search" text?
-                                Return True ; success
-                            Else
-                                Return True ; success
-                            EndIf
-                            $kCount += 1 ; not needed, error prevention
-                            If $kCount > 30 Then ; wait up to 30 * (100ms delay + ~60ms OCR) = 4.8 seconds for chat window to close
-                                ; verify that base has not been found?
-                                If chkSurrenderBtn() = True Then Return True ; check if clouds are gone.
-                                SetLog("Warning - Found CloseChat Btn still open during search extension", $COLOR_WARNING)
-                                Return False ; chat tab not closed, failed long search keep alive, need to restart
-                            EndIf
-                        WEnd
-                    EndIf
-                    If _Sleep($DELAYSLEEP) Then Return
-                    $jCount += 1
-                    If $jCount > 50 Then ; wait up to 50 * 100ms = 5 seconds for chat window to close
-                        If chkSurrenderBtn() = True Then Return True ; check if clouds are gone.
-                        SetLog("Warning - Not find CloseChat tab during search extension", $COLOR_WARNING)
-                        Return False ; chat tab not closed, failed long search keep alive, need to restart
-                    EndIf
-                WEnd
-            EndIf
-            $iCount += 1
-            If $iCount > 30 Then ; wait up to 30 * 100ms = 3 seconds for chat window to be found
-                If chkSurrenderBtn() = True Then Return True ; check if clouds are gone.
-                SetLog("Cloud Search Text found, but chat button not found, restart search..", $COLOR_ERROR)
-                Return False ; chat tab not found, failed long search keep alive, need to restart
-            EndIf
-        WEnd
-    Else ; OCR did not find cloud search messages
-        If chkSurrenderBtn() = True Then Return True ; check if clouds are gone and stop waiting
+	$iCount = 0 ; initialize safety loop counter #1
+	While 1
+		If chkSurrenderBtn() = True Then Return True ; check if clouds are gone.
 		If chkAttackSearchPersonalBreak() = True Then Return False ; OCR check for Personal Break while in clouds, return after PB prep
-        If chkAttackSearchFail() = 1 Then Return True ; OCR text for search fail message, and press rety if available, success continue searching
-        If $g_bDebugSetlog Then SetDebugLog("Cloud Search Text not found...", $COLOR_DEBUG)
-        Return False
-    EndIf
+		If chkAttackSearchFail() = 1 Then Return True ; OCR text for search fail message, and press retry if available, success continue searching
+		
+		; Samm0d
+		For $i = 0 To 4
+			If _MultiPixelSearch(251, 253, 610, 426 + $g_iBottomOffsetY, -2, 1, Hex(0xFFF5AE, 6), $aSearchOpp, 20) = 0 Then
+				If $g_bDebugSetlog Then SetDebugLog("Cloud Search Text not found...", $COLOR_DEBUG)
+				$iCountTrue = 1
+			Else
+				If $g_bDebugSetlog Then SetDebugLog("Cloud Search Text Found...", $COLOR_DEBUG)
+				Local $KeepAlive[2] = [271, 351 + $g_iMidOffsetY]
+				ClickP($KeepAlive, 1, 0, "#0514") ; click on text just to keep game alive
+				ExitLoop
+			EndIf
+			; Small delay
+			If _Sleep(1000) Then Return
+		Next
+		If $iCountTrue = 0 Then Return False
+		
+		$iCount += 1
+		; Just in Case
+		If $iCount > 6 Then Return True ; 4500 + 5000 * 6 = 1 min
+	WEnd
 
 EndFunc   ;==>EnableLongSearch
 
-Func chkSearchText()
-	; boolean 50-60ms OCR check for yellow text "Searching for oponents..." message that appears during attack search with long cloud times
-	Local $result
-	$result = getCloudTextShort(388, 348 + $g_iMidOffsetY, "Cloud Search Text: for=", $COLOR_DEBUG, Default) ; OCR "Searching for oponents..." text
-	If $result <> "" And StringInStr($result, "for", $STR_NOCASESENSEBASIC) <> 0 Then ; found "for" characters in text?
-		Return True
-	EndIf
-	Return False
-EndFunc   ;==>chkSearchText
+; Samm0d
+; 	Func chkSearchText()
+; 		; boolean 50-60ms OCR check for yellow text "Searching for oponents..." message that appears during attack search with long cloud times
+; 		Local $result
+; 		$result = getCloudTextShort(388, 348 + $g_iMidOffsetY, "Cloud Search Text: for=", $COLOR_DEBUG, Default) ; OCR "Searching for oponents..." text
+; 		If $result <> "" And StringInStr($result, "for", $STR_NOCASESENSEBASIC) <> 0 Then ; found "for" characters in text?
+; 			Return True
+; 		EndIf
+; 		Return False
+; 	EndFunc   ;==>chkSearchText
 
 Func chkAttackSearchFail()
 	; boolean 50-60ms OCR check for pink text "unable to find villages to attack!" error message during search for base to attack

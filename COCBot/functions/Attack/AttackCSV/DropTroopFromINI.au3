@@ -146,8 +146,9 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
 		If $g_iCSVLastTroopPositionDropTroopFromINI <> $troopSlotConst Then
 			ReleaseClicks()
 			SelectDropTroop($troopPosition) ; select the troop...
-			$g_iCSVLastTroopPositionDropTroopFromINI = $troopSlotConst
-			ReleaseClicks()
+            $g_iCSVLastTroopPositionDropTroopFromINI = $troopSlotConst
+            ReleaseClicks()
+            KeepClicks()
 		EndIf
 
         ;sleep time Before deploy all troops

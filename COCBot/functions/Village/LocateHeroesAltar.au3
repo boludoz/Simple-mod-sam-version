@@ -1,11 +1,10 @@
-
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: LocateQueenAltar & LocateKingAltar & LocateWardenAltar
 ; Description ...:
 ; Syntax ........: LocateKingAltar() & LocateQueenAltar() &  LocateWardenAltar()
 ; Parameters ....:
 ; Return values .: None
-; Author ........: ProMac 2015
+; Author ........: ProMac(07/2015)
 ; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
@@ -13,37 +12,25 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-
-
-Func LocateQueenAltar()
+Func LocateQueenAltar($bCollect = True)
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	AndroidShield("LocateQueenAltar 1") ; Update shield status due to manual $g_bRunState
-	Local $Result = _LocateQueenAltar()
+	Local $Result = _LocateQueenAltar($bCollect)
 	$g_bRunState = $wasRunState
 	AndroidShield("LocateQueenAltar 2") ; Update shield status due to manual $g_bRunState
 	Return $Result
 EndFunc   ;==>LocateQueenAltar
 
-Func _LocateQueenAltar()
+Func _LocateQueenAltar($bCollect = True)
 
 	Local $stext, $MsgBox, $iSilly = 0, $iStupid = 0, $sErrorText = "", $sInfo
-	
-	If Number($g_iTownHallLevel) < 9 And not Number($g_iTownHallLevel) <= 0 Then
-		SetLog("Archer Queen requires TH9, Cancel locate Altar!; detected :" & $g_iTownHallLevel, $COLOR_ERROR)
-		Return
-	EndIf
 
 	WinGetAndroidHandle()
 	checkMainScreen(False)
-
-	If _GetPixelColor($aTopLeftClient[0], $aTopLeftClient[1], True) <> Hex($aTopLeftClient[2], 6) Or _GetPixelColor($aTopRightClient[0], $aTopRightClient[1], True) <> Hex($aTopRightClient[2], 6) Then
-		Zoomout()
-		$g_bDisableBreakCheck = True ; stop early PB log off when locating upgrades
-		Collect()
-		$g_bDisableBreakCheck = False ; restore flag
-	EndIf
-
+	If $bCollect Then Collect(False)
+	
+	; samm0d
 	If $g_bEnableSkipBuild = True Then
 		$g_aiQueenAltarPos[0] = -1
 		$g_aiQueenAltarPos[1] = -1
@@ -51,8 +38,13 @@ Func _LocateQueenAltar()
 	Return
 	EndIf
 
-	SetLog("Locating Queen Altar...", $COLOR_INFO)
-	
+	; samm0d
+	If Number($g_iTownHallLevel) < 9 And not Number($g_iTownHallLevel) <= 0 Then
+		SetLog("Archer Queen requires TH9, Cancel locate Altar!; detected :" & $g_iTownHallLevel, $COLOR_ERROR)
+		Return
+	EndIf
+
+	SetLog("Locating Queen Altar", $COLOR_INFO)
 	While 1
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
 		$stext = $sErrorText & @CRLF & GetTranslatedFileIni("MBR Popups", "Func_Locate_Queen_Altar_01", "Click OK then click on your Queen Altar") & @CRLF & @CRLF & _
@@ -60,11 +52,11 @@ Func _LocateQueenAltar()
 		$MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Popups", "Ok_Cancel", "Ok|Cancel"), GetTranslatedFileIni("MBR Popups", "Func_Locate_Queen_Altar_02", "Locate Queen Altar"), $stext, 15)
 		If $MsgBox = 1 Then
 			WinGetAndroidHandle()
-			ClickP($aTopLeftClient)
+			ClickP($aAway)
 			Local $aPos = FindPos()
 			$g_aiQueenAltarPos[0] = $aPos[0]
 			$g_aiQueenAltarPos[1] = $aPos[1]
-			If isInsideDiamond($g_aiQueenAltarPos) = False Then
+			If Not isInsideDiamond($g_aiQueenAltarPos) Then
 				$iStupid += 1
 				Select
 					Case $iStupid = 1
@@ -82,20 +74,20 @@ Func _LocateQueenAltar()
 						ContinueLoop
 					Case $iStupid > 4
 						SetLog(" Operator Error - Bad Queen Altar Location: " & "(" & $g_aiQueenAltarPos[0] & "," & $g_aiQueenAltarPos[1] & ")", $COLOR_ERROR)
-						ClickP($aTopLeftClient)
+						ClickP($aAway)
 						Return False
 					Case Else
 						SetLog(" Operator Error - Bad Queen Altar Location: " & "(" & $g_aiQueenAltarPos[0] & "," & $g_aiQueenAltarPos[1] & ")", $COLOR_ERROR)
 						$g_aiQueenAltarPos[0] = -1
 						$g_aiQueenAltarPos[1] = -1
-						ClickP($aTopLeftClient)
+						ClickP($aAway)
 						Return False
 				EndSelect
 			EndIf
 			SetLog("Queen Altar: " & "(" & $g_aiQueenAltarPos[0] & "," & $g_aiQueenAltarPos[1] & ")", $COLOR_SUCCESS)
 		Else
 			SetLog("Locate Queen Altar Cancelled", $COLOR_INFO)
-			ClickP($aTopLeftClient)
+			ClickP($aAway)
 			Return
 		EndIf
 
@@ -103,7 +95,7 @@ Func _LocateQueenAltar()
 		$sInfo = BuildingInfo(242, 520 + $g_iBottomOffsetY); 860x780
 		If @error Then SetError(0, 0, 0)
 		Local $CountGetInfo = 0
-		While IsArray($sInfo) = False
+		While Not IsArray($sInfo)
 			$sInfo = BuildingInfo(242, 520 + $g_iBottomOffsetY); 860x780
 			If @error Then SetError(0, 0, 0)
 			Sleep(100)
@@ -137,7 +129,7 @@ Func _LocateQueenAltar()
 						SetLog("Quit joking, Click the Queen Altar, or restart bot and try again", $COLOR_ERROR)
 						$g_aiQueenAltarPos[0] = -1
 						$g_aiQueenAltarPos[1] = -1
-						ClickP($aTopLeftClient)
+						ClickP($aAway)
 						Return False
 				EndSelect
 			EndIf
@@ -145,13 +137,13 @@ Func _LocateQueenAltar()
 			SetLog(" Operator Error - Bad Queen Altar Location: " & "(" & $g_aiQueenAltarPos[0] & "," & $g_aiQueenAltarPos[1] & ")", $COLOR_ERROR)
 			$g_aiQueenAltarPos[0] = -1
 			$g_aiQueenAltarPos[1] = -1
-			ClickP($aTopLeftClient)
+			ClickP($aAway)
 			Return False
 		EndIf
 		ExitLoop
 	WEnd
 
-	ClickP($aTopLeftClient, 1, 200, "#0327")
+	ClickP($aAway, 1, 200, "#0327")
 	If _Sleep(1000) Then Return
 
 	_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
@@ -160,38 +152,27 @@ Func _LocateQueenAltar()
 
 	IniWrite($g_sProfileBuildingPath, "other", "xQueenAltarPos", $g_aiQueenAltarPos[0])
 	IniWrite($g_sProfileBuildingPath, "other", "yQueenAltarPos", $g_aiQueenAltarPos[1])
-
 EndFunc   ;==>_LocateQueenAltar
 
-Func LocateKingAltar()
+Func LocateKingAltar($bCollect = True)
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	AndroidShield("LocateKingAltar 1") ; Update shield status due to manual $g_bRunState
-	Local $Result = _LocateKingAltar()
+	Local $Result = _LocateKingAltar($bCollect)
 	$g_bRunState = $wasRunState
 	AndroidShield("LocateKingAltar 2") ; Update shield status due to manual $g_bRunState
 	Return $Result
 EndFunc   ;==>LocateKingAltar
 
-Func _LocateKingAltar()
+Func _LocateKingAltar($bCollect = True)
 
 	Local $stext, $MsgBox, $iSilly = 0, $iStupid = 0, $sErrorText = "", $sInfo
-	
-	If Number($g_iTownHallLevel) < 7 And not Number($g_iTownHallLevel) <= 0 Then
-		SetLog("Barbarian King requires TH7, Cancel locate Altar!; detected :" & $g_iTownHallLevel, $COLOR_ERROR)
-		Return
-	EndIf
 
 	WinGetAndroidHandle()
 	checkMainScreen(False)
-
-	If _GetPixelColor($aTopLeftClient[0], $aTopLeftClient[1], True) <> Hex($aTopLeftClient[2], 6) Or _GetPixelColor($aTopRightClient[0], $aTopRightClient[1], True) <> Hex($aTopRightClient[2], 6) Then
-		Zoomout()
-		$g_bDisableBreakCheck = True ; stop early PB log off when locating upgrades
-		Collect()
-		$g_bDisableBreakCheck = False ; restore flag
-	EndIf
+	If $bCollect Then Collect(False)
 	
+	; samm0d
 	If $g_bEnableSkipBuild = True Then
 		$g_aiKingAltarPos[0] = -1
 		$g_aiKingAltarPos[1] = -1
@@ -199,9 +180,15 @@ Func _LocateKingAltar()
 	Return
 	EndIf
 
-	SetLog("Locating King Altar...", $COLOR_INFO)
+	; samm0d
+	If Number($g_iTownHallLevel) < 7 And not Number($g_iTownHallLevel) <= 0 Then
+		SetLog("Barbarian King requires TH7, Cancel locate Altar!; detected :" & $g_iTownHallLevel, $COLOR_ERROR)
+		Return
+	EndIf
+
+	SetLog("Locating King Altar", $COLOR_INFO)
 	While 1
-		ClickP($aTopLeftClient)
+		ClickP($aAway)
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
 		$stext = $sErrorText & @CRLF & GetTranslatedFileIni("MBR Popups", "Func_Locate_King_Altar_01", "Click OK then click on your King Altar") & @CRLF & @CRLF & _
 				GetTranslatedFileIni("MBR Popups", "Locate_building_01", "Do not move mouse quickly after clicking location") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Locate_building_02", "Make sure the building name is visible for me!") & @CRLF
@@ -211,7 +198,7 @@ Func _LocateKingAltar()
 			Local $aPos = FindPos()
 			$g_aiKingAltarPos[0] = $aPos[0]
 			$g_aiKingAltarPos[1] = $aPos[1]
-			If isInsideDiamond($g_aiKingAltarPos) = False Then
+			If Not isInsideDiamond($g_aiKingAltarPos) Then
 				$iStupid += 1
 				Select
 					Case $iStupid = 1
@@ -229,20 +216,20 @@ Func _LocateKingAltar()
 						ContinueLoop
 					Case $iStupid > 4
 						SetLog(" Operator Error - Bad King Altar Location: " & "(" & $g_aiKingAltarPos[0] & "," & $g_aiKingAltarPos[1] & ")", $COLOR_ERROR)
-						ClickP($aTopLeftClient)
+						ClickP($aAway)
 						Return False
 					Case Else
 						SetLog(" Operator Error - Bad King Altar Location: " & "(" & $g_aiKingAltarPos[0] & "," & $g_aiKingAltarPos[1] & ")", $COLOR_ERROR)
 						$g_aiKingAltarPos[0] = -1
 						$g_aiKingAltarPos[1] = -1
-						ClickP($aTopLeftClient)
+						ClickP($aAway)
 						Return False
 				EndSelect
 			EndIf
 			SetLog("King Altar: " & "(" & $g_aiKingAltarPos[0] & "," & $g_aiKingAltarPos[1] & ")", $COLOR_SUCCESS)
 		Else
 			SetLog("Locate King Altar Cancelled", $COLOR_INFO)
-			ClickP($aTopLeftClient)
+			ClickP($aAway)
 			Return
 		EndIf
 
@@ -250,7 +237,7 @@ Func _LocateKingAltar()
 		$sInfo = BuildingInfo(242, 520 + $g_iBottomOffsetY); 860x780
 		If @error Then SetError(0, 0, 0)
 		Local $CountGetInfo = 0
-		While IsArray($sInfo) = False
+		While Not IsArray($sInfo)
 			$sInfo = BuildingInfo(242, 520 + $g_iBottomOffsetY); 860x780
 			If @error Then SetError(0, 0, 0)
 			Sleep(100)
@@ -283,7 +270,7 @@ Func _LocateKingAltar()
 						SetLog("Quit joking, Click the King Altar, or restart bot and try again", $COLOR_ERROR)
 						$g_aiKingAltarPos[0] = -1
 						$g_aiKingAltarPos[1] = -1
-						ClickP($aTopLeftClient)
+						ClickP($aAway)
 						Return False
 				EndSelect
 			EndIf
@@ -291,13 +278,13 @@ Func _LocateKingAltar()
 			SetLog(" Operator Error - Bad King Altar Location: " & "(" & $g_aiKingAltarPos[0] & "," & $g_aiKingAltarPos[1] & ")", $COLOR_ERROR)
 			$g_aiKingAltarPos[0] = -1
 			$g_aiKingAltarPos[1] = -1
-			ClickP($aTopLeftClient)
+			ClickP($aAway)
 			Return False
 		EndIf
 		ExitLoop
 	WEnd
 
-	ClickP($aTopLeftClient, 1, 200, "#0327")
+	ClickP($aAway, 1, 200, "#0327")
 	If _Sleep(1000) Then Return
 
 	_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
@@ -306,48 +293,41 @@ Func _LocateKingAltar()
 
 	IniWrite($g_sProfileBuildingPath, "other", "xKingAltarPos", $g_aiKingAltarPos[0])
 	IniWrite($g_sProfileBuildingPath, "other", "yKingAltarPos", $g_aiKingAltarPos[1])
-
 EndFunc   ;==>_LocateKingAltar
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Func LocateWardenAltar()
+Func LocateWardenAltar($bCollect = True)
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	AndroidShield("LocateWardenAltar 1") ; Update shield status due to manual $g_bRunState
-	Local $Result = _LocateWardenAltar()
+	Local $Result = _LocateWardenAltar($bCollect)
 	$g_bRunState = $wasRunState
 	AndroidShield("LocateWardenAltar 2") ; Update shield status due to manual $g_bRunState
 	Return $Result
 EndFunc   ;==>LocateWardenAltar
 
-Func _LocateWardenAltar()
+Func _LocateWardenAltar($bCollect = True)
 	Local $stext, $MsgBox, $iSilly = 0, $iStupid = 0, $sErrorText = "", $sInfo
-
+	
+	WinGetAndroidHandle()
+	checkMainScreen(False)
+	If $bCollect Then Collect(False)
+	; samm0d
 	If $g_bEnableSkipBuild = True Then
 		$g_aiWardenAltarPos[0] = -1
 		$g_aiWardenAltarPos[1] = -1
 		SetLog("Skipping Grand Warden Altar...", $COLOR_INFO)
 	Return
 	EndIf
-
+	
+	; samm0d
 	If Number($g_iTownHallLevel) < 11 And not Number($g_iTownHallLevel) <= 0 Then
 		SetLog("Grand Warden requires TH11, Cancel locate Altar!; detected :" & $g_iTownHallLevel, $COLOR_ERROR)
 		Return
 	EndIf
 
-	WinGetAndroidHandle()
-	checkMainScreen(False)
-
-	If _GetPixelColor($aTopLeftClient[0], $aTopLeftClient[1], True) <> Hex($aTopLeftClient[2], 6) And _GetPixelColor($aTopRightClient[0], $aTopRightClient[1], True) <> Hex($aTopRightClient[2], 6) Then
-		Zoomout()
-		$g_bDisableBreakCheck = True ; stop early PB log off when locating upgrades
-		Collect()
-		$g_bDisableBreakCheck = False ; restore flag
-	EndIf
-
-	SetLog("Locating Grand Warden Altar... work in progress!", $COLOR_INFO)
+	SetLog("Locating Grand Warden Altar", $COLOR_INFO)
 	While 1
-		ClickP($aTopLeftClient)
+		ClickP($aAway)
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
 		$stext = $sErrorText & @CRLF & GetTranslatedFileIni("MBR Popups", "Func_Locate_Warden_Altar_01", "Click OK then click on your Grand Warden Altar") & @CRLF & @CRLF & _
 				GetTranslatedFileIni("MBR Popups", "Locate_building_01", "Do not move mouse quickly after clicking location") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Locate_building_02", "Make sure the building name is visible for me!") & @CRLF
@@ -357,7 +337,7 @@ Func _LocateWardenAltar()
 			Local $aPos = FindPos()
 			$g_aiWardenAltarPos[0] = $aPos[0]
 			$g_aiWardenAltarPos[1] = $aPos[1]
-			If isInsideDiamond($g_aiWardenAltarPos) = False Then
+			If Not isInsideDiamond($g_aiWardenAltarPos) Then
 				$iStupid += 1
 				Select
 					Case $iStupid = 1
@@ -375,20 +355,20 @@ Func _LocateWardenAltar()
 						ContinueLoop
 					Case $iStupid > 4
 						SetLog(" Operator Error - Bad Grand Warden Altar Location: " & "(" & $g_aiWardenAltarPos[0] & "," & $g_aiWardenAltarPos[1] & ")", $COLOR_ERROR)
-						ClickP($aTopLeftClient)
+						ClickP($aAway)
 						Return False
 					Case Else
 						SetLog(" Operator Error - Bad Grand Warden Altar Location: " & "(" & $g_aiWardenAltarPos[0] & "," & $g_aiWardenAltarPos[1] & ")", $COLOR_ERROR)
 						$g_aiWardenAltarPos[0] = -1
 						$g_aiWardenAltarPos[1] = -1
-						ClickP($aTopLeftClient)
+						ClickP($aAway)
 						Return False
 				EndSelect
 			EndIf
 			SetLog("Grand Warden Altar: " & "(" & $g_aiWardenAltarPos[0] & "," & $g_aiWardenAltarPos[1] & ")", $COLOR_SUCCESS)
 		Else
 			SetLog("Locate Grand Warden Altar Cancelled", $COLOR_INFO)
-			ClickP($aTopLeftClient)
+			ClickP($aAway)
 			Return
 		EndIf
 
@@ -396,7 +376,7 @@ Func _LocateWardenAltar()
 		$sInfo = BuildingInfo(242, 520 + $g_iBottomOffsetY) ;<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< need to work
 		If @error Then SetError(0, 0, 0)
 		Local $CountGetInfo = 0
-		While IsArray($sInfo) = False
+		While Not IsArray($sInfo)
 			$sInfo = BuildingInfo(242, 520 + $g_iBottomOffsetY)
 			If @error Then SetError(0, 0, 0)
 			Sleep(100)
@@ -430,7 +410,7 @@ Func _LocateWardenAltar()
 						SetLog("Quit joking, Click the Grand Warden Altar, or restart bot and try again", $COLOR_ERROR)
 						$g_aiWardenAltarPos[0] = -1
 						$g_aiWardenAltarPos[1] = -1
-						ClickP($aTopLeftClient)
+						ClickP($aAway)
 						Return False
 				EndSelect
 			EndIf
@@ -438,13 +418,13 @@ Func _LocateWardenAltar()
 			SetLog(" Operator Error - Bad Grand Warden Altar Location: " & "(" & $g_aiWardenAltarPos[0] & "," & $g_aiWardenAltarPos[1] & ")", $COLOR_ERROR)
 			$g_aiWardenAltarPos[0] = -1
 			$g_aiWardenAltarPos[1] = -1
-			ClickP($aTopLeftClient)
+			ClickP($aAway)
 			Return False
 		EndIf
 		ExitLoop
 	WEnd
 
-	ClickP($aTopLeftClient, 1, 200, "#0327")
+	ClickP($aAway, 1, 200, "#0327")
 	If _Sleep(1000) Then Return
 
 	_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
@@ -453,7 +433,4 @@ Func _LocateWardenAltar()
 
 	IniWrite($g_sProfileBuildingPath, "other", "xWardenAltarPos", $g_aiWardenAltarPos[0])
 	IniWrite($g_sProfileBuildingPath, "other", "yWardenAltarPos", $g_aiWardenAltarPos[1])
-
-
 EndFunc   ;==>_LocateWardenAltar
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

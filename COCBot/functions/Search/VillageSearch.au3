@@ -94,7 +94,10 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		$g_iSearchCount = 0
 	EndIf
 
-	If $g_bIsSearchLimit = True Then $g_bIsSearchLimit = False
+    If $g_bIsSearchLimit = True Then $g_bIsSearchLimit = False
+
+    ; reset page errors
+    InitAndroidPageError()
 
 	While 1 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;### Main Search Loop ###;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -156,7 +159,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		_CaptureRegion2()
 
 		; measure enemy village (only if resources match)
-		Local $bAlwaysMeasure = True
+        Local $bAlwaysMeasure = $g_bVillageSearchAlwaysMeasure
 		For $i = 0 To $g_iModeCount - 1
 			If $match[$i] Or $bAlwaysMeasure Then
 				If CheckZoomOut("VillageSearch", True, False) = False Then

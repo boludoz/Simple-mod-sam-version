@@ -12,22 +12,22 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func LocateLab()
+Func LocateLab($bCollect = True)
 	Local $stext, $MsgBox, $iStupid = 0, $iSilly = 0, $sErrorText = ""
-
-	SetLog("Locating Laboratory...", $COLOR_INFO)
 	
+	; samm0d
 	If $g_bEnableSkipBuild Then
 		$g_aiLaboratoryPos[0] = -1
 		$g_aiLaboratoryPos[1] = -1
-		SetLog("Quick Laboratory...", $COLOR_INFO)
+		SetLog("Skipping Laboratory...", $COLOR_INFO)
 	Return False
 	EndIf
-	
-	If _GetPixelColor($aTopLeftClient[0], $aTopLeftClient[1], True) <> Hex($aTopLeftClient[2], 6) Or _GetPixelColor($aTopRightClient[0], $aTopRightClient[1], True) <> Hex($aTopRightClient[2], 6) Then
-		Zoomout()
-		Collect()
-	EndIf
+
+    SetLog("Locating Laboratory", $COLOR_INFO)
+		
+    WinGetAndroidHandle()
+    checkMainScreen()
+    If $bCollect Then Collect(False)
 
 	While 1
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 600)

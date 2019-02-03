@@ -185,12 +185,12 @@ Func UpgradeValue($inum, $bRepeat = False) ;function to find the value and type 
 	Local $inputbox, $iLoot, $aString, $aResult, $ButtonPixel
 	Local $bOopsFlag = False
 
-	If $bRepeat = True Or $g_abUpgradeRepeatEnable[$inum] = True Then ; check for upgrade in process when continiously upgrading
+    If $bRepeat Or $g_abUpgradeRepeatEnable[$inum] Then ; check for upgrade in process when continiously upgrading
 		ClickP($aAway, 1, 0, "#0999") ;Click Away to close windows
 		If _Sleep($DELAYUPGRADEVALUE1) Then Return
 		BuildingClick($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1]) ;Select upgrade trained
 		If _Sleep($DELAYUPGRADEVALUE4) Then Return
-		If $bOopsFlag = True Then DebugImageSave("ButtonView")
+		If $bOopsFlag And $g_bDebugImageSave Then DebugImageSave("ButtonView")
 		; check if upgrading collector type building, and reselect in case previous click only collect resource
 		If StringInStr($g_avBuildingUpgrades[$inum][4], "collect", $STR_NOCASESENSEBASIC) Or _
 				StringInStr($g_avBuildingUpgrades[$inum][4], "mine", $STR_NOCASESENSEBASIC) Or _
@@ -252,16 +252,11 @@ Func UpgradeValue($inum, $bRepeat = False) ;function to find the value and type 
 	EndIf
 	SetLog("Upgrade Name = " & $g_avBuildingUpgrades[$inum][4] & ", Level = " & $g_avBuildingUpgrades[$inum][5], $COLOR_INFO) ;Debug
 
-	If QuickMIS("BC1", $g_sImgAUpgradeUpgradeBtn, 120, 630, 740, 680) Then
-		Local $ButtonPixel[2]
-		$ButtonPixel[0] = 120 + $g_iQuickMISX
-		$ButtonPixel[1] = 630 + $g_iQuickMISY
-		If $g_bDebugSetlog Or $bOopsFlag Then SetLog("ButtonPixel = " & $ButtonPixel[0] & ", " & $ButtonPixel[1], $COLOR_DEBUG) ;Debug
-
-		Click($ButtonPixel[0] + 20, $ButtonPixel[1] + 20, 1, 0, "#0213") ; Click Upgrade Button
+    Local $aUpgradeButton = findButton("Upgrade", Default, 1, True)
+    If IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2 Then
+        ClickP($aUpgradeButton, 1, 0, "#0213") ; Click Upgrade Button
 		If _Sleep($DELAYUPGRADEVALUE5) Then Return
-
-		If $bOopsFlag = True And $g_bDebugImageSave Then DebugImageSave("UpgradeView")
+        If $bOopsFlag And $g_bDebugImageSave Then DebugImageSave("UpgradeView")
 
 		_CaptureRegion()
 		Select ;Ensure the right upgrade window is open!

@@ -36609,30 +36609,30 @@ If $g_bDebugGetLocation Then DebugImageGetLocation($aEndResult, "DarkElixir")
 Return GetListPixel($aEndResult)
 EndFunc
 Func GetLocationTownHall()
-Local $aEndResult = DllCall($g_hLibMyBot, "str", "getLocationTownHall", "ptr", $g_hHBitmap2)
+Local $aEndResult = DllCallMyBot("getLocationTownHall", "ptr", $g_hHBitmap2)
 If $g_bDebugBuildingPos Then SetLog("#*# GetLocationTownHall: " & $aEndResult[0], $COLOR_DEBUG)
 If $g_bDebugGetLocation Then DebugImageGetLocation($aEndResult[0], "TownHall")
 Return GetListPixel($aEndResult[0])
 EndFunc
 Func GetLocationDarkElixirStorageWithLevel()
-Local $aEndResult = DllCall($g_hLibMyBot, "str", "getLocationDarkElixirStorageWithLevel", "ptr", $g_hHBitmap2)
+Local $aEndResult = DllCallMyBot("getLocationDarkElixirStorageWithLevel", "ptr", $g_hHBitmap2)
 If $g_bDebugBuildingPos Then SetLog("#*# GetLocationDarkElixirStorageWithLevel: " & $aEndResult[0], $COLOR_DEBUG)
 If $g_bDebugGetLocation Then DebugImageGetLocation($aEndResult[0], "DarkElixirStorageWithLevel")
 Return $aEndResult[0]
 EndFunc
 Func GetLocationDarkElixirStorage()
-Local $aEndResult = DllCall($g_hLibMyBot, "str", "getLocationDarkElixirStorage", "ptr", $g_hHBitmap2)
+Local $aEndResult = DllCallMyBot("getLocationDarkElixirStorage", "ptr", $g_hHBitmap2)
 If $g_bDebugBuildingPos Then SetLog("#*# GetLocationDarkElixirStorage: " & $aEndResult[0], $COLOR_DEBUG)
 If $g_bDebugGetLocation Then DebugImageGetLocation($aEndResult[0], "DarkElixirStorage")
 Return GetListPixel($aEndResult[0])
 EndFunc
 Func GetLocationElixirWithLevel()
 If $g_iDetectedImageType = 0 Then
-Local $aEndResult = DllCall($g_hLibMyBot, "str", "getLocationElixirExtractorWithLevel", "ptr", $g_hHBitmap2)
+ Local $aEndResult = DllCallMyBot("getLocationElixirExtractorWithLevel", "ptr", $g_hHBitmap2)
 If $g_bDebugBuildingPos Then SetLog("#*# getLocationElixirExtractorWithLevel: " & $aEndResult[0], $COLOR_DEBUG)
 If $g_bDebugGetLocation Then DebugImageGetLocation($aEndResult[0], "ElixirExtractorWithLevel")
 Else
-Local $aEndResult = DllCall($g_hLibMyBot, "str", "getLocationSnowElixirExtractorWithLevel", "ptr", $g_hHBitmap2)
+Local $aEndResult = DllCallMyBot("getLocationSnowElixirExtractorWithLevel", "ptr", $g_hHBitmap2)
 If $g_bDebugBuildingPos Then SetLog("#*# getLocationSnowElixirExtractorWithLevel: " & $aEndResult[0], $COLOR_DEBUG)
 If $g_bDebugGetLocation Then DebugImageGetLocation($aEndResult[0], "SnowElixirExtractorWithLevel")
 EndIf
@@ -36640,11 +36640,11 @@ Return $aEndResult[0]
 EndFunc
 Func GetLocationMineWithLevel()
 If $g_iDetectedImageType = 0 Then
-Local $aEndResult = DllCall($g_hLibMyBot, "str", "getLocationMineExtractorWithLevel", "ptr", $g_hHBitmap2)
+Local $aEndResult = DllCallMyBot("getLocationMineExtractorWithLevel", "ptr", $g_hHBitmap2)
 If $g_bDebugBuildingPos Then SetLog("#*# getLocationMineExtractorWithLevel: " & $aEndResult[0], $COLOR_DEBUG)
 If $g_bDebugGetLocation Then DebugImageGetLocation($aEndResult[0], "MineExtractorWithLevel")
 Else
-Local $aEndResult = DllCall($g_hLibMyBot, "str", "getLocationSnowMineExtractorWithLevel", "ptr", $g_hHBitmap2)
+Local $aEndResult = DllCallMyBot("getLocationSnowMineExtractorWithLevel", "ptr", $g_hHBitmap2)
 If $g_bDebugBuildingPos Then SetLog("#*# getLocationSnowMineExtractorWithLevel: " & $aEndResult[0], $COLOR_DEBUG)
 If $g_bDebugGetLocation Then DebugImageGetLocation($aEndResult[0], "SnowMineExtractorWithLevel")
 EndIf
@@ -42301,7 +42301,7 @@ For $i = 0 To UBound($aCurrentSiegeMachines, 1) - 1
 $aTempSiegeArray = $aCurrentSiegeMachines[$i]
 $iSiegeIndex = TroopIndexLookup($aTempSiegeArray[0], "getArmySiegeMachines()") - $eWallW
 $aSiegeCoords = StringSplit($aTempSiegeArray[1], ",", $STR_NOCOUNT)
-If $iSiegeIndex = -1 Then ContinueLoop
+If $iSiegeIndex < 0 Then ContinueLoop
 $g_aiCurrentSiegeMachines[$iSiegeIndex] = Number(getBarracksNewTroopQuantity(Slot($aSiegeCoords[0], $aSiegeCoords[1]), 196, $bNeedCapture))
 $sSiegeName = $g_aiCurrentSiegeMachines[$iSiegeIndex] >= 2 ? $g_asSiegeMachineNames[$iSiegeIndex] & "s" : $g_asSiegeMachineNames[$iSiegeIndex] & ""
 If $g_bDebugSetlogTrain Then Setlog($sSiegeName & " Coord: (" & $aSiegeCoords[0] & "," & $aSiegeCoords[1] & ") Quant :" & $g_aiCurrentSiegeMachines[$iSiegeIndex])

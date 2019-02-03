@@ -153,7 +153,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 	If $GoldChangeCheck Then PushMsg("LastRaid")
 
     ; samm0d
-    If IsReturnHomeBattlePage() Then ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
+    If IsReturnHomeBattlePage(True) Then ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
 ;~
 ;~     $i = 0 ; Reset Loop counter
 ;~     While 1
@@ -187,7 +187,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 EndFunc   ;==>ReturnHome
 
 Func ReturnHomeMainPage()
-	If IsMainPage(2) Then
+	If IsMainPage(1) Then
 		SetLogCentered(" BOT LOG ", Default, Default, True)
 		Return True
 	EndIf
@@ -218,23 +218,26 @@ Func ReturnfromDropTrophies()
 		WEnd
 		If _Sleep(100) Then Return
 	Next
+	
+    ; samm0d
+    If IsReturnHomeBattlePage(True) Then ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
 
-    $i = 0 ; Reset Loop counter
-    Local $iExitLoop = -1
-	While 1
-		If $g_bDebugSetlog Then SetDebugLog("Wait for End Fight Scene to appear #" & $i)
-		If _CheckPixel($aEndFightSceneAvl, $g_bCapturePixel) Then ; check for the gold ribbon in the end of battle data screen
-            If IsReturnHomeBattlePage() Then
-                ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
-                ; sometimes 1st click is not closing, so check again
-                $iExitLoop = $i
-            EndIf
-		Else
-			$i += 1
-		EndIf
-        If $i > 25 Or ($iExitLoop > -1 And $i > $iExitLoop) Then ExitLoop ; if end battle window is not found in 25*200mms or 5 seconds, then give up.
-        If _Sleep($DELAYRETURNHOME5) Then Return
-	WEnd
+;~	   $i = 0 ; Reset Loop counter
+;~	   Local $iExitLoop = -1
+;~	While 1
+;~		If $g_bDebugSetlog Then SetDebugLog("Wait for End Fight Scene to appear #" & $i)
+;~		If _CheckPixel($aEndFightSceneAvl, $g_bCapturePixel) Then ; check for the gold ribbon in the end of battle data screen
+;~	           If IsReturnHomeBattlePage(True) Then
+;~	               ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
+;~	               ; sometimes 1st click is not closing, so check again
+;~	               $iExitLoop = $i
+;~	           EndIf
+;~		Else
+;~			$i += 1
+;~		EndIf
+;~	       If $i > 25 Or ($iExitLoop > -1 And $i > $iExitLoop) Then ExitLoop ; if end battle window is not found in 25*200mms or 5 seconds, then give up.
+;~	       If _Sleep($DELAYRETURNHOME5) Then Return
+;~	WEnd
     If _Sleep($DELAYRETURNHOME2) Then Return ; short wait for screen to close
 	$g_bFullArmy = False ; forcing check the army
 	$g_bIsFullArmywithHeroesAndSpells = False ; forcing check the army

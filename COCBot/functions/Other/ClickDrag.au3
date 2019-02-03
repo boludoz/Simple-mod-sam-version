@@ -105,8 +105,11 @@ EndFunc   ;==>_MakeLong
 
 Func ClickDrag($X1, $Y1, $X2, $Y2, $Delay = 50)
 	If TestCapture() Then Return
-	;Return _PostMessage_ClickDrag($X1, $Y1, $X2, $Y2, "left", $Delay)
-	Local $error = 0
+    ;Return _PostMessage_ClickDrag($X1, $Y1, $X2, $Y2, "left", $Delay)
+    Local $error = 0
+    If $g_bDebugClick Then
+        SetLog("ClickDrag " & $X1 & "," & $Y1 & " to " & $X2 & "," & $Y2 & " delay=" & $Delay, $COLOR_ACTION, "Verdana", "7.5", 0)
+    EndIf
 	If $g_bAndroidAdbClickDrag = True Then
 		If $g_bAndroidAdbClickDragScript = True Then
 			AndroidClickDrag($X1, $Y1, $X2, $Y2, $g_bRunState)

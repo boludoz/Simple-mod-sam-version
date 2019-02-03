@@ -138,7 +138,8 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 				If $g_bChkSharedPrefs And HaveSharedPrefs() Then
 					SetLog("Please wait for loading CoC...!")
 					PushSharedPrefs()
-					OpenCoC()
+					If Not $bRecursive Then OpenCoC()
+					Return True
 				EndIf
 			Case _CheckPixel($aIsCheckOOS, $g_bNoCapturePixel) Or (UBound(decodeSingleCoord(FindImageInPlace("OOS", $g_sImgOutOfSync, "355,335,435,395", False, $g_iAndroidLollipop))) > 1) ; Check OoS
 				SetLog("Out of Sync Error, Reloading CoC...", $COLOR_ERROR)
