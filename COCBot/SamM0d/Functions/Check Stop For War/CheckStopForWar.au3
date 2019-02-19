@@ -14,6 +14,35 @@
 ; ===============================================================================================================================
 #include-once
 
+
+Func IsWarMenu()
+	For $i = 0 To 15
+		Local $Result = MultiPSimple(422,49,428,56, 0xFEF0B8, 40) ;Wait for War Menu To Be Appear
+ 		If _Sleep(1000) Then Return
+		If Not $Result[0] = 0 Then
+			Return True
+		EndIf
+	Next
+	Return False
+EndFunc   ;==>IsWarMenu
+
+Func MultiPSimple($iX, $iY, $iX2, $iY2, $Hex, $iTolerance = 10) ; returns true if the last chat was not by you, false otherwise
+	_CaptureRegion($iX, $iY, $iX2, $iY2)
+	Local $aReturn[2] = [0, 0]
+	
+	For $y = $iY To $iY2 - 1
+		For $x = $iX To $iX2 - 1
+			If _ColorCheck(Hex(_GDIPlus_BitmapGetPixel($g_hBitmap, $x, $y), 6), Hex($Hex, 6), $iTolerance) Then 
+			$aReturn[0] = $iX + $x
+			$aReturn[1] = $iY + $y
+			ExitLoop
+			EndIf
+		Next
+	Next
+	
+	Return $aReturn
+EndFunc   ;==>MultiPSimple
+
 Func CheckStopForWar()
 
 	Local $asResetTimer = ["", "", "", "", "", "", "", ""], $abResetBoolean[8] = [False, False, False, False, False, False, False, False]
@@ -155,7 +184,7 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult) ; return [Success + $sResult =
 		If _Sleep(2000) Then Return
 	EndIf
 
-	If IsWarMenu() Then
+	If Not IsWarMenu() Then
 		If $bBattleDay_InWar Then
 			$sWarDay = "Battle"
 			$bResult = True
@@ -173,7 +202,7 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult) ; return [Success + $sResult =
 					If $g_bDebugSetlog Then SetDebugLog("CWL Enter In Battle page")
 					Click($g_iQuickMISX + 175, $g_iQuickMISY + 645, 1)
 					If _Sleep(500) Then Return
-					If Not IsWarMenu() Then
+					If  Not IsWarMenu() Then
 						SetLog("Error when trying to open CWL Battle page.", $COLOR_ERROR)
 						Return SetError(1, 0, "Error Open CWL Battle page")
 					EndIf
@@ -262,7 +291,8 @@ Func StopAndPrepareForWar($iSleepTime)
 		EndIf
 
 		; Train
-		DoubleTrain($g_bUseQuickTrainWar, True, True) ;Edited By SM Mod
+		TrainCustomArmy()
+		;DoubleTrain($g_bUseQuickTrainWar, True, True) ;Edited By SM Mod
 		If _Sleep(500) Then Return
 	EndIf
 
@@ -351,7 +381,28 @@ Func ChkStopForWar()
 		GUICtrlSetBkColor($g_hLblCountWarTroopsTotal, $COLOR_MONEYGREEN)
 		GUICtrlSetBkColor($g_hLblCountWarSpellsTotal, $COLOR_MONEYGREEN)
 	EndIf
+ApplySave()
 EndFunc   ;==>ChkStopForWar
+
+Func ApplySave()
+	$g_bStopForWar = GUICtrlRead($g_hChkStopForWar) = $GUI_CHECKED
+	$g_iStopTime = _GUICtrlComboBox_GetCurSel($g_hCmbStopTime)
+	If _GUICtrlComboBox_GetCurSel($g_hCmbStopBeforeBattle) = 0 Then $g_iStopTime = $g_iStopTime * -1
+	$g_iReturnTime = _GUICtrlComboBox_GetCurSel($g_hCmbReturnTime)
+	$g_bTrainWarTroop = GUICtrlRead($g_hChkTrainWarTroop) = $GUI_CHECKED
+	$g_bUseQuickTrainWar = GUICtrlRead($g_hChkUseQuickTrainWar) = $GUI_CHECKED
+	$g_aChkArmyWar[0] = GUICtrlRead($g_ahChkArmyWar[0]) = $GUI_CHECKED
+	$g_aChkArmyWar[1] = GUICtrlRead($g_ahChkArmyWar[1]) = $GUI_CHECKED
+	$g_aChkArmyWar[2] = GUICtrlRead($g_ahChkArmyWar[2]) = $GUI_CHECKED
+	For $i = 0 To $eTroopCount - 1
+		$g_aiWarCompTroops[$i] = GUICtrlRead($g_ahTxtTrainWarTroopCount[$i])
+	Next
+	For $j = 0 To $eSpellCount - 1
+		$g_aiWarCompSpells[$j] = GUICtrlRead($g_ahTxtTrainWarSpellCount[$j])
+	Next
+	$g_bRequestCCForWar = GUICtrlRead($g_hChkRequestCCForWar) = $GUI_CHECKED
+	$g_sTxtRequestCCForWar = GUICtrlRead($g_hTxtRequestCCForWar)
+EndFunc
 
 Func CmbStopTime()
 	If _GUICtrlComboBox_GetCurSel($g_hCmbStopBeforeBattle) < 1 Then Return
@@ -361,6 +412,7 @@ Func CmbStopTime()
 		Sleep(3500)
 		ToolTip('')
 	EndIf
+ApplySave()
 EndFunc   ;==>CmbStopTime
 
 Func CmbReturnTime()
@@ -371,6 +423,7 @@ Func CmbReturnTime()
 		Sleep(3500)
 		ToolTip('')
 	EndIf
+ApplySave()
 EndFunc   ;==>CmbReturnTime
 
 Func ChkTrainWarTroop()
@@ -384,6 +437,7 @@ Func ChkTrainWarTroop()
 		GUICtrlSetBkColor($g_hLblCountWarTroopsTotal, $COLOR_MONEYGREEN)
 		GUICtrlSetBkColor($g_hLblCountWarSpellsTotal, $COLOR_MONEYGREEN)
 	EndIf
+ApplySave()
 EndFunc   ;==>ChkTrainWarTroop
 
 Func chkUseQTrainWar()
@@ -403,6 +457,7 @@ Func chkUseQTrainWar()
 		lblTotalWarTroopCount()
 		lblTotalWarSpellCount()
 	EndIf
+ApplySave()
 EndFunc   ;==>chkUseQTrainWar
 
 Func chkQuickTrainComboWar()
@@ -412,6 +467,7 @@ Func chkQuickTrainComboWar()
 		Sleep(2000)
 		ToolTip('')
 	EndIf
+ApplySave()
 EndFunc   ;==>chkQuickTrainComboWar
 
 Func RemovecampWar()
@@ -425,6 +481,7 @@ Func RemovecampWar()
 	Next
 	lblTotalWarTroopCount()
 	lblTotalWarSpellCount()
+ApplySave()
 EndFunc   ;==>RemovecampWar
 
 Func lblTotalWarTroopCount($TotalArmyCamp = 0)
@@ -459,7 +516,7 @@ Func lblTotalWarTroopCount($TotalArmyCamp = 0)
 	Else
 		GUICtrlSetState($g_hLblTotalWarTroopsProgress, $GUI_HIDE)
 	EndIf
-
+ApplySave()
 EndFunc   ;==>lblTotalWarTroopCount
 
 Func lblTotalWarSpellCount($TotalArmyCamp = 0)
@@ -495,7 +552,7 @@ Func lblTotalWarSpellCount($TotalArmyCamp = 0)
 	Else
 		GUICtrlSetState($g_hLblTotalWarSpellsProgress, $GUI_HIDE)
 	EndIf
-
+ApplySave()
 EndFunc   ;==>lblTotalWarSpellCount
 
 Func TrainWarTroopCountEdit()
@@ -506,6 +563,7 @@ Func TrainWarTroopCountEdit()
 			Return
 		EndIf
 	Next
+ApplySave()
 EndFunc   ;==>TrainWarTroopCountEdit
 
 Func TrainWarSpellCountEdit()
@@ -524,6 +582,7 @@ Func ChkRequestCCForWar()
 	Else
 		GUICtrlSetState($g_hTxtRequestCCForWar, $GUI_DISABLE)
 	EndIf
+ApplySave()
 EndFunc   ;==>ChkRequestCCForWar
 
 

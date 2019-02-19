@@ -73,9 +73,11 @@ Global $InternalAreaRef[8][3] = [ _
 		]
 ConvertInternalExternArea() ; initial layout so variables are not empty
 
-Func ConvertInternalExternArea()
+;Samm0d
+Func ConvertInternalExternArea($FunctionName = "")
 	Local $x, $y
-
+	If not $FunctionName = "" Then SetDebugLog("ConvertInternalExternArea called from " & $FunctionName)
+	
 	; Update External coord.
 	For $i = 0 To 7
 		$x = $ExternalAreaRef[$i][0]
@@ -84,9 +86,8 @@ Func ConvertInternalExternArea()
 		$ExternalArea[$i][0] = $x
 		$ExternalArea[$i][1] = $y
 		$ExternalArea[$i][2] = $ExternalAreaRef[$i][2]
-        ;debugAttackCSV("External Area Point " & $ExternalArea[$i][2] & ": " & $x & ", " & $y)
-    Next
-
+		If $g_bDebugAttackCSV Then SetDebugLog("External Area Point " & $ExternalArea[$i][2] & ": " & $x & ", " & $y)
+	Next
 
     ; ================  samm0d - update edge coor
     Local $fEdgeFactor = 8.0
@@ -144,28 +145,11 @@ Func ConvertInternalExternArea()
     Global $g_aaiEdgeDropPoints[4] = [$g_aaiBottomRightDropPoints, $g_aaiTopLeftDropPoints, $g_aaiBottomLeftDropPoints, $g_aaiTopRightDropPoints]
     ;=====================================================================
 
-
 	; Full ECD Diamond $CocDiamondECD
-	; Top
-	$x = $ExternalAreaRef[2][0]
-	$y = $ExternalAreaRef[2][1] + $DiamandAdjY
-	ConvertToVillagePos($x, $y)
-	$CocDiamondECD = $x & "," & $y
-	; Right
-	$x = $ExternalAreaRef[1][0] - $DiamandAdjX
-	$y = $ExternalAreaRef[1][1]
-	ConvertToVillagePos($x, $y)
-	$CocDiamondECD &= "|" & $x & "," & $y
-	; Bottom
-	$x = $ExternalAreaRef[3][0]
-	$y = $ExternalAreaRef[3][1] - $DiamandAdjY
-	ConvertToVillagePos($x, $y)
-	$CocDiamondECD &= "|" & $x & "," & $y
-	; Left
-	$x = $ExternalAreaRef[0][0] + $DiamandAdjX
-	$y = $ExternalAreaRef[0][1]
-	ConvertToVillagePos($x, $y)
-	$CocDiamondECD &= "|" & $x & "," & $y
+	$CocDiamondECD = $ExternalArea[2][0] & "," & $ExternalArea[2][1] & "|" & _
+			$ExternalArea[1][0] & "," & $ExternalArea[1][1] & "|" & _
+			$ExternalArea[3][0] & "," & $ExternalArea[3][1] & "|" & _
+			$ExternalArea[0][0] & "," & $ExternalArea[0][1]
 
 	; Update Internal coord.
 	For $i = 0 To 7
@@ -175,12 +159,18 @@ Func ConvertInternalExternArea()
 		$InternalArea[$i][0] = $x
 		$InternalArea[$i][1] = $y
 		$InternalArea[$i][2] = $InternalAreaRef[$i][2]
-		;debugAttackCSV("Internal Area Point " & $InternalArea[$i][2] & ": " & $x & ", " & $y)
+		If $g_bDebugAttackCSV Then SetDebugLog("Internal Area Point " & $InternalArea[$i][2] & ": " & $x & ", " & $y)
 	Next
+
+	; Full DCD Diamond $CocDiamondDCD
 	$CocDiamondDCD = $InternalArea[2][0] & "," & $InternalArea[2][1] & "|" & _
 			$InternalArea[1][0] & "," & $InternalArea[1][1] & "|" & _
 			$InternalArea[3][0] & "," & $InternalArea[3][1] & "|" & _
 			$InternalArea[0][0] & "," & $InternalArea[0][1]
+
+	; $CocDiamondDCD: 440,25|790,292|440,559|91,292
+	$DiamondMiddleX = $InternalArea[2][0]
+	$DiamondMiddleY = $InternalArea[0][1]
 EndFunc   ;==>ConvertInternalExternArea
 
 Func CheckAttackLocation(ByRef $x, ByRef $y)

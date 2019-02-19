@@ -137,10 +137,10 @@ Func _MultiPixelSearch2($iLeft, $iTop, $iRight, $iBottom, $xSkip, $ySkip, $first
 EndFunc   ;==>_MultiPixelSearch2
 
 Func WaitforPixel($iLeft, $iTop, $iRight, $iBottom, $firstColor, $iColorVariation, $maxDelay = 10) ; $maxDelay is in 1/2 second
-	For $i = 1 To $maxDelay * 10
-		Local $result = _PixelSearch($iLeft, $iTop, $iRight, $iBottom, $firstColor, $iColorVariation)
-		If IsArray($result) Then Return True
-		If _Sleep(50) Then Return
-	Next
-	Return False
+    For $i = 1 To $maxDelay * 10
+        Local $result = _PixelSearch($iLeft, $iTop, $iRight, $iBottom, $firstColor, $iColorVariation)
+        If IsArray($result) Then Return True
+        If _Sleep(50) Then Return
+    Next
+    Return False
 EndFunc   ;==>WaitforPixel

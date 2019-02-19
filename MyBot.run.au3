@@ -89,21 +89,21 @@ Func InitializeBot()
 
 	ProcessCommandLine()
 
-	; samm0d - always enable debug mode
-	$g_bDevMode = True
-
-	If FileExists(@ScriptDir & "\EnableMBRDebug.txt") Then ; Set developer mode
-		$g_bDevMode = True
-		Local $aText = FileReadToArray(@ScriptDir & "\EnableMBRDebug.txt") ; check if special debug flags set inside EnableMBRDebug.txt file
-		If Not @error Then
-			For $l = 0 To UBound($aText) - 1
-				If StringInStr($aText[$l], "DISABLEWATCHDOG", $STR_NOCASESENSEBASIC) <> 0 Then
-					$g_bBotLaunchOption_NoWatchdog = True
-					SetDebugLog("Watch Dog disabled by Developer Mode File Command", $COLOR_INFO)
-				EndIf
-			Next
-		EndIf
-	EndIf
+	; ; samm0d - always enable debug mode
+	; $g_bDevMode = True
+    ; 
+	 If FileExists(@ScriptDir & "\EnableMBRDebug.txt") Then ; Set developer mode
+	 	$g_bDevMode = True
+	 	Local $aText = FileReadToArray(@ScriptDir & "\EnableMBRDebug.txt") ; check if special debug flags set inside EnableMBRDebug.txt file
+	 	If Not @error Then
+	 		For $l = 0 To UBound($aText) - 1
+	 			If StringInStr($aText[$l], "DISABLEWATCHDOG", $STR_NOCASESENSEBASIC) <> 0 Then
+	 				$g_bBotLaunchOption_NoWatchdog = True
+	 				SetDebugLog("Watch Dog disabled by Developer Mode File Command", $COLOR_INFO)
+	 			EndIf
+	 		Next
+	 	EndIf
+	 EndIf
 
 	SetupProfileFolder() ; Setup profile folders
 
@@ -727,7 +727,263 @@ Func MainLoop($bCheckPrerequisitesOK = True)
 
 	WEnd
 EndFunc   ;==>MainLoop
+#CS
+Func IsWarMenu()
+	Local $Result = _Wait4Pixel(425, 53, 0xFEF0B8, 40, 5000, "IsWarMenu") ;Wait for War Menu To Be Appear
+	Return $Result
+EndFunc   ;==>IsWarMenu
 
+Func MultiPSimple($iX, $iY, $iX2, $iY2, $Hex, $iTolerance = 10) ; returns true if the last chat was not by you, false otherwise
+	_CaptureRegion($iX, $iY, $iX2, $iY2)
+	Local $aReturn[2] = [0, 0]
+	
+	For $y = $iY To $iY2 - 1
+		For $x = $iX To $iX2 - 1
+			If _ColorCheck(Hex(_GDIPlus_BitmapGetPixel($g_hBitmap, $x, $y), 6), Hex($Hex, 6), $iTolerance) Then 
+			$aReturn[0] = $iX + $x
+			$aReturn[1] = $iY + $y
+			ExitLoop
+			EndIf
+		Next
+	Next
+	
+	Return $aReturn
+EndFunc   ;==>MultiPSimple
+
+Func CheckWarTime(ByRef $sResult, ByRef $bResult) ; return [Success + $sResult = $sBattleEndTime, $bResult = $bInWar] OR Failure
+
+	$sResult = ""
+	Local $directory = @ScriptDir & "\imgxml\WarPage"
+	Local $bBattleDay_InWar = False, $bClanWarLeague = False, $sWarDay, $sTime
+
+	If IsMainPage() Then
+
+		$bBattleDay_InWar = _ColorCheck(_GetPixelColor(45, 500, True), "ED151D", 20) ; Red color in war button
+		$bClanWarLeague = _ColorCheck(_GetPixelColor(10, 510, True), "FFED71", 20) ; Golden color at left side of clan war button
+		If $bClanWarLeague Then SetLog("Your Clan Is Doing Clan War League.", $COLOR_INFO)
+		If $g_bDebugSetlog Then SetDebugLog("Checking battle notification, $bBattleDay_InWar = " & $bBattleDay_InWar)
+		Click(40, 530) ; open war menu
+		If _Sleep(2000) Then Return
+	EndIf
+
+	;If IsWarMenu() Then
+		If _Sleep(3000) Then Return
+
+		If $bBattleDay_InWar Then
+			$sWarDay = "Battle"
+			$bResult = True
+		Else
+			If $bClanWarLeague Then
+				If QuickMIS("BC1", $directory & "\CWL_Preparation", 175, 645, 175 + 515, 645 + 30, True) Then ; By Default Battle Days Opens So Find Prepration Button
+					If $g_bDebugSetlog Then SetDebugLog("CWL Enter In Preparation page")
+					Click($g_iQuickMISX + 175, $g_iQuickMISY + 645, 1)
+					If _Sleep(500) Then Return
+					If Not IsWarMenu() Then
+						SetLog("Error when trying to open CWL Preparation page.", $COLOR_ERROR)
+						Return SetError(1, 0, "Error Open CWL Preparation page")
+					EndIf
+				ElseIf QuickMIS("BC1", $directory & "\CWL_Battle", 175, 645, 175 + 515, 645 + 30, True) Then ; When Battle Day Is Unselected
+					If $g_bDebugSetlog Then SetDebugLog("CWL Enter In Battle page")
+					Click($g_iQuickMISX + 175, $g_iQuickMISY + 645, 1)
+					If _Sleep(500) Then Return
+					If Not IsWarMenu() Then
+						SetLog("Error when trying to open CWL Battle page.", $COLOR_ERROR)
+						Return SetError(1, 0, "Error Open CWL Battle page")
+					EndIf
+				EndIf
+			EndIf
+			$sWarDay = QuickMIS("N1", $directory, 360, 85, 360 + 145, 85 + 28, True) ; Prepare or Battle
+			$bResult = QuickMIS("BC1", $directory, 795, 475, 795 + 20, 475 + 140, True) ; $bInWar Octobar Update Change
+			If $g_bDebugSetlog Then SetDebugLog("$sResult QuickMIS N1/BC1: " & $sWarDay & "/ " & $bResult)
+			If $sWarDay = "none" Then Return SetError(1, 0, "Error reading war day")
+		EndIf
+
+		If Not StringInStr($sWarDay, "Battle") And Not StringInStr($sWarDay, "Preparation") Then
+			SetLog("Your Clan is not in active war yet.", $COLOR_INFO)
+			Click(70, 680, 1, 500, "#0000") ; return home
+			Return False
+
+		Else
+			$sTime = QuickMIS("OCR", $directory, 396, 65, 396 + 70, 70 + 28, True) ;Octobar Update Change
+			If $g_bDebugSetlog Then SetDebugLog("$sResult QuickMIS OCR: " & ($bBattleDay_InWar ? $sWarDay & ", " : "") & $sTime)
+			If $sTime = "none" Then Return SetError(1, 0, "Error reading war time")
+
+			Local $iConvertedTime = ConvertOCRTime("War", $sTime, False)
+			If $iConvertedTime = 0 Then Return SetError(1, 0, "Error converting war time")
+
+			If StringInStr($sWarDay, "Preparation") Then
+				SetLog("Clan war is now in preparation. Battle will start in " & $sTime, $COLOR_INFO)
+				$sResult = _DateAdd("n", $iConvertedTime + 24 * 60, _NowCalc()) ; $iBattleFinishTime
+			ElseIf StringInStr($sWarDay, "Battle") Then
+				SetLog("Clan war is now in battle day. Battle will finish in " & $sTime, $COLOR_INFO)
+				$sResult = _DateAdd("n", $iConvertedTime, _NowCalc()) ; $iBattleFinishTime
+			EndIf
+
+			If Not _DateIsValid($sResult) Then Return SetError(1, 0, "Error converting battle finish time")
+
+			SetLog("You are " & ($bResult ? "" : "not ") & "in war", $COLOR_INFO)
+	; Bld Mod ===========================
+	Local $g_aiColorsMyProfilePixel = 0
+	Local $aBtnColorsMyProfile[3][3] = [[0xBDE86C, 1, 0], [0x9CBF5F, 0, 1], [0xBDE86C, 2, 0]] 
+	Local $aAureolaAldea = 0
+	Local $aAttackButton[3][3] = [[0xFFC854, 0, 1], [0xFFC854, 1, 1], [0xFFC854, 2, 1]]
+	Local $sAttackButton = 0
+	Local $iGAME_WIDTH_Mitad = 0
+	Local $bFailControl = True
+	
+		If $g_bRunState = False Then Return 
+
+		; War Info
+		For $i = 0 To 15 - 1
+			If QuickMIS("BC1", $directory & "\AttackProcess", 767, 538, 767 + 100, 538 + 100, True) Then
+				Click($g_iQuickMISX + 767, $g_iQuickMISY + 538, 1)
+				If _Sleep(750) Then Return
+				$bFailControl = False
+				ExitLoop
+			EndIf
+		Next
+		
+		If $g_bRunState = False Or $bFailControl = True Then Return 
+		
+		$bFailControl = True
+		
+		; My Team
+		For $i = 0 To 15 - 1
+			Click(516, 61, 1)
+			If _Sleep(750) Then Return
+				If _ColorCheck(_GetPixelColor(516, 61, True), "EFEFEB", 20) Then 
+					If _Sleep(750) Then Return
+					$bFailControl = False
+					ExitLoop
+				EndIf
+		Next
+		
+		If $g_bRunState = False and $bFailControl = True Then Return 
+		
+		$bFailControl = True
+		
+		; Drag
+		For $i = 0 To 60 - 1
+			$g_aiColorsMyProfilePixel = _MultiPixelSearch(450, 161, 845, 673, -1, 1, Hex(0xBDE86C, 6), $aBtnColorsMyProfile, 20)
+			If IsArray($g_aiColorsMyProfilePixel) Then
+				Click($g_aiColorsMyProfilePixel[0], $g_aiColorsMyProfilePixel[1] + 5, 1)
+				If _Sleep(750) Then Return
+				$bFailControl = False
+				ExitLoop
+				Else 
+				ClickDrag(345, 665 - Random(75,100) + $g_iMidOffsetY, 345, 440 - Random(75,100) + $g_iMidOffsetY, Random(50,2000))
+				If _Sleep(1750) Then Return
+			EndIf
+		Next
+		
+		If $g_bRunState = False Or $bFailControl = True Then Return 
+		
+		$bFailControl = True
+		
+		; ViewOnMap
+		For $i = 0 To 15 - 1
+			If QuickMIS("BC1", $directory & "\ViewOnMap", 415, 165, 600, 730, True) Then
+				Click($g_iQuickMISX + 415, $g_iQuickMISY + 165, 1)
+				If _Sleep(1750) Then Return
+				$bFailControl = False
+				ExitLoop
+			EndIf
+		Next
+		
+		If $g_bRunState = False Or $bFailControl = True Then Return 
+		
+		$bFailControl = True
+		For $i = 0 To 15 - 1
+			$aAureolaAldea = MultiPSimple(144, 141, 409, 477, 0xE0C898)
+			Sleep(1)
+			If Not $aAureolaAldea[0] = 0 Then 
+				$bFailControl = False
+				ExitLoop
+			EndIf
+		Next
+		
+		$iGAME_WIDTH_Mitad = Abs($g_iGAME_WIDTH / 2 - $aAureolaAldea[0]) + $g_iGAME_WIDTH / 2
+		
+		Click($iGAME_WIDTH_Mitad, $aAureolaAldea[1] - 50, 1)
+		If _Sleep(750) Then Return
+		
+		If $g_bRunState = False Or $bFailControl = True Then Return 
+		
+		$bFailControl = True
+		
+	;	;Loop start END
+    ;
+	;	;Stars Check
+	;	If $g_bRunState = False Or $bFailControl = True Then Return          ;;;;;;;;
+	;	                                                                     ;;;;;;;;
+	;	$bFailControl = True                                                 ;;;;;;;;
+	;	For $i = 0 To 15 - 1                                                 ;;;;;;;;
+	;		$aAureolaAldea = MultiPSimple(260, 631, 270, 640, 0xFFDC48)      ;;;;;;;;
+	;		Sleep(1)                                                         ;;;;;;;;
+	;		If Not $aAureolaAldea[0] = 0 Then                                ;;;;;;;;
+	;			$bFailControl = False                                        ;;;;;;;;
+	;			ExitLoop                                                     ;;;;;;;;
+	;		EndIf                                                            ;;;;;;;;
+	;	Next
+    ;
+	;	;Loop down END
+		
+		
+		;Orange Attack
+		For $i = 0 To 3 - 1
+			If QuickMIS("BC1", $directory & "\Attack", 431, 580, 572, 646, True) Then
+				Click($g_iQuickMISX + 431, $g_iQuickMISY + 580, 1)
+				If _Sleep(750) Then Return
+				$bFailControl = False
+				ExitLoop
+			EndIf
+		Next
+		
+
+		;Optional attack Warning                                            
+		If $g_bRunState = False Or $bFailControl = True Then Return         
+		                                                                    
+		$bFailControl = True                                                
+		For $i = 0 To 15 - 1                                                
+			$aAureolaAldea = MultiPSimple(248, 261, 599, 469, 0xDFF887)     
+			Sleep(1)                                                        
+			If Not $aAureolaAldea[0] = 0 Then  
+			Click($aAureolaAldea[0], $aAureolaAldea[1], 1)
+				$bFailControl = False                                       
+				ExitLoop                                                    
+			EndIf
+		Next
+
+		;True attack                                                        
+		If $g_bRunState = False Or $bFailControl = True Then Return         
+		                                                                    
+		$bFailControl = True                                                
+		For $i = 0 To 15 - 1                                                
+			$aAureolaAldea = MultiPSimple(446, 400, 575, 450, 0xDDF783, 30)     
+			Sleep(1)                                                        
+			If Not $aAureolaAldea[0] = 0 Then                         
+				Click($aAureolaAldea[0], $aAureolaAldea[1], 1)
+				$bFailControl = False                                       
+				ExitLoop                                                    
+			EndIf
+		Next
+		
+		If $g_bRunState = False Or $bFailControl = True Then Return 
+
+			;EndIf
+			; ===================================
+		Click(70, 680, 1, 500, "#0000") ; return home
+		Return True
+	EndIf
+
+	;Else
+	;	SetLog("Error when trying to open War window.", $COLOR_WARNING)
+	;	Return SetError(1, 0, "Error open War window")
+	;	ClickP($aAway, 2, 0, "#0000") ;Click Away
+	;EndIf
+
+EndFunc   ;==>CheckWarTime
+#CE
 Func runBot() ;Bot that runs everything in order
 	Local $iWaitTime
 
@@ -741,7 +997,10 @@ Func runBot() ;Bot that runs everything in order
 	EndIf
 	;If _Sleep(200) Then Return
 	;TNRQT(False, True, True, True)
-
+	;Local $sResult
+	;Local $bResult
+	;CheckWarTime($sResult, $bResult)
+	
 	while $g_bRunState = True
 		; samm0d
 		If $g_iSamM0dDebug = 1 And $g_bRestart Then SetLog("Continue loop with restart", $COLOR_DEBUG)
@@ -839,7 +1098,8 @@ Func runBot() ;Bot that runs everything in order
 		If $g_bRestart = True Then ContinueLoop
 		checkObstacles() ; trap common error messages also check for reconnecting animation
 		If $g_bRestart = True Then ContinueLoop
-
+		CheckStopForWar()
+		If $g_bRestart = True Then ContinueLoop
 		If $g_bQuicklyFirstStart = True Then
 			$g_bQuicklyFirstStart = False
 		Else
@@ -985,6 +1245,8 @@ Func runBot() ;Bot that runs everything in order
 					SetLog("Restarted due search limit", $COLOR_INFO)
 				Else
 					SetLog("Restarted after Out of Sync Error: Attack Now", $COLOR_INFO)
+					; Samm0d
+					CheckBaseQuick()
 				EndIf
 			EndIf
 			If _Sleep($DELAYRUNBOT3) Then Return

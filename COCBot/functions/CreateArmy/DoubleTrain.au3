@@ -15,7 +15,7 @@
 ; ===============================================================================================================================
 #include-once
 
-Func DoubleTrain($bQuickTrain = False, $bSetlog = True)
+Func DoubleTrain($bQuickTrain = False, $bSetlog = True, $bWarTroop = False) ; For War Troops EDITED By SM MOD
 
 	If Not $g_bDoubleTrain Then Return
 	Local $bDebug = $g_bDebugSetlogTrain Or $g_bDebugSetlog
@@ -49,8 +49,8 @@ Func DoubleTrain($bQuickTrain = False, $bSetlog = True)
 		If $bSetlog And $TroopCamp[1] <> $g_iTotalCampSpace Then _
 			SetLog("Incorrect Troop combo: " & $g_iTotalCampSpace & " vs Total camp: " & $TroopCamp[1] & @CRLF & "                 Double train may not work well", $COLOR_DEBUG)
 
-		If $TroopCamp[0] < $TroopCamp[1] Then ; <280/280
-			If $g_bDonationEnabled And $g_bChkDonate And MakingDonatedTroops("Troops") Then
+		If $bWarTroop Or $TroopCamp[0] < $TroopCamp[1] Then ; <280/280 ; For War Troops EDITED By SM MOD
+			If Not $bWarTroop And $g_bDonationEnabled And $g_bChkDonate And MakingDonatedTroops("Troops") Then ; For War Troops EDITED By SM MOD
 				If $bDebug Then SetLog($Step & ". MakingDonatedTroops('Troops')", $COLOR_DEBUG)
 				$Step += 1
 				If $Step = 6 Then ExitLoop
@@ -99,8 +99,8 @@ Func DoubleTrain($bQuickTrain = False, $bSetlog = True)
 				If $g_bForceBrewSpells And $SpellCamp[1] > $TotalSpell Then $SpellCamp[1] = $TotalSpell
 			EndIf
 
-			If $SpellCamp[0] < $SpellCamp[1] Then ; 0-10/11
-				If $g_bDonationEnabled And $g_bChkDonate And MakingDonatedTroops("Spells") Then
+			If $bWarTroop Or $SpellCamp[0] < $SpellCamp[1] Then ; 0-10/11 ; For War Troops EDITED By SM MOD 
+				If Not $bWarTroop And $g_bDonationEnabled And $g_bChkDonate And MakingDonatedTroops("Spells") Then ; For War Troops EDITED By SM MOD
 					If $bDebug Then SetLog($Step & ". MakingDonatedTroops('Spells')", $COLOR_DEBUG)
 					$Step += 1
 					If $Step = 6 Then ExitLoop
@@ -199,7 +199,7 @@ Func TrainFullQueue($bSpellOnly = False)
 	$g_bIsFullArmywithHeroesAndSpells = True
 
 	TrainUsingWhatToTrain($ToReturn, $bSpellOnly)
-	If _Sleep($bSpellOnly ? 1000 : 500) Then Return
+	If _Sleep(1000) Then Return ; was _Sleep($bSpellOnly ? 1000 : 500) EDITED By SM MOD
 
 	$g_bIsFullArmywithHeroesAndSpells = $bSavedFullArmyValue
 

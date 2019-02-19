@@ -28,25 +28,20 @@ Func CloseCoC($ReOpenCoC = False, $bCheckRunState = True)
 	EndIf
 	WinGetAndroidHandle()
 	If $bCheckRunState And Not $g_bRunState Then Return FuncReturn()
-	;SendAdbCommand("shell am force-stop " & $g_sAndroidGamePackage)
-	;AndroidHomeButton()
-    AndroidAdbSendShellCommand("am force-stop " & $g_sAndroidGamePackage, Default, Default, False)
 
     ; samm0d - check game client close
-    Local $j = 0
-    While GetAndroidProcessPID(Default, False)
-        $j += 1
+	For $j = 0 To 20
+		AndroidAdbSendShellCommand("am force-stop " & $g_sAndroidGamePackage, Default, Default, False)
+		If GetAndroidProcessPID(Default, False) = 0 Then ExitLoop
         If $g_iSamM0dDebug Then SetLog("Waiting game client close..." & $j, $COLOR_INFO)
-        If $j > 20 Then
-            AndroidAdbSendShellCommand("am force-stop " & $g_sAndroidGamePackage, Default, Default, False)
-        EndIf
-        If $j > 30 Then ExitLoop
-        _Sleep(200)
-    WEnd
-    If $j > 30 Then SetLog("Failed to close game client.", $COLOR_ERROR)
-
+        Sleep(300)
+		If $j > 19 Then SetLog("Failed to close game client.", $COLOR_ERROR)
+    Next
+		
 	ResetAndroidProcess()
-	_Sleep($DELAYCLOSEOPEN3000)
+	;_Sleep($DELAYCLOSEOPEN3000) 
+	_Sleep(300) ; fast
+	; end samm0d
 	If $bCheckRunState And Not $g_bRunState Then Return FuncReturn()
 	If $ReOpenCoC Then
 		OpenCoC()
@@ -73,6 +68,7 @@ EndFunc   ;==>CloseCoC
 ; ===============================================================================================================================
 
 Func OpenCoC()
+; samm0d
 	FuncEnter(OpenCoC)
 	ResumeAndroid()
 	If Not $g_bRunState Then Return FuncReturn()
@@ -82,15 +78,24 @@ Func OpenCoC()
 	;AndroidHomeButton()
 	If _Sleep($DELAYCLOSEOPEN500) Then Return FuncReturn()
 	If Not $g_bRunState Then Return FuncReturn()
-	If Not StartAndroidCoC() Then Return FuncReturn()
-	While _CheckPixel($aIsMain, True) = False ; Wait for MainScreen
-		$iCount += 1
-		If _Sleep($DELAYCLOSEOPEN500) Then Return FuncReturn()
-		If checkObstacles() Then $iCount += 1
-		If $iCount > 50 Then ExitLoop
-		If Not $g_bRunState Then ExitLoop
-	WEnd
-	FuncReturn()
+    If Not StartAndroidCoC() Then Return FuncReturn()
+    While _CheckPixel($aIsMain, True) = False ; Wait for MainScreen
+        $iCount += 1
+        If checkObstacles() Then $iCount += 1
+        If $iCount > 250 Then
+            SetLog("Reboot " & $g_sAndroidEmulator & ", could not open the game..", $COLOR_ERROR)
+            RebootAndroid()
+            WinGetAndroidHandle()
+            If _Sleep(500) Then Return FuncReturn()
+            If Not StartAndroidCoC() Then Return FuncReturn()
+            ExitLoop
+        EndIf
+        If Not $g_bRunState Then ExitLoop
+    WEnd
+    ; Let's Rearm and check tombs
+    $g_abIsToProccedWith[0] = True
+    $g_abIsToProccedWith[1] = True
+    FuncReturn()
 EndFunc   ;==>OpenCoC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -160,12 +165,12 @@ EndFunc   ;==>_WaitnOpenCoC
 
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: PoliteCloseCoC
-; Description ...: Tries to close CoC with back button & confirm OKAY, before forcefully closing CoC
+; Description ...: Send Home button now (more realist and simple)
 ; Syntax ........: PoliteCloseCoC([$sSource = "Unknown_"])
 ; Parameters ....: $sSource             - [optional] a string value. Default is "Unknown_".
 ; Return values .: None
 ; Author ........: MonkeyHunter (05-2016), MMHK (11-2016)
-; Modified ......:
+; Modified ......: Boludoz (10/2/2019)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -174,6 +179,7 @@ EndFunc   ;==>_WaitnOpenCoC
 ; ===============================================================================================================================
 Func PoliteCloseCoC($sSource = "Unknown_", $bPoliteCloseCoC = $g_bPoliteCloseCoC)
 	$g_bSkipFirstZoomout = False
+	#cs
 	If $bPoliteCloseCoC Then
 		; polite close
 		If $g_sAndroidGameDistributor = $g_sGoogle Then
@@ -259,26 +265,55 @@ Func PoliteCloseCoC($sSource = "Unknown_", $bPoliteCloseCoC = $g_bPoliteCloseCoC
 				If Not $g_bRunState Then ExitLoop
 			WEnd
 		EndIf
-	Else
-		; force-kill Game
+	Else		; force-kill Game
 		CloseCoC()
 	EndIf
 
-    ; samm0d last check for game client totally close
-    WinGetAndroidHandle()
-    Local $j = 0
-    While GetAndroidProcessPID(Default, False)
-        $j += 1
-        If $g_iSamM0dDebug Then SetLog("Waiting game client close..." & $j, $COLOR_INFO)
-        If $j > 20 Then
-            If $g_iSamM0dDebug Then SetLog("force stop game client...", $COLOR_INFO)
-            AndroidAdbSendShellCommand("am force-stop " & $g_sAndroidGamePackage, Default, Default, False)
-        EndIf
-        If $j > 30 Then ExitLoop
-        _Sleep(250)
-    WEnd
-    If $j > 30 Then SetLog("Failed to close game client.", $COLOR_ERROR)
+#ce
+	If $bPoliteCloseCoC Then
+	; samm0d - Realist and universal
+	Local $iResult = -1
+	Local $iResultString = -1
+	
+	For $i = 0 To 20		
+		If $g_bDebugAndroid Then $iResult = _AndroidAdbSendShellCommand("dumpsys window windows | grep -E 'mCurrentFocus'", Default)
+		Setlog($iResult, $COLOR_YELLOW)
+			$iResultString = StringInStr($iResult, $g_sAndroidGamePackage)
+			If $iResultString = 0 Then 
+				ExitLoop
+			Else
+				AndroidHomeButton()
+				If $g_bDebugAndroid Then SetDebugLog("Used Adb to press home button", $COLOR_INFO)
+			EndIf
+			Sleep(150)
+		Next
+	EndIf
+	
+	If $g_bDebugImageSave Then DebugImageSave($sSource)
+	
+	; force-kill Game
+	CloseCoC()
 
+    ; samm0d - check game client close
+	For $j = 0 To 20
+		AndroidAdbSendShellCommand("am force-stop " & $g_sAndroidGamePackage, Default, Default, False)
+		If GetAndroidProcessPID(Default, False) = 0 Then ExitLoop
+        If $g_iSamM0dDebug Then SetLog("Waiting game client close..." & $j, $COLOR_INFO)
+        Sleep(300)
+		If $j > 19 Then SetLog("Failed to close game client.", $COLOR_ERROR)
+    Next
+	
 	ResetAndroidProcess()
 	ReduceBotMemory()
+	
+	If $i > 19 Then 
+			Setlog("Send Home button - FAIL", $COLOR_ERROR)
+			Return False
+		Else
+			Setlog("Send Home button - OK", $COLOR_GREEN)
+			Return True
+	EndIf
+
+	If _Sleep($DELAYCLOSEOPEN1000) Then Return ; wait for window to close
+	
 EndFunc   ;==>PoliteCloseCoC

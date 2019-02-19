@@ -79,6 +79,7 @@
 ;----------------------------------------------------------------
 ; Edicion exclusiva
 #include "SamM0d\Functions\OcrBypass.au3"
+#include "SamM0d\Functions\Check Stop For War\CheckStopForWar.au3"
 ;==========================================================
 
 #include "functions\Attack\AttackReport.au3"

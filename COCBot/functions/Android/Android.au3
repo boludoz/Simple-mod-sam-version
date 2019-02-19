@@ -929,21 +929,57 @@ Func InitAndroid($bCheckOnly = False, $bLogChangesOnly = True)
 
 		Local $i = 0
 		Local $sText = ""
-		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidEmulator) Or $bLogChangesOnly = False Then SetDebugLog("Android: " & $g_sAndroidEmulator)
-		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_iAndroidConfig) Or $bLogChangesOnly = False Then SetDebugLog("Android Config: " & $g_iAndroidConfig)
-		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidVersion) Or $bLogChangesOnly = False Then SetDebugLog("Android Version: " & $g_sAndroidVersion)
-		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidInstance) Or $bLogChangesOnly = False Then SetDebugLog("Android Instance: " & $g_sAndroidInstance)
-		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidTitle) Or $bLogChangesOnly = False Then SetDebugLog("Android Window Title: " & $g_sAndroidTitle)
-		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidProgramPath) Or $bLogChangesOnly = False Then SetDebugLog("Android Program Path: " & $g_sAndroidProgramPath)
-		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], GetAndroidProgramParameter()) Or $bLogChangesOnly = False Then SetDebugLog("Android Program Parameter: " & GetAndroidProgramParameter())
-		$sText = ((IsArray($g_avAndroidProgramFileVersionInfo) ? _ArrayToString($g_avAndroidProgramFileVersionInfo, ",", 1) : "not available"))
-		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $sText) Or $bLogChangesOnly = False Then SetDebugLog("Android Program FileVersionInfo: " & $sText)
-		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_iAndroidSecureFlags) Or $bLogChangesOnly = False Then SetDebugLog("Android SecureME setting: " & $g_iAndroidSecureFlags)
-		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidAdbPath) Or $bLogChangesOnly = False Then SetDebugLog("Android ADB Path: " & $g_sAndroidAdbPath)
-		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidAdbGlobalOptions) Or $bLogChangesOnly = False Then SetDebugLog("Android ADB Global Options: " & $g_sAndroidAdbGlobalOptions)
-		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $__VBoxManage_Path) Or $bLogChangesOnly = False Then SetDebugLog("Android VBoxManage Path: " & $__VBoxManage_Path)
-		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidAdbDevice) Or $bLogChangesOnly = False Then SetDebugLog("Android ADB Device: " & $g_sAndroidAdbDevice)
-		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidPicturesPath) Or $bLogChangesOnly = False Then SetDebugLog("Android ADB Shared Folder: " & $g_sAndroidPicturesPath)
+; simplemod - samm0d - Fast CODE
+		If $bLogChangesOnly = False Then
+				SetDebugLog("Android: " & $g_sAndroidEmulator)
+				SetDebugLog("Android Config: " & $g_iAndroidConfig)
+				SetDebugLog("Android Version: " & $g_sAndroidVersion)
+				SetDebugLog("Android Instance: " & $g_sAndroidInstance)
+				SetDebugLog("Android Window Title: " & $g_sAndroidTitle)
+				SetDebugLog("Android Program Path: " & $g_sAndroidProgramPath)
+				SetDebugLog("Android Program Parameter: " & GetAndroidProgramParameter())
+				$sText = ((IsArray($g_avAndroidProgramFileVersionInfo) ? _ArrayToString($g_avAndroidProgramFileVersionInfo, ",", 1) : "not available"))
+				SetDebugLog("Android Program FileVersionInfo: " & $sText)		
+				SetDebugLog("Android SecureME setting: " & $g_iAndroidSecureFlags)		
+				SetDebugLog("Android ADB Path: " & $g_sAndroidAdbPath)		
+				SetDebugLog("Android ADB Global Options: " & $g_sAndroidAdbGlobalOptions)
+				SetDebugLog("Android VBoxManage Path: " & $__VBoxManage_Path)		
+				SetDebugLog("Android ADB Device: " & $g_sAndroidAdbDevice)
+				SetDebugLog("Android ADB Shared Folder: " & $g_sAndroidPicturesPath)
+			Else
+				Switch False 
+					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidEmulator)         
+						SetDebugLog("Android: " & $g_sAndroidEmulator)
+					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_iAndroidConfig)    
+						SetDebugLog("Android Config: " & $g_iAndroidConfig)		
+					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidVersion)  
+						SetDebugLog("Android Version: " & $g_sAndroidVersion)
+					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidInstance)   
+						SetDebugLog("Android Instance: " & $g_sAndroidInstance)	
+					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidTitle)     
+						SetDebugLog("Android Window Title: " & $g_sAndroidTitle)		
+					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidProgramPath)    
+						SetDebugLog("Android Program Path: " & $g_sAndroidProgramPath)		
+					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], GetAndroidProgramParameter())
+						SetDebugLog("Android Program Parameter: " & GetAndroidProgramParameter())
+					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $sText)   
+						$sText = ((IsArray($g_avAndroidProgramFileVersionInfo) ? _ArrayToString($g_avAndroidProgramFileVersionInfo, ",", 1) : "not available"))
+						SetDebugLog("Android Program FileVersionInfo: " & $sText)		
+					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_iAndroidSecureFlags)   
+						SetDebugLog("Android SecureME setting: " & $g_iAndroidSecureFlags)		
+					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidAdbPath)         
+						SetDebugLog("Android ADB Path: " & $g_sAndroidAdbPath)		
+					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidAdbGlobalOptions)
+						SetDebugLog("Android ADB Global Options: " & $g_sAndroidAdbGlobalOptions)
+					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $__VBoxManage_Path)      
+						SetDebugLog("Android VBoxManage Path: " & $__VBoxManage_Path)		
+					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidAdbDevice)
+						SetDebugLog("Android ADB Device: " & $g_sAndroidAdbDevice)
+					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidPicturesPath)  
+						SetDebugLog("Android ADB Shared Folder: " & $g_sAndroidPicturesPath)
+				EndSwitch
+		EndIf	
+
 		; check if share folder exists
 		If FileExists($g_sAndroidPicturesHostPath) Then
 			If ($g_sAndroidPicturesHostFolder <> "" Or BitAND($g_iAndroidSecureFlags, 1) = 1) Then
@@ -953,15 +989,43 @@ Func InitAndroid($bCheckOnly = False, $bLogChangesOnly = True)
 			SetLog("Shared Folder doesn't exist, please fix:", $COLOR_ERROR)
 			SetLog($g_sAndroidPicturesHostPath, $COLOR_ERROR)
 		EndIf
-		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidPicturesHostPath) Or $bLogChangesOnly = False Then SetDebugLog("Android ADB Shared Folder on Host: " & $g_sAndroidPicturesHostPath)
-		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidPicturesHostFolder) Or $bLogChangesOnly = False Then SetDebugLog("Android ADB Shared SubFolder: " & $g_sAndroidPicturesHostFolder)
-		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidMouseDevice) Or $bLogChangesOnly = False Then SetDebugLog("Android Mouse Device: " & $g_sAndroidMouseDevice)
-		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_bAndroidAdbScreencap) Or $bLogChangesOnly = False Then SetDebugLog("Android ADB screencap command enabled: " & $g_bAndroidAdbScreencap)
-		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_bAndroidAdbInput) Or $bLogChangesOnly = False Then SetDebugLog("Android ADB input command enabled: " & $g_bAndroidAdbInput)
-		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_bAndroidAdbClick) Or $bLogChangesOnly = False Then SetDebugLog("Android ADB Mouse Click enabled: " & $g_bAndroidAdbClick)
-		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_bAndroidAdbClickDrag) Or $bLogChangesOnly = False Then SetDebugLog("Android ADB Click Drag enabled: " & $g_bAndroidAdbClickDrag)
-		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], ($g_bChkBackgroundMode = True ? "enabled" : "disabled")) Or $bLogChangesOnly = False Then SetDebugLog("Bot Background Mode for screen capture: " & ($g_bChkBackgroundMode = True ? "enabled" : "disabled"))
-		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_bNoFocusTampering) Or $bLogChangesOnly = False Then SetDebugLog("No Focus Tampering: " & $g_bNoFocusTampering)
+		
+				If $bLogChangesOnly = False Then
+						SetDebugLog("Android ADB Shared Folder on Host: " & $g_sAndroidPicturesHostPath)
+						SetDebugLog("Android ADB Shared SubFolder: " & $g_sAndroidPicturesHostFolder)
+						SetDebugLog("Android Mouse Device: " & $g_sAndroidMouseDevice)
+						SetDebugLog("Android ADB screencap command enabled: " & $g_bAndroidAdbScreencap)
+						SetDebugLog("Android ADB input command enabled: " & $g_bAndroidAdbInput)
+						SetDebugLog("Android ADB Mouse Click enabled: " & $g_bAndroidAdbClick)
+						SetDebugLog("Android ADB Click Drag enabled: " & $g_bAndroidAdbClickDrag)
+						SetDebugLog("Bot Background Mode for screen capture: " & ($g_bChkBackgroundMode = True ? "enabled" : "disabled"))
+						SetDebugLog("No Focus Tampering: " & $g_bNoFocusTampering)
+					Else
+						Switch False
+							Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidPicturesHostPath)                                             
+								SetDebugLog("Android ADB Shared Folder on Host: " & $g_sAndroidPicturesHostPath)
+							Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidPicturesHostFolder)                                           
+								SetDebugLog("Android ADB Shared SubFolder: " & $g_sAndroidPicturesHostFolder)
+							Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidMouseDevice)                                                  
+								SetDebugLog("Android Mouse Device: " & $g_sAndroidMouseDevice)
+							Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_bAndroidAdbScreencap)                                                
+								SetDebugLog("Android ADB screencap command enabled: " & $g_bAndroidAdbScreencap)
+							Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_bAndroidAdbInput)                                                  	
+								SetDebugLog("Android ADB input command enabled: " & $g_bAndroidAdbInput)
+							Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_bAndroidAdbClick)                                                  	
+								SetDebugLog("Android ADB Mouse Click enabled: " & $g_bAndroidAdbClick)
+							Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_bAndroidAdbClickDrag)
+								SetDebugLog("Android ADB Click Drag enabled: " & $g_bAndroidAdbClickDrag)
+							Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], ($g_bChkBackgroundMode = True ? "enabled" : "disabled"))				   	
+								SetDebugLog("Bot Background Mode for screen capture: " & ($g_bChkBackgroundMode = True ? "enabled" : "disabled"))
+							Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_bNoFocusTampering)                                                 	
+								SetDebugLog("No Focus Tampering: " & $g_bNoFocusTampering)
+						EndSwitch
+				EndIf
+	
+		
+		; LOGICMOD OPTIMIZATION End
+		
 		;$g_hAndroidWindow = WinGetHandle($g_sAndroidTitle) ;Handle for Android window
 		WinGetAndroidHandle() ; Set $g_hAndroidWindow and $g_sAndroidTitle for Android window
 		InitAndroidTimeLag()

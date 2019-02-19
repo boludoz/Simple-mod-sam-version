@@ -1,5 +1,6 @@
-ReferenceFunctions() ; call reference function so stripper is not removing these
-ReferenceGlobals() ; call reference globals so stripper is not removing these
+; sammod
+;ReferenceFunctions() ; call reference function so stripper is not removing these
+;ReferenceGlobals() ; call reference globals so stripper is not removing these
 
 Func ReferenceFunctions()
 	If True Then Return

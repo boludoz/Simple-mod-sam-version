@@ -13,6 +13,7 @@
 ; ===============================================================================================================================
 
 Func ModTrain($ForcePreTrain = False)
+	$iLoop += 1
 	Local $bJustMakeDonateFlag = $bJustMakeDonate
 	$bJustMakeDonate = False
 
@@ -50,16 +51,16 @@ Func ModTrain($ForcePreTrain = False)
 	
 	If _Sleep(250) Then Return
 
-	; Get Current available troops
-	getArmyTroops(False, False, False, False)
-	getArmySpells(False, False, False, False)
-
-	If _Sleep(250) Then Return
-	Local $TroopsToTrain = WhatToTrainSam(False, False)
-	_ArrayDisplay($TroopsToTrain)
-	Local $TroopsToRemove = WhatToTrainSam(True, False)
-	_ArrayDisplay($TroopsToTrain)
-	If _Sleep(250) Then Return
+	; 	; Get Current available troops
+	; 	getArmyTroops(False, False, False, False)
+	; 	getArmySpells(False, False, False, False)
+    ; 	
+	; 	If _Sleep(250) Then Return
+	; 	Local $TroopsToTrain = WhatToTrainSam(False, False)
+	; 	_ArrayDisplay($TroopsToTrain)
+	; 	Local $TroopsToRemove = WhatToTrainSam(True, False)
+	; 	_ArrayDisplay($TroopsToTrain)
+	; 	If _Sleep(250) Then Return
 
 	; 紧贴着造兵视窗
 	$iCount = 0
@@ -101,22 +102,16 @@ Func ModTrain($ForcePreTrain = False)
 
 	getMyArmyHeroCount()
 	If _Sleep(50) Then Return ; 50ms improve pause button response
-	CheckAvailableCCUnit()
+	CapacitySieges()
 	If _Sleep(50) Then Return ; 50ms improve pause button response
-	getMyArmyCCCapacity()
-	If _Sleep(50) Then Return ; 50ms improve pause button response
-	CheckAvailableCCSpellUnit()
-	If _Sleep(50) Then Return ; 50ms improve pause button response
-	getMyArmyCCSpellCapacity()
-	If _Sleep(50) Then Return ; 50ms improve pause button response
-	getArmyCCSiegeMachines()
+	TrainSiegesM()
 	If _Sleep(50) Then Return ; 50ms improve pause button response
 
 		Local $iKTime[5] = [0,0,0,0,0]
 		;Local $bKingTrue = False
 		getArmyTroopTime(False,False)
 		$iKTime[4] = $g_aiTimeTrain[0]
-
+		
 		If BitAND($g_aiSearchHeroWaitEnable[$DB], $eHeroKing) = $eHeroKing Or BitAND($g_aiSearchHeroWaitEnable[$LB], $eHeroKing) = $eHeroKing Then
 			$iKTime[0] = getArmyHeroTime($eHeroKing)
 			;$bKingTrue = True
@@ -133,8 +128,6 @@ Func ModTrain($ForcePreTrain = False)
 			getArmySpellTime()
 			$iKTime[3] = $g_aiTimeTrain[1]
 		EndIf
-		;SG Train
-		TrainSiegesM(CapacitySieges())
 		
 		Local $iWaitMax = _ArrayMax($iKTime, 1)
 		
@@ -227,52 +220,30 @@ Func ModTrain($ForcePreTrain = False)
 	EndGainCost("Train")
 	UpdateStats()
 	
-	$iWaitS = Number($iWaitMax)*60
+	$iWaitS = Int($iWaitMax)*60
 	If $ichkEnableMySwitch = 1 and Not $iCanSmart = 1 And $iDateCalc > 0 Then $iWaitS -= $iDateCalc
-		
-	If $iWaitS >= 60 Then SmartWait4TrainMini($iWaitS)
-
+	
+	If $g_bCloseWhileTrainingEnable = True Then
+		If $iLoop = $iLoopMax Then
+			$iLoop = 0
+			If $g_bPreTrainFlag = False and $ichkForcePreTrainTroops = 1 and $itxtForcePreTrainStrength < 99 and $ichkDisablePretrainTroops = 0 Then
+				Local $iSecToWait = Int($g_aiTimeTrain[0]*$itxtForcePreTrainStrength)/100
+				SetLog($iSecToWait & "m. for pre-train Check.", $COLOR_INFO)
+				SmartWait4TrainMini(Int($iSecToWait)*Int(60))
+				Else
+			If Int($itxtStickToTrainWindow)*60 < $iWaitS Then SmartWait4TrainMini(Abs(Int($iWaitS)-Int($itxtStickToTrainWindow)*60))
+			EndIf
+		EndIf
+	EndIf
+	
 	If $g_iSamM0dDebug = 1 Then SetLog("$g_bfullArmy: " & $g_bfullArmy)
 	If $g_iSamM0dDebug = 1 Then SetLog("$g_bFullArmyHero: " & $g_bFullArmyHero)
 	If $g_iSamM0dDebug = 1 Then SetLog("$g_bFullArmySpells: " & $g_bFullArmySpells)
-	If $g_iSamM0dDebug = 1 Then SetLog("$g_bFullCCSpells: " & $g_bFullCCSpells)
+	If $g_iSamM0dDebug = 1 Then SetLog("$g_bFullCCSpells: " & $g_bFullCCSpells) 
 	If $g_iSamM0dDebug = 1 Then SetLog("$g_FullCCTroops: " & $g_FullCCTroops)
 	If $g_iSamM0dDebug = 1 Then SetLog("$g_bIsFullArmywithHeroesAndSpells: " & $g_bIsFullArmywithHeroesAndSpells)
 
 EndFunc   ;==>CustomTrain
-
-Func GetResourcesTroopDiff()
-	Local $iNewCurElixir = 0
-	Local $iNewCurDarkElixir = 0
-	Local $bDarkTrue = False
-	Local $iDiffToReturn = 0
-	
-	; Let??s UPDATE the current Elixir and Dark elixir each Troop train on 'Bottom train Window Page'
-	If _ColorCheck(_GetPixelColor(223, 594, True), Hex(0xE8E8E0, 6), 20) Then ; Gray background window color
-		; Village without Dark Elixir
-		$iNewCurElixir = getResourcesValueTrainPage(315, 594) ; ELIXIR
-	Else
-		$bDarkTrue = True
-		; Village with Elixir and Dark Elixir
-		$iNewCurElixir = getResourcesValueTrainPage(230, 594) ; ELIXIR
-		$iNewCurDarkElixir = getResourcesValueTrainPage(382, 594) ; DARK ELIXIR
-	EndIf
-	
-	If $bDarkTrue = True Then
-			If Abs($g_iCurDarkElixir - $iNewCurDarkElixir) > Abs($g_iCurElixir - $iNewCurElixir) Then
-				$iDiffToReturn = Abs($g_iCurDarkElixir - $iNewCurDarkElixir)
-				Else
-				$iDiffToReturn = Abs($g_iCurElixir - $iNewCurElixir)
-			EndIf
-		Else
-			$iDiffToReturn = Abs($g_iCurElixir - $iNewCurElixir)
-	EndIf
-	
-	If $bDarkTrue = True Then $g_iCurDarkElixir = $iNewCurDarkElixir
-	$g_iCurElixir = $iNewCurElixir
-	
-	Return $iDiffToReturn  ; IA LOGIK
-EndFunc   ;==>GetResourcesTroopDiff
 
 Func CheckIsReady()
 
@@ -293,15 +264,15 @@ Func CheckIsReady()
 	CheckArmyCamp(False, False, False, False)
 
 
-	$g_bFullArmySpells = False
-	; Local Variable to check the occupied space by the Spells to Brew ... can be different of the Spells Factory Capacity ( $g_iTotalSpellValue )
-	For $i = 0 To $eSpellCount - 1
-		$iTotalSpellsToBrew += $g_aiArmyCompSpells[$i] * $g_aiSpellSpace[$i]
-	Next
-
-	If Number($g_iCurrentSpells) = Number($g_iTotalTrainSpaceSpell) Or Number($g_iCurrentSpells) >= Number($g_iTotalSpellValue) Or (Number($g_iCurrentSpells) >= Number($iTotalSpellsToBrew) And $g_bQuickTrainEnable = False) Then
-		$g_bFullArmySpells = True
-	EndIf
+	;	$g_bFullArmySpells = False
+	;	; Local Variable to check the occupied space by the Spells to Brew ... can be different of the Spells Factory Capacity ( $g_iTotalSpellValue )
+	;	For $i = 0 To $eSpellCount - 1
+	;		$iTotalSpellsToBrew += $g_aiArmyCompSpells[$i] * $g_aiSpellSpace[$i]
+	;	Next
+    ;	
+	;	If Number($g_iCurrentSpells) = Number($g_iTotalTrainSpaceSpell) Or Number($g_iCurrentSpells) >= Number($g_iTotalSpellValue) Or (Number($g_iCurrentSpells) >= Number($iTotalSpellsToBrew) And $g_bQuickTrainEnable = False) Then
+	;		$g_bFullArmySpells = True
+	;	EndIf
 
 	$g_bCheckSpells = CheckSpells()
 
@@ -324,7 +295,7 @@ Func CheckIsReady()
 	EndIf
 
 	If (IsSearchModeActive($DB) And checkCollectors(True, False)) Or IsSearchModeActive($LB) Or IsSearchModeActive($TS) Then
-		If $g_bFullArmy And $g_bCheckSpells And $bFullArmyHero And $bFullArmyCC And $bFullSiege Then
+		If $g_bFullArmy And $g_bCheckSpells And $bFullArmyHero And $bFullArmyCC Then ; And $bFullSiege Then
 			$g_bIsFullArmywithHeroesAndSpells = True
 			If $g_bFirstStart Then $g_bFirstStart = False
 		Else
@@ -511,10 +482,10 @@ Func TroopsAndSpellsChecker($bDisableTrain = True, $bDisableBrewSpell = True, $b
 			Else
 				If CheckAvailableUnit($g_hHBitmapArmyTab) Then
 					If CheckOnTrainUnit($g_hHBitmapTrainTab) Then
-						Local $bPreTrainFlag = $bForcePreTrain
-						If $ichkForcePreTrainTroops Then
+						$g_bPreTrainFlag = $bForcePreTrain
+						If $ichkForcePreTrainTroops = 1 Then
 							If $g_iArmyCapacity >= $itxtForcePreTrainStrength Then
-								$bPreTrainFlag = True
+								$g_bPreTrainFlag = True
 							EndIf
 						EndIf
 
@@ -543,7 +514,7 @@ Func TroopsAndSpellsChecker($bDisableTrain = True, $bDisableBrewSpell = True, $b
 									DoRevampTroops(True)
 								EndIf
 							Case $g_CurrentCampUtilization < $iFullArmyCamp And $g_aiTroopsMaxCamp[0] > $iFullArmyCamp
-								If $bPreTrainFlag = True Then
+								If $g_bPreTrainFlag = True Then
 									If $ichkDisablePretrainTroops = 1 Then
 										SetLog("Pre-train troops disable by user.",$COLOR_INFO)
 										$tempDisableTrain = True
@@ -552,7 +523,7 @@ Func TroopsAndSpellsChecker($bDisableTrain = True, $bDisableBrewSpell = True, $b
 									EndIf
 								EndIf
 							Case $g_CurrentCampUtilization < $iFullArmyCamp And $g_aiTroopsMaxCamp[0] = $iFullArmyCamp
-								If $bPreTrainFlag = True Then
+								If $g_bPreTrainFlag = True Then
 									If $icmbMyQuickTrain = 0 Then
 										If $ichkDisablePretrainTroops = 1 Then
 											SetLog("Pre-train troops disable by user.",$COLOR_INFO)
@@ -570,7 +541,7 @@ Func TroopsAndSpellsChecker($bDisableTrain = True, $bDisableBrewSpell = True, $b
 								EndIf
 							Case $g_CurrentCampUtilization < $iFullArmyCamp And $g_aiTroopsMaxCamp[0] < $iFullArmyCamp
 								DoRevampTroops()
-								If $bPreTrainFlag = True Then
+								If $g_bPreTrainFlag = True Then
 									ContinueLoop
 								EndIf
 							Case Else
@@ -687,3 +658,36 @@ Func SetLogAndReturn($iMsg)
 	If $g_iSamM0dDebug = 1 Then SetLog("[" & $sMsg & "] - block for detection troops or spells.",$COLOR_RED)
 	Return True
 EndFunc
+
+Func GetResourcesTroopDiff()
+	Local $iNewCurElixir = 0
+	Local $iNewCurDarkElixir = 0
+	Local $bDarkTrue = False
+	Local $iDiffToReturn = 0
+	
+	; Let??s UPDATE the current Elixir and Dark elixir each Troop train on 'Bottom train Window Page'
+	If _ColorCheck(_GetPixelColor(223, 594, True), Hex(0xE8E8E0, 6), 20) Then ; Gray background window color
+		; Village without Dark Elixir
+		$iNewCurElixir = getResourcesValueTrainPage(315, 594) ; ELIXIR
+	Else
+		$bDarkTrue = True
+		; Village with Elixir and Dark Elixir
+		$iNewCurElixir = getResourcesValueTrainPage(230, 594) ; ELIXIR
+		$iNewCurDarkElixir = getResourcesValueTrainPage(382, 594) ; DARK ELIXIR
+	EndIf
+	
+	If $bDarkTrue = True Then
+			If Abs($g_iCurDarkElixir - $iNewCurDarkElixir) > Abs($g_iCurElixir - $iNewCurElixir) Then
+				$iDiffToReturn = Abs($g_iCurDarkElixir - $iNewCurDarkElixir)
+				Else
+				$iDiffToReturn = Abs($g_iCurElixir - $iNewCurElixir)
+			EndIf
+		Else
+			$iDiffToReturn = Abs($g_iCurElixir - $iNewCurElixir)
+	EndIf
+	
+	If $bDarkTrue = True Then $g_iCurDarkElixir = $iNewCurDarkElixir
+	$g_iCurElixir = $iNewCurElixir
+	
+	Return $iDiffToReturn  ; IA LOGIK
+EndFunc   ;==>GetResourcesTroopDiff

@@ -495,12 +495,13 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 			$g_bDebugDeadBaseImage = True
 		EndIf
 		If $g_bDebugDeadBaseImage Then setZombie()
-		Local $i = 0
-		While $i < 100
+         ; samm0d
+		;Local $i = 0
+		For $i = 0 To 50
 			If _Sleep($DELAYVILLAGESEARCH2) Then Return
-			$i += 1
-			_CaptureRegions()
-			If ( _ColorCheck(_GetPixelColor($NextBtn[0], $NextBtn[1]), Hex($NextBtn[2], 6), $NextBtn[3])) And IsAttackPage(False) Then
+			;$i += 1 while to for
+			;_CaptureRegions() Dont is necesary
+			If ( _ColorCheck(_GetPixelColor($NextBtn[0], $NextBtn[1]), Hex($NextBtn[2], 6), $NextBtn[3])) Then;  And IsAttackPage(False) Then
 				$g_bCloudsActive = True
 				If $g_bUseRandomClick = False Then
 					ClickP($NextBtn, 1, 0, "#0155") ;Click Next
@@ -521,13 +522,12 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 					PushMsg("OoSResources")
 				Else
 					SetLog("Have strange problem Couldn't locate Next button, Restarting CoC and Bot...", $COLOR_ERROR)
-                    ; samm0d
-                    ;$g_bIsClientSyncError = False ; disable fast OOS restart if not simple error and try restarting CoC
 					CloseCoC(True)
 				EndIf
 				Return
 			EndIf
-		WEnd
+		Next
+         ; samm0d custom bld end
 
 		If _Sleep($DELAYRESPOND) Then Return
 		$Result = getAttackDisable(346, 182) ; Grab Ocr for TakeABreak check

@@ -21,15 +21,25 @@
 
 Func _GetPixelColor($iX, $iY, $bNeedCapture = False, $sLogText = Default, $LogTextColor = Default, $bSilentSetLog = Default)
 	Local $aPixelColor = 0
-	If Not $bNeedCapture Or Not $g_bRunState Then
-		$aPixelColor = _GDIPlus_BitmapGetPixel($g_hBitmap, $iX, $iY)
+
+	If $iY < 0 Or $iY > $g_iGAME_HEIGHT Or $iX < 0 Or $iX > $g_iGAME_WIDTH Then
+		;SetLog($sLogText & " Requested X:" & $iX & " Or Y:" & $iY & " Is Outside 860x644 Cords, Please FIX Cords", $COLOR_ERROR)
 	Else
-		_CaptureRegion($iX - 1, $iY - 1, $iX + 1, $iY + 1)
-		$aPixelColor = _GDIPlus_BitmapGetPixel($g_hBitmap, 1, 1)
-	EndIf
-	If $sLogText <> Default And IsString($sLogText) Then
-		Local $String = $sLogText & " at X,Y: " & $iX & "," & $iY & " Found: " & Hex($aPixelColor, 6)
-		SetDebugLog($String, $LogTextColor, $bSilentSetLog)
+		If Not $bNeedCapture Or Not $g_bRunState Then
+			$aPixelColor = _GDIPlus_BitmapGetPixel($g_hBitmap, $iX, $iY)
+		Else
+			;Correct Values Just In Case If x,y=0 or x=$g_iGAME_WIDTH,$g_iGAME_HEIGHT there plus or subtract can be -1 or exceed Width/Height To Avoid Any issue
+			If $iX - 1 < 0 Then $iX += 1
+			If $iY - 1 < 0 Then $iY += 1
+			If $iX + 1 > $g_iGAME_WIDTH Then $iX -= 1
+			If $iY + 1 > $g_iGAME_HEIGHT Then $iY -= 1
+			_CaptureRegion($iX - 1, $iY - 1, $iX + 1, $iY + 1)
+			$aPixelColor = _GDIPlus_BitmapGetPixel($g_hBitmap, 1, 1)
+		EndIf
+		If $sLogText <> Default And IsString($sLogText) Then
+			Local $String = $sLogText & " at X,Y: " & $iX & "," & $iY & " Found: " & Hex($aPixelColor, 6)
+			SetDebugLog($String, $LogTextColor, $bSilentSetLog)
+		EndIf
 	EndIf
 	Return Hex($aPixelColor, 6)
 EndFunc   ;==>_GetPixelColor

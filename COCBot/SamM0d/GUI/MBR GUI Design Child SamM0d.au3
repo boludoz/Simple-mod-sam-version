@@ -931,6 +931,112 @@ Local $x = 25, $y = 45, $xStart = 25, $yStart = 50
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
+	; War
+	SplashStep("Loading M0d - My War tab...")
+	GUICtrlCreateTabItem(GetTranslatedFileIni("sam m0d", "My War", "My War"))
+	
+	Local $xStart, $yStart
+	
+	$xStart = 10
+	$yStart = 35
+	
+	Local $x = $xStart, $y = $yStart
+
+	Local $aTroopsIcons[20] = [$eIcnBarbarian, $eIcnArcher, $eIcnGiant, $eIcnGoblin, $eIcnWallBreaker, $eIcnBalloon, _
+			$eIcnWizard, $eIcnHealer, $eIcnDragon, $eIcnPekka, $eIcnBabyDragon, $eIcnMiner, $eIcnElectroDragon, _
+			$eIcnMinion, $eIcnHogRider, $eIcnValkyrie, $eIcnGolem, $eIcnWitch, $eIcnLavaHound, $eIcnBowler]
+	Local $aSpellsIcons[10] = [$eIcnLightSpell, $eIcnHealSpell, $eIcnRageSpell, $eIcnJumpSpell, $eIcnFreezeSpell, _
+			$eIcnCloneSpell, $eIcnPoisonSpell, $eIcnEarthQuakeSpell, $eIcnHasteSpell, $eIcnSkeletonSpell]
+
+	Local $x = 15, $y = 45
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design MOD - War preration", "Group", "War preration"), $x - 10, $y, $g_iSizeWGrpTab2, $g_iSizeHGrpTab3)
+	$y += 17
+	$g_hChkStopForWar = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design MOD - War preration", "chkStopForWar_01", "Pause farming for war"), $x, $y, -1, -1)
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design MOD - War preration", "chkStopForWar_02", "Pause or set current account 'idle' to prepare for war"))
+	GUICtrlSetOnEvent(-1, "ChkStopForWar")
+
+	$g_hCmbStopTime = GUICtrlCreateCombo("", $x + 140, $y, 60, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+	GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design MOD - War preration", "CmbStopTime_Info_01", "0 hr|1 hr|2 hrs|3 hrs|4 hrs|5 hrs|6 hrs|7 hrs|8 hrs|9 hrs|10 hrs|11 hrs|12 hrs |13 hrs|14 hrs|15 hrs|16 hrs|17 hrs|18 hrs|19 hrs|20 hrs|21 hrs|22 hrs|23 hrs"), "0 hr")
+	GUICtrlSetOnEvent(-1, "CmbStopTime")
+	$g_hCmbStopBeforeBattle = GUICtrlCreateCombo("", $x + 220, $y, 120, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+	GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design MOD - War preration", "CmbStopBeforeBattle", "before battle start|after battle start", "before battle start"))
+	GUICtrlSetOnEvent(-1, "CmbStopTime")
+
+	$y += 25
+	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design MOD - War preration", "Label_01", "Return to farm"), $x + 15, $y + 1, -1, -1)
+	$g_hCmbReturnTime = GUICtrlCreateCombo("", $x + 140, $y, 60, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+	GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design MOD - War preration", "CmbReturnTime_Info_01", "0 hr|1 hr|2 hrs|3 hrs|4 hrs|5 hrs|6 hrs|7 hrs|8 hrs|9 hrs|10 hrs|11 hrs|12 hrs |13 hrs|14 hrs|15 hrs|16 hrs|17 hrs|18 hrs|19 hrs|20 hrs|21 hrs|22 hrs|23 hrs"), "0 hr")
+	GUICtrlSetOnEvent(-1, "CmbReturnTime")
+	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design MOD - War preration", "CmbReturnTime_02", "before battle finish"), $x + 220, $y + 1, -1, -1)
+
+	$y += 25
+	$g_hChkTrainWarTroop = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design MOD - War preration", "chkTrainWarTroop", "Delete all farming troops and train war troops before pausing"), $x, $y, -1, -1)
+	GUICtrlSetOnEvent(-1, "ChkTrainWarTroop")
+
+	$y += 25
+	$g_hChkUseQuickTrainWar = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design MOD - War preration", "chkUseQuickTrainWar", "Use Quick Train"), $x + 15, $y, -1, 15)
+	GUICtrlSetState(-1, $GUI_UNCHECKED)
+	GUICtrlSetOnEvent(-1, "chkUseQTrainWar")
+	For $i = 0 To 2
+		$g_ahChkArmyWar[$i] = GUICtrlCreateCheckbox("Army " & $i + 1, $x + 120 + $i * 60, $y, 50, 15)
+		GUICtrlSetState(-1, $GUI_DISABLE)
+		If $i = 0 Then GUICtrlSetState(-1, $GUI_CHECKED)
+		GUICtrlSetOnEvent(-1, "chkQuickTrainComboWar")
+	Next
+	$g_hLblRemoveArmy = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design MOD - War preration", "LblRemoveArmyWar", "Remove Army"), $x + 305, $y + 1, -1, 15, $SS_LEFT)
+	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnResetButton, $x + 375, $y - 4, 24, 24)
+	GUICtrlSetOnEvent(-1, "RemovecampWar")
+
+	$x = 30
+	$y += 25
+	For $i = 0 To 19 ; Troops
+		If $i >= 12 Then $x = 37
+		_GUICtrlCreateIcon($g_sLibIconPath, $aTroopsIcons[$i], $x + Int($i / 2) * 38, $y + Mod($i, 2) * 60, 32, 32)
+
+		$g_ahTxtTrainWarTroopCount[$i] = GUICtrlCreateInput("0", $x + Int($i / 2) * 38 + 1, $y + Mod($i, 2) * 60 + 34, 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		GUICtrlSetLimit(-1, 3)
+		GUICtrlSetOnEvent(-1, "TrainWarTroopCountEdit")
+	Next
+
+	$x = 30
+	$y += 120
+	$g_hCalTotalWarTroops = GUICtrlCreateProgress($x, $y + 3, 285, 10)
+	$g_hLblTotalWarTroopsProgress = GUICtrlCreateLabel("", $x, $y + 3, 285, 10)
+	GUICtrlSetBkColor(-1, $COLOR_RED)
+	GUICtrlSetState(-1, BitOR($GUI_DISABLE, $GUI_HIDE))
+
+	GUICtrlCreateLabel( GetTranslatedFileIni("MBR GUI Design MOD - War preration", "Label_02", "Total troops"), $x + 290, $y, -1, -1)
+	$g_hLblCountWarTroopsTotal = GUICtrlCreateLabel("" & 0, $x + 350, $y, 30, 15, $SS_CENTER)
+	GUICtrlSetBkColor(-1, $COLOR_MONEYGREEN) ;lime, moneygreen
+
+	$y += 25
+	For $i = 0 To 9 ; Spells
+		If $i >= 6 Then $x = 37
+		_GUICtrlCreateIcon($g_sLibIconPath, $aSpellsIcons[$i], $x + $i * 38, $y, 32, 32)
+		$g_ahTxtTrainWarSpellCount[$i] = GUICtrlCreateInput("0", $x + $i * 38, $y + 34, 30, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		GUICtrlSetLimit(-1, 3)
+		GUICtrlSetOnEvent(-1, "TrainWarSpellCountEdit")
+	Next
+
+	$x = 30
+	$y += 60
+	$g_hCalTotalWarSpells = GUICtrlCreateProgress($x, $y + 3, 285, 10)
+	$g_hLblTotalWarSpellsProgress = GUICtrlCreateLabel("", $x, $y + 3, 285, 10)
+	GUICtrlSetBkColor(-1, $COLOR_RED)
+	GUICtrlSetState(-1, BitOR($GUI_DISABLE, $GUI_HIDE))
+
+	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design MOD - War preration", "Label_03", "Total spells"), $x + 290, $y, -1, -1)
+	$g_hLblCountWarSpellsTotal = GUICtrlCreateLabel("" & 0, $x + 350, $y, 30, 15, $SS_CENTER)
+	GUICtrlSetBkColor(-1, $COLOR_MONEYGREEN) ;lime, moneygreen
+
+	$x = 15
+	$y += 25
+	$g_hChkRequestCCForWar = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design MOD - War preration", "chkRequestCCForWar", "Request CC before pausing"), $x, $y, -1, -1)
+	GUICtrlSetOnEvent(-1, "ChkRequestCCForWar")
+	$g_hTxtRequestCCForWar = GUICtrlCreateInput(GetTranslatedFileIni("MBR GUI Design MOD - War preration", "TxtRequestCCForWar", "War troop please"), $x + 180, $y, 120, -1, $SS_CENTER)
+
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+
 #cs
 SplashStep("Loading M0d - My Clan Castle tab...")
 GUICtrlCreateTabItem(GetTranslatedFileIni("sam m0d", "My Clan Castle", "My Clan Castle"))

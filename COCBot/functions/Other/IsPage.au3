@@ -4,7 +4,7 @@
 ;                  IsEndBattlePage & IsReturnHomeBattlePage
 ; Description ...: Verify if you are in the correct window...
 ; Author ........: Sardo (2015)
-; Modified ......: ProMac (2015), MonkeyHunter (12-2015)
+; Modified ......: ProMac (2015), MonkeyHunter (12-2015), Boludoz (11/2/2019)
 ; Remarks .......: This file is part of MyBot Copyright 2015-2018
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......: Returns True or False
@@ -12,22 +12,17 @@
 ; Example .......:
 ; ===============================================================================================================================
 
-Func IsPageLoop($aCheckPixel, $iLoop = 30, $bCapturePixel = $g_bCapturePixel)
-	$bCapturePixel = $bCapturePixel Or $iLoop > 1
-	Local $IsPage = False
-	Local $i = 0
-
-	While $i < $iLoop
-		ForceCaptureRegion()
-		If _CheckPixel($aCheckPixel, $bCapturePixel) Then
-			$IsPage = True
-			ExitLoop
-		EndIf
-		If _Sleep($DELAYISTRAINPAGE2) Then ExitLoop ; 1s Delay
-		$i += 1
-	WEnd
-
-	Return $IsPage
+Func IsPageLoop($aCheckPixel, $iLoop = 35, $bCapturePixel = $g_bCapturePixel)
+	;$bCapturePixel = $bCapturePixel Or $iLoop > 1 ? dummy code
+	; Samm0d - bld / Simple 
+	Local $iTmpState = $g_bRunState
+	For $i = 0 To $iLoop
+		If Not $g_bRunState = $iTmpState Then Return FuncReturn()
+		If _CheckPixel2($aCheckPixel, _GetPixelColor($aCheckPixel[0], $aCheckPixel[1], $bCapturePixel)) Then Return True
+		If _Sleep(250) Then Return 
+	Next
+	Return False
+;
 EndFunc   ;==>IsPageLoop
 
 Func IsSettingPage($bSetLog = True, $iLoop = 30)

@@ -510,6 +510,5 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 		EndIf
 		$g_bSkipFirstZoomout = True
 	EndIf
-
 	Return $aResult
 EndFunc   ;==>SearchZoomOut

@@ -253,7 +253,7 @@ Func CheckOnTrainUnit($hHBitmap)
 
 		If $bGotOnQueueFlag And Not $bGotOnTrainFlag Then
 			If $ichkEnableDeleteExcessTroops = 1 Then
-			If $iAvailableCamp < $iMyTroopsCampSize Or $ichkDisablePretrainTroops Then
+			If $iAvailableCamp > $iMyTroopsCampSize Or $ichkDisablePretrainTroops Then
 				If $ichkDisablePretrainTroops Then
 					SetLog("Pre-Train troops disable by user, remove all pre-train troops.", $COLOR_ERROR)
 				Else

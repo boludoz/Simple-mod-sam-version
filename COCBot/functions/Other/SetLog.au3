@@ -23,6 +23,7 @@
 
 Global $g_oTxtLogInitText = ObjCreate("Scripting.Dictionary")
 Global $g_oTxtAtkLogInitText = ObjCreate("Scripting.Dictionary")
+Global $g_oTxtBBAtkLogInitText = ObjCreate("Scripting.Dictionary")
 Global $g_oTxtSALogInitText = ObjCreate("Scripting.Dictionary")
 Global $g_bSilentSetDebugLog = False
 Global $g_aLastStatusBar
@@ -301,6 +302,10 @@ Func CheckPostponedLog($bNow = False)
 		$iLogs += FlushGuiLog($g_hTxtAtkLog, $g_oTxtAtkLogInitText, False, "txtAtkLog")
 	EndIf
 
+	If $g_oTxtBBAtkLogInitText.Count > 0 And ($g_iGuiMode <> 1 Or ($g_hTxtBBAtkLog And BitAND(WinGetState($g_hGUI_LOG_BB), 2))) Then
+		$iLogs += FlushGuiLog($g_hTxtBBAtkLog, $g_oTxtBBAtkLogInitText, False, "txtBBAtkLog")
+	EndIf
+
 	If $g_oTxtSALogInitText.Count > 0 And ($g_iGuiMode <> 1 Or ($g_hTxtSALog And BitAND(WinGetState($g_hGUI_LOG_SA), 2))) Then
 		$iLogs += FlushGuiLog($g_hTxtSALog, $g_oTxtSALogInitText, False, "txtSALog")
 	EndIf
@@ -349,6 +354,25 @@ Func SetAtkLog($String1, $String2 = "", $Color = $COLOR_BLACK, $Font = "Lucida C
 
 EndFunc   ;==>SetAtkLog
 
+; Samm0d
+Func SetBBAtkLog($String1, $String2 = "", $Color = $COLOR_BLACK, $Font = "Lucida Console", $FontSize = 7.5) ;Sets the text for the log
+	If $g_hBBAttackLogFile = 0 Then CreateBBAttackLogFile()
+	;string1 see in video, string1&string2 put in file
+	_FileWriteLog($g_hBBAttackLogFile, $String1 & $String2)
+
+	;Local $txtLogMutex = AcquireMutex("txtBBAtkLog")
+	Dim $a[6]
+	$a[0] = $String1
+	$a[1] = $Color
+	$a[2] = $Font
+	$a[3] = $FontSize
+	$a[4] = 0 ; no status bar update
+	$a[5] = 0 ; no time
+	$g_oTxtBBAtkLogInitText($g_oTxtBBAtkLogInitText.Count + 1) = $a
+	;ReleaseMutex($txtLogMutex)
+
+EndFunc   ;==>SetBBAtkLog
+
 Func SetSwitchAccLog($String, $Color = $COLOR_BLACK, $Font = "Verdana", $FontSize = 7.5, $time = True)
 	If $time = True Then
 		$time = Time()
@@ -375,6 +399,12 @@ Func AtkLogHead()
 	SetAtkLog(GetTranslatedFileIni("MBR Func_AtkLogHead", "AtkLogHead_Text_02", '|                      -------  LOOT ------           ------ BONUS ------'), "")
 	SetAtkLog(GetTranslatedFileIni("MBR Func_AtkLogHead", "AtkLogHead_Text_03", '|AC|TIME.|TROP.|SRC|DS|   GOLD| ELIXIR|  DE|TR.|S|  %|  GOLD|ELIXIR|  DE|L.'), "")
 EndFunc   ;==>AtkLogHead
+; Samm0d
+Func BBAtkLogHead()
+	SetBBAtkLog(_PadStringCenter(" " & GetTranslatedFileIni("MBR Func_BBAtkLogHead", "BBAtkLogHead_Text_01", "ATTACK LOG") & " ", 43, "="), "", $COLOR_BLACK, "MS Shell Dlg", 8.5)
+	SetBBAtkLog(GetTranslatedFileIni("MBR Func_BBAtkLogHead", "BBAtkLogHead_Text_02", '|     --------- VICTORY BONUS ----------   |'), "")
+	SetBBAtkLog(GetTranslatedFileIni("MBR Func_BBAtkLogHead", "BBAtkLogHead_Text_03", '|AC|TIME.|TROP.|   GOLD| ELIXIR|GTR|S|  %|S|'), "")
+EndFunc   ;==>BBAtkLogHead
 
 Func __FileWriteLog($handle, $text)
 	Return FileWriteLine($handle, BitAND(WinGetState($g_hFrmBot), 2) & ": " & $text)

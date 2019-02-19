@@ -458,6 +458,7 @@ Global $g_bSilentSetLog = False ; No logs to Log Control when enabled
 Global $g_sLogFileName = ""
 Global $g_hLogFile = 0
 Global $g_hAttackLogFile = 0
+Global $g_hBBAttackLogFile = 0
 Global $g_hSwitchLogFile = 0
 Global $g_bFlushGuiLogActive = False ; when RichEdit Log control get updated, focus change occur and this flag is required to avoid focus change due to GUIControl_WM_ACTIVATEAPP events
 Global $g_iLogCheckFreeSpaceMB = 100 ; If > 0, check every 10 Minutes when logging messages, that at least 100 MB are free on profile folder or bot stops
@@ -1785,3 +1786,13 @@ Global $g_sStarsEarned = Null
 Func _ArrayIndexValid(Const ByRef $a, Const $idx)
 	Return $idx >= 0 And $idx < UBound($a)
 EndFunc
+
+; Lib with Icons
+Global Const $g_sLibBBIconPath = $g_sLibPath & "\BuilderBase.dll" ; icon library
+Global Enum $eIcnBBBarb = 1, $eIcnBBArch, $eIcnBBGiant, $eIcnBBBeta, $eIcnBBBombn, $eIcnBBBabyDrag, $eIcnBBCannon, $eIcnBBNight, $eIcnBBDrop, $eIcnBBPekka, $eIcnBBEmpty, _
+		$eIcnBB, $eIcnLabBB, $eIcnBBElixir, $eIcnBBGold, $eIcnBBTrophies, $eIcnMachine, $eIcnBBWallInfo, $eIcnBBWallL1, $eIcnBBWallL2, $eIcnBBWallL3, $eIcnBBWallL4, $eIcnBBWallL5, _
+		$eIcnBBWallL6, $eIcnBBWallL7, $eIcnBBWallL8
+
+; General
+Global $g_bChkBuilderAttack = False, $g_bChkBBStopAt3 = False, $g_bChkBBTrophiesRange = False, $g_iTxtBBDropTrophiesMin = 0, $g_iTxtBBDropTrophiesMax = 0
+Global $g_iCmbBBArmy1 = 0, $g_iCmbBBArmy2 = 0, $g_iCmbBBArmy3 = 0, $g_iCmbBBArmy4 = 0, $g_iCmbBBArmy5 = 0, $g_iCmbBBArmy6 = 0

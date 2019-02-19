@@ -427,3 +427,26 @@ Global $g_sProfileBackupPath = @ScriptDir & "\Backups"
 Global $g_bBackup = False ; Backup check
 Global $g_bFirstRun = False ; First Run
 
+;samm0d train
+Global $bPreWaitTimeFlag = False
+Global $sData = 0
+Global $g_bPreTrainFlag = False
+Global $g_aGetSiegeCap = 0
+Global $iLoop = 0 
+Global $iLoopMax = 3 
+
+Global $g_sImgZoomOutDirWar = @ScriptDir & "\imgxml\WarPage\Attack_2\"
+Global $g_bWar = False
+
+; ================================================== War preparation ================================================== ;
+Global $g_hChkStopForWar = 0, $g_hCmbStopTime = 0, $g_hCmbStopBeforeBattle = 0, $g_hCmbReturnTime = 0
+Global $g_hChkTrainWarTroop = 0, $g_hChkUseQuickTrainWar, $g_ahChkArmyWar[3], $g_hLblRemoveArmy, $g_ahTxtTrainWarTroopCount[$eTroopCount], $g_ahTxtTrainWarSpellCount[$eSpellCount]
+Global $g_hCalTotalWarTroops, $g_hLblTotalWarTroopsProgress, $g_hLblCountWarTroopsTotal
+Global $g_hCalTotalWarSpells, $g_hLblTotalWarSpellsProgress, $g_hLblCountWarSpellsTotal
+Global $g_hChkRequestCCForWar = 0, $g_hTxtRequestCCForWar = 0
+Global $g_bStopForWar
+Global $g_iStopTime, $g_iReturnTime
+Global $g_bTrainWarTroop, $g_bUseQuickTrainWar, $g_aChkArmyWar[3], $g_aiWarCompTroops[$eTroopCount], $g_aiWarCompSpells[$eSpellCount]
+Global $g_bRequestCCForWar, $g_sTxtRequestCCForWar
+
+

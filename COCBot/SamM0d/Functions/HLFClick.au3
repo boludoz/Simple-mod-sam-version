@@ -83,7 +83,7 @@ Global Const $aButtonEditOkay[9]                = [740, 562, 800, 582, 800, 560,
 
 Global Const $aButtonFriendlyChallenge[9]       = [160, 700, 220, 714, 200, 693, 0XDDF685, 20, "=-= Friendly Challenge"]
 Global Const $aButtonFCChangeLayout[9]          = [200, 290, 280, 305, 240, 285, 0XDDF685, 20, "=-= Change Layout"]
-Global Const $aButtonFCStart[9]                 = [500, 290, 550, 305, 530, 284, 0XDBF685, 20, "=-= Start Share Challenge"]
+Global Const $aButtonFCStart[9]                 = [456, 281, 594, 312, 523, 285, 0XDDF685, 40, "=-= Start Share Challenge"]
 Global Const $aButtonFCBack[9]                  = [160, 106, 195, 120, 180, 116, 0XF5FDFF, 10, "=-= Back To Challenge"]
 Global Const $aButtonFCClose[9]                 = [690, 103, 710, 125, 700, 111, 0xFFFFFF, 10, "=-= Close Challenge"]
 

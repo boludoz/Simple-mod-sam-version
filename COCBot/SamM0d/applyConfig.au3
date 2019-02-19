@@ -231,3 +231,24 @@ If $g_iTownHallLevel >= 4 And $g_iTownHallLevel <= 12 Then
 EndIf
 
 GUICtrlSetData($g_hLblTHLevels, $g_iTownHallLevel)
+
+; War
+GUICtrlSetState($g_hChkStopForWar, $g_bStopForWar ? $GUI_CHECKED : $GUI_UNCHECKED)
+_GUICtrlComboBox_SetCurSel($g_hCmbStopTime, Abs($g_iStopTime))
+_GUICtrlComboBox_SetCurSel($g_hCmbStopBeforeBattle, $g_iStopTime < 0 ? 0 : 1)
+_GUICtrlComboBox_SetCurSel($g_hCmbReturnTime, $g_iReturnTime)
+GUICtrlSetState($g_hChkTrainWarTroop, $g_bTrainWarTroop ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($g_hChkUseQuickTrainWar, $g_bUseQuickTrainWar ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($g_ahChkArmyWar[0], $g_aChkArmyWar[0] ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($g_ahChkArmyWar[1], $g_aChkArmyWar[1] ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($g_ahChkArmyWar[2], $g_aChkArmyWar[2] ? $GUI_CHECKED : $GUI_UNCHECKED)
+For $i = 0 To $eTroopCount - 1
+	GUICtrlSetData($g_ahTxtTrainWarTroopCount[$i], $g_aiWarCompTroops[$i])
+Next
+For $j = 0 To $eSpellCount - 1
+	GUICtrlSetData($g_ahTxtTrainWarSpellCount[$j], $g_aiWarCompSpells[$j])
+Next
+GUICtrlSetState($g_hChkRequestCCForWar, $g_bRequestCCForWar ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetData($g_hTxtRequestCCForWar, $g_sTxtRequestCCForWar)
+ReadConfig_600_52_2()
+ChkStopForWar()

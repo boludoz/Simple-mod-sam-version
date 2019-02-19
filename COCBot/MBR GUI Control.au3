@@ -31,6 +31,8 @@ Global $g_hFrmBot_WNDPROC_ptr = 0
 #include "GUI\MBR GUI Control Tab Village.au3"
 #include "GUI\MBR GUI Control Tab Search.au3"
 #include "GUI\MBR GUI Control Child Attack.au3"
+; samm0d
+#include "GUI\MBR GUI Control Tab Builder Base.au3"
 #include "GUI\MBR GUI Control Tab DropOrder.au3"
 #include "GUI\MBR GUI Control Tab EndBattle.au3"
 #include "GUI\MBR GUI Control Tab SmartZap.au3"
@@ -53,7 +55,10 @@ Func InitializeMainGUI($bGuiModeUpdate = False)
 	InitializeControlVariables()
 
 	; Initialize attack log
-	If Not $bGuiModeUpdate Then AtkLogHead()
+    If Not $bGuiModeUpdate Then
+        AtkLogHead()
+        BBAtkLogHead()
+    EndIf
 
 	; Show Default Tab
 	tabMain()
@@ -507,9 +512,13 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 					MakeScreenshot($g_sProfileTempPath, "png")
 				EndIf
 			EndIf
-		Case $g_hPicTwoArrowShield
-			btnVillageStat()
-		Case $g_hPicArrowLeft, $g_hPicArrowRight
+        Case $g_hPicArrowLeft
+            $g_iCurrentReport -= 1
+            If $g_iCurrentReport < $g_iVillageReport Then $g_iCurrentReport = $g_iBBReport
+            btnVillageStat()
+        Case $g_hPicArrowRight
+            $g_iCurrentReport += 1
+            If $g_iCurrentReport > $g_iBBReport Then $g_iCurrentReport = $g_iVillageReport
 			btnVillageStat()
 
 			; debug checkboxes and buttons
@@ -730,6 +739,9 @@ Func GUIControl_WM_NOTIFY($hWind, $iMsg, $wParam, $lParam)
 			tabDONATE()
 		Case $g_hGUI_ATTACK_TAB
 			tabAttack()
+		; SamM0d
+		Case $g_hGUI_BUILDER_BASE_TAB
+            tabBuilderBase()
 		Case $g_hGUI_SEARCH_TAB
 			tabSEARCH()
 		Case $g_hGUI_DEADBASE_TAB
@@ -1135,12 +1147,14 @@ Func BotGuiModeToggle()
 
 			GUICtrlDelete($g_hTabMain)
 			GUICtrlDelete($g_hTabLog)
-			GUICtrlDelete($g_hTabVillage)
+            GUICtrlDelete($g_hTabVillage)
+            GUICtrlDelete($g_hTabBuilderBase) ; SamM0d
 			GUICtrlDelete($g_hTabAttack)
 			GUICtrlDelete($g_hTabBot)
 			GUICtrlDelete($g_hTabAbout)
 
-			GUICtrlDelete($g_hGUI_VILLAGE_TAB)
+            GUICtrlDelete($g_hGUI_VILLAGE_TAB)
+            GUICtrlDelete($g_hGUI_BUILDER_BASE_TAB) ; SamM0d
 			GUICtrlDelete($g_hGUI_MISC_TAB)
 			GUICtrlDelete($g_hGUI_DONATE_TAB)
 			GUICtrlDelete($g_hGUI_UPGRADE_TAB)
@@ -1156,6 +1170,10 @@ Func BotGuiModeToggle()
 			GUICtrlDelete($g_hGUI_STRATEGIES_TAB)
 			GUICtrlDelete($g_hGUI_BOT_TAB)
 			GUICtrlDelete($g_hGUI_LOG_SA)
+			; SamM0d
+            GUICtrlDelete($g_hGUI_LOG_BB)
+            GUICtrlDelete($g_hGUI_ATTACK_PLAN_BUILDER_BASE)
+            GUICtrlDelete($g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV)
 			GUICtrlDelete($g_hGUI_STATS_TAB)
 
 			For $i = $g_hFirstControlToHide To $g_hLastControlToHide
@@ -1195,6 +1213,7 @@ Func BotGuiModeToggle()
 			tabSEARCH()
 			tabAttack()
 			tabVillage()
+            tabBuilderBase() ; samm0d
 
 			InitializeMainGUI(True)
 
@@ -1681,7 +1700,8 @@ Func tabMain()
 	Local $tabidx = GUICtrlRead($g_hTabMain)
 	Select
 		Case $tabidx = 0 ; Log
-			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
+            GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
+            GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE) ; samm0d
 			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
 			GUISetState(@SW_HIDE, $g_hGUI_BOT)
 			; SamM0d
@@ -1694,6 +1714,7 @@ Func tabMain()
 			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
 			GUISetState(@SW_HIDE, $g_hGUI_BOT)
 			; SamM0d
+            GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE)
 			GUISetState(@SW_HIDE, $hGUI_MOD)
 			GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_VILLAGE)
@@ -1704,36 +1725,50 @@ Func tabMain()
 			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
 			GUISetState(@SW_HIDE, $g_hGUI_BOT)
 			; SamM0d
+            GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE)
 			GUISetState(@SW_HIDE, $hGUI_MOD)
 			GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ATTACK)
 			tabAttack()
 
-		Case $tabidx = 3 ; Options
-			GUISetState(@SW_HIDE, $g_hGUI_LOG)
-			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
-			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
-			; SamM0d
+; SamM0d
+        Case $tabidx = 3 ; Builder Base
+            GUISetState(@SW_HIDE, $g_hGUI_LOG)
+            GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
+            GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
+            GUISetState(@SW_HIDE, $g_hGUI_BOT)
+            GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
 			GUISetState(@SW_HIDE, $hGUI_MOD)
-			GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
-			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_BOT)
-			tabBot()
+            GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_BUILDER_BASE)
+            tabBuilderBase()
 
-		Case $tabidx = 4 ; About
+        Case $tabidx = 4 ; Options
+            GUISetState(@SW_HIDE, $g_hGUI_LOG)
+            GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
+            GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE)
+            GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
+            GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
+			GUISetState(@SW_HIDE, $hGUI_MOD)
+            GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_BOT)
+            tabBot()
+;
+		Case $tabidx = 5 ; About
 			GUISetState(@SW_HIDE, $g_hGUI_LOG)
 			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
 			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
 			GUISetState(@SW_HIDE, $g_hGUI_BOT)
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ABOUT)
             ; SamM0d
+            GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE)
             GUISetState(@SW_SHOWNOACTIVATE, $hGUI_MOD)
 
-		Case $tabidx = 5 ; About
+		Case $tabidx = 6 ; About
            GUISetState(@SW_HIDE, $g_hGUI_LOG)
            GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
            GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
            GUISetState(@SW_HIDE, $g_hGUI_BOT)
            ; SamM0d
+           GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE)
            GUISetState(@SW_HIDE, $hGUI_MOD)
 
            GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ABOUT)
@@ -1744,10 +1779,43 @@ Func tabMain()
 			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
 			GUISetState(@SW_HIDE, $g_hGUI_BOT)
 			; SamM0d
+            GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE)
 			GUISetState(@SW_HIDE, $hGUI_MOD)
 	EndSelect
 
 EndFunc   ;==>tabMain
+
+; samm0d
+Func tabBuilderBase()
+    Local $tabidx = GUICtrlRead($g_hGUI_BUILDER_BASE_TAB)
+    Local $tabtsx = _GUICtrlTab_GetItemRect($g_hGUI_BUILDER_BASE_TAB, 2) ; use x,y coordinate of tabitem rectangle bottom right corner to dynamically reposition the checkbox control (for translated tabnames)
+
+    Select
+        Case $tabidx = 0 ; MISC & STATS tab
+            GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_LOG_BB)
+            GUISetState(@SW_HIDE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE)
+            GUISetState(@SW_HIDE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV)
+            GUICtrlSetPos($g_hChkBuilderAttack, $tabtsx[2] - 18, $tabtsx[3] - 15)
+            checkIfBBLogIsEmptyInitialize() ;When we switch to main from mini it then we need to initialize header
+        Case $tabidx = 1 ; UPGRADE tab
+            GUISetState(@SW_HIDE, $g_hGUI_LOG_BB)
+            GUISetState(@SW_HIDE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE)
+            GUISetState(@SW_HIDE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV)
+            GUICtrlSetPos($g_hChkBuilderAttack, $tabtsx[2] - 18, $tabtsx[3] - 15)
+        Case $tabidx = 2 ; ATTACK PLAN tab
+            GUISetState(@SW_HIDE, $g_hGUI_LOG_BB)
+            If GUICtrlRead($g_hChkBuilderAttack) = $GUI_CHECKED Then
+                GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE)
+                GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV)
+                GUICtrlSetState($g_hLblBuilderAttackDisabled, $GUI_HIDE)
+            Else
+                GUISetState(@SW_HIDE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE)
+                GUISetState(@SW_HIDE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV)
+                GUICtrlSetState($g_hLblBuilderAttackDisabled, $GUI_SHOW)
+            EndIf
+            GUICtrlSetPos($g_hChkBuilderAttack, $tabtsx[2] - 15, $tabtsx[3] - 17)
+    EndSelect
+EndFunc   ;==>tabBuilderBase
 
 Func tabVillage()
 	Local $tabidx = GUICtrlRead($g_hGUI_VILLAGE_TAB)
@@ -2059,7 +2127,7 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 			; the icons for main tab
             ; Local $aIconIndex = [$eIcnHourGlass, $eIcnTH12, $eIcnAttack, $eIcnGUI, $eIcnInfo]
             ; samm0d
-            Local $aIconIndex = [$eIcnHourGlass, $eIcnTH11, $eIcnAttack, $eIcnGUI, $eIcnPekka, $eIcnInfo]
+			Local $aIconIndex = [$eIcnHourGlass, $eIcnTH12, $eIcnAttack, $eIcnBuilderHall, $eTitan, $eIcnGUI, $eIcnInfo]
 
 		Case $g_hGUI_VILLAGE_TAB
 			; the icons for village tab
@@ -2120,6 +2188,10 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 		Case $g_hGUI_STATS_TAB
 			; the icons for stats tab
 			Local $aIconIndex = [$eIcnGoldElixir, $eIcnOptions, $eIcnCamp, $eIcnCCRequest, $eIcnGoldElixir]
+			; samm0d
+		Case $g_hGUI_BUILDER_BASE_TAB
+			; the icons for builder base tab
+			Local $aIconIndex = [$eIcnGold, $eIcnLaboratory, $eIcnTroops]
 
 		Case Else
 			;do nothing

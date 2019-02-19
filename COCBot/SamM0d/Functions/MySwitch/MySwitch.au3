@@ -628,12 +628,13 @@ Func DoSwitchAcc()
 						If $g_iSamM0dDebug = 1 Then SetLog("$ichkForcePreTrainB4Switch: " & $ichkForcePreTrainB4Switch)
 						If $g_bIsFullArmywithHeroesAndSpells = True Or $ichkForcePreTrainB4Switch = 1 Then ;If $g_bIsFullArmywithHeroesAndSpells = True mean just back from attack, then we check train before switch acc.
 							Local $bShare_replay = $g_bIsFullArmywithHeroesAndSpells
-							SetLog("Check train before switch account...",$COLOR_ACTION)
-							If $ichkModTrain = 1 Then
-								If $ichkForcePreTrainB4Switch = 1 Then ModTrain(True)
-							Else
-								$g_bDoubleTrain = True
-								TrainSystem()
+							If $ichkForcePreTrainB4Switch = 1 Then
+								SetLog("Check train before switch account...",$COLOR_ACTION)
+								If $ichkModTrain = 1 Then 
+									ModTrain(True)
+								Else
+									DoubleTrain($g_bQuickTrainEnable)
+								EndIf
 							EndIf
 							If $bShare_replay = True Then
 								ReplayShare($g_bShareAttackEnableNow, True)
@@ -1325,6 +1326,41 @@ Func btnMakeSwitchADBFolder()
 			$iSecondBaseTabHeight = 0
 		EndIf
 
+		; Click boton de logro - samm0d bld
+		Local $iSpecialColor[4][3] = [[0x6DAD25, 1, 0], [0x0D0D0D, 2, 0], [0x83C22B, 0, 1], [0x6DAD25, 1, 1]]
+		Local $iSpecialPixel
+		
+		For $iLoopGem = 0 To 30
+			For $iProf = 0 To 50
+				Sleep(10)
+				$iSpecialPixel = _MultiPixelSearch(825, 110, 842, 671, 1, 1, Hex(0x81C22B, 6), $iSpecialColor, 30)
+				If IsArray($iSpecialPixel) Then 
+					Click($iSpecialPixel[0]-Random(10,50), $iSpecialPixel[1], 1)
+					ExitLoop
+				EndIf
+			Next
+			
+			If $iProf < 50 Then
+				AndroidBackButton()
+				If _Sleep($DELAYPROFILEREPORT1*3) Then Return
+						Click(30, 40, 1, 0, "#0222") ; Click Info Profile Button
+						; Waiting for profile page fully load.
+						ForceCaptureRegion()
+						$iCount = 0
+						While 1
+							_CaptureRegion()
+							If _ColorCheck(_GetPixelColor(250, 95, $g_bNoCapturePixel), Hex(0XE8E8E0,6), 10) = True And _ColorCheck(_GetPixelColor(360, 145, $g_bNoCapturePixel), Hex(0XE8E8E0,6), 10) = False Then
+								ExitLoop
+							EndIf
+							If _Sleep(250) Then Return False
+							$iCount += 1
+							If $iCount > 40 Then ExitLoop
+						WEnd
+			Else
+				ExitLoop
+			EndIf
+		Next
+		
 		Local $hClone = _GDIPlus_BitmapCloneArea($g_hBitmap, 70,127 + $iSecondBaseTabHeight, 80,17, $GDIP_PXF24RGB)
 		_GDIPlus_ImageSaveToFile($hClone, @ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\village_92.png")
 		If FileExists(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\village_92.png") Then
@@ -1571,6 +1607,41 @@ Func checkProfileCorrect()
 
 			If $g_iSamM0dDebug = 1 Then SetLog("_GetPixelColor(85, " & 163 + $iSecondBaseTabHeight & ", True): " & _GetPixelColor(85, 163 + $iSecondBaseTabHeight, $g_bNoCapturePixel))
 			If $g_iSamM0dDebug = 1 Then SetLog("_GetPixelColor(20, " & 295 + $iSecondBaseTabHeight & ", True): " & _GetPixelColor(20, 295 + $iSecondBaseTabHeight, $g_bNoCapturePixel))
+			
+			; Click boton de logro - samm0d bld
+			Local $iSpecialColor[4][3] = [[0x6DAD25, 1, 0], [0x0D0D0D, 2, 0], [0x83C22B, 0, 1], [0x6DAD25, 1, 1]]
+			Local $iSpecialPixel
+			
+			For $iLoopGem = 0 To 30
+				For $iProf = 0 To 50
+					Sleep(10)
+					$iSpecialPixel = _MultiPixelSearch(825, 110, 842, 671, 1, 1, Hex(0x81C22B, 6), $iSpecialColor, 30)
+					If IsArray($iSpecialPixel) Then 
+						Click($iSpecialPixel[0]-Random(10,50), $iSpecialPixel[1], 1)
+						ExitLoop
+					EndIf
+				Next
+				
+				If $iProf < 50 Then
+					AndroidBackButton()
+					If _Sleep($DELAYPROFILEREPORT1*3) Then Return
+							Click(30, 40, 1, 0, "#0222") ; Click Info Profile Button
+							; Waiting for profile page fully load.
+							ForceCaptureRegion()
+							$iCount = 0
+							While 1
+								_CaptureRegion()
+								If _ColorCheck(_GetPixelColor(250, 95, $g_bNoCapturePixel), Hex(0XE8E8E0,6), 10) = True And _ColorCheck(_GetPixelColor(360, 145, $g_bNoCapturePixel), Hex(0XE8E8E0,6), 10) = False Then
+									ExitLoop
+								EndIf
+								If _Sleep(250) Then Return False
+								$iCount += 1
+								If $iCount > 40 Then ExitLoop
+							WEnd
+				Else
+					ExitLoop
+				EndIf
+			Next
 
 			$bVillagePageFlag = _ColorCheck(_GetPixelColor(85, 163 + $iSecondBaseTabHeight, $g_bNoCapturePixel), Hex(0X959AB6,6), 20) = True And _ColorCheck(_GetPixelColor(20, 295 + $iSecondBaseTabHeight, $g_bNoCapturePixel), Hex(0X4E4D79,6), 10) = True
 

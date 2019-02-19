@@ -102,6 +102,32 @@ Func CreateAttackLogFile()
 EndFunc   ;==>CreateAttackLogFile
 
 ; #FUNCTION# ====================================================================================================================
+; Name ..........: CreateBBAttackLogFile
+; Description ...:
+; Syntax ........: CreateBBAttackLogFile()
+; Parameters ....:
+; Return values .: None
+; Author ........:
+; Modified ......:
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2018
+;                  MyBot is distributed under the terms of the GNU GPL
+; Related .......:
+; Link ..........: https://github.com/MyBotRun/MyBot/wiki
+; Example .......: No
+; ===============================================================================================================================
+Func CreateBBAttackLogFile()
+	If $g_hBBAttackLogFile <> 0 Then
+	   FileClose($g_hBBAttackLogFile)
+	   $g_hBBAttackLogFile = 0
+    EndIf
+
+	Local $sBBAttackLogFName = "BBAttackLog" & "-" & @YEAR & "-" & @MON & ".log"
+	Local $sBBAttackLogPath = $g_sProfileLogsPath & $sBBAttackLogFName
+	$g_hBBAttackLogFile = FileOpen($sBBAttackLogPath, $FO_APPEND)
+	SetDebugLog("Created BB attack log file: " & $sBBAttackLogPath)
+EndFunc   ;==>CreateAttackLogFile
+
+; #FUNCTION# ====================================================================================================================
 ; Name ..........: CreateAttackSwitchFile
 ; Description ...:
 ; Syntax ........: CreateAttackSwitchFile()

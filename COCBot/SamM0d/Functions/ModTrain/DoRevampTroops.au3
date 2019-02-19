@@ -117,10 +117,7 @@ Func DoRevampTroops($bDoPreTrain = False)
 					If LocateTroopButton($tempTroops[$i][0]) Then
 							If ($tempTroops[$i][2] * $Troop4Add) <= $iRemainTroopsCapacity Then
 								If MyTrainClick($g_iTroopButtonX, $g_iTroopButtonY, $Troop4Add,$g_iTrainClickDelay, "#TT01") Then 
-										$bGetCost = True
 										$iRemainTroopsCapacity -= ($tempTroops[$i][2] * $Troop4Add)
-									Else
-										$bGetCost = False
 								EndIf
 							Else
 								Local $iReduceCap = Int($iRemainTroopsCapacity / $tempTroops[$i][2])
@@ -149,7 +146,6 @@ Func DoRevampTroops($bDoPreTrain = False)
 
 							; Boludoz cost Update.
 							$iCost = $iCost / $Troop4Add
-							Setlog(" - Troop Cost : " & $iCost ,$COLOR_GREEN)
 		
 							$iBuildCost = (Eval("e" & $tempTroops[$i][0]) > $iDarkFixTroop ? $g_iCurDarkElixir : $g_iCurElixir)
 							If ($Troop4Add * $iCost) > $iBuildCost Then
@@ -169,6 +165,7 @@ Func DoRevampTroops($bDoPreTrain = False)
 								Return ; We are out of Elixir stop training.
 							EndIf
 							SetLog($CustomTrain_MSG_6 & " " & GetTroopName(Eval("e" & $tempTroops[$i][0]),$Troop4Add) & " x" & $Troop4Add & " " & $CustomTrain_MSG_7 & " " & (Eval("e" & $tempTroops[$i][0]) > $iDarkFixTroop ? $CustomTrain_MSG_DarkElixir : $CustomTrain_MSG_Elixir) & " : " & ($Troop4Add * $iCost),(Eval("e" & $tempTroops[$i][0]) > 12 ? $COLOR_DARKELIXIR : $COLOR_ELIXIR))
+							Setlog(" - Troop Cost : " & $iCost ,$COLOR_INFO)
 							Else 
 						; reduce some speed
 						If _Sleep(500) Then Return

@@ -466,6 +466,8 @@ Func FriendlyChallenge()
 		EndIf
 		If $g_hHBitmap2 <> 0 Then GdiDeleteHBitmap($g_hHBitmap2)
 	EndIf
+	
+	Local $bIsBtnStartOk = False
 
 	If $bDoFriendlyChallenge Then
 		SetLog("Prepare for select base: " & $iBaseForShare + 1, $COLOR_INFO)
@@ -476,7 +478,6 @@ Func FriendlyChallenge()
 				If _Wait4Pixel($aButtonFCBack[4], $aButtonFCBack[5], $aButtonFCBack[6], $aButtonFCBack[7], 1500, 150, "$aButtonFCBack") Then
 					If CheckNeedSwipeFriendlyChallengeBase($iBaseForShare) Then
 						If _Wait4Pixel($aButtonFCStart[4], $aButtonFCStart[5], $aButtonFCStart[6], $aButtonFCStart[7], 1500, 150, "$aButtonFCStart") Then
-							Local $bIsBtnStartOk = True
 							If $stxtChallengeText <> "" Then
 								Click(Random(440,620,1),Random(165,185,1))
 								If _Sleep(100) Then Return False
@@ -489,9 +490,12 @@ Func FriendlyChallenge()
 										Setlog(" challenge text entry failed!", $COLOR_ERROR)
 									EndIf
 								EndIf
-								If Not _Wait4Pixel($aButtonFCStart[4], $aButtonFCStart[5], $aButtonFCStart[6], $aButtonFCStart[7], 1500, 150, "$aButtonFCStart") Then $bIsBtnStartOk = False
+								If _Sleep(200) Then Return
 							EndIf
-							If $bIsBtnStartOk Then
+							If _Wait4Pixel($aButtonFCStart[4], $aButtonFCStart[5], $aButtonFCStart[6], $aButtonFCStart[7], 1500, 200, "$aButtonFCStart") Then $bIsBtnStartOk = True
+							If _Sleep(200) Then Return
+
+							If $bIsBtnStartOk = True Then
 								Click($aButtonFCStart[4], $aButtonFCStart[5], 1, 0, "#BtnFCStart")
 								SetLog("Friendly Challenge Shared.", $COLOR_INFO)
 								$iTimeForLastShareFriendlyChallenge = _NowCalc()

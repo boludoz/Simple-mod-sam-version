@@ -11,7 +11,7 @@
 ; Return values .: True when the referenced pixel is found, False if not found
 ; Author ........: FastFrench (2015)
 ; Modified ......: Hervidero (2015), MonkeyHunter (08-2015)
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2018
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
@@ -44,16 +44,17 @@ Func _CheckPixel2($aScreenCode, $sHexColor, $Ignore = Default)
 	Return False ;
 EndFunc   ;==>_CheckPixel2
 
+; Old Methods from Mybot
 Func _WaitForCheckPixel($aScreenCode, $bNeedCapture = Default, $Ignore = Default, $sLogText = Default, $LogTextColor = Default, $bSilentSetLog = Default, $iWaitLoop = Default)
-	If $iWaitLoop = Default Then $iWaitLoop = 250  ; if default wait time per loop, then wait 250ms
-	Local $wCount = 0
-	While _CheckPixel($aScreenCode, $bNeedCapture, $Ignore, $sLogText, $LogTextColor, $bSilentSetLog) = False
-		If _Sleep($iWaitLoop ) Then Return
-		$wCount += 1
-		If $wCount > 20 Then ; wait for 20*250ms=5 seconds for pixel to appear
-			SetLog($sLogText & " not found!", $COLOR_ERROR)
-			Return False
-		EndIf
-	WEnd
-	Return True
-EndFunc
+    If $iWaitLoop = Default Then $iWaitLoop = 250 ; if default wait time per loop, then wait 250ms
+    Local $wCount = 0
+    While _CheckPixel($aScreenCode, $bNeedCapture, $Ignore, $sLogText, $LogTextColor, $bSilentSetLog) = False
+        If _Sleep($iWaitLoop) Then Return
+        $wCount += 1
+        If $wCount > 20 Then ; wait for 20*250ms=5 seconds for pixel to appear
+            SetLog($sLogText & " not found!", $COLOR_ERROR)
+            Return False
+        EndIf
+    WEnd
+    Return True
+EndFunc   ;==>_WaitForCheckPixel

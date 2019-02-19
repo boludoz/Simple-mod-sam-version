@@ -104,24 +104,28 @@ Func DoRevampSpells($bDoPreTrain = False)
 			SetLog("Elixir: " & $g_iCurElixir & "   Dark Elixir: " & $g_iCurDarkElixir, $COLOR_INFO)
 
 			For $i = 0 To UBound($tempSpells) - 1
+				; Reset var
+				$iCost = 0
+				$bGetCost = False
+				$iBuildCost = 0
+				
 				Local $tempSpell = Eval("Add" & $tempSpells[$i][0] & "Spell")
 				If $tempSpell > 0 And $iRemainSpellsCapacity > 0 Then
 
 					If LocateTroopButton($tempSpells[$i][0], True) Then
-							If ($tempSpells[$i][2] * $tempSpell) <= $iRemainSpellsCapacity Then
-								If MyTrainClick($g_iTroopButtonX, $g_iTroopButtonY, $tempSpell, $g_iTrainClickDelay, "#BS01", True) Then 
-										$bGetCost = True
-									Else
-										$bGetCost = False
+								If ($tempSpells[$i][2] * $tempSpell) <= $iRemainSpellsCapacity Then
+										If MyTrainClick($g_iTroopButtonX, $g_iTroopButtonY, $tempSpell, $g_iTrainClickDelay, "#BS01", True) Then
+										$iRemainSpellsCapacity -= ($tempSpells[$i][2] * $tempSpell)
 								EndIf
 							Else
 								SetLog("Error: remaining space cannot fit to brew " & GetTroopName(Eval("enum" & $tempSpells[$i][0])+ $eLSpell,0), $COLOR_ERROR)
 							EndIf
 						$bGetCost = True
 					Else
+						$bGetCost = False
 						SetLog("Cannot find button: " & $tempSpells[$i][0] & " for click", $COLOR_ERROR)
 					EndIf
-					
+				EndIf
 					If $bGetCost = True Then
 						; reduce some speed
 						If _Sleep(250) Then Return
@@ -131,8 +135,7 @@ Func DoRevampSpells($bDoPreTrain = False)
 						; reduce some speed
 						If _Sleep(750) Then Return
 
-						$iCost = $iCost / $tempSpell
-						Setlog(" - Spell Cost : " & $iCost ,$COLOR_GREEN)
+							$iCost = $iCost / $tempSpell
 							; Boludoz cost Update.
 							$iBuildCost = (Eval("enum" & $tempSpells[$i][0]) > $iDarkFixSpell ? $g_iCurDarkElixir : $g_iCurElixir)
 							If ($tempSpell * $iCost) > $iBuildCost Then
@@ -151,12 +154,11 @@ Func DoRevampSpells($bDoPreTrain = False)
 								Return ; We are out of Elixir stop training.
 							EndIf
 							SetLog($CustomTrain_MSG_14 & " " & GetTroopName(Eval("enum" & $tempSpells[$i][0])+ $eLSpell,$tempSpell) & " x" & $tempSpell & " with total " & (Eval("enum" & $tempSpells[$i][0]) > $iDarkFixSpell ? $CustomTrain_MSG_DarkElixir : $CustomTrain_MSG_Elixir) & ": " & ($tempSpell * $iCost),(Eval("enum" & $tempSpells[$i][0]) > $iDarkFixSpell ? $COLOR_DARKELIXIR : $COLOR_ELIXIR))
+							Setlog(" - Spell Cost : " & $iCost ,$COLOR_INFO)
 							Else 
 						; reduce some speed
 						If _Sleep(500) Then Return
 					EndIf
-					$bGetCost = False
-				EndIf
 			Next
 	EndIf
 	If $bDoPreTrain Then

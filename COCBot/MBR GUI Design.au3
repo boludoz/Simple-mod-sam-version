@@ -59,6 +59,11 @@ MBR GUI Design.au3; CreateMainGUI()
 			MBR GUI Design Child Attack - Options-TrophySettings.au3; CreateAttackSearchOptionsTrophySettings()
 	  MBR GUI Design Child Attack - Strategies.au3; CreateAttackStrategies()
 
+	MBR GUI Design Builder Base.au3; CreateBuilderBaseTab()
+      MBR GUI Design Child Builder Base - Misc.au3; CreateMiscBuilderBaseSubTab()
+      MBR GUI Design Child Builder Base - Upgrade.au3; CreateUpgradeBuilderBaseSubTab()
+      MBR GUI Design Child Builder Base - Attack.au3; CreateAttackPlanBuilderBaseSubTab()
+
    MBR GUI Design Bot.au3; CreateBotTab()
 	  MBR GUI Design Child Bot - Options.au3; CreateBotOptions()
 	  MBR GUI Design Child Bot - Android.au3; CreateBotAndroid()
@@ -105,7 +110,7 @@ Global $g_bBotDockedShrinked = False ; Bot is shrinked or not when docked
 Global $g_hFrmBotButtons, $g_hFrmBotLogoUrlSmall, $g_hFrmBotEx = 0, $g_hLblBotTitle, $g_hLblBotShrink = 0, $g_hLblBotExpand = 0, $g_hLblBotMiniGUI = 0, $g_hLblBotNormalGUI = 0 _
 		, $g_hLblBotMinimize = 0, $g_hLblBotClose = 0, $g_hFrmBotBottom = 0, $g_hFrmBotEmbeddedShield = 0, $g_hFrmBotEmbeddedShieldInput = 0, $g_hFrmBotEmbeddedGraphics = 0
 Global $g_hFrmBot_MAIN_PIC = 0, $g_hFrmBot_URL_PIC = 0, $g_hFrmBot_URL_PIC2 = 0
-Global $g_hTabMain = 0, $g_hTabLog = 0, $g_hTabVillage = 0, $g_hTabAttack = 0, $g_hTabBot = 0, $g_hTabAbout = 0
+Global $g_hTabMain = 0, $g_hTabLog = 0, $g_hTabVillage = 0, $g_hTabBuilderBase = 0, $g_hTabAttack = 0, $g_hTabBot = 0, $g_hTabAbout = 0
 Global $g_hStatusBar = 0
 Global $g_hTiShow = 0, $g_hTiHide = 0, $g_hTiDonate = 0, $g_hTiAbout = 0, $g_hTiStartStop = 0, $g_hTiPause = 0, $g_hTiExit = 0
 Global $g_aFrmBotPosInit[8] = [0, 0, 0, 0, 0, 0, 0, 0]
@@ -118,6 +123,7 @@ Global $g_oGuiNotInMini = ObjCreate("Scripting.Dictionary")
 #include "GUI\MBR GUI Design Bottom.au3"
 #include "GUI\MBR GUI Design Log.au3"
 #include "GUI\MBR GUI Design Village.au3"
+#include "GUI\MBR GUI Design Builder Base.au3" ;SamM0d
 #include "GUI\MBR GUI Design Attack.au3"
 #include "GUI\MBR GUI Design Bot.au3"
 #include "GUI\MBR GUI Design About.au3"
@@ -363,7 +369,10 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 	; This dummy is used in btnStart and btnStop to disable/enable all labels, text, buttons etc. on all tabs.
 	$g_hFirstControlToHide = GUICtrlCreateDummy()
 
-	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_03", "Loading Log tab..."))
+    SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_06", "Loading Builder Base tab..."))
+    CreateBuilderBaseTab()
+
+    SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_08", "Loading About Us tab..."))
 	CreateLogTab()
 
 	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_04", "Loading Village tab..."))
@@ -387,9 +396,9 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 	Local $sStepText = ""
 	Switch $g_iGuiMode
 		Case 1
-			$sStepText = GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_08", "Initializing GUI...")
+            $sStepText = GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_09", "Initializing GUI...")
 		Case 2
-			$sStepText = GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_08_Mini", "Initializing Mini GUI...")
+            $sStepText = GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_09_Mini", "Initializing Mini GUI...")
 	EndSwitch
 	SplashStep($sStepText)
 
@@ -401,10 +410,11 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 	$g_hTabLog = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_01", "Log"))
 	$g_hTabVillage = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_02", "Village"))
 	$g_hTabAttack = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_03", "Attack Plan"))
-	$g_hTabBot = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_04", "Bot"))
+	$g_hTabBuilderBase = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_04", "BBase"))
    	; samm0d
-	$g_hTabMod = GUICtrlCreateTabItem("M0d")
-	$g_hTabAbout = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_05", "About Us"))
+	$g_hTabMod = GUICtrlCreateTabItem("Mod")
+	$g_hTabBot = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_05", "Bot"))
+	$g_hTabAbout = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_06", "About Us"))
 	GUICtrlCreateTabItem("")
 	GUICtrlSetResizing(-1, $GUI_DOCKBORDERS)
 
@@ -430,8 +440,11 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 	Static $g_hGUI_STRATEGIES_TAB_ImageList = 0
 	Static $g_hGUI_BOT_TAB_ImageList = 0
 	Static $g_hGUI_STATS_TAB_ImageList = 0
+    Static $g_hGUI_BUILDER_BASE_TAB_ImageList = 0
 
 	Bind_ImageList($g_hTabMain, $g_hTabMain_ImageList)
+    Bind_ImageList($g_hGUI_BUILDER_BASE_TAB, $g_hGUI_BUILDER_BASE_TAB_ImageList)
+
 
 	Bind_ImageList($g_hGUI_VILLAGE_TAB, $g_hGUI_VILLAGE_TAB_ImageList)
 	Bind_ImageList($g_hGUI_MISC_TAB, $g_hGUI_MISC_TAB_ImageList)

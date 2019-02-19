@@ -24,12 +24,12 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 		SetLog("Disabling Normal End Battle Options", $COLOR_SUCCESS)
 	EndIf
 	
-	; Spawn Event Troops
+	; Spawn Event Troops - samm0d
     Local $iSpecialColor[4][3] = [[0xFFFDFF, 1, 0], [0xFFFDFF, 2, 0], [0xCADEF2, 0, 1], [0xCADEF2, 1, 1]]
     Local $iSpecialPixel
         
     For $clickss = 0 to 300
-        $iSpecialPixel = _MultiPixelSearch(23, 632, 834, 658, 1, 1, Hex(0xFFFDFF, 6), $iSpecialColor, 15)
+        $iSpecialPixel = _MultiPixelSearch(23, 632, 834, 658, 1, 1, Hex(0xFFFDFF, 6), $iSpecialColor, 10)
         If $iSpecialPixel = 0 Then ExitLoop
         SetLog("Dropping event troops" & ": " & $iSpecialPixel[0] & "/" &  $iSpecialPixel[1])
         PureClick($iSpecialPixel[0], $iSpecialPixel[1], 1, 10, "#0000")
@@ -123,8 +123,9 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
         EndIf
         If _Sleep($DELAYRETURNHOME5) Then Return
     WEnd
-
-	;If CheckAndroidReboot() Then Return
+	
+	;samm0d
+    If CheckAndroidReboot() Then Return ; In case bot stuck and restart needed
 
 	If $GoldChangeCheck Then
         ; samm0d
@@ -153,6 +154,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 	If $GoldChangeCheck Then PushMsg("LastRaid")
 
     ; samm0d
+	If _Sleep($DELAYRETURNHOME5) Then Return
     If IsReturnHomeBattlePage(True) Then ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
 ;~
 ;~     $i = 0 ; Reset Loop counter
@@ -167,23 +169,28 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 ;~         If $i > 10 Then ExitLoop ; if end battle window is not found in 10*200mms or 2 seconds, then give up.
 ;~         If _Sleep($DELAYRETURNHOME5) Then Return
 ;~     WEnd
-;~     If _Sleep($DELAYRETURNHOME2) Then Return ; short wait for screen to close
+	If _Sleep($DELAYRETURNHOME2) Then Return ; short wait for screen to close
+;Samm0d
+    For $i = 0 To 50
+        If $g_bDebugSetlog Then SetDebugLog("Wait for Star Bonus window to appear #" & $i)
+        If _Sleep($DELAYRETURNHOME4) Then Return ; 2s
+			If $g_bDebugSetlog Then SetDebugLog("Wait for Star Bonus window to appear #" & $counter)
+			If _Sleep($DELAYRETURNHOME4) Then Return
+			If StarBonus() Then SetLog("Star Bonus window closed chief!", $COLOR_INFO) ; Check for Star Bonus window to fill treasury (2016-01) update
+			$g_bFullArmy = False ; forcing check the army
+			$g_bIsFullArmywithHeroesAndSpells = False ; forcing check the army
+			If ReturnHomeMainPage() Then Return
+			If checkObstacles() Then checkMainScreen() ; trap common error messages without setlog
+			If $i > 49 Or isProblemAffect(True) Then
+				SetLog("Cannot return home.", $COLOR_ERROR)
+					RebootAndroid(True)
+					ConnectAndroidAdb()
+					waitMainScreen()
+					$g_bRestart = True
+				Return
+			EndIf
+    Next
 
-	$counter = 0
-	While 1
-		If $g_bDebugSetlog Then SetDebugLog("Wait for Star Bonus window to appear #" & $counter)
-		If _Sleep($DELAYRETURNHOME4) Then Return
-		If StarBonus() Then SetLog("Star Bonus window closed chief!", $COLOR_INFO) ; Check for Star Bonus window to fill treasury (2016-01) update
-		$g_bFullArmy = False ; forcing check the army
-		$g_bIsFullArmywithHeroesAndSpells = False ; forcing check the army
-		If ReturnHomeMainPage() Then Return
-		$counter += 1
-		If $counter >= 50 Or isProblemAffect(True) Then
-			SetLog("Cannot return home.", $COLOR_ERROR)
-			checkMainScreen()
-			Return
-		EndIf
-	WEnd
 EndFunc   ;==>ReturnHome
 
 Func ReturnHomeMainPage()
@@ -220,6 +227,7 @@ Func ReturnfromDropTrophies()
 	Next
 	
     ; samm0d
+	If _Sleep($DELAYRETURNHOME5) Then Return
     If IsReturnHomeBattlePage(True) Then ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
 
 ;~	   $i = 0 ; Reset Loop counter

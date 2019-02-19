@@ -306,6 +306,16 @@ Func DonateCC($bCheckForNewMsg = False)
         EndIf
 
         ;==========================
+		;;; Open Donate Window
+		If _Sleep($DELAYDONATECC3) Then Return
+		If Not DonateWindow($bOpen) Then
+			If $g_bSkipDonTroops And $g_bSkipDonSpells And $g_bSkipDonSiege Then
+				$bDonate = True
+				$y = $g_aiDonatePixel[1] + 50
+				SetLog("Donate Window did not open - Exiting Donate", $COLOR_ERROR)
+				ExitLoop ; Leave donate to prevent a bot hang condition
+			EndIf
+		EndIf
 
 		$itime = TimerInit()
 		If _Sleep($DELAYDONATECC2) Then ExitLoop
@@ -320,6 +330,8 @@ Func DonateCC($bCheckForNewMsg = False)
 		$itime = TimerInit()
 
 		If IsArray($g_aiDonatePixel) Then ; if Donate Button found
+			If UBound($g_aiDonatePixel) >= 1 Then
+		
 			$Buttons += 1
 			If $g_bDebugSetlog Then SetDebugLog("***** Donate Request Number " & $Buttons & " *****", $COLOR_ACTION)
 			If $g_bDebugSetlog Then SetDebugLog("$g_aiDonatePixel: (" & $g_aiDonatePixel[0] & "," & $g_aiDonatePixel[1] & ")", $COLOR_DEBUG)
@@ -484,8 +496,11 @@ Func DonateCC($bCheckForNewMsg = False)
 						$g_bSkipDonTroops = True
 					EndIf
 				EndIf
+			
 			EndIf
-
+			Else 
+			Return False
+		EndIf
 			#cs
 			;;; Flagged to Skip Check
 			If $g_bSkipDonTroops And $g_bSkipDonSpells And $g_bSkipDonSiege Then
@@ -496,16 +511,6 @@ Func DonateCC($bCheckForNewMsg = False)
 			#ce
 			
 			; ==== samm0d
-			;;; Open Donate Window
-			If _Sleep($DELAYDONATECC3) Then Return
-			If Not DonateWindow($bOpen) Then
-				If $g_bSkipDonTroops And $g_bSkipDonSpells And $g_bSkipDonSiege Then
-					$bDonate = True
-					$y = $g_aiDonatePixel[1] + 50
-					SetLog("Donate Window did not open - Exiting Donate", $COLOR_ERROR)
-					ExitLoop ; Leave donate to prevent a bot hang condition
-				EndIf
-			EndIf
 
 			;;; Variables to use in Loops for Custom.A to Custom.D
 			Local $eCustom[4] = [$eCustomA, $eCustomB, $eCustomC, $eCustomD]

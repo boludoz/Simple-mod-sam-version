@@ -618,13 +618,13 @@ Func ChkTreasuryCollect()
 	EndIf
 EndFunc   ;==>ChkTreasuryCollect
 
-Func chkStartClockTowerBoost()
-	If GUICtrlRead($g_hChkStartClockTowerBoost) = $GUI_CHECKED Then
-		GUICtrlSetState($g_hChkCTBoostBlderBz, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($g_hChkCTBoostBlderBz, $GUI_DISABLE)
-	EndIf
-EndFunc   ;==>chkStartClockTowerBoost
+;Func chkStartClockTowerBoost()
+;	If GUICtrlRead($g_hChkStartClockTowerBoost) = $GUI_CHECKED Then
+;		GUICtrlSetState($g_hChkCTBoostBlderBz, $GUI_ENABLE)
+;	Else
+;		GUICtrlSetState($g_hChkCTBoostBlderBz, $GUI_DISABLE)
+;	EndIf
+;EndFunc   ;==>chkStartClockTowerBoost
 
 
 

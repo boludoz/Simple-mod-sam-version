@@ -21,6 +21,7 @@ Func SelectDropTroop($iSlotIndex, $iClicks = 1, $iDelay = 0, $bCheckAttackPage =
 	EndIf
 EndFunc   ;==>SelectDropTroop
 
+;Samm0d
 Func GetSlotPosition($iSlotIndex, $bOCRPosition = False)
 	Local $aiReturnPosition[2] = [0, 0]
 
