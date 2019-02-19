@@ -718,16 +718,16 @@ EndFunc   ;==>btnTestDeadBase
 
 Func btnTestDeadBaseFolder()
 
-	;Local $directory = FileOpenDialog("Select folder of CoC village screenshot to test for dead base", $g_sProfileTempPath, "Image (*.png)", $FD_PATHMUSTEXIST, "", $g_hFrmBot)
 	Local $directory = FileSelectFolder("Select folder of CoC village screenshot to test for dead base", "", $FSF_NEWDIALOG, @ScriptDir, $g_hFrmBot)
-	If @error <> 0 Then
-		SetLog("btnTestDeadBaseFolder cancelled", $COLOR_INFO)
-	EndIf
+	If @error Then SetLog("btnTestDeadBaseFolder cancelled", $COLOR_ERROR)
 
-	;checkDeadBaseFolder($directory, "checkDeadBaseNew()", "checkDeadBaseSuperNew()")
-	Local $oldFill = 'checkDeadBaseSuperNew(False, "' & @ScriptDir & "\imgxml\deadbase\elix\fill\old\" & '")'
-	Local $newFill = 'checkDeadBaseSuperNew(False, "' & @ScriptDir & "\imgxml\deadbase\elix\fill\new\" & '")'
-	checkDeadBaseFolder($directory, $oldFill, $newFill)
+	; ### Change this to proceeds with a comparison between OLD images and the NEW Images
+	Local $NewElixirCollectorFillPath = FileSelectFolder("Select folder from new images ElixirCollectorFill", "", $FSF_NEWDIALOG, @ScriptDir, $g_hFrmBot)
+	If @error Then SetLog("$NewElixirCollectorFillPath cancelled", $COLOR_ERROR)
+	Local $newElixirCollectorLvl = FileSelectFolder("Select folder from new images ElixirCollectorLvl", "", $FSF_NEWDIALOG, @ScriptDir, $g_hFrmBot)
+	If @error Then SetLog("$newElixirCollectorLvl cancelled", $COLOR_ERROR)
+
+	checkDeadBaseFolder($directory, $NewElixirCollectorFillPath, $newElixirCollectorLvl)
 
 EndFunc   ;==>btnTestDeadBaseFolder
 

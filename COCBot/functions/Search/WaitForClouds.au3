@@ -234,28 +234,9 @@ Func chkAttackSearchPersonalBreak()
 EndFunc   ;==>chkAttackSearchPersonalBreak
 
 Func btnSearchFailRetry()
-#cs    ; verify retry button exists, and press button, return false if button not found
-    Local $offColors[3][3] = [[0x121311, 50, 8], [0x6EBC1F, 55, 21], [0x11110F, 90, 7]] ; 2nd=Black in "R", 3rd=green centered under text, 4th=black in v of letter "Y" ; before 2017 May update 0x000000 0x60B014 0x020201
-    Local $ButtonPixel = _MultiPixelSearch(364, 405 + $g_iMidOffsetY, 466, 430 + $g_iMidOffsetY, 1, 1, Hex(0x171814, 6), $offColors, 20) ; first vertical black pixel of Retry button edge ; before 2017 May update 0x000000
-    If $g_bDebugSetlog Then SetDebugLog("Retry btn clr chk-#1: " &     _GetPixelColor(368, 347 + $g_iMidOffsetY + 60, True) & ", #2: " & _
-                                                                    _GetPixelColor(368 + 50, 347 + 8 + $g_iMidOffsetY + 60, True) & ", #3: " & _
-                                                                    _GetPixelColor(368 + 55, 347 + 21 + $g_iMidOffsetY + 60, True) & ", #4: " & _
-                                                                    _GetPixelColor(368 + 90, 347 + 7 + $g_iMidOffsetY + 60, True), $COLOR_DEBUG) ; after 2017 May update Y +60
-    If IsArray($ButtonPixel) Then
-        If $g_bDebugSetlog Then
-            SetLog("ButtonPixel = " & $ButtonPixel[0] & ", " & $ButtonPixel[1], $COLOR_DEBUG) ;Debug
-            SetLog("Retry Btn Pixel color found #1: " & _GetPixelColor($ButtonPixel[0], $ButtonPixel[1], True) & ", #2: " & _
-                                                        _GetPixelColor($ButtonPixel[0] + 50, $ButtonPixel[1] + 8, True) & ", #3: " & _
-                                                        _GetPixelColor($ButtonPixel[0] + 55, $ButtonPixel[1] + 21, True) & ", #4: " & _
-                                                        _GetPixelColor($ButtonPixel[0] + 90, $ButtonPixel[1] + 7, True), $COLOR_DEBUG) ; before 2017 May update + (0, 0) (144, 0) (54, 17) (54, 27)
-        EndIf
-        Click($ButtonPixel[0] + 68, $ButtonPixel[1] + 13, 1, 0, "#0512") ; Click Retry Button ; before 2017 May update + (75, 25)
-        Return True
-    EndIf
-#ce
-    Local $aRetrySearchButton = decodeSingleCoord(findImage("Retry Search", $g_sImgRetrySearchButton, GetDiamondFromRect("270,400,600,500"), 1, True))
-    If IsArray($aRetrySearchButton) And UBound($aRetrySearchButton) = 2 Then
-        Click($aRetrySearchButton[0], $aRetrySearchButton[1], 1, 0, "#0512")
+;samm0d
+	If QuickMIS("BC1", $g_sImgRetrySearchButton, 270, 400+ $g_iMidOffsetY, 600, 500+ $g_iMidOffsetY) Then ; RC Done
+		Click($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY, 1, 0, "#0512")
 		Return True
 	EndIf
 	Return False

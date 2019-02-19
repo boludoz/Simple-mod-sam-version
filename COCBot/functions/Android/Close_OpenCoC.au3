@@ -31,13 +31,14 @@ Func CloseCoC($ReOpenCoC = False, $bCheckRunState = True)
 
     ; samm0d - check game client close
 	For $j = 0 To 20
+		If _Sleep(300) Then Return
 		AndroidAdbSendShellCommand("am force-stop " & $g_sAndroidGamePackage, Default, Default, False)
 		If GetAndroidProcessPID(Default, False) = 0 Then ExitLoop
         If $g_iSamM0dDebug Then SetLog("Waiting game client close..." & $j, $COLOR_INFO)
-        Sleep(300)
-		If $j > 19 Then SetLog("Failed to close game client.", $COLOR_ERROR)
     Next
-		
+	
+	If $j > 20 Then SetLog("Failed to close game client.", $COLOR_ERROR)
+
 	ResetAndroidProcess()
 	;_Sleep($DELAYCLOSEOPEN3000) 
 	_Sleep(300) ; fast
@@ -68,7 +69,7 @@ EndFunc   ;==>CloseCoC
 ; ===============================================================================================================================
 
 Func OpenCoC()
-; samm0d
+; samm0d bld
 	FuncEnter(OpenCoC)
 	ResumeAndroid()
 	If Not $g_bRunState Then Return FuncReturn()
@@ -80,22 +81,28 @@ Func OpenCoC()
 	If Not $g_bRunState Then Return FuncReturn()
     If Not StartAndroidCoC() Then Return FuncReturn()
     While _CheckPixel($aIsMain, True) = False ; Wait for MainScreen
+		Sleep(10) ; CPU Strees out
         $iCount += 1
         If checkObstacles() Then $iCount += 1
-        If $iCount > 250 Then
-            SetLog("Reboot " & $g_sAndroidEmulator & ", could not open the game..", $COLOR_ERROR)
-            RebootAndroid()
-            WinGetAndroidHandle()
-            If _Sleep(500) Then Return FuncReturn()
-            If Not StartAndroidCoC() Then Return FuncReturn()
-            ExitLoop
-        EndIf
+		If Mod($iCount, 50) = 0 Then 
+			StartAndroidCoC()
+        	SetLog(Starting game I try : x & $iCount, $COLOR_INFO)
+			If $iCount > 250 Then
+				SetLog("Reboot " & $g_sAndroidEmulator & ", could not open the game..", $COLOR_ERROR)
+				RebootAndroid()
+				WinGetAndroidHandle()
+				If _Sleep(250) Then Return FuncReturn()
+				If Not StartAndroidCoC() Then Return FuncReturn()
+				ExitLoop
+			EndIf
+		EndIf
         If Not $g_bRunState Then ExitLoop
     WEnd
     ; Let's Rearm and check tombs
-    $g_abIsToProccedWith[0] = True
-    $g_abIsToProccedWith[1] = True
+    $g_abNotNeedAllTime[0] = True
+    $g_abNotNeedAllTime[1] = True
     FuncReturn()
+;-------------
 EndFunc   ;==>OpenCoC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -275,9 +282,12 @@ Func PoliteCloseCoC($sSource = "Unknown_", $bPoliteCloseCoC = $g_bPoliteCloseCoC
 	Local $iResult = -1
 	Local $iResultString = -1
 	
+	AndroidHomeButton()
+	Setlog("Closing the game like a barbarian.", $COLOR_YELLOW) 
+
 	For $i = 0 To 20		
-		If $g_bDebugAndroid Then $iResult = _AndroidAdbSendShellCommand("dumpsys window windows | grep -E 'mCurrentFocus'", Default)
-		Setlog($iResult, $COLOR_YELLOW)
+		$iResult = _AndroidAdbSendShellCommand("dumpsys window windows | grep -E 'mCurrentFocus'", Default)
+		If $g_bDebugAndroid Then Setlog($iResult, $COLOR_YELLOW)
 			$iResultString = StringInStr($iResult, $g_sAndroidGamePackage)
 			If $iResultString = 0 Then 
 				ExitLoop
@@ -294,19 +304,21 @@ Func PoliteCloseCoC($sSource = "Unknown_", $bPoliteCloseCoC = $g_bPoliteCloseCoC
 	; force-kill Game
 	CloseCoC()
 
+#cs - CloseCoC Do it
     ; samm0d - check game client close
 	For $j = 0 To 20
 		AndroidAdbSendShellCommand("am force-stop " & $g_sAndroidGamePackage, Default, Default, False)
 		If GetAndroidProcessPID(Default, False) = 0 Then ExitLoop
         If $g_iSamM0dDebug Then SetLog("Waiting game client close..." & $j, $COLOR_INFO)
-        Sleep(300)
-		If $j > 19 Then SetLog("Failed to close game client.", $COLOR_ERROR)
+		If _Sleep(300) Then Return
     Next
-	
+	If $j > 20 Then SetLog("Failed to close game client.", $COLOR_ERROR)
+#ce
+
 	ResetAndroidProcess()
 	ReduceBotMemory()
 	
-	If $i > 19 Then 
+	If $i > 20 Then 
 			Setlog("Send Home button - FAIL", $COLOR_ERROR)
 			Return False
 		Else
