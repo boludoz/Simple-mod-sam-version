@@ -297,9 +297,10 @@ Func SkipWallUpgrade() ; Dynamic Upgrades
 	EndIf
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;End bldg upgrade value checking
 
-
-	;   Is Warden Level updated |          Is Warden not max yet           |  Is Upgrade enabled       |               Is Warden not already upgrading                |               Is a Builder available
-	If ($g_iWardenLevel <> -1) And ($g_iWardenLevel < $g_iMaxWardenLevel) And $g_bUpgradeWardenEnable And BitAND($g_iHeroUpgradingBit, $eHeroWarden) <> $eHeroWarden And ($g_iFreeBuilderCount > ($g_bUpgradeWallSaveBuilder ? 1 : 0)) Then
+	; samod
+    ;   Is Warden Level updated |          Is Warden not max yet           |  Is Upgrade enabled       |               Is a Builder available
+    If ($g_iWardenLevel <> -1) And ($g_iWardenLevel < $g_iMaxWardenLevel) And $g_bUpgradeWardenEnable And ($g_iFreeBuilderCount > ($g_bUpgradeWallSaveBuilder ? 1 : 0)) Then
+	; samod end
 		Local $bMinWardenElixir = Number($g_aiCurrentLoot[$eLootElixir]) > ($g_iWallCost + $g_afWardenUpgCost[$g_iWardenLevel] * 1000000 + Number($g_iUpgradeWallMinElixir))
 		If Not $bMinWardenElixir Then
 			Switch $g_iUpgradeWallLootType

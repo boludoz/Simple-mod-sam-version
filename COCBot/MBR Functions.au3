@@ -76,6 +76,24 @@
 #include "SamM0d\MBRMates\Multi Fingers\eightFinger.au3"
 #include "SamM0d\MBRMates\Multi Fingers\multiFinger.au3"
 #include "SamM0d\MBRMates\Multi Fingers\unitInfo.au3"
+; Builder base
+;----------------------------------------------------------------
+#include "SamM0d\Functions\BuilderBase\BBImageDirectories.au3"
+#include "SamM0d\Functions\BuilderBase\BuilderBaseMain.au3"
+#include "SamM0d\Functions\BuilderBase\BuilderBaseDebugUI.au3"
+#include "SamM0d\Functions\BuilderBase\Attack\BuilderBaseZoomOut.au3"
+#include "SamM0d\Functions\BuilderBase\Attack\BuilderBaseAttack.au3"
+#include "SamM0d\Functions\BuilderBase\Attack\BuilderBaseAttackBar.au3"
+#include "SamM0d\Functions\BuilderBase\Attack\BuilderBaseImageDetection.au3"
+#include "SamM0d\Functions\BuilderBase\Attack\BuilderBaseCSV.au3"
+#include "SamM0d\Functions\BuilderBase\Camps\BuilderBaseCheckArmy.au3"
+#include "SamM0d\Functions\BuilderBase\Village\BuilderBaseStartClockTowerBoost.au3" ;#include "functions\Village\BuilderBase\StartClockTowerBoost.au3"
+#include "SamM0d\Functions\BuilderBase\Village\BuilderBaseReport.au3" ;#include "functions\Village\BuilderBase\BuilderBaseReport.au3"
+#include "SamM0d\Functions\BuilderBase\Village\BuilderBaseSuggestedUpgrades.au3" ;#include "functions\Village\BuilderBase\SuggestedUpgrades.au3"
+#include "SamM0d\Functions\BuilderBase\Village\BuilderBaseCollect.au3" ;#include "functions\Village\BuilderBase\Collect.au3"
+#include "SamM0d\Functions\BuilderBase\Village\BuilderBaseUpgradeTroops.au3" ;#include "functions\Village\BuilderBase\StarLaboratory.au3"
+#include "SamM0d\Functions\BuilderBase\Village\BuilderBaseCleanYard.au3" ;#include "functions\Village\BuilderBase\CleanBBYard.au3"
+#include "SamM0d\Functions\BuilderBase\Village\BuilderBaseUpgradeWalls.au3"
 ;----------------------------------------------------------------
 ; Edicion exclusiva
 #include "SamM0d\Functions\OcrBypass.au3"
@@ -350,13 +368,6 @@
 #include "functions\Village\SwitchAccountVariablesReload.au3"
 #include "functions\Village\Clan Games\ClanGames.au3"
 #include "functions\Village\FreeMagicItems.au3"
-
-#include "functions\Village\BuilderBase\Collect.au3"
-#include "functions\Village\BuilderBase\StartClockTowerBoost.au3"
-#include "functions\Village\BuilderBase\BuilderBaseReport.au3"
-#include "functions\Village\BuilderBase\SuggestedUpgrades.au3"
-#include "functions\Village\BuilderBase\CleanBBYard.au3"
-#include "functions\Village\BuilderBase\StarLaboratory.au3"
 
 #include "functions\Other\Api.au3"
 #include "functions\Other\ApiClient.au3"

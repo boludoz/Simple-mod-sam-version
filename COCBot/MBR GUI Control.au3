@@ -1741,8 +1741,17 @@ Func tabMain()
 			GUISetState(@SW_HIDE, $hGUI_MOD)
             GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_BUILDER_BASE)
             tabBuilderBase()
-
-        Case $tabidx = 4 ; Options
+			
+		Case $tabidx = 4  ; Mod
+			GUISetState(@SW_HIDE, $g_hGUI_LOG)
+			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
+			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
+			GUISetState(@SW_HIDE, $g_hGUI_BOT)
+			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ABOUT)
+            GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE)
+            GUISetState(@SW_SHOWNOACTIVATE, $hGUI_MOD)
+;----------------------------
+        Case $tabidx = 5 ; Options
             GUISetState(@SW_HIDE, $g_hGUI_LOG)
             GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
             GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE)
@@ -1751,16 +1760,6 @@ Func tabMain()
 			GUISetState(@SW_HIDE, $hGUI_MOD)
             GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_BOT)
             tabBot()
-;
-		Case $tabidx = 5 ; About
-			GUISetState(@SW_HIDE, $g_hGUI_LOG)
-			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
-			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
-			GUISetState(@SW_HIDE, $g_hGUI_BOT)
-			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ABOUT)
-            ; SamM0d
-            GUISetState(@SW_HIDE, $g_hGUI_BUILDER_BASE)
-            GUISetState(@SW_SHOWNOACTIVATE, $hGUI_MOD)
 
 		Case $tabidx = 6 ; About
            GUISetState(@SW_HIDE, $g_hGUI_LOG)
@@ -1784,38 +1783,6 @@ Func tabMain()
 	EndSelect
 
 EndFunc   ;==>tabMain
-
-; samm0d
-Func tabBuilderBase()
-    Local $tabidx = GUICtrlRead($g_hGUI_BUILDER_BASE_TAB)
-    Local $tabtsx = _GUICtrlTab_GetItemRect($g_hGUI_BUILDER_BASE_TAB, 2) ; use x,y coordinate of tabitem rectangle bottom right corner to dynamically reposition the checkbox control (for translated tabnames)
-
-    Select
-        Case $tabidx = 0 ; MISC & STATS tab
-            GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_LOG_BB)
-            GUISetState(@SW_HIDE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE)
-            GUISetState(@SW_HIDE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV)
-            GUICtrlSetPos($g_hChkBuilderAttack, $tabtsx[2] - 18, $tabtsx[3] - 15)
-            checkIfBBLogIsEmptyInitialize() ;When we switch to main from mini it then we need to initialize header
-        Case $tabidx = 1 ; UPGRADE tab
-            GUISetState(@SW_HIDE, $g_hGUI_LOG_BB)
-            GUISetState(@SW_HIDE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE)
-            GUISetState(@SW_HIDE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV)
-            GUICtrlSetPos($g_hChkBuilderAttack, $tabtsx[2] - 18, $tabtsx[3] - 15)
-        Case $tabidx = 2 ; ATTACK PLAN tab
-            GUISetState(@SW_HIDE, $g_hGUI_LOG_BB)
-            If GUICtrlRead($g_hChkBuilderAttack) = $GUI_CHECKED Then
-                GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE)
-                GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV)
-                GUICtrlSetState($g_hLblBuilderAttackDisabled, $GUI_HIDE)
-            Else
-                GUISetState(@SW_HIDE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE)
-                GUISetState(@SW_HIDE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV)
-                GUICtrlSetState($g_hLblBuilderAttackDisabled, $GUI_SHOW)
-            EndIf
-            GUICtrlSetPos($g_hChkBuilderAttack, $tabtsx[2] - 15, $tabtsx[3] - 17)
-    EndSelect
-EndFunc   ;==>tabBuilderBase
 
 Func tabVillage()
 	Local $tabidx = GUICtrlRead($g_hGUI_VILLAGE_TAB)
@@ -1848,6 +1815,38 @@ Func tabVillage()
 	EndSelect
 
 EndFunc   ;==>tabVillage
+
+; samm0d
+Func tabBuilderBase()
+	Local $tabidx = GUICtrlRead($g_hGUI_BUILDER_BASE_TAB)
+	Local $tabtsx = _GUICtrlTab_GetItemRect($g_hGUI_BUILDER_BASE_TAB, 2) ; use x,y coordinate of tabitem rectangle bottom right corner to dynamically reposition the checkbox control (for translated tabnames)
+
+	Select
+		Case $tabidx = 0 ; MISC & STATS tab
+			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_LOG_BB)
+			GUISetState(@SW_HIDE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE)
+			GUISetState(@SW_HIDE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV)
+			GUICtrlSetPos($g_hChkBuilderAttack, $tabtsx[2] - 18, $tabtsx[3] - 15)
+			checkIfBBLogIsEmptyInitialize() ;When we switch to main from mini it then we need to initialize header
+		Case $tabidx = 1 ; UPGRADE tab
+			GUISetState(@SW_HIDE, $g_hGUI_LOG_BB)
+			GUISetState(@SW_HIDE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE)
+			GUISetState(@SW_HIDE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV)
+			GUICtrlSetPos($g_hChkBuilderAttack, $tabtsx[2] - 18, $tabtsx[3] - 15)
+		Case $tabidx = 2 ; ATTACK PLAN tab
+			GUISetState(@SW_HIDE, $g_hGUI_LOG_BB)
+			If GUICtrlRead($g_hChkBuilderAttack) = $GUI_CHECKED Then
+				GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE)
+				GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV)
+				GUICtrlSetState($g_hLblBuilderAttackDisabled, $GUI_HIDE)
+			Else
+				GUISetState(@SW_HIDE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE)
+				GUISetState(@SW_HIDE, $g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV)
+				GUICtrlSetState($g_hLblBuilderAttackDisabled, $GUI_SHOW)
+			EndIf
+			GUICtrlSetPos($g_hChkBuilderAttack, $tabtsx[2] - 15, $tabtsx[3] - 17)
+	EndSelect
+EndFunc   ;==>tabBuilderBase
 
 Func tabAttack()
 	Local $tabidx = GUICtrlRead($g_hGUI_ATTACK_TAB)

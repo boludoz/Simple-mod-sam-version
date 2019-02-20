@@ -450,3 +450,63 @@ Global $g_bTrainWarTroop, $g_bUseQuickTrainWar, $g_aChkArmyWar[3], $g_aiWarCompT
 Global $g_bRequestCCForWar, $g_sTxtRequestCCForWar
 
 
+; ################   Builder Base   ################
+; Report
+Global $g_iAvailableAttacksBB = 0, $g_iLastDamage = 0
+Global $g_sTxtRegistrationToken = ""
+
+Global Enum $g_iAirDefense = 0, $g_iCrusher, $g_iGuardPost, $g_iCannon, $g_iBuilderHall, $g_iDeployPoints
+Global $g_aBuilderHallPos[1][2] = [[Null, Null]], $g_aAirdefensesPos[0][2], $g_aCrusherPos[0][2], $g_aCannonPos[0][2], $g_aGuardPostPos[0][2], $g_aDeployPoints
+Global $g_aBuilderHallPos[1][2] = [[Null, Null]], $g_aAirdefensesPos[0][2], $g_aCrusherPos[0][2], $g_aCannonPos[0][2], $g_aGuardPostPos[0][2], $g_aDeployPoints, $g_aDeployBestPoints
+Global $g_aOpponentBuildings[6] = [$g_aAirdefensesPos, $g_aCrusherPos, $g_aGuardPostPos, $g_aCannonPos, $g_aBuilderHallPos, $g_aDeployPoints]
+Global $g_aExternalEdges, $g_aBuilderBaseDiamond, $g_aOuterEdges, $g_aBuilderBaseOuterDiamond, $g_aBuilderBaseOuterPolygon, $g_aFinalOuter[4]
+
+; Attack CSV
+Global $g_bChkBBRandomAttack = False
+Global Const $g_sCSVBBAttacksPath = @ScriptDir & "\CSV\BuilderBase"
+Global $g_sAttackScrScriptNameBB[3] = ["", "", ""]
+Global $g_iBuilderBaseScript = 0
+
+; Upgrade Troops
+Global $g_bChkUpgradeTroops = False, $g_iCmbBBLaboratory, $g_bChkUpgradeMachine = False
+
+; Upgrade Walls
+Global $g_bChkBBUpgradeWalls = False, $g_iCmbBBWallLevel, $g_iTxtBBWallNumber = 0
+Global Const $g_aiWallBBInfoPerLevel[9][4] = [ _ ; Level, Gold, Qty, BH
+		[0, 0, 0, 0], _
+		[1, 4000, 20, 2], _
+		[2, 10000, 50, 3], _
+		[3, 100000, 50, 3], _
+		[4, 300000, 75, 4], _
+		[5, 800000, 100, 5], _
+		[6, 1200000, 120, 6], _
+		[7, 2000000, 140, 7], _
+		[8, 3000000, 160, 8]]
+
+; Troops
+Global Enum $eBBTroopBarbarian, $eBBTroopArcher, $eBBTroopGiant, $eBBTroopMinion, $eBBTroopBomber, $eBBTroopBabyDragon, $eBBTroopCannon, $eBBTroopNight, $eBBTroopDrop, $eBBTroopPekka, $eBBTroopMachine, $eBBTroopCount
+Global Const $g_asBBTroopNames[$eBBTroopCount] = ["Raged Barbarian", "Sneaky Archer", "Boxer Giant", "Beta Minion", "Bomber", "Baby Dragon", "Cannon Cart", "Night Witch", "Drop Ship", "Super Pekka", "Battle Machine"]
+Global Const $g_asBBTroopShortNames[$eBBTroopCount] = ["Barb", "Arch", "Giant", "Beta", "Bomb", "BabyDrag", "Cannon", "Night", "Drop", "Pekka", "Machine"]
+Global $g_bIsMachinePresent = False
+
+; Camps
+Global $g_aCamps[6] = ["", "", "", "", "", ""]
+
+; General
+Global $g_bChkBuilderAttack = False, $g_bChkBBStopAt3 = False, $g_bChkBBTrophiesRange = False, $g_iTxtBBDropTrophiesMin = 0, $g_iTxtBBDropTrophiesMax = 0
+Global $g_iCmbBBArmy1 = 0, $g_iCmbBBArmy2 = 0, $g_iCmbBBArmy3 = 0, $g_iCmbBBArmy4 = 0, $g_iCmbBBArmy5 = 0, $g_iCmbBBArmy6 = 0
+
+; Lib with Icons
+Global Const $g_sLibBBIconPath = $g_sLibPath & "\MBRBot.dll" ; icon library
+Global Enum $eIcnBBBarb = 1, $eIcnBBArch, $eIcnBBGiant, $eIcnBBBeta, $eIcnBBBombn, $eIcnBBBabyDrag, $eIcnBBCannon, $eIcnBBNight, $eIcnBBDrop, $eIcnBBPekka, $eIcnBBEmpty, _
+		$eIcnBB, $eIcnLabBB, $eIcnBBElixir, $eIcnBBGold, $eIcnBBTrophies, $eIcnMachine, $eIcnBBWallInfo, $eIcnBBWallL1, $eIcnBBWallL2, $eIcnBBWallL3, $eIcnBBWallL4, $eIcnBBWallL5, _
+		$eIcnBBWallL6, $eIcnBBWallL7, $eIcnBBWallL8
+
+; Internal & External Polygon
+Global $CocDiamondECD = "ECD"
+Global $CocDiamondDCD = "DCD"
+Global $InternalArea[8][3]
+Global $ExternalArea[8][3]
+
+; Log
+Global $g_hBBAttackLogFile = 0

@@ -368,10 +368,13 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 
 	; This dummy is used in btnStart and btnStop to disable/enable all labels, text, buttons etc. on all tabs.
 	$g_hFirstControlToHide = GUICtrlCreateDummy()
+	; samm0d
+	SplashStep(GetTranslatedFileIni("Sam M0d", "Loading Bot tab", "Loading Bot tab..."))
+	#include "SamM0d\GUI\MBR GUI Design Child SamM0d.au3"
 
     SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_06", "Loading Builder Base tab..."))
     CreateBuilderBaseTab()
-
+;----------------
     SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_08", "Loading About Us tab..."))
 	CreateLogTab()
 
@@ -384,9 +387,6 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_06", "Loading Bot tab..."))
 	CreateBotTab() ; also creates  $g_hLastControlToHide
 
-	; samm0d
-	SplashStep(GetTranslatedFileIni("Sam M0d", "Loading Bot tab", "Loading Bot tab..."))
-	#include "SamM0d\GUI\MBR GUI Design Child SamM0d.au3"
 
 	If Not $bGuiModeUpdate Then DistributorsUpdateGUI() ; Now loading Distributors (during GUI switch it must be called outside CreateMainGUIControls()!)
 

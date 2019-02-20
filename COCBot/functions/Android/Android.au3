@@ -2689,6 +2689,7 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 EndFunc   ;==>_AndroidScreencap
 
 Func AndroidZoomOut($loopCount = 0, $timeout = Default, $bMinitouch = Default, $wasRunState = Default)
+	If isOnBuilderBase() Then Return BuilderBaseSendZoomOut(True)
 	Return AndroidAdbScript("ZoomOut", Default, $timeout, $bMinitouch, $wasRunState)
 EndFunc   ;==>AndroidZoomOut
 

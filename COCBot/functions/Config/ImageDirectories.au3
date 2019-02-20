@@ -42,7 +42,7 @@ Global $g_sImgDailyDiscountWindow = @ScriptDir & "\imgxml\FreeMagicItems\DailyDi
 Global $g_sImgBuyDealWindow = @ScriptDir & "\imgxml\FreeMagicItems\BuyDeal"
 #EndRegion
 
-#Region Builder Base
+#CS - samm0d
 Global $g_sImgCollectRessourcesBB = @ScriptDir & "\imgxml\Resources\BuildersBase\Collect"
 Global $g_sImgBoatBB = @ScriptDir & "\imgxml\Boat\BoatBuilderBase_0_89.xml"
 Global $g_sImgZoomOutDirBB = @ScriptDir & "\imgxml\village\BuilderBase\"
@@ -51,7 +51,7 @@ Global $g_sImgCleanBBYard = @ScriptDir & "\imgxml\Resources\ObstaclesBB"
 Global $g_sImgIsOnBB = @ScriptDir & "\imgxml\village\Page\BuilderBase*"
 Global $g_sImgStarLaboratory = @ScriptDir & "\imgxml\Resources\BuildersBase\StarLaboratory"
 Global $g_sImgStarLabElex = @ScriptDir & "\imgxml\Resources\BuildersBase\StarLabElex\StarLabElex*"
-#EndRegion
+#CE
 
 #Region DonateCC
 Global $g_sImgDonateTroops = @ScriptDir & "\imgxml\DonateCC\Troops\"
@@ -68,7 +68,7 @@ Global $g_sImgChatIUnterstand = @ScriptDir & "\imgxml\DonateCC\donateccwbl\iunde
  Global $g_sImgAUpgradeUpgradeBtn = @ScriptDir & "\imgxml\Resources\Auto Upgrade\UpgradeButton"
  Global $g_sImgAUpgradeRes = @ScriptDir & "\imgxml\Resources\Auto Upgrade\Resources"
 #EndRegion
-
+#cs -samm0d
 #Region Auto Upgrade Builder Base
 Global $g_sImgAutoUpgradeGold = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\Gold"
 Global $g_sImgAutoUpgradeElixir = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\Elixir"
@@ -84,7 +84,7 @@ Global $g_sImgAutoUpgradeInfo = @ScriptDir & "\imgxml\Resources\BuildersBase\Aut
 Global $g_sImgAutoUpgradeNewBldgYes = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\NewBuildings\Yes"
 Global $g_sImgAutoUpgradeNewBldgNo = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\NewBuildings\No"
 #EndRegion
-
+#ce
 #Region Train
 Global $g_sImgTrainTroops = @ScriptDir & "\imgxml\Train\Train_Train\"
 Global $g_sImgTrainSpells = @ScriptDir & "\imgxml\Train\Spell_Train\"
