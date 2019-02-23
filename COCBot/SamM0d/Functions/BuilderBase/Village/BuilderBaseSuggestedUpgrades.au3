@@ -346,7 +346,7 @@ Func NewBuildings($aResult, $DebugLog = False)
 
 		; Lets se if exist or NOT the Yellow Arrow, If Doesnt exist the [i] icon than exist the Yellow arrow , DONE
 
-		If Not IsArray($DetectionClock) And UBound($DetectionClock) < 1 Then _DebugFailedImageDetection("DetectionClock")
+		If Not IsArray($DetectionClock) And UBound($DetectionClock) < 1 Then  _DebugFailedImageDetection("DetectionClock")
 
 		For $i = 0 To UBound($DetectionClock) - 1
 			; for each Visible clock : search zone is (x , y -100 , x + 160 , y )
@@ -359,7 +359,7 @@ Func NewBuildings($aResult, $DebugLog = False)
 			Local $DetectionInfo = _ImageSearchXMLMyBot($g_sXMLAutoUpgradeInfoIcon, $g_aXMLNotToForceAreaParms[0], $Area2Search, $g_aXMLNotToForceAreaParms[2], $DebugLog)
 			SetDebugLog(_ArrayToString($DetectionInfo))
 
-			If Not IsArray($DetectionInfo) And UBound($DetectionInfo) < 1 Then _DebugFailedImageDetection("DetectionInfo")
+			If Not IsArray($DetectionInfo) And UBound($DetectionInfo) < 1 Then  _DebugFailedImageDetection("DetectionInfo")
 
 			If $DetectionInfo = "" Or UBound($DetectionInfo) < 1 Or Not IsArray($DetectionInfo) Then
 				Setlog("Detected the correct building at " & $DetectionClock[$i][1] & "x" & $DetectionClock[$i][2])
@@ -388,7 +388,7 @@ Func NewBuildings($aResult, $DebugLog = False)
 		Local $DetectionWhiteZeros = _ImageSearchXMLMyBot($g_sXMLAutoUpgradeWhiteZeros, $g_aXMLNotToForceAreaParms[0], $Area2Search, $ForceArea, $DebugLog)
 		SetDebugLog(_ArrayToString($DetectionWhiteZeros))
 
-		If Not IsArray($DetectionWhiteZeros) And UBound($DetectionWhiteZeros) < 1 Then _DebugFailedImageDetection("DetectionWhiteZeros")
+		If Not IsArray($DetectionWhiteZeros) And UBound($DetectionWhiteZeros) < 1 Then  _DebugFailedImageDetection("DetectionWhiteZeros")
 
 		If IsArray($DetectionWhiteZeros) And UBound($DetectionWhiteZeros) > 1 Then
 			; CLICK it
@@ -419,7 +419,7 @@ Func NewBuildings($aResult, $DebugLog = False)
 				Local $DetectionNo = _ImageSearchXMLMyBot($g_sXMLAutoUpgradeNewBldgNo, $g_aXMLToForceAreaParms[0], $g_aXMLToForceAreaParms[1], $g_aXMLToForceAreaParms[2], $DebugLog)
 				Setlog("$DetectionNo: " & _ArrayToString($DetectionNo))
 
-				If Not IsArray($DetectionNo) And UBound($DetectionNo) < 1 Then _DebugFailedImageDetection("DetectionNo")
+				If Not IsArray($DetectionNo) And UBound($DetectionNo) < 1 Then  _DebugFailedImageDetection("DetectionNo")
 
 				; If NOT present then we can slide the NO icon ( x + 10 , y + 25 ) for TOP until exist the YES icon ) or just click on NO
 				If IsArray($DetectionNo) And UBound($DetectionNo) > 0 Then

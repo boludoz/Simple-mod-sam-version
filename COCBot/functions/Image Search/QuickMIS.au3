@@ -241,108 +241,7 @@ Func DebugQuickMIS($x, $y, $DebugText)
 
 EndFunc   ;==>DebugQuickMIS
 
-Func _ImageSearchXMLBoludoz($XmlPath, $Quantity2Match = 0, $sArea2Search = "0,0,"&$g_iGAME_WIDTH&","&$g_iGAME_HEIGHT, $bForceArea = True, $DebugLog = False, $checkDuplicatedpoints = False, $Distance2check = 25)
-
-	#cs - Disabled more fasther
-	If Not IsInt($Quantity2Match) Then $Quantity2Match = 0
-	If Not IsString($Area2Search) Then $Area2Search = "0,0,860,644" ; RC Done
-	If Not IsBool($bForceArea) Then $bForceArea = True
-	If Not IsBool($DebugLog) Then $DebugLog = False
-	#ce
-
-	Local $aScreen = StringSplit($sArea2Search, ",", 2)
-	
-	For $iArray = 0 To UBound($aScreen) - 1
-		$aScreen[$iArray] = Int($aScreen[$iArray])
-	Next
-
-	_CaptureRegion2()
-	;Local $aRes = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $XmlPath, "str", "FV", "Int", $Quantity2Match, "str", $sArea2Search, "Int", 0, "Int", $iMaxLevel)
-	Local $aRes = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $XmlPath, "str", "FV", "Int", 0, "str", $sArea2Search, "Int", 0, "Int", $Quantity2Match)
-	If @error Then _logErrorDLLCall($g_sLibMyBotPath, @error)
-	;If Not IsArray($aRes) Then Return 0 Never return Int
-	If $aRes[0] = "" Or StringInStr($aRes[0], "-1") <> 0 Then Return ""
-
-	#cs - Debug Disabled more fasther
-	If $g_bDebugImageSave Then DebugImageSave("QuickMIS_" & $ValueReturned, False)
-	If $DebugLog Then _ArrayDisplay($aRes)
-	If $g_bDebugSetlog Then SetDebugLog("DLL Call succeeded " & $aRes[0], $COLOR_PURPLE)
-	#ce
-	
-	Local $KeyValue = StringSplit($aRes[0], "|", $STR_NOCOUNT)
-	Local $Name = ""
-	Local $aPositions, $aCoords, $aCord, $level
-	SetDebugLog("Detected : " & UBound($KeyValue) & " tiles")
-	Local $aResults[UBound($KeyValue)][3]
-	For $i = 0 To UBound($KeyValue) - 1
-		$Name = RetrieveImglocProperty($KeyValue[$i], "objectname")
-		$aPositions = RetrieveImglocProperty($KeyValue[$i], "objectpoints")
-		$level = RetrieveImglocProperty($KeyValue[$i], "objectlevel")
-		SetDebugLog("Name: " & $Name)
-		$aCoords = decodeMultipleCoords($aPositions, 20, 0, 0) ; dedup coords by x on 50 pixel ;
-		SetDebugLog("How many $aCoords: " & UBound($aCoords))
-		$aResults[$i][0] = $Name
-		$aResults[$i][1] = $aCoords
-		$aResults[$i][2] = $level
-	Next
-
-	Local $aAllResults[0][4], $aCoordinates, $aCoord
-
-	;If $aResults = 0 Then Return -1
-
-	For $i = 0 To UBound($aResults) - 1
-		If Not $g_bRunState Then Return
-		$aCoordinates = Null
-		$aCoordinates = $aResults[$i][1]
-		For $j = 0 To UBound($aCoordinates) - 1
-			$aCoord = Null
-			$aCoord = $aCoordinates[$j]
-			SetDebugLog(" - " & $aResults[$i][0] & " at (" & $aCoord[0] + $aScreen[0] & "," & $aCoord[1] + $aScreen[1] & ")")
-			ReDim $aAllResults[UBound($aAllResults) + 1][4]
-			$aAllResults[UBound($aAllResults) - 1][0] = $aResults[$i][0] ; NAME
-			$aAllResults[UBound($aAllResults) - 1][1] = $aCoord[0] + $aScreen[0] ; X axis
-			$aAllResults[UBound($aAllResults) - 1][2] = $aCoord[1] + $aScreen[1] ; Y axis
-			$aAllResults[UBound($aAllResults) - 1][3] = $aResults[$i][2] ; Level
-		Next
-		;If $i = $Quantity2Match Then ExitLoop
-	Next
-
-	; Sort by X axis
-	_ArraySort($aAllResults, 0, 0, 0, 1)
-
-	If $checkDuplicatedpoints Then
-		; check if is a double Detection, near in 10px
-		Local $Dime = 0
-		For $i = 0 To UBound($aAllResults) - 1
-			If Not $g_bRunState Then Return
-			If $i > UBound($aAllResults) - 1 Then ExitLoop
-			Local $LastCoordinate[4] = [$aAllResults[$i][0], $aAllResults[$i][1], $aAllResults[$i][2], $aAllResults[$i][3]]
-			SetDebugLog("Coordinate to Check: " & _ArrayToString($LastCoordinate))
-			If UBound($aAllResults) > 1 Then
-				For $j = 0 To UBound($aAllResults) - 1
-					If $j > UBound($aAllResults) - 1 Then ExitLoop
-					Local $SingleCoordinate[4] = [$aAllResults[$j][0], $aAllResults[$j][1], $aAllResults[$j][2], $aAllResults[$j][3]]
-					If $LastCoordinate[1] <> $SingleCoordinate[1] Or $LastCoordinate[2] <> $SingleCoordinate[2] Then
-						If Int($SingleCoordinate[1]) < Int($LastCoordinate[1]) + $Distance2check And Int($SingleCoordinate[1]) > Int($LastCoordinate[1]) - $Distance2check And _
-								Int($SingleCoordinate[2]) < Int($LastCoordinate[2]) + $Distance2check And Int($SingleCoordinate[2]) > Int($LastCoordinate[2]) - $Distance2check Then
-							_ArrayDelete($aAllResults, $j)
-						EndIf
-					Else
-						If $LastCoordinate[1] = $SingleCoordinate[1] And $LastCoordinate[2] = $SingleCoordinate[2] And $LastCoordinate[3] <> $SingleCoordinate[3] Then
-							_ArrayDelete($aAllResults, $j)
-						EndIf
-					EndIf
-				Next
-			EndIf
-		Next
-	EndIf
-	
-	Return $aAllResults
-
-
-EndFunc   ;==>BuilderBaseBuildingsDetection
-#CS
-Func _ImageSearchXMLBoludoz($XmlPath, $Quantity2Match = 1000, $sArea2Search = "0,0,860,644", $bForceArea = True, $DebugLog = False, $checkDuplicatedpoints = False, $Distance2check = 25, $iMaxLevel = 1000)
+Func _ImageSearchXMLBoludoz($sTilePath, $Quantity2Match = 0, $saiArea2SearchOri = 0, $bForceArea = True, $DebugLog = False, $checkDuplicatedpoints = False, $Distance2check = 25, $iLevel = 0)
 
 	;#cs - Disabled more fasther
 	;If Not IsInt($Quantity2Match) Then $Quantity2Match = 0
@@ -350,46 +249,29 @@ Func _ImageSearchXMLBoludoz($XmlPath, $Quantity2Match = 1000, $sArea2Search = "0
 	;If Not IsBool($bForceArea) Then $bForceArea = True
 	;If Not IsBool($DebugLog) Then $DebugLog = False
 	;#ce
-
-	Local $aScreen = StringSplit($sArea2Search, ",", 2)
 	
-	For $iArray = 0 To UBound($aScreen) - 1
-		$aScreen[$iArray] = Int($aScreen[$iArray])
-	Next
-
-	If $bForceArea Then _CaptureGameScreen($g_hHBitmap2, $aScreen[0], $aScreen[1], $aScreen[2], $aScreen[3])
-
-	Local $aRes = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $XmlPath, "str", "FV", "Int", $Quantity2Match, "str", $sArea2Search, "Int", 0, "Int", $iMaxLevel)
-	;If @error Then _logErrorDLLCall($g_sLibMyBotPath, @error)
-	;If Not IsArray($aRes) Then Return 0 Never return Int
-	If $aRes[0] = "" Or StringInStr($aRes[0], "-1") <> 0 Then Return ""
-
-	;#cs - Debug Disabled more fasther
-	;If $g_bDebugImageSave Then DebugImageSave("QuickMIS_" & $ValueReturned, False)
-	;If $DebugLog Then _ArrayDisplay($aRes)
-	;If $g_bDebugSetlog Then SetDebugLog("DLL Call succeeded " & $aRes[0], $COLOR_PURPLE)
-	;#ce
+	Local $sArea2Search = $saiArea2SearchOri
 	
-	Local $KeyValue = StringSplit($aRes[0], "|", $STR_NOCOUNT)
-	Local $Name = ""
-	Local $aPositions, $aCoords, $aCord, $level
-	SetDebugLog("Detected : " & UBound($KeyValue) & " tiles")
-	Local $aResults[UBound($KeyValue)][3]
-	For $i = 0 To UBound($KeyValue) - 1
-		$Name = RetrieveImglocProperty($KeyValue[$i], "objectname")
-		$aPositions = RetrieveImglocProperty($KeyValue[$i], "objectpoints")
-		$level = RetrieveImglocProperty($KeyValue[$i], "objectlevel")
-		SetDebugLog("Name: " & $Name)
-		$aCoords = decodeMultipleCoords($aPositions, 20, 0, 0) ; dedup coords by x on 50 pixel ;
-		SetDebugLog("How many $aCoords: " & UBound($aCoords))
-		$aResults[$i][0] = $Name
-		$aResults[$i][1] = $aCoords
-		$aResults[$i][2] = $level
-	Next
+	If IsInt($sArea2Search) and $sArea2Search = 0 Then 
+		Local $iTmpArea[4]
+		$iTmpArea[0] = 0
+		$iTmpArea[1] = 0
+		$iTmpArea[2] = $g_iGAME_WIDTH 
+		$iTmpArea[3] = $g_iGAME_HEIGHT
+		$sArea2Search = $iTmpArea
+	EndIf
+	
+	If Not IsString($sArea2Search) And IsArray($sArea2Search) And UBound($sArea2Search) = 4 Then 
+		$sArea2Search = _ArrayToString($sArea2Search, ",") ; Array Or String support
+	EndIf
+	Local $Screen = StringSplit($sArea2Search, ",", 2)
+		
+	_CaptureRegion2($Screen[0], $Screen[1], $Screen[2], $Screen[3])
 
+	Local $aResults = QuickMIS("NxCx", $sTilePath, $Screen[0], $Screen[1], $Screen[2], $Screen[3], True, False)
 	Local $aAllResults[0][4], $aCoordinates, $aCoord
 
-	;If $aResults = 0 Then Return -1
+	If $aResults = 0 Then Return -1
 
 	For $i = 0 To UBound($aResults) - 1
 		If Not $g_bRunState Then Return
@@ -398,54 +280,25 @@ Func _ImageSearchXMLBoludoz($XmlPath, $Quantity2Match = 1000, $sArea2Search = "0
 		For $j = 0 To UBound($aCoordinates) - 1
 			$aCoord = Null
 			$aCoord = $aCoordinates[$j]
-			SetDebugLog(" - " & $aResults[$i][0] & " at (" & $aCoord[0] + $aScreen[0] & "," & $aCoord[1] + $aScreen[1] & ")")
+			SetDebugLog(" - " & $aResults[$i][0] & " at (" & $aCoord[0] + $Screen[0] & "," & $aCoord[1] + $Screen[1] & ")")
 			ReDim $aAllResults[UBound($aAllResults) + 1][4]
 			$aAllResults[UBound($aAllResults) - 1][0] = $aResults[$i][0] ; NAME
-			$aAllResults[UBound($aAllResults) - 1][1] = $aCoord[0] + $aScreen[0] ; X axis
-			$aAllResults[UBound($aAllResults) - 1][2] = $aCoord[1] + $aScreen[1] ; Y axis
-			$aAllResults[UBound($aAllResults) - 1][3] = $aResults[$i][2] ; Level
+			$aAllResults[UBound($aAllResults) - 1][1] = Number($aCoord[0] + $Screen[0]) ; X axis
+			$aAllResults[UBound($aAllResults) - 1][2] = Number($aCoord[1] + $Screen[1]) ; Y axis
+			$aAllResults[UBound($aAllResults) - 1][3] = Number($aResults[$i][2]) ; Level
 		Next
-		;If $i = $Quantity2Match Then ExitLoop
 	Next
+
+	; Sort by X axis
+	_ArraySort($aAllResults, 0, 0, 0, 1)
 	
-	; USER LOG
-	For $i = 0 To UBound($aAllResults) - 1
-		If $DebugLog Then SetLog("Detected " & $aAllResults[$i][0] & " Level " & $aAllResults[$i][3] & " at (" & $aAllResults[$i][1] & "," & $aAllResults[$i][2] & ")", $COLOR_INFO)
-	Next
-
-	If ($g_bDebugImageSave Or $DebugLog) And UBound($aAllResults) < 50 Then ; Discard Deploy Points Touch much text on image
-		_CaptureRegion2()
-
-		Local $sSubDir = $g_sProfileTempDebugPath & "_ImageSearchXMLBoludoz"
-
-		DirCreate($sSubDir)
-
-		Local $sDate = @YEAR & "-" & @MON & "-" & @MDAY, $sTime = @HOUR & "." & @MIN & "." & @SEC
-		Local $sDebugImageName = String($sDate & "_" & $sTime & "_.png")
-		Local $hEditedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
-		Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($hEditedImage)
-		Local $hPenRED = _GDIPlus_PenCreate(0xFFFF0000, 3)
-
-		For $i = 0 To UBound($aAllResults) - 1
-			addInfoToDebugImage($hGraphic, $hPenRED, $aAllResults[$i][0] & "_" & $aAllResults[$i][3], $aAllResults[$i][1], $aAllResults[$i][2])
-		Next
-
-		_GDIPlus_ImageSaveToFile($hEditedImage, $sSubDir & "\" & $sDebugImageName)
-		_GDIPlus_PenDispose($hPenRED)
-		_GDIPlus_GraphicsDispose($hGraphic)
-		_GDIPlus_BitmapDispose($hEditedImage)
-	EndIf
-
-	If $checkDuplicatedpoints And UBound($aAllResults) > 0 Then
-		; Sort by X axis
-		_ArraySort($aAllResults, 0, 0, 0, 1)
-
+	If $checkDuplicatedpoints Then
 		; Distance in pixels to check if is a duplicated detection , for deploy point will be 5
 		Local $D2Check = $Distance2check
-
-		; check if is a double Detection
+		; check if is a double Detection, near in 10px
 		Local $Dime = 0
 		For $i = 0 To UBound($aAllResults) - 1
+			If Not $g_bRunState Then Return
 			If $i > UBound($aAllResults) - 1 Then ExitLoop
 			Local $LastCoordinate[4] = [$aAllResults[$i][0], $aAllResults[$i][1], $aAllResults[$i][2], $aAllResults[$i][3]]
 			SetDebugLog("Coordinate to Check: " & _ArrayToString($LastCoordinate))
@@ -467,16 +320,34 @@ Func _ImageSearchXMLBoludoz($XmlPath, $Quantity2Match = 1000, $sArea2Search = "0
 			EndIf
 		Next
 	EndIf
-	;_ArrayDisplay($aAllResults)
+	
 	If (UBound($aAllResults) > 0) Then
+		If $DebugLog = True Or $g_bDebugSetlog Then SetLog("_ImageSearchXMLBoludoz Return: " & _ArrayToString($aAllResults, "|", -1,-1,"#"), $COLOR_DEBUG)
 		Return $aAllResults
 	Else
+		If $DebugLog = True Or $g_bDebugSetlog Then SetLog("_ImageSearchXMLBoludoz Return: -1", $COLOR_ERROR)
 		Return -1
 	EndIf
 
+EndFunc   ;==>_ImageSearchXMLBoludoz
 
-EndFunc   ;==>BuilderBaseBuildingsDetection
-#CE
+; New Method using new Image detetion - ProMac
+Func _WaitForCheckXML($pathImage, $SearchZone, $ForceArea = True, $iWait = 10000, $iDelay = 250)
+	Local $Timer = __TimerInit()
+	Local $DebugWait4XMLImag = ($g_bDebugSetlog Or $g_bDebugImageSave) ? True : False
+	For $i = 0 To 600 ; if detection takes 100ms will be >60s + delay's
+		If __TimerDiff($Timer) > $iWait Then ExitLoop
+		Local $a_Array = _ImageSearchXMLBoludoz($pathImage, 1000, $SearchZone, $ForceArea, $DebugWait4XMLImag)
+		If $a_Array <> -1 And IsArray($a_Array) And UBound($a_Array) > 0 And $a_Array[0][0] <> "" Then
+			If $DebugWait4XMLImag Then SetDebugLog("_WaitForCheckXML found " & $a_Array[0][0] & " at (" & $a_Array[0][1] & "x" & $a_Array[0][2] & ")")
+			Return True
+		EndIf
+		If _Sleep($iDelay) Then ExitLoop
+	Next
+	If $DebugWait4XMLImag Then SetDebugLog("_WaitForCheckXML not found at " & $SearchZone, $COLOR_ERROR)
+	Return False
+EndFunc   ;==>_WaitForCheckXML
+
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: QuickMIS
 ; Description ...: A function to easily use ImgLoc, without headache :P !!!
@@ -861,3 +732,29 @@ Func _ImageSearchXMLBoludoz($XmlPath, $Quantity2Match = 0, $sArea2Search = "0,0,
 
 EndFunc   ;==>BuilderBaseBuildingsDetection
 #ce
+Func _ImageSearchXMLMyBotFunc($XmlPath, $Quantity2Match = 0, $sArea2Search = "0,0,"&$g_iGAME_WIDTH&","&$g_iGAME_HEIGHT, $bForceArea = True, $DebugLog = False, $checkDuplicatedpoints = False, $Distance2check = 25, $iLevel = 0)
+		Return _ImageSearchXMLBoludoz($XmlPath, $Quantity2Match, $sArea2Search, $bForceArea, $DebugLog, $checkDuplicatedpoints, $Distance2check, $iLevel)
+EndFunc   ;==>_ImageSearchXMLMyBot
+
+Func _ImageSearchBundlesMyBot($XmlPath, $Quantity2Match = 0, $sArea2Search = "0,0,"&$g_iGAME_WIDTH&","&$g_iGAME_HEIGHT, $bForceArea = True, $DebugLog = False, $checkDuplicatedpoints = False, $Distance2check = 25, $iLevel = 0)
+	If Not FileExists($XmlPath) Then
+		SetLog("Please verify the Bundle Path! File doesn't exist!", $COLOR_DEBUG)
+		Return -1
+	EndIf
+	
+	Return _ImageSearchXMLBoludoz($XmlPath, $Quantity2Match, $sArea2Search, $bForceArea, $DebugLog, $checkDuplicatedpoints, $Distance2check, $iLevel)
+EndFunc   ;==>_ImageSearchBundlesMyBot
+
+Func _DebugFailedImageDetection($Text)
+	If $g_bDebugImageSave Or $g_bDebugSetlog Then
+		_CaptureRegion2()
+		Local $sSubDir = $g_sProfileTempDebugPath & "NewImageDetectionFails"
+		DirCreate($sSubDir)
+		Local $sDate = @YEAR & "-" & @MON & "-" & @MDAY
+		Local $sTime = @HOUR & "." & @MIN & "." & @SEC
+		Local $sDebugImageName = String($sDate & "_" & $sTime & "__" & $Text & "_.png")
+		Local $hEditedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
+		_GDIPlus_ImageSaveToFile($hEditedImage, $sSubDir & "\" & $sDebugImageName)
+		_GDIPlus_BitmapDispose($hEditedImage)
+	EndIf
+EndFunc   ;==>_DebugFailedImageDetection

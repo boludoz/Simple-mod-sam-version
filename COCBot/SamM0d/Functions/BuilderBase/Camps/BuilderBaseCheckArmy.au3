@@ -178,8 +178,8 @@ Func DetectCamps(ByRef $b2Fill)
 		If $aResults[$i][0] = "QueuedCamp" Then
 			$aCampsCoordinates[UBound($aCampsCoordinates) - 1][0] = "Queued"
 		Else
-			SetDebugLog("[-] Color Check at (" & $aResults[$i][1] + 75 & "," & $aResults[$i][2] - 105 & "): " & _GetPixelColor($aResults[$i][1] + 75, $aResults[$i][2] - 105, False))
-			If _ColorCheck(_GetPixelColor($aResults[$i][1] + 75, $aResults[$i][2] - 105, False), Hex(0xccccc6, 6), 5) Then ; RC Done
+			SetDebugLog("[-] Color Check at (" & $aResults[$i][1] + 60 & "," & $aResults[$i][2] - 75 & "): " & _GetPixelColor($aResults[$i][1] + 60, $aResults[$i][2] - 75, False))
+			If _ColorCheck(_GetPixelColor($aResults[$i][1] + 60, $aResults[$i][2] - 75, False), Hex(0xCDCDC6, 6), 15) Then ; RC Done
 				$b2Fill += 1
 				$aCampsCoordinates[UBound($aCampsCoordinates) - 1][0] = "EmptyCamp"
 			EndIf

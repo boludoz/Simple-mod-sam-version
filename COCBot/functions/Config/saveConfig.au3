@@ -354,18 +354,27 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "minTreasurygold", $g_iTxtTreasuryGold)
 	_Ini_Add("other", "minTreasuryelixir", $g_iTxtTreasuryElixir)
 	_Ini_Add("other", "minTreasurydark", $g_iTxtTreasuryDark)
-
+	
+	; samm0d
 	_Ini_Add("other", "ChkCollectBuildersBase", $g_bChkCollectBuilderBase ? 1 : 0)
-	_Ini_Add("other", "ChkCleanBBYard", $g_bChkCleanBBYard ? 1 : 0)
 	_Ini_Add("other", "ChkStartClockTowerBoost", $g_bChkStartClockTowerBoost ? 1 : 0)
 	_Ini_Add("other", "ChkCTBoostBlderBz", $g_bChkCTBoostBlderBz ? 1 : 0)
+	_Ini_Add("other", "ChkCTBoostAtkAvailable", $g_bChkCTBoostAtkAvailable ? 1 : 0)
+	_Ini_Add("other", "chkCleanYardBB", $g_bChkCleanYardBB ? 1 : 0)
+	;
 	_Ini_Add("other", "ChkBBSuggestedUpgrades", $g_iChkBBSuggestedUpgrades)
 	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreGold", $g_iChkBBSuggestedUpgradesIgnoreGold)
 	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreElixir", $g_iChkBBSuggestedUpgradesIgnoreElixir)
 	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreHall", $g_iChkBBSuggestedUpgradesIgnoreHall)
 
+	_Ini_Add("other", "ChkUpgradeMachine", $g_bChkUpgradeMachine ? 1 : 0) ; samm0d
 	_Ini_Add("other", "ChkPlacingNewBuildings", $g_iChkPlacingNewBuildings)
-
+	
+	; samm0d
+	_Ini_Add("other", "ChkBBUpgradeWalls", $g_bChkBBUpgradeWalls ? 1 : 0)
+	_Ini_Add("other", "CmbBBWallLevel", $g_iCmbBBWallLevel)
+	_Ini_Add("other", "BBWallNumber", $g_iTxtBBWallNumber)
+	;
 	_Ini_Add("other", "ChkClanGamesAir", $g_bChkClanGamesAir ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesGround", $g_bChkClanGamesGround ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesMisc", $g_bChkClanGamesMisc ? 1 : 0)
@@ -384,6 +393,23 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "ChkClanGamesMiscellaneous", $g_bChkClanGamesMiscellaneous ? 1 : 0)
 	_Ini_Add("other", "PurgeMax", $g_iPurgeMax)
 
+
+	_Ini_Add("BuilderBase", "BuilderAttack", $g_bChkBuilderAttack ? 1 : 0)
+	_Ini_Add("BuilderBase", "BBStopAt3", $g_bChkBBStopAt3 ? 1 : 0)
+	_Ini_Add("BuilderBase", "BBTrophiesRange", $g_bChkBBTrophiesRange ? 1 : 0)
+	_Ini_Add("BuilderBase", "BBRandomAttack", $g_bChkBBRandomAttack ? 1 : 0)
+	For $i = 0 To 2
+		_Ini_Add("BuilderBase", "ScriptBB" & $i, $g_sAttackScrScriptNameBB[$i])
+	Next
+	_Ini_Add("BuilderBase", "BBDropTrophiesMin", $g_iTxtBBDropTrophiesMin)
+	_Ini_Add("BuilderBase", "BBDropTrophiesMax", $g_iTxtBBDropTrophiesMax)
+
+	_Ini_Add("BuilderBase", "BBArmy1", $g_iCmbBBArmy1)
+	_Ini_Add("BuilderBase", "BBArmy2", $g_iCmbBBArmy2)
+	_Ini_Add("BuilderBase", "BBArmy3", $g_iCmbBBArmy3)
+	_Ini_Add("BuilderBase", "BBArmy4", $g_iCmbBBArmy4)
+	_Ini_Add("BuilderBase", "BBArmy5", $g_iCmbBBArmy5)
+	_Ini_Add("BuilderBase", "BBArmy6", $g_iCmbBBArmy6)
 
 EndFunc   ;==>SaveConfig_600_6
 
@@ -1048,7 +1074,7 @@ EndFunc   ;==>SaveConfig_600_30_TS
 Func SaveConfig_600_31()
 	; <><><><> Attack Plan / Search & Attack / Deadbase / Collectors <><><><>
 	ApplyConfig_600_31(GetApplyConfigSaveAction())
-	For $i = 6 To 13
+	For $i = 6 To UBound($g_aiCollectorLevelFill) - 1
 		_Ini_Add("collectors", "lvl" & $i & "Enabled", $g_abCollectorLevelEnabled[$i] ? 1 : 0)
 		_Ini_Add("collectors", "lvl" & $i & "fill", $g_aiCollectorLevelFill[$i])
 	Next

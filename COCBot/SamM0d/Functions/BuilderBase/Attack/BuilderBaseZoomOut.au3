@@ -59,7 +59,7 @@ Func BuilderBaseZoomOut($DebugImage = False)
 				If IsNumber($Size) And $Size > 0 Then ExitLoop
 			Next
 			; Can't be precise each time we enter at Builder base was deteced a new Zoom Factor!! from 563-616
-			If $Size > 520 And $Size < 590 Then
+			If $Size > 520 And $Size < 640 Then
 				Return True
 			EndIf
 		Else

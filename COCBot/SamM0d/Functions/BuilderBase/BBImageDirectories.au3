@@ -12,18 +12,24 @@
 ; ===============================================================================================================================
 
 #Region Builder Base
-Global $g_sImgCollectRessourcesBB = @ScriptDir & "\imgxml\Resources\BuildersBase\Collect"
+Global $g_sImgCollectRessourcesBB = @ScriptDir & "\imgxml\Resources\BuildersBase\Collect\"
 Global $g_sImgBoatBB = @ScriptDir & "\imgxml\Boat\BoatBuilderBase_0_89.xml"
 Global $g_sImgZoomOutDirBB = @ScriptDir & "\imgxml\village\BuilderBase\"
 Global $g_sImgStartCTBoost = @ScriptDir & "\imgxml\Resources\BuildersBase\ClockTower\ClockTowerAvailable*.xml"
-Global $g_sImgCleanBBYard = @ScriptDir & "\imgxml\Resources\ObstaclesBB"
+;Global $g_sImgCleanBBYard = @ScriptDir & "\imgxml\Resources\ObstaclesBB"
 Global $g_sImgIsOnBB = @ScriptDir & "\imgxml\village\Page\BuilderBase*"
 Global $g_sImgStarLaboratory = @ScriptDir & "\imgxml\Resources\BuildersBase\StarLaboratory"
 Global $g_sImgStarLabElex = @ScriptDir & "\imgxml\Resources\BuildersBase\StarLabElex\StarLabElex*"
 #EndRegion
 
+#Region Clean Yard
+Global Const $g_sBundleCleanYardBB = @ScriptDir & "\imgxml\Resources\ObstaclesBB\"
+Global Const $g_aBundleCleanYardBBParms[3] = [0, "0,50,860,594", False] ; RC Done ; [0] Quantity2Match [1] Area2Search [2] ForceArea
+#EndRegion Clean Yard
+
+
 #Region Builder Base
-Global Const $g_sBundleCollectResourcesBB = @ScriptDir & "\imgxml\BuildersBase\Bundles\Collect\CollectResources\"
+;Global Const $g_sBundleCollectResourcesBB = @ScriptDir & "\imgxml\BuildersBase\Bundles\Collect\CollectResources\"
 
 Global Const $g_sImgZoomoutBoatBB = @ScriptDir & "\imgxml\BuildersBase\ZoomOut\"
 ;Global $g_sImgBoatBB = @ScriptDir & "\imgxml\Boat\BoatBuilderBase_0_89.xml"
@@ -100,11 +106,6 @@ Global Const $g_sImgTroopsUpgradeAvaiTroops = @ScriptDir & "\imgxml\BuildersBase
 Global Const $g_sImgTroopsUpgradeTroops = @ScriptDir & "\imgxml\BuildersBase\TroopsUpgrade\Troops"
 ;;;;;;;;;;;;;;;;;;;;;NOT USED DIR;;;;;;;;;;;;;;;;;;;;;
 #EndRegion Troops Upgrade Builder Base
-
-#Region Clean Yard
-Global Const $g_sBundleCleanYardBB = @ScriptDir & "\imgxml\BuildersBase\Bundles\Obstacles\"
-Global Const $g_aBundleCleanYardBBParms[3] = [0, "0,50,860,594", False] ; RC Done ; [0] Quantity2Match [1] Area2Search [2] ForceArea
-#EndRegion Clean Yard
 
 #Region Check Army Builder Base
 Global Const $aArmyTrainButtonBB[4] = [46, 572+ $g_iBottomOffsetYNew, 0xE5A439, 10] ; RC Done

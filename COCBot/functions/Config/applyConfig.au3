@@ -324,7 +324,20 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreGold, $g_iChkBBSuggestedUpgradesIgnoreGold = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreElixir, $g_iChkBBSuggestedUpgradesIgnoreElixir = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreHall, $g_iChkBBSuggestedUpgradesIgnoreHall = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			; samm0d
+			;GUICtrlSetState($g_hChkUpgradeTroops, $g_bChkUpgradeTroops ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkUpgradeMachine, $g_bChkUpgradeMachine ? $GUI_CHECKED : $GUI_UNCHECKED)
+			;ChkBBLab()
+            ;
+			;_GUICtrlComboBox_SetCurSel($g_hCmbBBLaboratory, $g_iCmbBBLaboratory)
+			;cmbBBLab()
 
+			GUICtrlSetState($g_hChkBBUpgradeWalls, $g_bChkBBUpgradeWalls ? $GUI_CHECKED : $GUI_UNCHECKED)
+			ChkBBWalls()
+			_GUICtrlComboBox_SetCurSel($g_hCmbBBWallLevel, $g_iCmbBBWallLevel)
+			cmbBBWall()
+			GUICtrlSetData($g_hTxtBBWallNumber, $g_iTxtBBWallNumber)
+			;
 			GUICtrlSetState($g_hChkPlacingNewBuildings, $g_iChkPlacingNewBuildings = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 
 			chkActivateBBSuggestedUpgrades()
@@ -350,7 +363,35 @@ Func ApplyConfig_600_6($TypeReadSave)
 
 			chkActivateClangames()
 			chkPurgeLimits()
-
+			; samm0d
+			GUICtrlSetState($g_hChkBuilderAttack, $g_bChkBuilderAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkBBStopAt3, $g_bChkBBStopAt3 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkBBTrophiesRange, $g_bChkBBTrophiesRange ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkBBRandomAttack, $g_bChkBBRandomAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
+			ChkBBRandomAttack()
+			chkBuilderAttack()
+			PopulateComboScriptsFilesBB()
+			For $i = 0 To 2
+				Local $tempindex = _GUICtrlComboBox_FindStringExact($g_hCmbBBAttackStyle[$i], $g_sAttackScrScriptNameBB[$i])
+				If $tempindex = -1 Then
+					$tempindex = 0
+					SetLog("Previous saved BB Scripted Attack not found (deleted, renamed?)", $COLOR_ERROR)
+					SetLog("Automatically setted a default script, please check your config", $COLOR_ERROR)
+				EndIf
+				_GUICtrlComboBox_SetCurSel($g_hCmbBBAttackStyle[$i], $tempindex)
+			Next
+			cmbScriptNameBB()
+			GUICtrlSetData($g_hTxtBBDropTrophiesMin, $g_iTxtBBDropTrophiesMin)
+			GUICtrlSetData($g_hTxtBBDropTrophiesMax, $g_iTxtBBDropTrophiesMax)
+			chkBBtrophiesRange()
+			_GUICtrlComboBox_SetCurSel($g_hCmbBBArmy1, $g_iCmbBBArmy1)
+			_GUICtrlComboBox_SetCurSel($g_hCmbBBArmy2, $g_iCmbBBArmy2)
+			_GUICtrlComboBox_SetCurSel($g_hCmbBBArmy3, $g_iCmbBBArmy3)
+			_GUICtrlComboBox_SetCurSel($g_hCmbBBArmy4, $g_iCmbBBArmy4)
+			_GUICtrlComboBox_SetCurSel($g_hCmbBBArmy5, $g_iCmbBBArmy5)
+			_GUICtrlComboBox_SetCurSel($g_hCmbBBArmy6, $g_iCmbBBArmy6)
+			chkBBArmyCamp()
+			;
 		Case "Save"
 			$g_bChkBotStop = (GUICtrlRead($g_hChkBotStop) = $GUI_CHECKED)
 			$g_iCmbBotCommand = _GUICtrlComboBox_GetCurSel($g_hCmbBotCommand)
@@ -375,14 +416,25 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_iTxtTreasuryDark = GUICtrlRead($g_hTxtTreasuryDark)
 
 			$g_bChkCollectBuilderBase = (GUICtrlRead($g_hChkCollectBuilderBase) = $GUI_CHECKED)
-			$g_bChkCleanBBYard = (GUICtrlRead($g_hChkCleanBBYard) = $GUI_CHECKED)
+			; $g_bChkCleanBBYard = (GUICtrlRead($g_hChkCleanBBYard) = $GUI_CHECKED) ; samm0d
 			$g_bChkStartClockTowerBoost = (GUICtrlRead($g_hChkStartClockTowerBoost) = $GUI_CHECKED)
-			$g_bChkCTBoostBlderBz = (GUICtrlRead($g_hChkCTBoostBlderBz) = $GUI_CHECKED)
+			$g_bChkCTBoostBlderBz = (GUICtrlRead($g_hChkCTBoostBlderBz) = $GUI_CHECKED) ; samm0d
+			$g_bChkCTBoostAtkAvailable = (GUICtrlRead($g_hChkCTBoostAtkAvailable) = $GUI_CHECKED) ; samm0d
+			$g_bChkCleanYardBB = (GUICtrlRead($g_hChkCleanYardBB) = $GUI_CHECKED)
 			$g_iChkBBSuggestedUpgrades = (GUICtrlRead($g_hChkBBSuggestedUpgrades) = $GUI_CHECKED) ? 1 : 0
 			$g_iChkBBSuggestedUpgradesIgnoreGold = (GUICtrlRead($g_hChkBBSuggestedUpgradesIgnoreGold) = $GUI_CHECKED) ? 1 : 0
 			$g_iChkBBSuggestedUpgradesIgnoreElixir = (GUICtrlRead($g_hChkBBSuggestedUpgradesIgnoreElixir) = $GUI_CHECKED) ? 1 : 0
 			$g_iChkBBSuggestedUpgradesIgnoreHall = (GUICtrlRead($g_hChkBBSuggestedUpgradesIgnoreHall) = $GUI_CHECKED) ? 1 : 0
+			 ; samm0d
+			;$g_bChkUpgradeTroops = (GUICtrlRead($g_hChkUpgradeTroops) = $GUI_CHECKED)
+			$g_bChkUpgradeMachine = (GUICtrlRead($g_hChkUpgradeMachine) = $GUI_CHECKED)
 
+			;$g_iCmbBBLaboratory = _GUICtrlComboBox_GetCurSel($g_hCmbBBLaboratory)
+
+			$g_bChkBBUpgradeWalls = (GUICtrlRead($g_hChkBBUpgradeWalls) = $GUI_CHECKED)
+			$g_iCmbBBWallLevel = _GUICtrlComboBox_GetCurSel($g_hCmbBBWallLevel)
+			$g_iTxtBBWallNumber = Int(GUICtrlRead($g_hTxtBBWallNumber))
+			;
 			$g_iChkPlacingNewBuildings = (GUICtrlRead($g_hChkPlacingNewBuildings) = $GUI_CHECKED) ? 1 : 0
 
 			$g_bChkClanGamesAir = (GUICtrlRead($g_hChkClanGamesAir) = $GUI_CHECKED) ? 1 : 0
@@ -400,7 +452,31 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bChkClanGamesGroundTroop = (GUICtrlRead($g_hChkClanGamesGroundTroop) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGamesMiscellaneous = (GUICtrlRead($g_hChkClanGamesMiscellaneous) = $GUI_CHECKED) ? 1 : 0
 			$g_iPurgeMax = _GUICtrlComboBox_GetCurSel($g_hcmbPurgeLimit)
-	EndSwitch
+			
+			; samm0d
+			$g_bChkBuilderAttack = (GUICtrlRead($g_hChkBuilderAttack) = $GUI_CHECKED) ? 1 : 0
+			$g_bChkBBStopAt3 = (GUICtrlRead($g_hChkBBStopAt3) = $GUI_CHECKED) ? 1 : 0
+			$g_bChkBBTrophiesRange = (GUICtrlRead($g_hChkBBTrophiesRange) = $GUI_CHECKED) ? 1 : 0
+			$g_bChkBBRandomAttack = (GUICtrlRead($g_hChkBBRandomAttack) = $GUI_CHECKED) ? 1 : 0
+
+			For $i = 0 To 2
+				Local $indexofscript = _GUICtrlComboBox_GetCurSel($g_hCmbBBAttackStyle[$i])
+				Local $scriptname
+				_GUICtrlComboBox_GetLBText($g_hCmbBBAttackStyle[$i], $indexofscript, $scriptname)
+				$g_sAttackScrScriptNameBB[$i] = $scriptname
+				IniWriteS($g_sProfileConfigPath, "BuilderBase", "ScriptBB" & $i, $g_sAttackScrScriptNameBB[$i])
+			Next
+
+			$g_iTxtBBDropTrophiesMin = Int(GUICtrlRead($g_hTxtBBDropTrophiesMin))
+			$g_iTxtBBDropTrophiesMax = Int(GUICtrlRead($g_hTxtBBDropTrophiesMax))
+			$g_iCmbBBArmy1 = _GUICtrlComboBox_GetCurSel($g_hCmbBBArmy1)
+			$g_iCmbBBArmy2 = _GUICtrlComboBox_GetCurSel($g_hCmbBBArmy2)
+			$g_iCmbBBArmy3 = _GUICtrlComboBox_GetCurSel($g_hCmbBBArmy3)
+			$g_iCmbBBArmy4 = _GUICtrlComboBox_GetCurSel($g_hCmbBBArmy4)
+			$g_iCmbBBArmy5 = _GUICtrlComboBox_GetCurSel($g_hCmbBBArmy5)
+			$g_iCmbBBArmy6 = _GUICtrlComboBox_GetCurSel($g_hCmbBBArmy6)
+			;
+			EndSwitch
 EndFunc   ;==>ApplyConfig_600_6
 
 Func ApplyConfig_600_9($TypeReadSave)
@@ -1925,9 +2001,9 @@ Func ApplyConfig_600_31($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Deadbase / Collectors <><><><>
 	Switch $TypeReadSave
 		Case "Read"
-			For $i = 6 To 13
+			For $i = 6 To UBound($g_abCollectorLevelEnabled) - 1
 				GUICtrlSetState($g_ahChkDBCollectorLevel[$i], $g_abCollectorLevelEnabled[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
-                GUICtrlSetState($g_ahCmbDBCollectorLevel[$i], $g_abCollectorLevelEnabled[$i] ? $GUI_ENABLE : $GUI_DISABLE)
+				GUICtrlSetState($g_ahCmbDBCollectorLevel[$i], $g_abCollectorLevelEnabled[$i] ? $GUI_ENABLE : $GUI_DISABLE)
 				_GUICtrlComboBox_SetCurSel($g_ahCmbDBCollectorLevel[$i], $g_aiCollectorLevelFill[$i])
 			Next
 			GUICtrlSetState($g_hChkDBDisableCollectorsFilter, $g_bCollectorFilterDisable ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -1935,7 +2011,7 @@ Func ApplyConfig_600_31($TypeReadSave)
 			GUICtrlSetData($g_hSldCollectorTolerance, $g_iCollectorToleranceOffset)
 			checkCollectors()
 		Case "Save"
-			For $i = 6 To 13
+			For $i = 6 To UBound($g_abCollectorLevelEnabled) - 1
 				$g_abCollectorLevelEnabled[$i] = (GUICtrlRead($g_ahChkDBCollectorLevel[$i]) = $GUI_CHECKED)
 				$g_aiCollectorLevelFill[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbDBCollectorLevel[$i])
 			Next

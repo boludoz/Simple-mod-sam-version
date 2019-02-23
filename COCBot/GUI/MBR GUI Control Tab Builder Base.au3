@@ -117,174 +117,174 @@ Func chkBBStyle()
 	cmbScriptNameBB()
 EndFunc   ;==>chkBBStyle
 
-;Func PopulateComboScriptsFilesBB($spacficIndex = "-999") ;Define Impoisble Default Index
-;	Dim $FileSearch, $NewFile
-;	$FileSearch = FileFindFirstFile($g_sCSVBBAttacksPath & "\*.csv")
-;	Dim $output = ""
-;	While True
-;		$NewFile = FileFindNextFile($FileSearch)
-;		If @error Then ExitLoop
-;		$output = $output & StringLeft($NewFile, StringLen($NewFile) - 4) & "|"
-;	WEnd
-;	FileClose($FileSearch)
-;	;remove last |
-;	$output = StringLeft($output, StringLen($output) - 1)
-;	If $spacficIndex = "-999" Then
-;		;set 3 combo boxes
-;		For $i = 0 To 2
-;			;reset combo box
-;			_GUICtrlComboBox_ResetContent($g_hCmbBBAttackStyle[$i])
-;			GUICtrlSetData($g_hCmbBBAttackStyle[$i], $output)
-;			_GUICtrlComboBox_SetCurSel($g_hCmbBBAttackStyle[$i], _GUICtrlComboBox_FindStringExact($g_hCmbBBAttackStyle[$i], ""))
-;			GUICtrlSetData($g_hLblNotesScriptBB[$i], "")
-;		Next
-;	Else
-;		;reset combo box For Spacfic Index We Need This Logic For Reload Button
-;		_GUICtrlComboBox_ResetContent($g_hCmbBBAttackStyle[$spacficIndex])
-;		GUICtrlSetData($g_hCmbBBAttackStyle[$spacficIndex], $output)
-;		_GUICtrlComboBox_SetCurSel($g_hCmbBBAttackStyle[$spacficIndex], _GUICtrlComboBox_FindStringExact($g_hCmbBBAttackStyle[$spacficIndex], ""))
-;		GUICtrlSetData($g_hLblNotesScriptBB[$spacficIndex], "")
-;	EndIf
-;EndFunc   ;==>PopulateComboScriptsFilesBB
+Func PopulateComboScriptsFilesBB($spacficIndex = "-999") ;Define Impoisble Default Index
+	Dim $FileSearch, $NewFile
+	$FileSearch = FileFindFirstFile($g_sCSVBBAttacksPath & "\*.csv")
+	Dim $output = ""
+	While True
+		$NewFile = FileFindNextFile($FileSearch)
+		If @error Then ExitLoop
+		$output = $output & StringLeft($NewFile, StringLen($NewFile) - 4) & "|"
+	WEnd
+	FileClose($FileSearch)
+	;remove last |
+	$output = StringLeft($output, StringLen($output) - 1)
+	If $spacficIndex = "-999" Then
+		;set 3 combo boxes
+		For $i = 0 To 2
+			;reset combo box
+			_GUICtrlComboBox_ResetContent($g_hCmbBBAttackStyle[$i])
+			GUICtrlSetData($g_hCmbBBAttackStyle[$i], $output)
+			_GUICtrlComboBox_SetCurSel($g_hCmbBBAttackStyle[$i], _GUICtrlComboBox_FindStringExact($g_hCmbBBAttackStyle[$i], ""))
+			GUICtrlSetData($g_hLblNotesScriptBB[$i], "")
+		Next
+	Else
+		;reset combo box For Spacfic Index We Need This Logic For Reload Button
+		_GUICtrlComboBox_ResetContent($g_hCmbBBAttackStyle[$spacficIndex])
+		GUICtrlSetData($g_hCmbBBAttackStyle[$spacficIndex], $output)
+		_GUICtrlComboBox_SetCurSel($g_hCmbBBAttackStyle[$spacficIndex], _GUICtrlComboBox_FindStringExact($g_hCmbBBAttackStyle[$spacficIndex], ""))
+		GUICtrlSetData($g_hLblNotesScriptBB[$spacficIndex], "")
+	EndIf
+EndFunc   ;==>PopulateComboScriptsFilesBB
 
-;Func cmbScriptNameBB()
-;	For $i = 0 To 2
-;		Local $tempvect1 = _GUICtrlComboBox_GetListArray($g_hCmbBBAttackStyle[$i])
-;		Local $filename = $tempvect1[_GUICtrlComboBox_GetCurSel($g_hCmbBBAttackStyle[$i]) + 1]
-;		Local $f, $result = ""
-;		Local $tempvect, $line, $t
-;
-;		If FileExists($g_sCSVBBAttacksPath & "\" & $filename & ".csv") Then
-;			$f = FileOpen($g_sCSVBBAttacksPath & "\" & $filename & ".csv", 0)
-;			; Read in lines of text until the EOF is reached
-;			While 1
-;				$line = FileReadLine($f)
-;				If @error = -1 Then ExitLoop
-;				$tempvect = StringSplit($line, "|", 2)
-;				If UBound($tempvect) >= 2 Then
-;					If StringStripWS(StringUpper($tempvect[0]), 2) = "NOTE" Then $result &= $tempvect[1] & @CRLF
-;				EndIf
-;			WEnd
-;			FileClose($f)
-;		EndIf
-;		GUICtrlSetData($g_hLblNotesScriptBB[$i], $result)
-;	Next
-;EndFunc   ;==>cmbScriptNameBB
-;
-;Func UpdateComboScriptNameBB()
-;	For $i = 0 To 2
-;		Local $indexofscript = _GUICtrlComboBox_GetCurSel($g_hCmbBBAttackStyle[$i])
-;		Local $scriptname
-;		_GUICtrlComboBox_GetLBText($g_hCmbBBAttackStyle[$i], $indexofscript, $scriptname)
-;		PopulateComboScriptsFilesBB($i)
-;		_GUICtrlComboBox_SetCurSel($g_hCmbBBAttackStyle[$i], _GUICtrlComboBox_FindStringExact($g_hCmbBBAttackStyle[$i], $scriptname))
-;	Next
-;	cmbScriptNameBB()
-;EndFunc   ;==>UpdateComboScriptNameBB
-;
-;Func EditScriptBB()
-;	Local $tempvect1 = _GUICtrlComboBox_GetListArray($g_hCmbBBAttackStyle[0])
-;	Local $filename = $tempvect1[_GUICtrlComboBox_GetCurSel($g_hCmbBBAttackStyle[0]) + 1]
-;	Local $f, $result = ""
-;	Local $tempvect, $line, $t
-;	If FileExists($g_sCSVBBAttacksPath & "\" & $filename & ".csv") Then
-;		ShellExecute("notepad.exe", $g_sCSVBBAttacksPath & "\" & $filename & ".csv")
-;	EndIf
-;EndFunc   ;==>EditScriptBB
-;
-;Func NewScriptBB()
-;	Local $filenameScript = InputBox(GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_Create", -1), GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_New_0", -1) & ":")
-;	If StringLen($filenameScript) > 0 Then
-;		If FileExists($g_sCSVBBAttacksPath & "\" & $filenameScript & ".csv") Then
-;			MsgBox("", "", GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_File-exists", -1))
-;		Else
-;			Local $hFileOpen = FileOpen($g_sCSVBBAttacksPath & "\" & $filenameScript & ".csv", $FO_APPEND)
-;			If $hFileOpen = -1 Then
-;				MsgBox($MB_SYSTEMMODAL, "", GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_Error", -1))
-;				Return False
-;			Else
-;				FileClose($hFileOpen)
-;				$g_sAttackScrScriptNameBB[0] = $filenameScript
-;				UpdateComboScriptNameBB()
-;			EndIf
-;		EndIf
-;	EndIf
-;EndFunc   ;==>NewScriptBB
-;
-;Func DuplicateScriptBB()
-;	Local $indexofscript = _GUICtrlComboBox_GetCurSel($g_hCmbBBAttackStyle[0])
-;	Local $scriptname
-;	_GUICtrlComboBox_GetLBText($g_hCmbBBAttackStyle[0], $indexofscript, $scriptname)
-;	$g_sAttackScrScriptNameBB[0] = $scriptname
-;	Local $filenameScript = InputBox(GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_Copy_0", -1), GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_Copy_1", -1) & ": <" & $g_sAttackScrScriptNameBB[0] & ">" & @CRLF & GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_New_1", -1) & ":")
-;	If StringLen($filenameScript) > 0 Then
-;		If FileExists($g_sCSVBBAttacksPath & "\" & $filenameScript & ".csv") Then
-;			MsgBox("", "", GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_File-exists", -1))
-;		Else
-;			Local $hFileOpen = FileCopy($g_sCSVBBAttacksPath & "\" & $g_sAttackScrScriptNameBB[0] & ".csv", $g_sCSVBBAttacksPath & "\" & $filenameScript & ".csv")
-;
-;			If $hFileOpen = -1 Then
-;				MsgBox($MB_SYSTEMMODAL, "", GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_Error", -1))
-;				Return False
-;			Else
-;				FileClose($hFileOpen)
-;				$g_sAttackScrScriptNameBB[0] = $filenameScript
-;				UpdateComboScriptNameBB()
-;			EndIf
-;		EndIf
-;	EndIf
-;EndFunc   ;==>DuplicateScriptBB
-;
-;Func ChkBBRandomAttack()
-;	If GUICtrlRead($g_hChkBBRandomAttack) = $GUI_CHECKED Then
-;		GUICtrlSetState($g_hCmbBBAttackStyle[1], $GUI_SHOW)
-;		GUICtrlSetState($g_hCmbBBAttackStyle[2], $GUI_SHOW)
-;		GUICtrlSetState($g_hLblNotesScriptBB[1], $GUI_SHOW)
-;		GUICtrlSetState($g_hLblNotesScriptBB[2], $GUI_SHOW)
-;		GUICtrlSetState($g_hGrpGuideScriptBB[1], $GUI_SHOW)
-;		GUICtrlSetState($g_hGrpGuideScriptBB[2], $GUI_SHOW)
-;
-;		GUICtrlSetPos($g_hGrpOptionsBB, -1, -1, $g_iSizeWGrpTab2 - 2, 45)
-;		GUICtrlSetPos($g_hChkBBTrophiesRange, 100, 105)
-;		GUICtrlSetPos($g_hTxtBBDropTrophiesMin, 203, 105)
-;		GUICtrlSetPos($g_hLblBBDropTrophiesDash, 245, 105 + 2)
-;		GUICtrlSetPos($g_hTxtBBDropTrophiesMax, 250, 105)
-;		GUICtrlSetPos($g_hChkBBRandomAttack, 300, 105)
-;
-;		WinMove($g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV, "", 0, 140, $g_iSizeWGrpTab2 - 2)
-;		GUICtrlSetPos($g_hGrpAttackStyleBB, -1, -1, $g_iSizeWGrpTab2 - 12, $g_iSizeHGrpTab4 - 90)
-;		GUICtrlSetState($g_hGrpGuideScriptBB[0], $GUI_SHOW)
-;		GUICtrlSetPos($g_hCmbBBAttackStyle[0], -1, 35, 130)
-;		GUICtrlSetPos($g_hLblNotesScriptBB[0], -1, 60, 130, 180)
-;		For $i = 0 To UBound($g_hIcnBBCSV) - 1
-;			GUICtrlSetPos($g_hIcnBBCSV[$i], 416)
-;		Next
-;		$g_bChkBBRandomAttack = True
-;	Else
-;		GUICtrlSetState($g_hCmbBBAttackStyle[1], $GUI_HIDE)
-;		GUICtrlSetState($g_hCmbBBAttackStyle[2], $GUI_HIDE)
-;		GUICtrlSetState($g_hLblNotesScriptBB[1], $GUI_HIDE)
-;		GUICtrlSetState($g_hLblNotesScriptBB[2], $GUI_HIDE)
-;		GUICtrlSetState($g_hGrpGuideScriptBB[1], $GUI_HIDE)
-;		GUICtrlSetState($g_hGrpGuideScriptBB[2], $GUI_HIDE)
-;
-;
-;		GUICtrlSetPos($g_hGrpOptionsBB, -1, -1, 200, 90)
-;		GUICtrlSetPos($g_hChkBBTrophiesRange, 5, 125)
-;		GUICtrlSetPos($g_hTxtBBDropTrophiesMin, 108, 126)
-;		GUICtrlSetPos($g_hLblBBDropTrophiesDash, 150, 126 + 2)
-;		GUICtrlSetPos($g_hTxtBBDropTrophiesMax, 155, 126)
-;		GUICtrlSetPos($g_hChkBBRandomAttack, 5, 145)
-;
-;		WinMove($g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV, "", 200, 85, 240)
-;		GUICtrlSetPos($g_hGrpAttackStyleBB, -1, -1, 233, $g_iSizeHGrpTab4 - 35)
-;		GUICtrlSetState($g_hGrpGuideScriptBB[0], $GUI_HIDE)
-;		GUICtrlSetPos($g_hCmbBBAttackStyle[0], -1, 25, 195)
-;		GUICtrlSetPos($g_hLblNotesScriptBB[0], -1, 50, 195, 160)
-;		For $i = 0 To UBound($g_hIcnBBCSV) - 1
-;			GUICtrlSetPos($g_hIcnBBCSV[$i], 215)
-;		Next
-;		$g_bChkBBRandomAttack = False
-;	EndIf
-;
-;EndFunc   ;==>ChkBBRandomAttack
+Func cmbScriptNameBB()
+	For $i = 0 To 2
+		Local $tempvect1 = _GUICtrlComboBox_GetListArray($g_hCmbBBAttackStyle[$i])
+		Local $filename = $tempvect1[_GUICtrlComboBox_GetCurSel($g_hCmbBBAttackStyle[$i]) + 1]
+		Local $f, $result = ""
+		Local $tempvect, $line, $t
+
+		If FileExists($g_sCSVBBAttacksPath & "\" & $filename & ".csv") Then
+			$f = FileOpen($g_sCSVBBAttacksPath & "\" & $filename & ".csv", 0)
+			; Read in lines of text until the EOF is reached
+			While 1
+				$line = FileReadLine($f)
+				If @error = -1 Then ExitLoop
+				$tempvect = StringSplit($line, "|", 2)
+				If UBound($tempvect) >= 2 Then
+					If StringStripWS(StringUpper($tempvect[0]), 2) = "NOTE" Then $result &= $tempvect[1] & @CRLF
+				EndIf
+			WEnd
+			FileClose($f)
+		EndIf
+		GUICtrlSetData($g_hLblNotesScriptBB[$i], $result)
+	Next
+EndFunc   ;==>cmbScriptNameBB
+
+Func UpdateComboScriptNameBB()
+	For $i = 0 To 2
+		Local $indexofscript = _GUICtrlComboBox_GetCurSel($g_hCmbBBAttackStyle[$i])
+		Local $scriptname
+		_GUICtrlComboBox_GetLBText($g_hCmbBBAttackStyle[$i], $indexofscript, $scriptname)
+		PopulateComboScriptsFilesBB($i)
+		_GUICtrlComboBox_SetCurSel($g_hCmbBBAttackStyle[$i], _GUICtrlComboBox_FindStringExact($g_hCmbBBAttackStyle[$i], $scriptname))
+	Next
+	cmbScriptNameBB()
+EndFunc   ;==>UpdateComboScriptNameBB
+
+Func EditScriptBB()
+	Local $tempvect1 = _GUICtrlComboBox_GetListArray($g_hCmbBBAttackStyle[0])
+	Local $filename = $tempvect1[_GUICtrlComboBox_GetCurSel($g_hCmbBBAttackStyle[0]) + 1]
+	Local $f, $result = ""
+	Local $tempvect, $line, $t
+	If FileExists($g_sCSVBBAttacksPath & "\" & $filename & ".csv") Then
+		ShellExecute("notepad.exe", $g_sCSVBBAttacksPath & "\" & $filename & ".csv")
+	EndIf
+EndFunc   ;==>EditScriptBB
+
+Func NewScriptBB()
+	Local $filenameScript = InputBox(GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_Create", -1), GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_New_0", -1) & ":")
+	If StringLen($filenameScript) > 0 Then
+		If FileExists($g_sCSVBBAttacksPath & "\" & $filenameScript & ".csv") Then
+			MsgBox("", "", GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_File-exists", -1))
+		Else
+			Local $hFileOpen = FileOpen($g_sCSVBBAttacksPath & "\" & $filenameScript & ".csv", $FO_APPEND)
+			If $hFileOpen = -1 Then
+				MsgBox($MB_SYSTEMMODAL, "", GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_Error", -1))
+				Return False
+			Else
+				FileClose($hFileOpen)
+				$g_sAttackScrScriptNameBB[0] = $filenameScript
+				UpdateComboScriptNameBB()
+			EndIf
+		EndIf
+	EndIf
+EndFunc   ;==>NewScriptBB
+
+Func DuplicateScriptBB()
+	Local $indexofscript = _GUICtrlComboBox_GetCurSel($g_hCmbBBAttackStyle[0])
+	Local $scriptname
+	_GUICtrlComboBox_GetLBText($g_hCmbBBAttackStyle[0], $indexofscript, $scriptname)
+	$g_sAttackScrScriptNameBB[0] = $scriptname
+	Local $filenameScript = InputBox(GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_Copy_0", -1), GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_Copy_1", -1) & ": <" & $g_sAttackScrScriptNameBB[0] & ">" & @CRLF & GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_New_1", -1) & ":")
+	If StringLen($filenameScript) > 0 Then
+		If FileExists($g_sCSVBBAttacksPath & "\" & $filenameScript & ".csv") Then
+			MsgBox("", "", GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_File-exists", -1))
+		Else
+			Local $hFileOpen = FileCopy($g_sCSVBBAttacksPath & "\" & $g_sAttackScrScriptNameBB[0] & ".csv", $g_sCSVBBAttacksPath & "\" & $filenameScript & ".csv")
+
+			If $hFileOpen = -1 Then
+				MsgBox($MB_SYSTEMMODAL, "", GetTranslatedFileIni("MBR Popups", "Func_AttackCSVAssignDefaultScriptName_Error", -1))
+				Return False
+			Else
+				FileClose($hFileOpen)
+				$g_sAttackScrScriptNameBB[0] = $filenameScript
+				UpdateComboScriptNameBB()
+			EndIf
+		EndIf
+	EndIf
+EndFunc   ;==>DuplicateScriptBB
+
+Func ChkBBRandomAttack()
+	If GUICtrlRead($g_hChkBBRandomAttack) = $GUI_CHECKED Then
+		GUICtrlSetState($g_hCmbBBAttackStyle[1], $GUI_SHOW)
+		GUICtrlSetState($g_hCmbBBAttackStyle[2], $GUI_SHOW)
+		GUICtrlSetState($g_hLblNotesScriptBB[1], $GUI_SHOW)
+		GUICtrlSetState($g_hLblNotesScriptBB[2], $GUI_SHOW)
+		GUICtrlSetState($g_hGrpGuideScriptBB[1], $GUI_SHOW)
+		GUICtrlSetState($g_hGrpGuideScriptBB[2], $GUI_SHOW)
+
+		GUICtrlSetPos($g_hGrpOptionsBB, -1, -1, $g_iSizeWGrpTab2 - 2, 45)
+		GUICtrlSetPos($g_hChkBBTrophiesRange, 100, 105)
+		GUICtrlSetPos($g_hTxtBBDropTrophiesMin, 203, 105)
+		GUICtrlSetPos($g_hLblBBDropTrophiesDash, 245, 105 + 2)
+		GUICtrlSetPos($g_hTxtBBDropTrophiesMax, 250, 105)
+		GUICtrlSetPos($g_hChkBBRandomAttack, 300, 105)
+
+		WinMove($g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV, "", 0, 140, $g_iSizeWGrpTab2 - 2)
+		GUICtrlSetPos($g_hGrpAttackStyleBB, -1, -1, $g_iSizeWGrpTab2 - 12, $g_iSizeHGrpTab4 - 90)
+		GUICtrlSetState($g_hGrpGuideScriptBB[0], $GUI_SHOW)
+		GUICtrlSetPos($g_hCmbBBAttackStyle[0], -1, 35, 130)
+		GUICtrlSetPos($g_hLblNotesScriptBB[0], -1, 60, 130, 180)
+		For $i = 0 To UBound($g_hIcnBBCSV) - 1
+			GUICtrlSetPos($g_hIcnBBCSV[$i], 416)
+		Next
+		$g_bChkBBRandomAttack = True
+	Else
+		GUICtrlSetState($g_hCmbBBAttackStyle[1], $GUI_HIDE)
+		GUICtrlSetState($g_hCmbBBAttackStyle[2], $GUI_HIDE)
+		GUICtrlSetState($g_hLblNotesScriptBB[1], $GUI_HIDE)
+		GUICtrlSetState($g_hLblNotesScriptBB[2], $GUI_HIDE)
+		GUICtrlSetState($g_hGrpGuideScriptBB[1], $GUI_HIDE)
+		GUICtrlSetState($g_hGrpGuideScriptBB[2], $GUI_HIDE)
+
+
+		GUICtrlSetPos($g_hGrpOptionsBB, -1, -1, 200, 90)
+		GUICtrlSetPos($g_hChkBBTrophiesRange, 5, 125)
+		GUICtrlSetPos($g_hTxtBBDropTrophiesMin, 108, 126)
+		GUICtrlSetPos($g_hLblBBDropTrophiesDash, 150, 126 + 2)
+		GUICtrlSetPos($g_hTxtBBDropTrophiesMax, 155, 126)
+		GUICtrlSetPos($g_hChkBBRandomAttack, 5, 145)
+
+		WinMove($g_hGUI_ATTACK_PLAN_BUILDER_BASE_CSV, "", 200, 85, 240)
+		GUICtrlSetPos($g_hGrpAttackStyleBB, -1, -1, 233, $g_iSizeHGrpTab4 - 35)
+		GUICtrlSetState($g_hGrpGuideScriptBB[0], $GUI_HIDE)
+		GUICtrlSetPos($g_hCmbBBAttackStyle[0], -1, 25, 195)
+		GUICtrlSetPos($g_hLblNotesScriptBB[0], -1, 50, 195, 160)
+		For $i = 0 To UBound($g_hIcnBBCSV) - 1
+			GUICtrlSetPos($g_hIcnBBCSV[$i], 215)
+		Next
+		$g_bChkBBRandomAttack = False
+	EndIf
+
+EndFunc   ;==>ChkBBRandomAttack

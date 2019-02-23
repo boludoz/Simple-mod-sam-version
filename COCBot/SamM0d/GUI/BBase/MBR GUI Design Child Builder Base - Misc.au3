@@ -5,8 +5,8 @@
 ; Parameters ....: None
 ; Return values .: None
 ; Author ........: Fahid.Mahmood (2018)
-; Remarks .......: This file is part of MultiBot, previously known as Mybot and ClashGameBot. Copyright 2015-2018
-;                  MultiBot is distributed under the terms of the GNU GPL
+; Remarks .......: This file is part of MyBot, previously known as Mybot and ClashGameBot. Copyright 2015-2018
+;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........:
 ; Example .......: No
@@ -15,38 +15,9 @@
 Global $g_alblBldBaseStats[4] = ["", "", ""]
 Global $g_hChkCollectBuilderBase = 0, $g_hChkStartClockTowerBoost = 0, $g_hChkCTBoostBlderBz = 0, $g_hChkCTBoostAtkAvailable = 0
 Global $g_hChkCollectBldGE = 0, $g_hChkCollectBldGems = 0, $g_hChkActivateClockTower = 0, $g_hChkCleanYardBB = 0
-Global $g_hBtnBBAtkLogClear = 0,$g_hBtnBBAtkLogCopyClipboard = 0
-
+Global $g_hBtnBBAtkLogClear = 0,$g_hBtnBBAtkLogCopyClipboard=0
 Func CreateMiscBuilderBaseSubTab()
 	Local $x = 15, $y = 45
-	
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "Group_02", "Builders Base Stats"), $x - 10, $y - 20, $g_iSizeWGrpTab2, 120)
-		$y += 5
-		_GUICtrlCreateIcon($g_sLibBBIconPath, $eIcnBBGold, $x , $y, 16, 16)
-		$g_alblBldBaseStats[$eLootGoldBB] = GUICtrlCreateLabel("---", $x + 35, $y + 2, 100, -1)
-			GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
-		$y += 30
-		_GUICtrlCreateIcon($g_sLibBBIconPath, $eIcnBBElixir, $x , $y, 16, 16)
-		$g_alblBldBaseStats[$eLootElixirBB] = GUICtrlCreateLabel("---", $x + 35 , $y + 2, 100, -1)
-			GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
-		$y += 30
-		_GUICtrlCreateIcon($g_sLibBBIconPath, $eIcnBBTrophies, $x , $y, 16, 16)
-		$g_alblBldBaseStats[$eLootTrophyBB] = GUICtrlCreateLabel("---", $x + 35 , $y + 2, 100, -1)
-			GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
-
-		;$y += 160
-        ;
-		;$g_hBtnBBAtkLogClear = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "BtnBBAtkLogClear", "Clear Atk. Log"), $x + 245, $y - 1, 80, 23)
-		;	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "BtnBBAtkLogClear_Info_01", "Use this to clear the Attack Log."))
-		;	GUICtrlSetOnEvent(-1, "btnBBAtkLogClear")
-        ;
-		;$g_hBtnBBAtkLogCopyClipboard = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "BtnBBAtkLogCopyClipboard", "Copy to Clipboard"), $x + 325, $y - 1, 100, 23)
-		;	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "BtnBBAtkLogCopyClipboard_Info_01", "Use this to copy the Attack Log to the Clipboard (CTRL+C)"))
-		;	GUICtrlSetOnEvent(-1, "btnBBAtkLogCopyClipboard")
-
-	GUICtrlCreateGroup("", -99, -99, 1, 1)
-
-	$y += 57
 
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "Group_01", "Collect && Activate"), $x - 10, $y - 20, $g_iSizeWGrpTab2, 125)
 		GUICtrlCreateIcon($g_sLibIconPath, $eIcnGoldMineL5, $x + 7, $y - 5, 24, 24)
@@ -76,6 +47,34 @@ Func CreateMiscBuilderBaseSubTab()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "ChkCleanYardBB_Info_01", "Check this to automatically clear Yard from Trees, Trunks etc. from Builder base."))
 			GUICtrlSetOnEvent(-1, "chkCleanYardBB")
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
+
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+
+	$y += 57
+
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "Group_02", "Builders Base Stats"), $x - 10, $y - 20, $g_iSizeWGrpTab2, 275)
+		$y += 5
+		_GUICtrlCreateIcon($g_sLibBBIconPath, $eIcnBBGold, $x , $y, 16, 16)
+		$g_alblBldBaseStats[$eLootGoldBB] = GUICtrlCreateLabel("---", $x + 35, $y + 2, 100, -1)
+			GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
+		$y += 30
+		_GUICtrlCreateIcon($g_sLibBBIconPath, $eIcnBBElixir, $x , $y, 16, 16)
+		$g_alblBldBaseStats[$eLootElixirBB] = GUICtrlCreateLabel("---", $x + 35 , $y + 2, 100, -1)
+			GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
+		$y += 30
+		_GUICtrlCreateIcon($g_sLibBBIconPath, $eIcnBBTrophies, $x , $y, 16, 16)
+		$g_alblBldBaseStats[$eLootTrophyBB] = GUICtrlCreateLabel("---", $x + 35 , $y + 2, 100, -1)
+			GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
+		
+		$y += 160
+
+		$g_hBtnBBAtkLogClear = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "BtnBBAtkLogClear", "Clear Atk. Log"), $x + 245, $y - 1, 80, 23)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "BtnBBAtkLogClear_Info_01", "Use this to clear the Attack Log."))
+			GUICtrlSetOnEvent(-1, "btnBBAtkLogClear")
+
+		$g_hBtnBBAtkLogCopyClipboard = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "BtnBBAtkLogCopyClipboard", "Copy to Clipboard"), $x + 325, $y - 1, 100, 23)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "BtnBBAtkLogCopyClipboard_Info_01", "Use this to copy the Attack Log to the Clipboard (CTRL+C)"))
+			GUICtrlSetOnEvent(-1, "btnBBAtkLogCopyClipboard")
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 

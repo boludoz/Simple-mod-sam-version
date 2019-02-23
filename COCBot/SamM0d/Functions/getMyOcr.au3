@@ -88,7 +88,7 @@ Func getMyOcr($hHOCRBitmap, $x, $y, $width, $height, $OCRType, $bReturnAsNumber 
 		_ArraySort($aLastResult, 0, 0, 0, 1) ; rearrange order by coor X
 		If $g_iSamM0dDebugOCR = 1 Then
 			For $i = 0 To UBound($aLastResult) - 1
-				SetLog("Afrer _ArraySort - Obj:" & $aLastResult[$i][0] & " Coor:" & $aLastResult[$i][1] & "," & $aLastResult[$i][2] & " Width:" & $aLastResult[$i][3], $COLOR_DEBUG)
+				SetDebugLog("Afrer _ArraySort - Obj:" & $aLastResult[$i][0] & " Coor:" & $aLastResult[$i][1] & "," & $aLastResult[$i][2] & " Width:" & $aLastResult[$i][3])
 			Next
 		EndIf
 		$iMax = UBound($aLastResult) - 1
@@ -115,7 +115,7 @@ Func getMyOcr($hHOCRBitmap, $x, $y, $width, $height, $OCRType, $bReturnAsNumber 
 	EndIf
 
 	If $g_iSamM0dDebugOCR = 1 Or ($sReturn = "" And $tempOCRType <> "ccrequest") Then
-		SetLog("getMyOcr $sReturn: " & $sReturn, $COLOR_DEBUG)
+		SetDebugLog("getMyOcr $sReturn: " & $sReturn)
 		_debugSaveHBitmapToImage($hHOCRBitmap, "getMyOcr_" & $OCRType & "_" & $sReturn & "_", True, True)
 	EndIf
 

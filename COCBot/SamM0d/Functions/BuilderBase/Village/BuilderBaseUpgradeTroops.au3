@@ -193,7 +193,7 @@ Func BuilderBaseCheckMachine(ByRef $aMachineStatus, $Test = 0)
 			$aMachineStatus[$g_iCurAccount][1] = $aResult[2] <> "Broken" ? Number($aResult[2]) : 0
 			If $Test > 0 Then Setlog("Machine Level: " & $aMachineStatus[$g_iCurAccount][1])
 		Else
-			_DebugFailedImageDetection("Machine")
+			 _DebugFailedImageDetection("Machine")
 			$aMachineStatus[$g_iCurAccount][1] = 0
 		EndIf
 	EndIf
@@ -240,11 +240,11 @@ Func BuilderBaseUpgradeMachine($Test = 0)
 		Local $MachinePosition = _ImageSearchXMLBoludoz($g_sXMLTroopsUpgradeMachine, $g_aXMLToForceBuilderBaseParms[0], $g_aXMLToForceBuilderBaseParms[1], $g_aXMLToForceBuilderBaseParms[2], $Test)
 		If IsArray($MachinePosition) And UBound($MachinePosition) > 0 Then
 			SetDebugLog("Machine Found: " & _ArrayToString($MachinePosition))
-			Click($MachinePosition[0][1], $MachinePosition[0][2], 1, 0, "#901")
+			Click($MachinePosition[0][1], $MachinePosition[0][2], 1, 0, "#9010")
 			If _Sleep(2000) Then Return
 			If GetUpgradeButton("Elixir", $Test) Then Return True
 		Else
-			_DebugFailedImageDetection("UpgradeMachine")
+			 _DebugFailedImageDetection("UpgradeMachine")
 		EndIf
 	EndIf
 	Return False

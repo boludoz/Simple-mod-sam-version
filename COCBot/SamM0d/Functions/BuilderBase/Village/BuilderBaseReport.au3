@@ -64,17 +64,17 @@ Func BuilderBaseStats()
 	; $g_hLblBBResultTrophyNow
 	; $g_hLblBBResultBuilderNow
 
-	GUICtrlSetData($g_hLblBBResultGoldNow, _NumberFormat($g_aiCurrentLootBB[$eLootGoldBB], True))
-	GUICtrlSetData($g_hLblBBResultElixirNow, _NumberFormat($g_aiCurrentLootBB[$eLootElixirBB], True))
-	GUICtrlSetData($g_hLblBBResultTrophyNow, _NumberFormat($g_aiCurrentLootBB[$eLootTrophyBB], True))
-	GUICtrlSetData($g_hLblBBResultBuilderNow, $g_iFreeBuilderCountBB & "/" & $g_iTotalBuilderCountBB)
+	;GUICtrlSetData($g_hLblBBResultGoldNow, _NumberFormat($g_aiCurrentLootBB[$eLootGoldBB], True))
+	;GUICtrlSetData($g_hLblBBResultElixirNow, _NumberFormat($g_aiCurrentLootBB[$eLootElixirBB], True))
+	;GUICtrlSetData($g_hLblBBResultTrophyNow, _NumberFormat($g_aiCurrentLootBB[$eLootTrophyBB], True))
+	;GUICtrlSetData($g_hLblBBResultBuilderNow, $g_iFreeBuilderCountBB & "/" & $g_iTotalBuilderCountBB)
 
 EndFunc   ;==>BuilderBaseStats
 
 Func BuilderBaseResetStats()
-	GUICtrlSetData($g_hLblBBResultGoldNow, "")
-	GUICtrlSetData($g_hLblBBResultElixirNow, "")
-	GUICtrlSetData($g_hLblBBResultTrophyNow, "")
-	GUICtrlSetData($g_hLblBBResultBuilderNow, "")
+	;GUICtrlSetData($g_hLblBBResultGoldNow, "")
+	;GUICtrlSetData($g_hLblBBResultElixirNow, "")
+	;GUICtrlSetData($g_hLblBBResultTrophyNow, "")
+	;GUICtrlSetData($g_hLblBBResultBuilderNow, "")
 EndFunc   ;==>BuilderBaseResetStats
 

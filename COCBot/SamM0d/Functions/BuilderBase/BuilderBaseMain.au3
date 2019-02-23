@@ -30,13 +30,15 @@ Func runBuilderBase($Test = False)
 
 	; Check IF is Necessary run the Builder Base IDLE loop
 
-	If Not $g_bChkBuilderAttack And Not $g_bChkCollectBuilderBase And Not $g_bChkStartClockTowerBoost And Not $g_iChkBBSuggestedUpgrades And Not $g_bChkCleanYardBB Then
-		If $g_bChkPlayBBOnly Then
+	If Not $g_bChkBuilderAttack And Not $g_bChkCollectBuilderBase And Not $g_bChkStartClockTowerBoost And Not $g_iChkBBSuggestedUpgrades And Not $g_bChkCleanBBYard Then
+	#cs
+	If $g_bChkPlayBBOnly Then
 			SetLog("Play Only Builder Base Check Is On But BB Option's(Collect,Attack etc) Unchecked", $COLOR_ERROR)
 			SetLog("Please Check BB Options From Builder Base Tab", $COLOR_INFO)
 			$g_bRunState = False ;Stop The Bot
 			btnStop()
 		EndIf
+	#ce
 		Return
 	EndIf
 
@@ -50,7 +52,7 @@ Func runBuilderBase($Test = False)
 	; If checkObstacles() Then SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
 
 	; Collect resources
-	If ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart Or $g_bChkPlayBBOnly) And $g_bChkFarmVersion = False Then CollectBuilderBase()
+	If ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Then CollectBuilderBase()
 	If $g_bRestart = True Then Return
 
 	; Builder base Report - Get The number of available attacks
@@ -59,7 +61,7 @@ Func runBuilderBase($Test = False)
 
 	; Upgrade Troops
 	If $g_bRestart = True Then Return
-	If ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart Or $g_bChkPlayBBOnly) And $g_bChkFarmVersion = False Then BuilderBaseUpgradeTroops()
+	If ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Then BuilderBaseUpgradeTroops()
 	Local $boosted = False
 	; Fill/check Army Camps only If is necessary attack
 	If $g_bRestart = True Then Return
@@ -106,7 +108,7 @@ Func runBuilderBase($Test = False)
 
 		; Auto Upgrade just when you don't need more defenses to win battles
 		If $g_bRestart = True Then Return
-		If ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart Or $g_bChkPlayBBOnly) And $g_bChkFarmVersion = False And $g_iAvailableAttacksBB = 0 Then SuggestedUpgradeBuildings()
+		If ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) And $g_iAvailableAttacksBB = 0 Then SuggestedUpgradeBuildings()
 
 		If Not $boosted Then ExitLoop
 		If $boosted Then
@@ -119,10 +121,10 @@ Func runBuilderBase($Test = False)
 		BuilderBaseReport()
 	Next
 
-	If Not $g_bChkPlayBBOnly Then
+;	If Not $g_bChkPlayBBOnly Then
 		; switch back to normal village
 		If isOnBuilderBase() Then SwitchBetweenBases()
-	EndIf
+;	EndIf
 
 	_Sleep($DELAYRUNBOT3)
 
@@ -130,7 +132,7 @@ Func runBuilderBase($Test = False)
 
 	If ProfileSwitchAccountEnabled() Then Return
 
-	If $g_bChkPlayBBOnly Then _Sleep($DELAYRUNBOT1 * 15) ;Add 15 Sec Delay Before Starting Again In BB Only
+;	If $g_bChkPlayBBOnly Then _Sleep($DELAYRUNBOT1 * 15) ;Add 15 Sec Delay Before Starting Again In BB Only
 EndFunc   ;==>runBuilderBase
 
 
@@ -145,7 +147,7 @@ Func NewImageDetection()
 	Local $AllResults[0][3]
 	Local $hStarttime = _Timer_Init()
 
-	Local $a_Array = _ImageSearchBundlesMyBot($g_sBundleCollectResourcesBB, $g_aXMLToForceAreaParms[0], $g_aXMLToForceAreaParms[1], $g_aXMLToForceAreaParms[2], $g_bDebugBBattack)
+	Local $a_Array = _ImageSearchXMLBoludoz($g_sImgCollectRessourcesBB, $g_aXMLToForceAreaParms[0], $g_aXMLToForceAreaParms[1], $g_aXMLToForceAreaParms[2], $g_bDebugBBattack)
 
 	; Example to PNG
 	;

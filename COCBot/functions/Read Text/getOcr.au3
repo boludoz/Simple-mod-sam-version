@@ -11,7 +11,7 @@
 ; ===============================================================================================================================
 
 
-Func getNameBuilding($x_start, $y_start) ; getNameBuilding(242,520) -> Gets complete name and level of the buildings, bottom of screen
+Func getNameBuilding($x_start, $y_start) ; getNameBuilding(242,492) -> Gets complete name and level of the buildings, bottom of screen
 	Return getOcrAndCapture("coc-build", $x_start, $y_start, 377, 27)
 EndFunc   ;==>getNameBuilding
 
@@ -25,7 +25,7 @@ EndFunc   ;==>getRemainTrainTimer
 
 Func getRemainBuildTimer($x_start, $y_start, $bNeedCapture = True) ;
 	Return getOcrAndCapture("coc-siegeremain", $x_start, $y_start, 50, 10, True, False, $bNeedCapture)
-EndFunc   ;==>getRemainTrainTimer
+EndFunc   ;==>getRemainBuildTimer
 
 Func getElixirVillageSearch($x_start, $y_start) ;48, 69+29 -> Gets complete value of Elixir xxx,xxx, top left,  Getresources.au3
 	Return getOcrAndCapture("coc-v-e", $x_start, $y_start, 90, 16, True)
@@ -72,34 +72,30 @@ Func getResourcesLootT($x_start, $y_start) ; -> Gets complete value of Trophies 
 EndFunc   ;==>getResourcesLootT
 
 Func getResourcesBonus($x_start, $y_start) ; -> Gets complete value of Gold/Elixir bonus loot in "AttackReport.au3"
-	Return getOcrAndCapture("coc-bonus", $x_start, $y_start, 98, 20, True)
+	Return getOcrAndCapture("coc-bonus", $x_start, $y_start, 98, 16, True)
 EndFunc   ;==>getResourcesBonus
 
 Func getResourcesBonusPerc($x_start, $y_start) ; -> Gets complete value of Bonus % in "AttackReport.au3"
 	Return getOcrAndCapture("coc-bonus", $x_start, $y_start, 48, 16, True)
 EndFunc   ;==>getResourcesBonusPerc
 
-Func getLabUpgrdResourceWht($x_start, $y_start) ; -> Gets complete value of Elixir/DE on the troop buttons, xxx,xxx for "laboratory.au3" and "starlaboratory.au3" when white text
-	Return getOcrAndCapture("coc-lab-w", $x_start, $y_start, 70, 14, True)
+Func getLabUpgrdResourceWht($x_start, $y_start) ; -> Gets complete value of Elixir/DE on the troop buttons, xxx,xxx for "laboratory.au3" when white text
+	Return getOcrAndCapture("coc-lab-w", $x_start, $y_start, 90, 14, True)
 EndFunc   ;==>getLabUpgrdResourceWht
 
 Func getLabUpgrdResourceRed($x_start, $y_start) ; -> Gets complete value of Elixir/DE on the troop buttons,  xxx,xxx for "laboratory.au3" when red text
-	Return getOcrAndCapture("coc-lab-r", $x_start, $y_start, 70, 14, True)
+	Return getOcrAndCapture("coc-lab-r", $x_start, $y_start, 90, 14, True)
 EndFunc   ;==>getLabUpgrdResourceRed
 
-Func getStarLabUpgrdResourceRed($x_start, $y_start) ; -> Gets complete value of Elixir on the troop buttons,  xxx,xxx for "starlaboratory.au3" when red text
-    Return getOcrAndCapture("coc-starlab-r", $x_start, $y_start, 70, 14, True)
-EndFunc   ;==>getLabUpgrdResourceRed
-
-Func getBldgUpgradeTime($x_start, $y_start) ; -> Gets complete remain building upgrade time
-	Return getOcrAndCapture("coc-uptime", $x_start, $y_start, 42, 18) ; 42 is enougth xxx : 2 numbers and one letter at max
+Func getBldgUpgradeTime($x_start, $y_start) ; -> Gets complete remain building upgrade time for Dec2018 update
+	Return getOcrAndCapture("coc-uptime", $x_start, $y_start, 68, 18) ; 68 is required to days & hours
 EndFunc   ;==>getBldgUpgradeTime
 
-Func getLabUpgradeTime($x_start, $y_start) ; -> Gets complete remain lab upgrade time V2 for Dec2015 update
-	Return getOcrAndCapture("coc-uptime2", $x_start, $y_start, 68, 22) ; 40 is enougth xxx : 2 numbers and one letter at max
+Func getLabUpgradeTime($x_start, $y_start) ; -> Gets complete remain lab upgrade time V3 for Dec2018 update
+	Return getOcrAndCapture("coc-uptime2", $x_start, $y_start, 68, 22) ; 68 is required to days & hours
 EndFunc   ;==>getLabUpgradeTime
 
-Func getHeroUpgradeTime($x_start, $y_start) ; -> Gets complete upgrade time for heroes 464, 527 + $g_iMidOffsetY
+Func getHeroUpgradeTime($x_start, $y_start) ; -> Gets complete upgrade time for heroes 578, 450
 	Return getOcrAndCapture("coc-uptime2", $x_start, $y_start, 68, 20) ; 68 is required to days & hours for young hero
 EndFunc   ;==>getHeroUpgradeTime
 
@@ -119,8 +115,8 @@ Func getTroopCountSmall($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Ge
 	Return getOcrAndCapture("coc-t-s", $x_start, $y_start, 53, 16, True, Default, $bNeedNewCapture)
 EndFunc   ;==>getTroopCountSmall
 
-Func getTroopCountBig($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for selected troop kind
-	Return getOcrAndCapture("coc-t-b", $x_start, $y_start, 53, 17, True, Default, $bNeedNewCapture)
+Func getTroopCountBig($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for selected troop kind V2 for Dec2018 update
+	Return getOcrAndCapture("coc-t-b", $x_start, $y_start, 53, 18, True, Default, $bNeedNewCapture)
 EndFunc   ;==>getTroopCountBig
 
 Func getTroopsSpellsLevel($x_start, $y_start) ;  -> Gets spell level on Attack Screen for selected spell kind (could be used for troops too)
@@ -139,7 +135,7 @@ Func getBarracksTroopQuantity($x_start, $y_start) ;  -> Gets quantity of troops 
 	Return getOcrAndCapture("coc-train", $x_start, $y_start, 52, 16, True)
 EndFunc   ;==>getBarracksTroopQuantity
 
-Func getAttackDisable($x_start, $y_start) ;  -> 346, 182 - Gets red text disabled for early warning of Personal Break
+Func getAttackDisable($x_start, $y_start) ;  ->(180,156) Or (346,156)  - Gets red text disabled for early warning of Personal Break
 	Return getOcrAndCapture("coc-dis", $x_start, $y_start, 118, 24, True)
 EndFunc   ;==>getAttackDisable
 
@@ -208,7 +204,6 @@ EndFunc   ;==>getRemainTHero
 Func getRequestRemainTime($x_start, $y_start, $bNeedCapture = True) ; Get Remain Time To request Troops
 	Return getOcrAndCapture("coc-CCremainTime", $x_start, $y_start, 30, 14, False, False, $bNeedCapture)
 EndFunc   ;==>getRequestRemainTime
-
 Func getCloudTextShort($x_start, $y_start, $sLogText = Default, $LogTextColor = Default, $bSilentSetLog = Default)
 	; Get 3 characters of yellow text in center of attack search window during extended cloud waiting (388,378)
 	; Full text length is 316 pixels, some is covered by chat window when open
@@ -235,9 +230,8 @@ Func getBarracksNewTroopQuantity($x_start, $y_start, $bNeedCapture = True) ;  ->
 	Return getOcrAndCapture("coc-newarmy", $x_start, $y_start, 45, 18, True, False, $bNeedCapture)
 EndFunc   ;==>getBarracksNewTroopQuantity
 
-
-Func getArmyCapacityOnTrainTroops($x_start, $y_start)
-        Return _getArmyCapacityOnTrainTroops($x_start, $y_start)
+Func getArmyCapacityOnTrainTroops($x_start, $y_start) ;  -> Gets quantity of troops in army Window
+	Return getOcrAndCapture("coc-NewCapacity", $x_start, $y_start, 67, 14, True)
 EndFunc   ;==>getArmyCapacityOnTrainTroops
 
 Func getQueueTroopsQuantity($x_start, $y_start) ;  -> Gets quantity of troops in Queue in Train Tab
@@ -307,18 +301,16 @@ Func getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpa
 	If $removeSpace = Default Then $removeSpace = False
 	If $bImgLoc = Default Then $bImgLoc = False
 	If $bForceCaptureRegion = Default Then $bForceCaptureRegion = $g_bOcrForceCaptureRegion
-    Static $_hHBitmap = 0
-    If $bForceCaptureRegion = True Then
-        _CaptureRegion2($x_start, $y_start, $x_start + $width, $y_start + $height)
-        ; samm0d
-        If $g_iSamM0dDebugOCR = 1 Then _debugSaveHBitmapToImage($g_hHBitmap2, $language, True, True)
-    Else
-        $_hHBitmap = GetHHBitmapArea($g_hHBitmap2, $x_start, $y_start, $x_start + $width, $y_start + $height)
-        ; samm0d
-        If $g_iSamM0dDebugOCR = 1 Then _debugSaveHBitmapToImage($_hHBitmap, $language, True, True)
-    EndIf
-    Local $result
-    If $bImgLoc Then
+	Static $_hHBitmap = 0
+	If $bForceCaptureRegion = True Then
+		_CaptureRegion2($x_start, $y_start, $x_start + $width, $y_start + $height)
+	Else
+		;This commented line with '$g_hHBitmapTest' is just for debug purpose when want to test OCR with dir image it can be commented out ;)
+		;$_hHBitmap = GetHHBitmapArea($g_hHBitmapTest, $x_start, $y_start, $x_start + $width, $y_start + $height)
+		$_hHBitmap = GetHHBitmapArea($g_hHBitmap2, $x_start, $y_start, $x_start + $width, $y_start + $height)
+	EndIf
+	Local $result
+	If $bImgLoc Then
 		If $_hHBitmap <> 0 Then
 			$result = getOcrImgLoc($_hHBitmap, $language)
 		Else
@@ -370,3 +362,78 @@ Func getOcrImgLoc(ByRef Const $_hHBitmap, $sLanguage)
 		Return ""
 	EndIf
 EndFunc   ;==>getOcrImgLoc
+
+
+;######################### MyBotRun #########################
+; $sBundleName = string = bundle's Name [just bundle´s name]
+; $Area2Search =  string = "Xaxis, Yaxis , Width , Height"
+; $DebugOCR = boolean = True ,False
+;######################### MyBotRun #########################
+
+;Func getNewOCR($sBundleName, $Area2Search, $DebugOCR = False)
+;
+;	Local $path = @ScriptDir & "\imgxml\BuildersBase\Bundles\OCR\" & $sBundleName
+;
+;	; JUST IN CASE
+;	If StringInStr($path, ".DocBundle") = 0 Then
+;		SetLog("Please verify the Bundle Path!", $COLOR_DEBUG)
+;		Return
+;	EndIf
+;	If Not FileExists($path) Then
+;		SetLog("Please verify the Bundle Path! File doesn't exist!", $COLOR_DEBUG)
+;		Return
+;	EndIf
+;
+;	Local $result = DllCallMyBot("MyBotOCR", "handle", $g_hHBitmap2, "str", $path, "str", $Area2Search, "bool", $DebugOCR)
+;	If @error Then _logErrorDLLCall($g_sLibMyBotPath, @error)
+;	If IsArray($result) Then
+;		Switch $result[0]
+;			Case "-3|DEAD"
+;				SetLog("-- Please visit MyBot.run --", $COLOR_DEBUG)
+;			Case "-2"
+;				SetLog("-- Security Failed --", $COLOR_DEBUG)
+;			Case "-1"
+;				SetLog("-- Empty Bundle --", $COLOR_DEBUG)
+;			Case "0"
+;				SetLog("-- No Detection --", $COLOR_DEBUG)
+;			Case Else
+;				Return 1
+;		EndSwitch
+;	EndIf
+;	Return 1
+;EndFunc   ;==>getNewOCR
+
+Func _getTroopCountBig($x_start, $y_start, $DebugOCR = False)
+_CaptureRegion2($x_start, $y_start, $x_start + 53, $y_start + 17)
+Return getTroopCountBig($x_start, $y_start)
+	;Local $Area2Search = ""
+	;Local $return = getNewOCR("getTroopCountBig.DocBundle", $Area2Search, $DebugOCR)
+	;If $DebugOCR Or $g_bDebugOcr Or $g_bDebugBBattack Then
+	;	Local $editedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
+	;	Local $libpath = @ScriptDir & "\lib\debug\ocr\"
+	;	Local $time = @YEAR & @MON & @MDAY & @HOUR & @MIN & @SEC & @MSEC
+	;	Local $filename = "ocr_" & $time & " _getTroopCountBig"
+	;	_GDIPlus_ImageSaveToFile($editedImage, $libpath & $filename & ".png")
+	;	FileWrite($libpath & $filename & ".txt", $return)
+	;	_GDIPlus_BitmapDispose($editedImage)
+	;EndIf
+	;Return $return
+EndFunc   ;==>_getTroopCountBig
+
+Func _getTroopCountSmall($x_start, $y_start, $DebugOCR = False)
+	_CaptureRegion2($x_start, $y_start, $x_start + 53, $y_start + 16)
+	Return getTroopCountSmall($x_start, $y_start)
+	;Local $Area2Search = ""
+	;Local $return = getNewOCR("getTroopCountSmall.DocBundle", $Area2Search, $DebugOCR)
+	;If $DebugOCR Or $g_bDebugOcr Or $g_bDebugBBattack Then
+	;	Local $editedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
+	;	Local $libpath = @ScriptDir & "\lib\debug\ocr\"
+	;	Local $time = @YEAR & @MON & @MDAY & @HOUR & @MIN & @SEC & @MSEC
+	;	Local $filename = "ocr_" & $time & " _getTroopCountSmall"
+	;	_GDIPlus_ImageSaveToFile($editedImage, $libpath & $filename & ".png")
+	;	FileWrite($libpath & $filename & ".txt", $return)
+	;	_GDIPlus_BitmapDispose($editedImage)
+	;EndIf
+	;Return $return
+EndFunc   ;==>_getTroopCountSmall
+

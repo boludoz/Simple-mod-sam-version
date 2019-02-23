@@ -891,5 +891,3 @@ Func BuilderBaseBuildingsOnEdge($g_aDeployPoints)
 	Return UBound($ToReturn) > 0 ? $ToReturn : "-1"
 
 EndFunc   ;==>BuilderBaseBuildingsOnEdge
-
-

@@ -44,29 +44,25 @@ Func getShieldInfo()
 			If $g_bDebugSetlog Then SetDebugLog("Guard Active", $COLOR_DEBUG)
 		Case Else
 			SetLog("Sorry, Monkey needs more bananas to read shield type", $COLOR_ERROR) ; Check for pixel colors errors!
-            SetError(1, "Bad shield pixel read")
-            ; samm0d
-            $g_bRestart = True
+			SetError(1, "Bad shield pixel read")
 			Return
 	EndSelect
 
 	$sTimeResult = getOcrGuardShield(484, 21) ; read Shield time
 	If $g_bDebugSetlog Then SetDebugLog("OCR Shield Time= " & $sTimeResult, $COLOR_DEBUG)
 	If $sTimeResult = "" Then ; try a 2nd time after a short delay if slow PC and null read
-		If _Sleep($DELAYPERSONALSHIELD2) Then Return $aPBReturnResult ; pause for slow PC
+		If _Sleep($DELAYPERSONALSHIELD2) Then Return ; pause for slow PC
 		$sTimeResult = getOcrGuardShield(484, 21) ; read Shield time
 		If $g_bDebugSetlog Then SetDebugLog("OCR2 Shield Time= " & $sTimeResult, $COLOR_DEBUG)
 		If $sTimeResult = "" Then ; error if no read value
 			$aPBReturnResult[1] = '00:00:00'
 			SetLog("strange error, no shield value found?", $COLOR_ERROR)
-            SetError(2, "Bad time value OCR")
-            ; samm0d
-            $g_bRestart = True
+			SetError(2, "Bad time value OCR")
 			Return $aPBReturnResult ; return zero value
 		EndIf
 	EndIf
 
-	If _Sleep($DELAYPERSONALSHIELD3) Then Return $aPBReturnResult ; improve pause/stop button response
+	If _Sleep($DELAYPERSONALSHIELD3) Then Return ; improve pause/stop button response
 
 	$aString = StringSplit($sTimeResult, " ") ; split hours/minutes or minutes/seconds
 	Switch $aString[0]

@@ -444,3 +444,26 @@ Func chkUpgradesToIgnore()
 		$g_iChkUpgradesToIgnore[$i] = GUICtrlRead($g_hChkUpgradesToIgnore[$i]) = $GUI_CHECKED ? 1 : 0
 	Next
 EndFunc   ;==>chkUpgradesToIgnore
+;samm0d
+Func ChkBBWalls()
+	If GUICtrlRead($g_hChkBBUpgradeWalls) = $GUI_CHECKED Then
+		$g_bChkBBUpgradeWalls = True
+		GUICtrlSetState($g_hLblBBWallLevelInfo, $GUI_ENABLE)
+		GUICtrlSetState($g_hCmbBBWallLevel, $GUI_ENABLE)
+		GUICtrlSetState($g_hPicBBWallUpgrade, $GUI_SHOW)
+		GUICtrlSetState($g_hTxtBBWallNumber, $GUI_SHOW)
+		GUICtrlSetState($g_hLblBBWallNumberInfo, $GUI_SHOW)
+	Else
+		$g_bChkBBUpgradeWalls = False
+		GUICtrlSetState($g_hLblBBWallLevelInfo, $GUI_DISABLE)
+		GUICtrlSetState($g_hCmbBBWallLevel, $GUI_DISABLE)
+		GUICtrlSetState($g_hPicBBWallUpgrade, $GUI_HIDE)
+		GUICtrlSetState($g_hTxtBBWallNumber, $GUI_HIDE)
+		GUICtrlSetState($g_hLblBBWallNumberInfo, $GUI_HIDE)
+	EndIf
+EndFunc ;==>ChkBBWalls
+
+Func cmbBBWall()
+	$g_iCmbBBWallLevel = _GUICtrlComboBox_GetCurSel($g_hCmbBBWallLevel)
+	_GUICtrlSetImage($g_hPicBBWallUpgrade, $g_sLibBBIconPath, $g_iCmbBBWallLevel + 19)
+EndFunc   ;==>cmbBBWall

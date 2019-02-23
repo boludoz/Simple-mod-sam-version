@@ -1001,7 +1001,7 @@ Func runBot() ;Bot that runs everything in order
 	;Local $bResult
 	;CheckWarTime($sResult, $bResult)
 	
-	while $g_bRunState = True
+	while 1
 		; samm0d
 		If $g_iSamM0dDebug = 1 And $g_bRestart Then SetLog("Continue loop with restart", $COLOR_DEBUG)
 		If $ichkAutoDock = 1 Then
@@ -1130,7 +1130,7 @@ Func runBot() ;Bot that runs everything in order
 			checkMainScreen(False)
 			If $g_bRestart = True Then ContinueLoop
 			Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'ReArm', 'CleanYard']
-			while $g_bRunState = True
+			while 1
 				If $g_bRunState = False Then Return
 				If $g_bRestart = True Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 				If UBound($aRndFuncList) > 1 Then
@@ -1152,7 +1152,7 @@ Func runBot() ;Bot that runs everything in order
 			If IsSearchAttackEnabled() Then ; if attack is disabled skip reporting, requesting, donating, training, and boosting
 				; samm0d - ignore request cc, since later when train army will be apply request cc.
 				Local $aRndFuncList = ['ReplayShare', 'NotifyReport', 'DonateCC,Train', 'CollectFreeMagicItems']
-				while $g_bRunState = True
+				while 1
 					If $g_bRunState = False Then Return
 					If $g_bRestart = True Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 					If UBound($aRndFuncList) > 1 Then
@@ -1167,7 +1167,7 @@ Func runBot() ;Bot that runs everything in order
 				WEnd
 				BoostEverything() ; 1st Check if is to use Training Potion
 				;Local $aRndFuncList = ['ReplayShare', 'NotifyReport', 'DonateCC,Train', 'BoostBarracks', 'BoostSpellFactory', 'BoostKing', 'BoostQueen', 'BoostWarden', 'RequestCC', 'CollectFreeMagicItems']
-				while $g_bRunState = True
+				while 1
 					If $g_bRunState = False Then Return
 					If $g_bRestart = True Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 					If UBound($aRndFuncList) > 1 Then
@@ -1191,7 +1191,7 @@ Func runBot() ;Bot that runs everything in order
 				If BalanceDonRec(True) Then DonateCC()
 			EndIf
 			Local $aRndFuncList = ['Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'BuilderBase']
-			while $g_bRunState = True
+			while 1
 				If $g_bRunState = False Then Return
 				If $g_bRestart = True Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 				If UBound($aRndFuncList) > 1 Then
@@ -1371,7 +1371,7 @@ Func _Idle() ;Sequence that runs until Full Army
 		If $g_bRestart = True Then ExitLoop
 		If $iCollectCounter > $g_iCollectAtCount Then ; This is prevent from collecting all the time which isn't needed anyway
 			Local $aRndFuncList = ['Collect', 'CheckTombs', 'DonateCC', 'CleanYard']
-			while $g_bRunState = True
+			while 1
 				If $g_bRunState = False Then Return
 				If $g_bRestart = True Then ExitLoop
 				If CheckAndroidReboot() Then ContinueLoop 2
@@ -1736,22 +1736,24 @@ Func _RunFunction($action)
  			AutoUpgrade()
 			_Sleep($DELAYRUNBOT3)
 		Case "BuilderBase"
-			If isOnBuilderBase() Or (($g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades) And SwitchBetweenBases()) Then
-                BuilderBaseReport()
-                CollectBuilderBase()
-                _Sleep($DELAYRUNBOT3)
-                StartClockTowerBoost()
-                _Sleep($DELAYRUNBOT3)
-                StarLaboratory()
-                _Sleep($DELAYRUNBOT3)
-                CleanBBYard()
-                _Sleep($DELAYRUNBOT3)
-                MainSuggestedUpgradeCode()
-                ; switch back to normal village
-                BuilderBaseReport()
-                SwitchBetweenBases()
-            EndIf
-            _Sleep($DELAYRUNBOT3)
+			runBuilderBase()
+			_Sleep($DELAYRUNBOT3)
+			;If isOnBuilderBase() Or (($g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades) And SwitchBetweenBases()) Then
+           ;    BuilderBaseReport()
+           ;    CollectBuilderBase()
+           ;    _Sleep($DELAYRUNBOT3)
+           ;    StartClockTowerBoost()
+           ;    _Sleep($DELAYRUNBOT3)
+           ;    StarLaboratory()
+           ;    _Sleep($DELAYRUNBOT3)
+           ;    CleanBBYard()
+           ;    _Sleep($DELAYRUNBOT3)
+           ;    MainSuggestedUpgradeCode()
+           ;    ; switch back to normal village
+           ;    BuilderBaseReport()
+           ;    SwitchBetweenBases()
+           ;EndIf
+           ;_Sleep($DELAYRUNBOT3)
         Case "CollectFreeMagicItems"
             CollectFreeMagicItems()
             _Sleep($DELAYRUNBOT3)
@@ -1773,8 +1775,13 @@ Func FirstCheck()
 	$g_bRestart = False
 	$g_bFullArmy = False
 	$g_iCommandStop = -1
-
-	VillageReport()
+	;If $g_bChkFarmVersion = False Then BotHumanization() ; Bot Humanization - ADDEDg_sBotVersion
+	;If $g_bChkFarmVersion = False And $g_bEnableSuperXP = True And $g_irbSXTraining = 2 Then ;When Super Xp Only Farm Option is on skip all and just do the Goblin Xp Farming
+	;	MainSuperXPHandler()
+	;	Return
+	;EndIf
+	;If $g_bChkFarmVersion = False Then MainGTFO()
+	;If $g_bChkFarmVersion = False Then MainKickout()
 	If Not $g_bRunState Then Return
 
 	If $g_bOutOfGold = True And (Number($g_aiCurrentLoot[$eLootGold]) >= Number($g_iTxtRestartGold)) Then ; check if enough gold to begin searching again

@@ -8,7 +8,7 @@
 ; ...............: Sets @error if buttons not found properly or problem with OCR of PBT time, and sets @extended with string error message
 ; Author ........: MonkeyHunter (2016-02)
 ; Modified ......:
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2018
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
@@ -48,13 +48,13 @@ Func getPBTInfo()
 			Return
 	EndSelect
 
-    PureClickP($aShieldInfoButton,1,0,"#9997") ;samm0d ; click on PBT info icon
+	PureClickP($aShieldInfoButton) ; click on PBT info icon
 	If _Sleep($DELAYPERSONALSHIELD3) Then Return
 
 	Local $iCount = 0
 	While _CheckPixel($aIsShieldInfo, $g_bCapturePixel) = False ; check for open shield info window
 		If _Sleep($DELAYPERSONALSHIELD2) Then Return
-		$Result = getAttackDisable(180, 156 + $g_iMidOffsetY) ; Try to grab Ocr for PBT warning message as it can randomly block pixel check
+		$Result = getAttackDisable(180, 156) ; Try to grab Ocr for PBT warning message as it can randomly block pixel check
 		If $g_bDebugSetlog Then SetDebugLog("OCR PBT warning= " & $Result, $COLOR_DEBUG)
 		If (StringLen($Result) > 3) And StringRegExp($Result, "[a-w]", $STR_REGEXPMATCH) Then ; Check string for valid characters
 			SetLog("Personal Break Warning found!", $COLOR_INFO)
@@ -76,7 +76,7 @@ Func getPBTInfo()
 		$sTimeResult = getOcrPBTtime(555, 499 + $g_iMidOffsetY) ; read PBT time
 		If $g_bDebugSetlog Then SetDebugLog("OCR PBT Time= " & $sTimeResult, $COLOR_DEBUG)
 		If $sTimeResult = "" Then ; try a 2nd time after a short delay if slow PC and null read
-			If _Sleep($DELAYPERSONALSHIELD2) Then Return $aPBReturnResult ; pause for slow PC
+			If _Sleep($DELAYPERSONALSHIELD2) Then Return ; pause for slow PC
 			$sTimeResult = getOcrPBTtime(555, 499 + $g_iMidOffsetY) ; read PBT time
 			If $g_bDebugSetlog Then SetDebugLog("OCR2 PBT Time= " & $sTimeResult, $COLOR_DEBUG)
 			If $sTimeResult = "" Then ; error if no read value
@@ -88,7 +88,7 @@ Func getPBTInfo()
 			EndIf
 		EndIf
 
-		If _Sleep($DELAYPERSONALSHIELD3) Then Return $aPBReturnResult ; improve pause/stop button response
+		If _Sleep($DELAYPERSONALSHIELD3) Then Return ; improve pause/stop button response
 
 		$aString = StringSplit($sTimeResult, " ") ; split hours/minutes or minutes/seconds
 		Switch $aString[0]

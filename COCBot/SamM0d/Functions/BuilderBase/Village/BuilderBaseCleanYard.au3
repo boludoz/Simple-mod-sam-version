@@ -13,19 +13,19 @@
 Func TestrunCleanYardBB()
 	SetDebugLog("** TestrunCleanYardBB START**", $COLOR_DEBUG)
 	Local $Status = $g_bRunState
-	Local $wasCleanYardBB = $g_bChkCleanYardBB
+	Local $wasCleanYardBB = $g_bChkCleanBBYard
 	$g_bRunState = True
-	$g_bChkCleanYardBB = True
+	$g_bChkCleanBBYard = True
 	CleanYardBB()
 	$g_bRunState = $Status
-	$g_bChkCleanYardBB = $wasCleanYardBB
+	$g_bChkCleanBBYard = $wasCleanYardBB
 	SetDebugLog("** TestrunCleanYardBB END**", $COLOR_DEBUG)
 EndFunc   ;==>TestrunCleanYardBB
 
 Func CleanYardBB() ;Call this function After ClockTower So It can benfit from builder boost
 	; Early exist if noting to do
 	If Not $g_bRunState Then Return
-	If Not $g_bChkCleanYardBB And Not TestCapture() Then Return
+	If Not $g_bChkCleanBBYard And Not TestCapture() Then Return
 
 	FuncEnter(CleanYardBB)
 
@@ -49,7 +49,7 @@ Func CleanYardBB() ;Call this function After ClockTower So It can benfit from bu
 		Local $iObstacleRemoved = 0
 		Local $bNoBuilders = $g_iFreeBuilderCountBB < 1
 
-		If $g_iFreeBuilderCountBB > 0 And $g_bChkCleanYardBB = True And Number($g_aiCurrentLootBB[$eLootElixirBB]) > 50000 Then
+		If $g_iFreeBuilderCountBB > 0 And $g_bChkCleanBBYard = True And Number($g_aiCurrentLootBB[$eLootElixirBB]) > 50000 Then
 			; Reurn an Array [xx][0] = Name , [xx][1] = Xaxis , [xx][2] = Yaxis , [xx][3] = Level
 			Local $CleanYardBBNXY = _ImageSearchXMLBoludoz($g_sBundleCleanYardBB, $g_aBundleCleanYardBBParms[0], $g_aBundleCleanYardBBParms[1], $g_aBundleCleanYardBBParms[2], $g_bDebugBBattack)
 			If $g_bDebugSetlog Then SetDebugLog("Benchmark Image Detection Of Builder Base Clean Yard: " & Round(_Timer_Diff($hStarttime), 2) & "'ms")
@@ -80,14 +80,14 @@ Func CleanYardBB() ;Call this function After ClockTower So It can benfit from bu
 					EndIf
 				Next
 			EndIf
-		ElseIf $g_iFreeBuilderCountBB > 0 And $g_bChkCleanYardBB = True And Number($g_aiCurrentLootBB[$eLootElixirBB]) < 50000 Then
+		ElseIf $g_iFreeBuilderCountBB > 0 And $g_bChkCleanBBYard = True And Number($g_aiCurrentLootBB[$eLootElixirBB]) < 50000 Then
 			SetLog("Sorry, Low Builder Base Elixer(" & $g_aiCurrentLootBB[$eLootElixirBB] & ") Skip remove Obstacles check!", $COLOR_INFO)
 		EndIf
 
 		If $bNoBuilders Then
 			SetLog("Builder not available to remove Builder Base Obstacles!")
 		Else
-			If $iObstacleRemoved = 0 And $g_bChkCleanYardBB And Number($g_aiCurrentLootBB[$eLootElixirBB]) > 50000 Then SetLog("No Obstacles found, Builder Base Yard is clean!", $COLOR_SUCCESS)
+			If $iObstacleRemoved = 0 And $g_bChkCleanBBYard And Number($g_aiCurrentLootBB[$eLootElixirBB]) > 50000 Then SetLog("No Obstacles found, Builder Base Yard is clean!", $COLOR_SUCCESS)
 			If $g_bDebugSetlog Then SetDebugLog("Took Time: " & Round(__TimerDiff($hObstaclesTimer) / 1000, 2) & "'s", $COLOR_SUCCESS)
 		EndIf
 		ClickP($aAway, 1, 300, "#0329") ;Click Away
@@ -96,9 +96,9 @@ Func CleanYardBB() ;Call this function After ClockTower So It can benfit from bu
 EndFunc   ;==>CleanYardBB
 
 Func chkCleanYardBB()
-	If GUICtrlRead($g_hChkCleanYardBB) = $GUI_CHECKED Then
-		$g_bChkCleanYardBB = True
+	If GUICtrlRead($g_hChkCleanBBYard) = $GUI_CHECKED Then
+		$g_bChkCleanBBYard = True
 	Else
-		$g_bChkCleanYardBB = False
+		$g_bChkCleanBBYard = False
 	EndIf
 EndFunc   ;==>chkCleanYardBB

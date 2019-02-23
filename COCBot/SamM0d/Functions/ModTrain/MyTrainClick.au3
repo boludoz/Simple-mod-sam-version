@@ -19,11 +19,58 @@
 
 Func LocateTroopButton($TroopButton, $bIsBrewSpell = False)
 	If IsTrainPage() Then
-		Local $aRegionForScan[4] = [26,411,840,536]
+		Local $aRegionForScan[4] = [17,319,840,538] ; RC DONE
 		Local $aButtonXY
-
+		Local $iPseudoRandomDrag
+		Local $iToClick = 0
 		If $bIsBrewSpell Then $TroopButton = "Spell" & $TroopButton
+		
+		Local Const $sImgTroopButton = $g_sSamM0dImageLocation & "\TrainButtons"
+		Local $aSettingTroopButton[3] = [1000, "17,319,840,538", False] ; RC Done ; [0] Quantity2Match [1] Area2Search [2] ForceArea
 
+		Local $aTroopPosition = _ImageSearchXMLBoludoz($sImgTroopButton, $aSettingTroopButton[0], $aSettingTroopButton[1], $aSettingTroopButton[2], True)
+			For $i = 0 To UBound($aTroopPosition) - 1
+				If StringInStr($aTroopPosition[$i][0], $TroopButton) > 0 Then
+					$g_iTroopButtonX = Number($aTroopPosition[$i][1])
+					$g_iTroopButtonY = Number($aTroopPosition[$i][2])
+					SetLog($g_iTroopButtonX &" "&$g_iTroopButtonY)
+				Return True
+				EndIf
+			Next
+			
+			_CaptureRegion2()
+			Local $iCount = 0
+			If _ColorCheck(_GetPixelColor(24, 370, True), Hex(0XD3D3CB, 6), 10) Then
+					While Not _ColorCheck(_GetPixelColor(838, 370, True), Hex(0XD3D3CB, 6), 10)
+						AndroidClickDrag(617, PseudoRandomDrag(), 318, PseudoRandomDrag())
+						If _sleep(Random(250, 600, 1)) Then Return False
+						$iCount += 1
+						If $iCount > 5 Then Return False
+					WEnd
+				ElseIf _ColorCheck(_GetPixelColor(838, 370, True), Hex(0XD3D3CB, 6), 10) Then
+					While Not _ColorCheck(_GetPixelColor(24, 370, True), Hex(0XD3D3CB, 6), 10)
+						AndroidClickDrag(236, PseudoRandomDrag(), 538, PseudoRandomDrag())
+						If _sleep(Random(250, 600, 1)) Then Return False
+						$iCount += 1
+						If $iCount > 5 Then Return False
+					WEnd
+				EndIf
+			EndIf
+			
+			Local $aTroopPosition = _ImageSearchXMLBoludoz($sImgTroopButton, $aSettingTroopButton[0], $aSettingTroopButton[1], $aSettingTroopButton[2], False)
+			For $i = 0 To UBound($aTroopPosition) - 1
+				If StringInStr($aTroopPosition[$i][0], $TroopButton) > 0 Then
+					$g_iTroopButtonX = Number($aTroopPosition[$i][1])
+					$g_iTroopButtonY = Number($aTroopPosition[$i][2])
+					SetLog($g_iTroopButtonX &" "&$g_iTroopButtonY)
+				Return True
+				EndIf
+			Next
+			
+		_DebugFailedImageDetection("LocateTroopButton")
+		SetLog("Cannot find image file " & $TroopButton & " for scan", $COLOR_ERROR)
+		Return False
+		#cs
 		_CaptureRegion2($aRegionForScan[0],$aRegionForScan[1],$aRegionForScan[2],$aRegionForScan[3])
 		Local $aFileToScan = _FileListToArrayRec($g_sSamM0dImageLocation & "\TrainButtons", $TroopButton & "*.png", $FLTAR_FILES, $FLTAR_NORECUR, $FLTAR_SORT, $FLTAR_NOPATH)
 		If UBound($aFileToScan) > 1 Then
@@ -41,7 +88,6 @@ Func LocateTroopButton($TroopButton, $bIsBrewSpell = False)
 			SetLog("Cannot find image file " & $TroopButton & " for scan", $COLOR_ERROR)
 			Return False
 		EndIf
-
 		_debugSaveHBitmapToImage($g_hHBitmap2, "RegionForScan")
 		If $g_hHBitmap2 <> 0 Then
 			GdiDeleteHBitmap($g_hHBitmap2)
@@ -52,25 +98,9 @@ Func LocateTroopButton($TroopButton, $bIsBrewSpell = False)
 			$g_iTroopButtonY = $aRegionForScan[1] + $aButtonXY[1]
 			Return True
 		Else
-			Local $iCount = 0
-			If _ColorCheck(_GetPixelColor(24, 370 + $g_iMidOffsetY, True), Hex(0XD3D3CB, 6), 10) Then
-				While Not _ColorCheck(_GetPixelColor(838, 370 + $g_iMidOffsetY, True), Hex(0XD3D3CB, 6), 10)
-					;ClickDrag(830,476,25,476,250)
-					ClickDrag(617,476,318,476,250)
-					If _sleep(500) Then Return False
-					$iCount += 1
-					If $iCount > 3 Then Return False
-				WEnd
-			ElseIf _ColorCheck(_GetPixelColor(838, 370 + $g_iMidOffsetY, True), Hex(0XD3D3CB, 6), 10) Then
-				While Not _ColorCheck(_GetPixelColor(24, 370 + $g_iMidOffsetY, True), Hex(0XD3D3CB, 6), 10)
-					;ClickDrag(25,476,830,476,250)
-					ClickDrag(236,476,538,476,250)
-					If _sleep(500) Then Return False
-					$iCount += 1
-					If $iCount > 3 Then Return False
-				WEnd
-			EndIf
+		#ce
 
+		#cs
 			_CaptureRegion2($aRegionForScan[0],$aRegionForScan[1],$aRegionForScan[2],$aRegionForScan[3])
 			Local $aFileToScan = _FileListToArrayRec($g_sSamM0dImageLocation & "\TrainButtons", $TroopButton & "*.png", $FLTAR_FILES, $FLTAR_NORECUR, $FLTAR_SORT, $FLTAR_NOPATH)
 			If UBound($aFileToScan) > 1 Then
@@ -100,7 +130,18 @@ Func LocateTroopButton($TroopButton, $bIsBrewSpell = False)
 			EndIf
 		EndIf
 	EndIf
-	Return False
+	#ce
+EndFunc
+
+Func PseudoRandomDrag()
+	Switch Random(1,3,1)
+		Case 1
+			Return Number(Random(322, 331, 1)) ; Up
+		Case 2                             
+			Return Number(Random(427, 432, 1)) ; Mid.
+		Case 3                             
+			Return Number(Random(530, 535, 1)) ; Bottom
+	EndSwitch
 EndFunc
 
 Func MyTrainClick($x, $y, $iTimes = 1, $iSpeed = 0, $sdebugtxt="", $bIsBrewSpell = False)
@@ -149,9 +190,9 @@ Func MakeTroopsAndSpellsTrainImage()
 	RemoveAllPreTrainTroops()
 
 	Local $iCount = 0
-	Local $iSlotWidth = 98.5
+	Local $iSlotWidth = 94
 	Local $iStartingOffset = 45
-	Local $iUpperLeftTroopElixirStartOffset = 26
+	Local $iUpperLeftTroopElixirStartOffset = 21
 	Local $iUpperLeftTroopDarkElixirStartOffset = 624
 	Local $iUpperRightTroopDarkElixirStartOffset = 640
 	Local $iUpperRowY1 = 413
@@ -266,8 +307,8 @@ Func MakeTroopsAndSpellsTrainImage()
 	If gotoBrewSpells() = False Then Return
 	RemoveAllPreTrainTroops()
 
-	Local $iUpperLeftSpellStartOffset = 26
-	Local $iUpperLeftDarkSpellStartOffset = 329
+	Local $iUpperLeftSpellStartOffset = 21
+	Local $iUpperLeftDarkSpellStartOffset = 325
 
 	_CaptureRegion2()
 	Local $aTemp[1][3]

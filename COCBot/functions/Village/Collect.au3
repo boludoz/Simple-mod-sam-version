@@ -5,8 +5,8 @@
 ; Parameters ....:
 ; Return values .: None
 ; Author ........:
-; Modified ......: Sardo (08/2015), KnowJack(10/2015), kaganus (10/2015), ProMac (04/2016), Codeslinger69 (01/2017), Fliegerfaust (11/2017)
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+; Modified ......: Sardo (08-2015), KnowJack(10-2015), kaganus (10-2015), ProMac (04-2016), Codeslinger69 (01-2017), Fliegerfaust (11-2017)
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2018
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
@@ -15,7 +15,8 @@
 #include-once
 
 Func Collect($bCheckTreasury = True)
-	If Not $g_bChkCollect Or Not $g_bRunState Then Return
+	If Not $g_bChkCollect Then Return
+	If Not $g_bRunState Then Return
 
 	ClickP($aAway, 1, 0, "#0332") ;Click Away
 
@@ -40,17 +41,17 @@ Func Collect($bCheckTreasury = True)
 			Switch StringLower($sFileName)
 				Case "collectmines"
 					If $g_iTxtCollectGold <> 0 And $g_aiCurrentLoot[$eLootGold] >= Number($g_iTxtCollectGold) Then
-						SetLog("Gold is high enough, skip collecting", $COLOR_ACTION)
+						SetLog("Gold is high enough, skip collecting...", $COLOR_ACTION)
 						ContinueLoop
 					EndIf
 				Case "collectelix"
 					If $g_iTxtCollectElixir <> 0 And $g_aiCurrentLoot[$eLootElixir] >= Number($g_iTxtCollectElixir) Then
-						SetLog("Elixir is high enough, skip collecting", $COLOR_ACTION)
+						SetLog("Elixir is high enough, skip collecting...", $COLOR_ACTION)
 						ContinueLoop
 					EndIf
 				Case "collectdelix"
 					If $g_iTxtCollectDark <> 0 And $g_aiCurrentLoot[$eLootDarkElixir] >= Number($g_iTxtCollectDark) Then
-						SetLog("Dark Elixier is high enough, skip collecting", $COLOR_ACTION)
+						SetLog("Dark Elixier is high enough, skip collecting...", $COLOR_ACTION)
 						ContinueLoop
 					EndIf
 			EndSwitch
@@ -73,12 +74,47 @@ Func Collect($bCheckTreasury = True)
 EndFunc   ;==>Collect
 
 Func CollectLootCart()
-	SetLog("Searching for a Loot Cart", $COLOR_INFO)
+	; Loot Cart Collect Function
 
-	Local $aLootCart = decodeSingleCoord(findImage("LootCart", $g_sImgCollectLootCart, "ECD", 1, True))
-	If UBound($aLootCart) > 1 Then
-		If isInsideDiamond($aLootCart) Then
-			If IsMainPage() Then ClickP($aLootCart, 1, 0, "#0330")
+	SetLog("Searching for a Loot Cart..", $COLOR_INFO)
+
+	Local $Area2Search = 0
+	Local $Quantity2Match = 1000, $ForceArea = True
+
+	Local $Time = TimerInit()
+
+	Local $CordinateToUse[2]
+
+	Local $bCollectWithOldMethod = True
+
+	Local $sImgCollectNewLootCart = @ScriptDir & "\imgxml\Resources\LootCart\"
+	Local $aNewLootCart = _ImageSearchXMLBoludoz($sImgCollectNewLootCart, $Quantity2Match, $Area2Search, $ForceArea, False)
+	SetDebugLog("$aNewLootCart New Method: " & Round(TimerDiff($Time)) & "'ms")
+	If $aNewLootCart <> -1 And IsArray($aNewLootCart) And UBound($aNewLootCart) > 0 And $aNewLootCart[0][0] <> "" Then
+		; Result [X][0] = NAME , [x][1] = Xaxis , [x][2] = Yaxis , [x][3] = Level
+		SetDebugLog("$aNewLootCart array: " & _ArrayToString($aNewLootCart))
+		$CordinateToUse[0] = Ceiling($aNewLootCart[0][1])
+		$CordinateToUse[1] = Ceiling($aNewLootCart[0][2])
+		If $aNewLootCart[0][0] = "LootCartName" Then $CordinateToUse[1] += 20
+		$bCollectWithOldMethod = False
+	Else
+		SetLog("New LootCart Image Failed! Procedding with old image.", $COLOR_DEBUG)
+		 _DebugFailedImageDetection("LootCart")
+	EndIf
+
+	If $bCollectWithOldMethod Then
+		Local $aLootCart = decodeSingleCoord(findImage("LootCart", $g_sImgCollectLootCart, "ECD", 1, True))
+		SetLog("$aLootCart Old Method: " & Round(TimerDiff($Time)) & "'ms")
+		If IsArray($aLootCart) And UBound($aLootCart) > 1 Then
+			SetDebugLog("$aLootCart array: " & _ArrayToString($aLootCart))
+			$CordinateToUse[0] = Ceiling($aLootCart[0])
+			$CordinateToUse[1] = Ceiling($aLootCart[1])
+		EndIf
+	EndIf
+
+	If UBound($CordinateToUse) > 1 And $CordinateToUse[0] <> 0 Then
+		If isInsideDiamond($CordinateToUse) Then
+			If IsMainPage() Then ClickP($CordinateToUse, 1, 0, "#0330")
 			If _Sleep($DELAYCOLLECT1) Then Return
 
 			;Get LootCart info confirming the name
@@ -102,7 +138,7 @@ Func CollectLootCart()
 				EndIf
 			EndIf
 		Else
-			SetLog("LootCart is not inside the Village (X: " & $aLootCart[0] & " | Y: " & $aLootCart[1] & ")", $COLOR_INFO)
+			SetLog("LootCart Coordinates are not inside the Village (X: " & $CordinateToUse[0] & " | Y: " & $CordinateToUse[1] & ")", $COLOR_INFO)
 		EndIf
 	Else
 		SetLog("No Loot Cart found on your Village", $COLOR_SUCCESS)

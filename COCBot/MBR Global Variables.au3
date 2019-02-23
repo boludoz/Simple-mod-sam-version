@@ -60,14 +60,20 @@ Global Const $g_sLogoPath = @ScriptDir & "\Images\Logo.png"
 Global Const $g_sLogoUrlPath = @ScriptDir & "\Images\LogoURL.png"
 Global Const $g_sLogoUrlSmallPath = @ScriptDir & "\Images\LogoURLsmall.png"
 Global Const $g_iGAME_WIDTH = 860
-Global Const $g_iGAME_HEIGHT = 732
-Global Const $g_iDEFAULT_HEIGHT = 780
+Global Const $g_iGAME_HEIGHT = 644
+Global Const $g_iDEFAULT_HEIGHT = 644 + 48
 Global Const $g_iDEFAULT_WIDTH = 860
-Global Const $g_iMidOffsetY = Int(($g_iDEFAULT_HEIGHT - 720) / 2)
-Global Const $g_iBottomOffsetY = $g_iDEFAULT_HEIGHT - 720
+																 
+														 
 
-Global Const $g_iMidOffsetYNew = Int(($g_iDEFAULT_HEIGHT - 720) / 2)
-Global Const $g_iBottomOffsetYNew = $g_iDEFAULT_HEIGHT - 720
+Global Const $g_iMidOffsetYNew = Floor((644 - 732) / 2) ; -44
+Global Const $g_iBottomOffsetYNew = Floor((644 - 732)) ; -88
+
+Global Const $g_iMidOffsetYAbs = 44
+Global Const $g_iBottomOffsetYAbs = 88
+
+Global Const $g_iMidOffsetY = Floor(($g_iDEFAULT_HEIGHT - 720) / 2)
+Global Const $g_iBottomOffsetY = Floor($g_iDEFAULT_HEIGHT - 720)
 
 Global $g_hBotLaunchTime = __TimerInit() ; Keeps track of time bot launched
 Global $g_iBotLaunchTime = 0 ; Keeps track of time (in millseconds) from bot launch to ready for use
@@ -931,7 +937,7 @@ Global $g_sUpgradeDuration
 Global $g_iChkBBSuggestedUpgrades = 0, $g_iChkBBSuggestedUpgradesIgnoreGold = 0, $g_iChkBBSuggestedUpgradesIgnoreElixir = 0, $g_iChkBBSuggestedUpgradesIgnoreHall = 0
 Global $g_iChkPlacingNewBuildings = 0
 
-Global $g_iQuickMISX = 0, $g_iQuickMISY = 0
+Global $g_iQuickMISX = 0, $g_iQuickMISY = 0,$g_iQuickMISWOffSetX = 0, $g_iQuickMISWOffSetY = 0 ;samm0d
 
 ; <><><><> Village / Achievements <><><><>
 Global $g_iUnbrkMode = 0, $g_iUnbrkWait = 5
