@@ -462,11 +462,11 @@ Func BuilderBaseAttackReport()
 
 	; Get the LOOT :
 	Local $gain[3]
-	; To get trophies getOcrOverAllDamage(493, 480) ; DESRC Done
-	$gain[$eLootTrophyBB] = Int(getOcrBBTrophy(493, 479)) ; DESRC Done
-	$gain[$eLootGoldBB] = Int(getOcrBBResources(152, 480)) ; DESRC Done
-	$gain[$eLootElixirBB] = Int(getOcrBBResources(312, 480)) ; DESRC Done
-	Local $iLastDamage = Int(_getTroopCountBig(242, 302)) ; DESRC Done
+	; To get trophies getOcrOverAllDamage(493, 480 + $g_iMidOffsetYNew)
+	$gain[$eLootTrophyBB] = Number(getOcrOverAllDamage(493, 480))
+	$gain[$eLootGoldBB] = Number(getTrophyVillageSearch(150, 483))
+	$gain[$eLootElixirBB] = Number(getTrophyVillageSearch(310, 483))
+	Local $iLastDamage = Number(_getTroopCountBig(222, 304))
 	If $iLastDamage > $g_iLastDamage Then $g_iLastDamage = $iLastDamage
 
 	If StringInStr($ResultName, "Victory") > 0 Then
@@ -503,12 +503,3 @@ Func BuilderBaseAttackReport()
 
 	If _sleep(2000) Then Return
 EndFunc   ;==>BuilderBaseAttackReport
-
-Func getOcrBBTrophy($x_start, $y_start)
-	Return getOcrAndCapture("coc-overalldamage", $x_start, $y_start, 50, 20, True)
-EndFunc   ;==>getOcrBBTrophy
-
-Func getOcrBBResources($x_start, $y_start) ;48, 69+99 or 69+69 -> Gets complete value of Trophies xxx,xxx , top left, Getresources.au3
-	Return getOcrAndCapture("coc-v-t", $x_start, $y_start, 75, 18, True)
-EndFunc   ;==>getOcrBBResources
-
