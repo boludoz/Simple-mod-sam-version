@@ -449,8 +449,9 @@ Global $g_iStopTime, $g_iReturnTime
 Global $g_bTrainWarTroop, $g_bUseQuickTrainWar, $g_aChkArmyWar[3], $g_aiWarCompTroops[$eTroopCount], $g_aiWarCompSpells[$eSpellCount]
 Global $g_bRequestCCForWar, $g_sTxtRequestCCForWar
 
-
-; ################   Builder Base   ################
+; ================================================== Fast MultiPixel Click ================================================== ;
+Global $g_iMultiPixelOffSet[2] = [Null, Null] ; X, Y
+; ==================================================   Builder Base   ==================================================
 ; Report
 Global $g_iAvailableAttacksBB = 0, $g_iLastDamage = 0
 Global $g_sTxtRegistrationToken = ""
@@ -513,3 +514,7 @@ Global $g_hBBAttackLogFile = 0
 
 Global $g_bChkCollectBuilderBase = False, $g_bChkStartClockTowerBoost = False, $g_bChkCTBoostBlderBz = False, $g_bChkCTBoostAtkAvailable = False, $g_bChkCleanYardBB = False, $g_bDebugBBattack = False
 
+Global $g_bChkPlayBBOnly = False
+
+; ================================================== Quick MIS ==================================================
+Global $g_iQuickMISWOffSetX = 0, $g_iQuickMISWOffSetY = 0 ; SAMM0D

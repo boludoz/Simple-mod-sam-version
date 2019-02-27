@@ -179,8 +179,8 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 						; $aAvailableTroops_NXQ  [Name][Xaxis][Quantities]
 						For $i = 0 To UBound($aAvailableTroops_NXQ) - 1
 							If $sTroopName = $aAvailableTroops_NXQ[$i][0] Then ;We Just Need To redo the ocr for mentioned troop only
-								$aAvailableTroops_NXQ[$i][2] = Number(_getTroopCountSmall(Number($aAvailableTroops_NXQ[$i][1]), 640 + $g_iBottomOffsetYNew)) ; RC Done
-								If $aAvailableTroops_NXQ[$i][2] < 1 Then $aAvailableTroops_NXQ[$i][2] = Number(_getTroopCountBig(Number($aAvailableTroops_NXQ[$i][1]), 633 + $g_iBottomOffsetYNew)) ; RC Done ; For Big numbers when the troop is selected
+								$aAvailableTroops_NXQ[$i][2] = Number(_getTroopCountSmall(Number($aAvailableTroops_NXQ[$i][1]), 640)) ; RC Done
+								If $aAvailableTroops_NXQ[$i][2] < 1 Then $aAvailableTroops_NXQ[$i][2] = Number(_getTroopCountBig(Number($aAvailableTroops_NXQ[$i][1]), 633)) ; RC Done ; For Big numbers when the troop is selected
 							EndIf
 						Next
 
@@ -219,7 +219,7 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 
 					Local $iQtyOfSelectedSlot = 0 ; Quantities on current slot
 					Local $iSlotNumber = 20 ; just an impossible slot to initialize it
-					Local $aSlot_XY = [0, 650+ $g_iBottomOffsetYNew] ; RC Done ; slot position as a Point [autoit case is an array] will necessary change the $aSlot_XY[0] only
+					Local $aSlot_XY = [0, 650] ; RC Done ; slot position as a Point [autoit case is an array] will necessary change the $aSlot_XY[0] only
 
 					; VerifySlotTroops uses ByRef on $aSlot_XY , $iQtyOfSelectedSlot And $iSlotNumber
 					If Not VerifySlotTroop($sTroopName, $aSlot_XY, $iQtyOfSelectedSlot, $iSlotNumber, $aAvailableTroops_NXQ) Then
@@ -389,7 +389,7 @@ Func BuilderBaseParseAttackCSV($AvailableTroops, $DeployPoints, $DeployBestPoint
 			If UBound($aSelectedDropSidePoints_XY) > 0 Then
 				Local $iQtyOfSelectedSlot = 0 ; Quantities on current slot
 				Local $iSlotNumber = 20 ; just an impossible slot to initialize it
-				Local $aSlot_XY = [0, 650+ $g_iBottomOffsetYNew] ; RC Done ; slot position as a Point [autoit case is an array] will necessary change the $aSlot_XY[0] only
+				Local $aSlot_XY = [0, 650] ; RC Done ; slot position as a Point [autoit case is an array] will necessary change the $aSlot_XY[0] only
 				Local $sTroopName = ""
 				Local $iQtyToDrop = 0
 
@@ -594,8 +594,8 @@ Func AddTilesToDeployPoint(ByRef $aSelectedDropSidePoints_XY, $iAddTiles, $sSele
 		Local $x = $aSelectedDropSidePoints_XY[$i][0]
 		Local $y = $aSelectedDropSidePoints_XY[$i][1]
 		Local $pixel[2]
-		; use ADDTILES * 8 pixels per tile to add offset to vector location
-		For $u = 8 * Abs(Int($iAddTiles)) To 0 Step -1 ; count down to zero pixels till find valid drop point
+		; use ADDTILES * 9 pixels per tile to add offset to vector location
+		For $u = 9 * Abs(Int($iAddTiles)) To 0 Step -1 ; count down to zero pixels till find valid drop point
 			If Int($iAddTiles) > 0 Then ; adjust for positive or negative ADDTILES value
 				Local $l = $u
 			Else
@@ -639,8 +639,8 @@ Func AddTilesToEdgePoint(ByRef $aSelectedEdgePoints_XYS, $iAddTiles, $bDebug)
 		Local $y = $aSelectedEdgePoints_XYS[$i][1]
 		Local $sSelectedDropSideName = $aSelectedEdgePoints_XYS[$i][2]
 		Local $pixel[2]
-		; use ADDTILES * 8 pixels per tile to add offset to vector location
-		For $u = 8 * Abs(Int($iAddTiles)) To 0 Step -1 ; count down to zero pixels till find valid drop point
+		; use ADDTILES * 9 pixels per tile to add offset to vector location
+		For $u = 9 * Abs(Int($iAddTiles)) To 0 Step -1 ; count down to zero pixels till find valid drop point
 			If Int($iAddTiles) > 0 Then ; adjust for positive or negative ADDTILES value
 				Local $l = $u
 			Else
@@ -736,7 +736,7 @@ Func TriggerMachineAbility(ByRef $bIfMachineHasAbility, $aMachineSlot_XYA, $isFi
 	If Not $g_bRunState Then Return
 
 	;$aMachineSlot_XYA[2] Contains e.g With 5 $aMachineSlot_XYA[2] = (5*72)+10 = 370 And Pixel It Contains 370x633 -> EFC88A Or AE9A88
-	Local $pColor = _GetPixelColor($aMachineSlot_XYA[2], 633+ $g_iBottomOffsetYNew, True, "Machine Ability Needed?") ; RC Done
+	Local $pColor = _GetPixelColor($aMachineSlot_XYA[2], 633 + 88, True, "Machine Ability Needed?") ; DESRC Done ?
 	Static $hTimer = TimerInit()
 	Local $fDiff = TimerDiff($hTimer)
 	If $fDiff > 500 Or $isFirstTime Then ; Although This Check is not needed now as we are using pixel logic but to avoid frequent check added a 2 sec delay
@@ -786,7 +786,7 @@ Func FindMachinePosXAbilityPixel($iMachineSlotPosX)
 	Local $bFoundAbilityPixel = False
 	_CaptureRegion()
 	For $iTroopsAbilityPixelPosX = $iMachineSlotPosX To $iMachineSlotPosX - $iSlotStartingPoint Step -1
-		Local $pColor = _GetPixelColor($iTroopsAbilityPixelPosX, 633+ $g_iBottomOffsetYNew, False, "Find Machine Ability Pixel?") ; RC Done
+		Local $pColor = _GetPixelColor($iTroopsAbilityPixelPosX, 633 + 88, False, "Find Machine Ability Pixel?") ; DESRC Done ?
 		If IsMachinePixelMactched($aMachineAbilityPixels, $pColor) Then
 			$bFoundAbilityPixel = True
 			ExitLoop
@@ -815,12 +815,12 @@ Func IsMachinePixelMactched($aMachinePixelsList, $pColor, $tolerance = 25)
 EndFunc   ;==>IsMachinePixelMactched
 
 Func BattleIsOver($bIfMachineHasAbility, $aSlot_XY)
-	Local $SurrenderBtn = [65, 607+ $g_iBottomOffsetYNew] ; RC Done
+	Local $SurrenderBtn = [65, 607 + 88] ; DESRC Done ???
 
 	For $i = 0 To 180
 		If Not $g_bRunState Then Return
 		TriggerMachineAbility($bIfMachineHasAbility, $aSlot_XY) ;Keep Clicking on Machine Ability After every 5 seconds
-		Local $Damage = Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY))
+		Local $Damage = Number(getOcrOverAllDamage(780, 527 + 88)) ; ?
 		If Int($Damage) > Int($g_iLastDamage) Then
 			$g_iLastDamage = Int($Damage)
 			Setlog("Total Damage: " & $g_iLastDamage & "%")

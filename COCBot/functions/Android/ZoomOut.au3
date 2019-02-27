@@ -189,7 +189,7 @@ Func ZoomOutCtrlWheelScroll($CenterMouseWhileZooming = True, $GlobalMouseWheel =
 		EndIf
 		Local $aMousePos = MouseGetPos()
 
-		While StringInStr($aPicture[0], "zoomout") = 0
+		While IsArray($aPicture) And StringInStr($aPicture[0], "zoomout") = 0
 
 			If $AndroidZoomOut Then
 			   AndroidZoomOut($i, Default, ($g_iAndroidZoomoutMode <> 2)) ; use new ADB zoom-out
@@ -288,7 +288,7 @@ Func ZoomOutCtrlClick($CenterMouseWhileZooming = False, $AlwaysControlFocus = Fa
 		Local $aMousePos = MouseGetPos()
 
 		$i = 0
-		While StringInStr($aPicture[0], "zoomout") = 0
+		While IsArray($aPicture) And StringInStr($aPicture[0], "zoomout") = 0
 
 			If $AndroidZoomOut Then
 			   AndroidZoomOut($i, Default, ($g_iAndroidZoomoutMode <> 2)) ; use new ADB zoom-out

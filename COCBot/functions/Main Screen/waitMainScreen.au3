@@ -15,6 +15,8 @@
 ; ===============================================================================================================================
 
 Func waitMainScreen() ;Waits for main screen to popup
+	If $g_bChkPlayBBOnly = True Then Return
+
 	If Not $g_bRunState Then Return
 	Local $iCount
 	SetLog("Waiting for Main Screen")

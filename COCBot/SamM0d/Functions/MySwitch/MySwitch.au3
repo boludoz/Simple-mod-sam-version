@@ -617,8 +617,8 @@ Func DoSwitchAcc()
 		Return
 	Endif
 
-	If $iCurActiveAcc = - 1 Then
-		$iDoPerformAfterSwitch = True
+	If $iCurActiveAcc <= 0 Then
+		$iDoPerformAfterSwitch = False
 	Else
 		If $iDoPerformAfterSwitch Then
 			For $i = 0 To UBound($aSwitchList) - 1
@@ -626,7 +626,7 @@ Func DoSwitchAcc()
 					If $aSwitchList[$i][2] <> 1 Then
 						If $g_iSamM0dDebug = 1 Then SetLog("$g_bIsFullArmywithHeroesAndSpells: " & $g_bIsFullArmywithHeroesAndSpells)
 						If $g_iSamM0dDebug = 1 Then SetLog("$ichkForcePreTrainB4Switch: " & $ichkForcePreTrainB4Switch)
-						If $g_bIsFullArmywithHeroesAndSpells = True Or $ichkForcePreTrainB4Switch = 1 Then ;If $g_bIsFullArmywithHeroesAndSpells = True mean just back from attack, then we check train before switch acc.
+						If $g_bIsFullArmywithHeroesAndSpells = True Or $ichkForcePreTrainB4Switch = 1 and not $g_bChkPlayBBOnly Then ;If $g_bIsFullArmywithHeroesAndSpells = True mean just back from attack, then we check train before switch acc.
 							Local $bShare_replay = $g_bIsFullArmywithHeroesAndSpells
 							If $ichkForcePreTrainB4Switch = 1 Then
 								SetLog("Check train before switch account...",$COLOR_ACTION)
@@ -661,7 +661,7 @@ Func DoSwitchAcc()
 	If $iCurActiveAcc <> $iNextAcc Then
 		If _Sleep(500) Then Return
 
-		If $iCurActiveAcc <> - 1 Then
+		If Not $iCurActiveAcc <= 0 Then
 			;SetLog("Do train army and brew spell",$COLOR_ACTION)
 			SetLog("Switch account from " & $icmbWithProfile[$iCurActiveAcc] & " to " & $icmbWithProfile[$iNextAcc] ,$COLOR_ACTION)
 			saveCurStats($iCurActiveAcc)
@@ -730,11 +730,11 @@ Func DoSwitchAcc()
 		EndSwitch
 
 		GUICtrlSetData($grpMySwitch,"Current Active Acc: " & @CRLF & $aSwitchList[$iCurStep][4] + 1 & " - " & $aSwitchList[$iCurStep][3] & " [" & ($aSwitchList[$iCurStep][2] = 1 ? "D" : "A") &  "]")
-		If $iCurActiveAcc <> - 1 Then
+		If Not $iCurActiveAcc <= 0 Then
 			GUICtrlSetData($g_hLblProfileName,$icmbWithProfile[$iCurActiveAcc])
 		EndIf
 
-		If $g_bCloseWhileTrainingEnable Then
+		If $g_bCloseWhileTrainingEnable and not $g_bChkPlayBBOnly Then
 			SetLog("Disable smart wait")
 			GUICtrlSetState($g_hChkCloseWhileTraining, $GUI_UNCHECKED)
 			$g_bCloseWhileTrainingEnable = False

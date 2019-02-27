@@ -60,26 +60,20 @@ Global Const $g_sLogoPath = @ScriptDir & "\Images\Logo.png"
 Global Const $g_sLogoUrlPath = @ScriptDir & "\Images\LogoURL.png"
 Global Const $g_sLogoUrlSmallPath = @ScriptDir & "\Images\LogoURLsmall.png"
 Global Const $g_iGAME_WIDTH = 860
-Global Const $g_iGAME_HEIGHT = 644
-Global Const $g_iDEFAULT_HEIGHT = 644 + 48
+Global Const $g_iGAME_HEIGHT = 732
+Global Const $g_iDEFAULT_HEIGHT = 780
 Global Const $g_iDEFAULT_WIDTH = 860
-																 
-														 
-
-Global Const $g_iMidOffsetYNew = Floor((644 - 732) / 2) ; -44
-Global Const $g_iBottomOffsetYNew = Floor((644 - 732)) ; -88
-
-Global Const $g_iMidOffsetYAbs = 44
-Global Const $g_iBottomOffsetYAbs = 88
-
-Global Const $g_iMidOffsetY = Floor(($g_iDEFAULT_HEIGHT - 720) / 2)
-Global Const $g_iBottomOffsetY = Floor($g_iDEFAULT_HEIGHT - 720)
+Global Const $g_iMidOffsetY = Int(($g_iDEFAULT_HEIGHT - 720) / 2)
+Global Const $g_iBottomOffsetY = $g_iDEFAULT_HEIGHT - 720
 
 Global $g_hBotLaunchTime = __TimerInit() ; Keeps track of time bot launched
 Global $g_iBotLaunchTime = 0 ; Keeps track of time (in millseconds) from bot launch to ready for use
 
 ; Since October 12th 2016 Update, Village cannot be entirely zoomed out, offset updated in func SearchZoomOut
 Global $g_iVILLAGE_OFFSET[3] = [0, 0, 1]
+
+Global $g_iMidOffsetYNew = 44 ; -44                ;samm0d compatible
+Global $g_iBottomOffsetYNew = 88 ; -88             ;samm0d compatible
 
 #Region debugging
 #Tidy_Off
@@ -937,7 +931,7 @@ Global $g_sUpgradeDuration
 Global $g_iChkBBSuggestedUpgrades = 0, $g_iChkBBSuggestedUpgradesIgnoreGold = 0, $g_iChkBBSuggestedUpgradesIgnoreElixir = 0, $g_iChkBBSuggestedUpgradesIgnoreHall = 0
 Global $g_iChkPlacingNewBuildings = 0
 
-Global $g_iQuickMISX = 0, $g_iQuickMISY = 0,$g_iQuickMISWOffSetX = 0, $g_iQuickMISWOffSetY = 0 ;samm0d
+Global $g_iQuickMISX = 0, $g_iQuickMISY = 0
 
 ; <><><><> Village / Achievements <><><><>
 Global $g_iUnbrkMode = 0, $g_iUnbrkWait = 5
@@ -1233,9 +1227,10 @@ Global $g_abAccountNo[8], $g_asProfileName[8], $g_abDonateOnly[8]
 Global $g_aiAttackedCountSwitch[8], $g_iActiveSwitchCounter = 0, $g_iDonateSwitchCounter = 0
 Global $g_asTrainTimeFinish[8], $g_abPBActive[8]
 Global $g_aiRunTime[8], $g_ahTimerSinceSwitched[8]
-; <><><><> Bot / Stats <><><><>
-; <<< nothing here >>>
 
+; <><><><> Bot / Stats <><><><>
+Global Enum $g_iVillageReport=0, $g_iVillageHourlyReport=1, $g_iBBReport=2
+Global $g_iCurrentReport = $g_iVillageReport
 ;--------------------------------------------------------------------------
 ; END: Variables to hold current GUI setting values
 ;--------------------------------------------------------------------------

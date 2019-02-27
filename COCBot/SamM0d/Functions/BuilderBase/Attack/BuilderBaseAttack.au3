@@ -71,7 +71,7 @@ Func BuilderBaseAttack($Test = False)
 
 
 	If $Test Then $IsToDropTrophies = True
-
+	$IsReaddy = True
 	; User LOG
 	SetLog(" - Are you ready to Battle? " & $IsReaddy, $COLOR_INFO)
 	SetLog(" - Is To Drop Trophies? " & $IsToDropTrophies, $COLOR_INFO)
@@ -81,7 +81,7 @@ Func BuilderBaseAttack($Test = False)
 	If $g_bRestart = True Then Return
 	If FindVersusBattlebtn() And $IsReaddy And $IsToDropTrophies Then
 		Setlog("Let's Drop some Trophies!", $COLOR_SUCCESS)
-		Click($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY, 1)
+		ClickP($g_iMultiPixelOffSet, 1)
 		If _Sleep(3000) Then Return
 
 		; Clouds
@@ -111,7 +111,7 @@ Func BuilderBaseAttack($Test = False)
 		EndIf
 	ElseIf FindVersusBattlebtn() And $IsReaddy And Not $IsToDropTrophies Then
 		Setlog("Ready to Battle! Let's Go!", $COLOR_SUCCESS)
-		Click($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY, 1)
+		ClickP($g_iMultiPixelOffSet, 1)
 		If _Sleep(3000) Then Return
 
 		; Clouds
@@ -149,7 +149,7 @@ Func BuilderBaseAttack($Test = False)
 EndFunc   ;==>BuilderBaseAttack
 
 Func CheckAttackBtn()
-	If QuickMIS("BC1", $g_sImgAttackBtnBB, 0, 620 + $g_iBottomOffsetYNew, 120, 732 + $g_iBottomOffsetYNew, True, False) Then ; RC Done
+	If QuickMIS("BC1", $g_sImgAttackBtnBB, 0, 620, 120, 732, True, False) Then ; DESRC Done
 		SetDebugLog("Attack Button detected: " & $g_iQuickMISWOffSetX & "," & $g_iQuickMISWOffSetY)
 		Click($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY, 1)
 		If _Sleep(3000) Then Return
@@ -162,22 +162,32 @@ EndFunc   ;==>CheckAttackBtn
 
 Func isOnVersusBattleWindow()
 	If Not $g_bRunState Then Return
-	If QuickMIS("BC1", $g_sImgVersusWindow, 340, 190 + $g_iMidOffsetYNew, 460, 210 + $g_iMidOffsetYNew, True, False) Then ; RC Done
+	Local $iSpecialColor[4][3] = [[0x87A9CF, 1, 0], [0x87A9CF, 2, 0], [0x87A9CF, 3, 0], [0x87A9CF, 4, 0]]
+	
+	For $i = 0 To 15
+		If Not $g_bRunState Then Return
+		_MultiPixelSearch(591, 119, 668, 216, 1, 1, Hex(0x87A9CF, 6), $iSpecialColor, 30)
+		SetDebugLog( "******* isOnVersusBattleWindow Try X:" & $g_iMultiPixelOffSet[0])
+		If Number($g_iMultiPixelOffSet[0]) > 0 Then ExitLoop
+		If _Sleep(1000) Then Return
+	Next
+	
+	If $i < 15 Then
 		SetDebugLog("Versus Battle window detected: " & $g_iQuickMISWOffSetX & "," & $g_iQuickMISWOffSetY)
 		Return True
 	Else
 		SetLog("Versus Battle window not available...", $COLOR_WARNING)
+		Return False
 	EndIf
-	Return False
 EndFunc   ;==>isOnVersusBattleWindow
 
 Func ArmyStatus(ByRef $IsReaddy)
 	If Not $g_bRunState Then Return
-	If QuickMIS("BC1", $g_sImgFullArmyBB, 110, 360 + $g_iMidOffsetYNew, 140, 385 + $g_iMidOffsetYNew, True, False) Then ; RC Done
+	If QuickMis("BC1", $g_sImgFullArmyBB, 108, 355, 431, 459, True, False) Then ; DESRC Done
 		SetDebugLog("Full Army detected: " & $g_iQuickMISWOffSetX & "," & $g_iQuickMISWOffSetY)
 		SetLog("Full Army detected", $COLOR_INFO)
 		$IsReaddy = True
-	ElseIf QuickMIS("BC1", $g_sImgHeroStatusUpg, 116, 390 + $g_iMidOffsetYNew, 420, 425 + $g_iMidOffsetYNew, True, False) Then ; RC Done
+	ElseIf QuickMis("BC1", $g_sImgHeroStatusUpg, 108, 355, 431, 459, True, False) Then ; RC Done
 		SetLog("Full Army detected, But Battle Machine is on Upgrade", $COLOR_INFO)
 		$IsReaddy = True
 	Else
@@ -189,13 +199,13 @@ EndFunc   ;==>ArmyStatus
 Func HeroStatus()
 	If Not $g_bRunState Then Return
 	Local $Status = "No Hero to use in Battle"
-	If QuickMIS("BC1", $g_sImgHeroStatusRec, 116, 390 + $g_iMidOffsetYNew, 420, 425 + $g_iMidOffsetYNew, True, False) Then ; RC Done
+	If QuickMis("BC1", $g_sImgHeroStatusRec, 108, 355, 431, 459, True, False) Then ; DESRC Done
 		$Status = "Battle Machine Recovering"
 	EndIf
-	If QuickMIS("BC1", $g_sImgHeroStatusMachine, 116, 390 + $g_iMidOffsetYNew, 420, 425 + $g_iMidOffsetYNew, True, False) Then ; RC Done
+	If QuickMis("BC1", $g_sImgHeroStatusMachine, 108, 355, 431, 459, True, False) Then ; DESRC Done
 		$Status = "Battle Machine ready to use"
 	EndIf
-	If QuickMIS("BC1", $g_sImgHeroStatusUpg, 116, 390 + $g_iMidOffsetYNew, 420, 425 + $g_iMidOffsetYNew, True, False) Then ; RC Done
+	If QuickMis("BC1", $g_sImgHeroStatusUpg, 108, 355, 431, 459, True, False) Then ; DESRC Done
 		$Status = "Battle Machine Upgrading"
 	EndIf
 	Return $Status
@@ -214,14 +224,24 @@ Func IsToDropTrophies(ByRef $IsToDropTrophies)
 EndFunc   ;==>IsToDropTrophies
 
 Func FindVersusBattlebtn()
+	; Samm0d
 	If Not $g_bRunState Then Return
-	If QuickMIS("BC1", $g_sImgFindBtnBB, 455, 250 + $g_iMidOffsetYNew, 725, 425 + $g_iMidOffsetYNew, True, False) Then ; RC Done
-		SetDebugLog("Find Now! Button detected: " & $g_iQuickMISWOffSetX & "," & $g_iQuickMISWOffSetY) ; RC Done
-		Return True
-	Else
+	
+    Local $iSpecialColor[2][3] = [[0xFFCA4A, 1, 0], [0xFFCA4A, 0, 1]]
+        
+    For $i = 0 to 15
+       If IsArray(_MultiPixelSearch(490, 284, 710, 375, 1, 1, Hex(0xFFCA4A, 6), $iSpecialColor, 25)) Then ExitLoop
+		SetLog("Finding Button Now!")
+		Sleep(10)
+	Next
+	
+	If $i > 15 Then
 		SetLog("Find Now! Button not available...", $COLOR_DEBUG)
+		Return False
 	EndIf
-	Return False
+	
+	SetDebugLog("Find Now! Button detected: " & $g_iMultiPixelOffSet[0] & "," & $g_iMultiPixelOffSet[1])
+	Return True
 EndFunc   ;==>FindVersusBattlebtn
 
 Func WaitForVersusBattle()
@@ -232,7 +252,7 @@ Func WaitForVersusBattle()
 	While $Time < 15 * 24 ; 15 minutes  | ( 24 * (2000 + 500ms)) = 60000ms / 1000 = 60seconds
 		If Mod($Time, 10) = 0 Then SetLog("Searching for opponents...")
 		If checkObstacles_Network(True, True) Then Return False
-		If Not QuickMIS("BC1", $g_sImgCloudSearch, 230, 400 + $g_iMidOffsetYNew, 420, 460 + $g_iMidOffsetYNew, True, False) Then ExitLoop ; RC Done
+		If Not QuickMIS("BC1", $g_sImgCloudSearch, 230, 400, 420, 460, True, False) Then ExitLoop ; RC Done
 		If _Sleep(2000) Then ExitLoop
 		$Time += 1
 	WEnd
@@ -301,7 +321,7 @@ Func BuilderBaseAttackToDrop($AvailableTroops)
 	EndIf
 
 	; Get the surrender Button
-	Local $SurrenderBtn = [67, 586 + $g_iBottomOffsetYNew] ; RC Done
+	Local $SurrenderBtn = [67, 586] ; RC Done
 	For $i = 0 To 10
 		; Surrender button [FC5D64]
 		If _ColorCheck(_GetPixelColor($SurrenderBtn[0], $SurrenderBtn[1], True), Hex(0xFC5D64, 6), 15) Then
@@ -314,8 +334,8 @@ Func BuilderBaseAttackToDrop($AvailableTroops)
 	Next
 
 	; Get the Surrender Window [Cancel] [Ok]
-	Local $CancelBtn = [350, 445 + $g_iMidOffsetYNew] ; RC Done
-	Local $OKbtn = [520, 445 + $g_iMidOffsetYNew] ; RC Done
+	Local $CancelBtn = [350, 445] ; RC Done
+	Local $OKbtn = [520, 445] ; RC Done
 	For $i = 0 To 10
 		If Not $g_bRunState Then Return
 		; [Cancel] = 350 , 445 : DB4E1D
@@ -357,57 +377,70 @@ EndFunc   ;==>BuilderBaseCSVAttack
 
 Func BuilderBaseAttackReport()
 	; Verify the Window Report , Point[0] Archer Shadow Black Zone [155,460,000000], Point[1] Ok Green Button [430,590, 6DBC1F]
-	Local $SurrenderBtn = [65, 607 + $g_iBottomOffsetYNew] ; RC Done
-	Local $OKbtn = [430, 590 + $g_iMidOffsetYNew] ; RC Done
+	Local $SurrenderBtn = [76, 584] ; DESRC Done
+	Local $OKbtn = [435, 562] ; DESRC Done ;auxiliar click
 
 	For $i = 0 To 60
 		If Not $g_bRunState Then Return
-		Local $Damage = Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY))
+		Local $Damage = Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY)) ; DESRC Done
 		If Int($Damage) > Int($g_iLastDamage) Then
 			$g_iLastDamage = Int($Damage)
 			Setlog("Total Damage: " & $g_iLastDamage & "%")
 		EndIf
-		If Not _ColorCheck(_GetPixelColor($SurrenderBtn[0], $SurrenderBtn[1], True), Hex(0xcf0d0e, 6), 10) Then ExitLoop
+		If Not _ColorCheck(_GetPixelColor($SurrenderBtn[0], $SurrenderBtn[1], True), Hex(0xFE5D65, 6), 10) Then ExitLoop
 		If $i = 60 Then Setlog("Window Report Problem!", $COLOR_WARNING)
 		If _Sleep(2000) Then Return
 	Next
 
-	If checkObstacles(True) Then
-		SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
-		Return
-	EndIf
+	;If checkObstacles(True) Then
+	;	SetLog("Window clean required, but no problem for MyBot!", $COLOR_INFO)
+	;	Return
+	;EndIf
 
 	Local $Stars = 0
-	Local $StarsPositions[3][2] = [[326, 394 + $g_iMidOffsetYNew], [452, 388 + $g_iMidOffsetYNew], [546, 413 + $g_iMidOffsetYNew]] ; RC Done
+	Local $StarsPositions[3][2] = [[326, 394], [452, 388], [546, 413]] ; des RC Done ?
 	Local $Color[3] = [0xD0D4D0, 0xDBDEDB, 0xDBDDD8]
 
 	If _Sleep(1500) Then Return
 	If Not $g_bRunState Then Return
 
 	For $i = 0 To UBound($StarsPositions) - 1
-		If _ColorCheck(_GetPixelColor($StarsPositions[$i][0], $StarsPositions[$i][1], True), Hex($Color[$i], 6), 10) Then $Stars += 1
+		If _ColorCheck(_GetPixelColor($StarsPositions[$i][0], $StarsPositions[$i][1], True), Hex($Color[$i], 6), 30) Then $Stars += 1
 	Next
 
 	Setlog("Your Attack: " & $Stars & " Star(s)!", $COLOR_INFO)
 
 	If _Sleep(1500) Then Return
-
-	ClickP($OKbtn, 1, 0)
-
+	
+    Local $iSpecialColor[4][3] = [[0xBEE758, 0, 1], [0xA9DD49, 0, 2], [0x7BC726, 0, 3], [0x79C426, 0, 4]]
+    Local $iSpecialPixel
+        
+    For $i = 0 to 15
+        $iSpecialPixel = _MultiPixelSearch(345, 540, 510, 612, 1, 1, Hex(0xBFE85A, 6), $iSpecialColor, 20)
+        If IsArray($iSpecialPixel) Then ExitLoop
+    Next
+	If $i > 15 Then
+		SetLog("Return To Home fail, auxiliar click.", $Color_Error)
+		ClickP($OKbtn, 1, 0)
+	Else
+		SetLog("Return To Home.", $Color_Info)
+		ClickP($g_iMultiPixelOffSet, 1, 0)
+	EndIf
+	
 	Local $ResultName = ""
 
 	For $i = 0 To 12 ; 120 seconds
 		If Not $g_bRunState Then Return
 		; Wait
 		If _Sleep(5000) Then Return ; 5seconds
-		If QuickMIS("BC1", $g_sImgReportWaitBB, 500, 325 + $g_iMidOffsetYNew, 675, 380 + $g_iMidOffsetYNew, True, False) Then ; RC Done
+		If QuickMIS("BC1", $g_sImgReportWaitBB, 538, 326, 647, 378, True, False) Then ; DESRC Done
 			Setlog("...Opponent is Attacking!", $COLOR_INFO)
 			If _Sleep(5000) Then Return ; 5seconds
 			ContinueLoop
 		EndIf
-		If QuickMIS("BC1", $g_sImgReportFinishedBB, 500, 325 + $g_iMidOffsetYNew, 675, 380 + $g_iMidOffsetYNew, True, False) Then ; RC Done
+		If QuickMIS("BC1", $g_sImgReportFinishedBB, 538, 320 , 648, 366, True, False) Then ; DESRC Done
 			If _Sleep(1000) Then Return
-			Local $aResults = QuickMIS("NxCx", $g_sImgReportResultBB, 305, 185 + $g_iMidOffsetYNew, 540, 210 + $g_iMidOffsetYNew, True, False) ; RC Done
+			Local $aResults = QuickMIS("NxCx", $g_sImgReportResultBB, 534, 164, 730, 223, True, False) ; DESRC Done
 			; Name $aResults[0][0]
 			If $aResults = 0 Then
 				Setlog("Attack Result Problem!!", $COLOR_WARNING)
@@ -429,17 +462,19 @@ Func BuilderBaseAttackReport()
 
 	; Get the LOOT :
 	Local $gain[3]
-	; To get trophies getOcrOverAllDamage(493, 480 + $g_iMidOffsetYNew) ; RC Done
-	$gain[$eLootTrophyBB] = Int(getOcrOverAllDamage(493, 480 + $g_iMidOffsetYNew)) ; RC Done
-	$gain[$eLootGoldBB] = Int(getTrophyVillageSearch(150, 483 + $g_iMidOffsetYNew)) ; RC Done
-	$gain[$eLootElixirBB] = Int(getTrophyVillageSearch(310, 483 + $g_iMidOffsetYNew)) ; RC Done
-	Local $iLastDamage = Int(_getTroopCountBig(222, 304 + $g_iMidOffsetYNew)) ; RC Done
+	; To get trophies getOcrOverAllDamage(493, 480) ; DESRC Done
+	$gain[$eLootTrophyBB] = Int(getOcrBBTrophy(493, 479)) ; DESRC Done
+	$gain[$eLootGoldBB] = Int(getOcrBBResources(152, 480)) ; DESRC Done
+	$gain[$eLootElixirBB] = Int(getOcrBBResources(312, 480)) ; DESRC Done
+	Local $iLastDamage = Int(_getTroopCountBig(242, 302)) ; DESRC Done
 	If $iLastDamage > $g_iLastDamage Then $g_iLastDamage = $iLastDamage
 
 	If StringInStr($ResultName, "Victory") > 0 Then
 		$gain[$eLootTrophyBB] = Abs($gain[$eLootTrophyBB])
-	Else
+	ElseIf StringInStr($ResultName, "Defeat") > 0 Then
 		$gain[$eLootTrophyBB] = $gain[$eLootTrophyBB] * -1
+	Else
+		$gain[$eLootTrophyBB] = 0
 	EndIf
 
 	; #######################################################################
@@ -455,9 +490,11 @@ Func BuilderBaseAttackReport()
 	$AtkLogTxt &= StringFormat("%1d", $g_iBuilderBaseScript + 1) & "|"
 
 	If StringInStr($ResultName, "Victory") > 0 Then
-		SetBBAtkLog($AtkLogTxt, "", $COLOR_BLACK)
-	Else
+		SetBBAtkLog($AtkLogTxt, "", $COLOR_GREEN)
+	ElseIf StringInStr($ResultName, "Defeat") > 0 Then
 		SetBBAtkLog($AtkLogTxt, "", $COLOR_ERROR)
+	Else
+		SetBBAtkLog($AtkLogTxt, "", $COLOR_INFO)
 	EndIf
 	; #######################################################################
 
@@ -466,3 +503,12 @@ Func BuilderBaseAttackReport()
 
 	If _sleep(2000) Then Return
 EndFunc   ;==>BuilderBaseAttackReport
+
+Func getOcrBBTrophy($x_start, $y_start)
+	Return getOcrAndCapture("coc-overalldamage", $x_start, $y_start, 50, 20, True)
+EndFunc   ;==>getOcrBBTrophy
+
+Func getOcrBBResources($x_start, $y_start) ;48, 69+99 or 69+69 -> Gets complete value of Trophies xxx,xxx , top left, Getresources.au3
+	Return getOcrAndCapture("coc-v-t", $x_start, $y_start, 75, 18, True)
+EndFunc   ;==>getOcrBBResources
+

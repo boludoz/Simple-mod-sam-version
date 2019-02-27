@@ -252,3 +252,9 @@ GUICtrlSetState($g_hChkRequestCCForWar, $g_bRequestCCForWar ? $GUI_CHECKED : $GU
 GUICtrlSetData($g_hTxtRequestCCForWar, $g_sTxtRequestCCForWar)
 ReadConfig_600_52_2()
 ChkStopForWar()
+
+; Village mode
+;GUICtrlSetState($g_hChkFarmVersion, $g_bChkFarmVersion ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($g_hChkPlayBBOnly, $g_bChkPlayBBOnly ? $GUI_CHECKED : $GUI_UNCHECKED)
+;chkLiteVersion()
+chkPlayBBOnly()

@@ -14,7 +14,10 @@
 ; Example .......: No
 ; ===============================================================================================================================
 ;
-Func checkObstacles($bBuilderBase = False) ;Checks if something is in the way for mainscreen
+Func checkObstacles($bTmpBuilderBase = False) ;Checks if something is in the way for mainscreen
+	Local $bBuilderBase = $bTmpBuilderBase
+	If $g_bChkPlayBBOnly = True Then $bBuilderBase = True
+		
 	FuncEnter(checkObstacles)
 	Static $checkObstaclesActive = False
 
@@ -47,18 +50,23 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 
 	_CaptureRegions()
 
-	If Not $bRecursive Then
-		If checkObstacles_Network() Then Return True
-		If checkObstacles_GfxError() Then Return True
-	EndIf
 	Local $bIsOnBuilderIsland = isOnBuilderBase()
-	If $bBuilderBase = False And $bIsOnBuilderIsland = True Then
+	If $bBuilderBase = False And $bIsOnBuilderIsland = True And $g_bChkPlayBBOnly = False Then
 		SetLog("Detected Builder Base, trying to switch back to Main Village")
 		If SwitchBetweenBases() Then
 			$g_bMinorObstacle = True
 			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 			Return False
 		EndIf
+		ElseIf $g_bChkPlayBBOnly = True And Not $bIsOnBuilderIsland Then 
+		If SwitchBetweenBases() Then
+			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+			Return
+		EndIf
+	EndIf
+	
+	If $bBuilderBase = True Then 
+		Return 
 	EndIf
 
 	If $g_sAndroidGameDistributor <> $g_sGoogle Then ; close an ads window for non google apks
@@ -272,6 +280,11 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
             Return False
         EndIf
     ;EndIf
+	
+	If Not $bRecursive Then
+		If checkObstacles_Network() Then Return True
+		If checkObstacles_GfxError() Then Return True
+	EndIf
 
     ; prevent close train page failed, and get builder failed
     If _CheckPixel($aIsTrainPgChk1, $g_bNoCapturePixel) Then
@@ -290,6 +303,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
         Return False
     EndIf
     ;=============================
+	
 
 	Local $bHasTopBlackBar = _ColorCheck(_GetPixelColor(10, 3), Hex(0x000000, 6), 1) And _ColorCheck(_GetPixelColor(300, 6), Hex(0x000000, 6), 1) And _ColorCheck(_GetPixelColor(600, 9), Hex(0x000000, 6), 1)
 	If _ColorCheck(_GetPixelColor(235, 209 + $g_iMidOffsetY), Hex(0x9E3826, 6), 20) Then

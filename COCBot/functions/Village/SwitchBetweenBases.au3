@@ -21,7 +21,7 @@ Func SwitchBetweenBases($bCheckMainScreen = True)
 	If Not $g_bRunState Then Return
 
 	For $i = 0 To 1
-		If isOnBuilderBase(True) Then
+		If isOnBuilderBaseEz(True) Then
 			$sSwitchFrom = "Builder Base"
 			$sSwitchTo = "Normal Village"
 			$bIsOnBuilderBase = True
@@ -53,6 +53,10 @@ Func SwitchBetweenBases($bCheckMainScreen = True)
 
 		$aButtonCoords = decodeSingleCoord(findImageInPlace($sTile, $sTileDir, $sRegionToSearch))
 		If UBound($aButtonCoords) > 1 Then
+			If isOnBuilderBaseEz(True) And $g_bChkPlayBBOnly = True Then 
+				$bIsOnBuilderBase = True
+				Return True 
+			EndIf
 			SetLog("[" & $i & "] Going to " & $sSwitchTo, $COLOR_INFO)
 			ClickP($aButtonCoords)
 			If _Sleep($DELAYSWITCHBASES1) Then Return

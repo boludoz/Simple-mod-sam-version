@@ -182,7 +182,7 @@ Func BuilderBaseCheckMachine(ByRef $aMachineStatus, $Test = 0)
 			For $i = 0 To 10
 				If _Sleep(200) Then Return
 				; $aResult[1] = Name , $aResult[2] = Level
-				Local $aResult = BuildingInfo(242, 520 + $g_iBottomOffsetY)
+				Local $aResult = BuildingInfo(242, 520)
 				If UBound($aResult) >= 2 Then ExitLoop
 				If $i = 10 Then
 					Setlog("Error geting the Machine Info!!", $COLOR_ERROR)
@@ -253,7 +253,7 @@ EndFunc   ;==>BuilderBaseUpgradeMachine
 
 ; laboratory
 Func BuilderBaseUpgradeTroop(ByRef $aRemaintime, ByRef $aTroopsToUpgrade, $Test = 0)
-	If isOnBuilderBase() Then
+	If isOnBuilderBaseEz() Then
 
 		If Not DetectedLaboratory() Then Return
 
@@ -278,8 +278,8 @@ Func BuilderBaseUpgradeTroop(ByRef $aRemaintime, ByRef $aTroopsToUpgrade, $Test 
 				_GUICtrlSetImage($g_hPicBBLabUpgrade, $g_sLibBBIconPath, $g_iCmbBBLaboratory + 1)
 				If _sleep(2000) Then Return
 				; 74c223 650,570 , green button [OK]
-				If _ColorCheck(_GetPixelColor(650, 570 + $g_iMidOffsetYNew, True), Hex(0x74c223, 6), 10) Then ; RC Done
-					Click(650, 570 + $g_iMidOffsetYNew , 1)
+				If _ColorCheck(_GetPixelColor(650, 570, True), Hex(0x74c223, 6), 10) Then ; RC Done
+					Click(650, 570 , 1)
 					Return True
 				EndIf
 			EndIf
@@ -291,7 +291,7 @@ Func BuilderBaseUpgradeTroop(ByRef $aRemaintime, ByRef $aTroopsToUpgrade, $Test 
 EndFunc   ;==>BuilderBaseUpgradeTroop
 
 Func DetectedLaboratory()
-	If QuickMIS("BC1", $g_sImgTroopsUpgradeLab, 100, 100, 840, 650 + $g_iBottomOffsetYNew, True, False) Then ; RC Done
+	If QuickMIS("BC1", $g_sImgTroopsUpgradeLab, 100, 100, 840, 650, True, False) Then ; RC Done
 		SetDebugLog("Laboratory detected: " & $g_iQuickMISWOffSetX & "," & $g_iQuickMISWOffSetY)
 		Click($g_iQuickMISWOffSetX + 10, $g_iQuickMISWOffSetY + 10, 1)
 		If _Sleep(2000) Then Return
@@ -303,7 +303,7 @@ Func DetectedLaboratory()
 EndFunc   ;==>DetectedLaboratory
 
 Func DetectButton()
-	If QuickMIS("BC1", $g_sImgTroopsUpgradeButton, 230, 640 + $g_iBottomOffsetYNew) Then ; RC Done
+	If QuickMIS("BC1", $g_sImgTroopsUpgradeButton, 230, 640) Then ; RC Done
 		SetDebugLog("Button Research detected: " & $g_iQuickMISWOffSetX & "," & $g_iQuickMISWOffSetY)
 		Click($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY, 1)
 		If _Sleep(2000) Then Return
@@ -315,7 +315,7 @@ Func DetectButton()
 EndFunc   ;==>DetectButton
 
 Func DetectLaboratoryWindow()
-	If QuickMIS("BC1", $g_sImgTroopsUpgradeLabWindow, 320, 130 + $g_iMidOffsetYNew, 510, 160 + $g_iMidOffsetYNew) Then ; RC Done
+	If QuickMIS("BC1", $g_sImgTroopsUpgradeLabWindow, 320, 130, 510, 160) Then ; RC Done
 		SetDebugLog("Upg Units window detected: " & $g_iQuickMISWOffSetX & "," & $g_iQuickMISWOffSetY)
 		Return True
 	Else
@@ -328,7 +328,7 @@ Func IsLaboratyAvailable(ByRef $aRemaintime, $Test = 0) ; passing the all struct
 	; x = 660 , y = 250
 	; 8088B0 : yes
 	; A2CB6C : No
-	If _ColorCheck(_GetPixelColor(660, 250 + $g_iMidOffsetYNew, True), Hex(0x8088B0, 6), 5) Then ; RC Done
+	If _ColorCheck(_GetPixelColor(660, 250, True), Hex(0x8088B0, 6), 5) Then ; RC Done
 		SetDebugLog("Unit upgrade Available...")
 		$aRemaintime[$g_iCurAccount] = 0
 		Return True
@@ -336,7 +336,7 @@ Func IsLaboratyAvailable(ByRef $aRemaintime, $Test = 0) ; passing the all struct
 
 	SetLog("Unit Upgrade in progress...", $COLOR_WARNING)
 	; Let's get the remain lab time  : coc-RemainLaboratory
-	$aRemaintime[$g_iCurAccount] = getRemainTLaboratory(255, 256 + $g_iMidOffsetYNew) ; RC Done
+	$aRemaintime[$g_iCurAccount] = getRemainTLaboratory(255, 256) ; RC Done
 	Setlog("Remain Lab time is " & $aRemaintime[$g_iCurAccount], $COLOR_INFO)
 	Local $return = ConvertOCRTime("Builder Base Lab", $aRemaintime[$g_iCurAccount], True)
 	$aRemaintime[$g_iCurAccount] = ($return <> False) ? $return : 0
@@ -346,14 +346,14 @@ EndFunc   ;==>IsLaboratyAvailable
 
 Func IsElixirAvailable(ByRef $aTroopsToUpgrade)
 
-	Local $Temp = QuickMIS("CX", $g_sImgTroopsUpgradeAvaiTroops, 160, 385 + $g_iMidOffsetYNew, 685, 570 + $g_iMidOffsetYNew) ; RC Done
+	Local $Temp = QuickMIS("CX", $g_sImgTroopsUpgradeAvaiTroops, 160, 385, 685, 570) ; RC Done
 	If IsArray($Temp) Then
 		_ArraySort($Temp, 0, 0, 0, 0)
 		SetDebugLog("IsElixirAvailable shorted array: " & _ArrayToString($Temp))
 		For $i = 0 To UBound($Temp) - 1
 			Local $Coordinate = StringSplit($Temp[$i], ",", $STR_NOCOUNT)
 			$g_iQuickMISX = 160 + $Coordinate[0] - 60
-			$g_iQuickMISY = 385 + $g_iMidOffsetYNew + $Coordinate[1] - 20 ; RC Done
+			$g_iQuickMISY = 385 + $Coordinate[1] - 20 ; RC Done
 			SetDebugLog("IsElixirAvailable[" & $i & "] Name: " & SlotName(SlotTroop($g_iQuickMISX, $g_iQuickMISY)))
 			SetDebugLog("IsElixirAvailable[" & $i & "] Detection at X:" & $g_iQuickMISX & " Y:" & $g_iQuickMISY)
 
@@ -408,7 +408,7 @@ Func SlotTroop($x, $y)
 	EndSwitch
 
 	Local $OcrX[5] = [173, 275, 377, 482, 590]
-	Local $OcrY[2] = [420 + $g_iMidOffsetYNew, 520 + $g_iMidOffsetYNew] ; RC Done
+	Local $OcrY[2] = [420, 520] ; RC Done
 
 	$slot[2] = getTroopLevel($OcrX[$slot[0] - 1], $OcrY[$slot[1] - 1])
 	SetDebugLog("SlotTroop OCR at Column: " & $slot[0] & " Row: " & $slot[1] & " troop level: " & $slot[2])

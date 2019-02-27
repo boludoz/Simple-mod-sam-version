@@ -31,18 +31,16 @@ Func runBuilderBase($Test = False)
 	; Check IF is Necessary run the Builder Base IDLE loop
 
 	If Not $g_bChkBuilderAttack And Not $g_bChkCollectBuilderBase And Not $g_bChkStartClockTowerBoost And Not $g_iChkBBSuggestedUpgrades And Not $g_bChkCleanBBYard Then
-	#cs
 	If $g_bChkPlayBBOnly Then
 			SetLog("Play Only Builder Base Check Is On But BB Option's(Collect,Attack etc) Unchecked", $COLOR_ERROR)
 			SetLog("Please Check BB Options From Builder Base Tab", $COLOR_INFO)
 			$g_bRunState = False ;Stop The Bot
 			btnStop()
 		EndIf
-	#ce
 		Return
 	EndIf
 
-	If Not isOnBuilderBase() Then SwitchBetweenBases()
+	If Not isOnBuilderBaseEz() Then SwitchBetweenBases()
 
 	SetLog("Builder Base Idle Starts", $COLOR_INFO)
 
@@ -121,10 +119,10 @@ Func runBuilderBase($Test = False)
 		BuilderBaseReport()
 	Next
 
-;	If Not $g_bChkPlayBBOnly Then
+	If Not $g_bChkPlayBBOnly Then
 		; switch back to normal village
-		If isOnBuilderBase() Then SwitchBetweenBases()
-;	EndIf
+		If isOnBuilderBaseEz() Then SwitchBetweenBases()
+	EndIf
 
 	_Sleep($DELAYRUNBOT3)
 
@@ -132,9 +130,8 @@ Func runBuilderBase($Test = False)
 
 	If ProfileSwitchAccountEnabled() Then Return
 
-;	If $g_bChkPlayBBOnly Then _Sleep($DELAYRUNBOT1 * 15) ;Add 15 Sec Delay Before Starting Again In BB Only
+	If $g_bChkPlayBBOnly Then _Sleep($DELAYRUNBOT1 * 15) ;Add 15 Sec Delay Before Starting Again In BB Only
 EndFunc   ;==>runBuilderBase
-
 
 Func NewImageDetection()
 

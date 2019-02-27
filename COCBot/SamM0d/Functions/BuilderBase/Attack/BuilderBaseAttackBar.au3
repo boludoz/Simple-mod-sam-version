@@ -28,8 +28,7 @@ EndFunc   ;==>TestBuilderBaseAttackBar
 Func BuilderBaseAttackBar($bIfMachineWasDeployed = False, $bIfMachineHasAbility = False, $aMachineSlot_XYA = Null, $bRemaining = False)
 
 	If Not $bRemaining Then $g_bIsMachinePresent = False
-	Local $offColors[1][3] = [[0xFED5D4, 0, 1]]
-	Local $aXXXTentancion
+	Local $aOpponentVillageVisible
 	
 	If Not $g_bRunState Then Return
 	For $i = 0 To 15
@@ -37,8 +36,8 @@ Func BuilderBaseAttackBar($bIfMachineWasDeployed = False, $bIfMachineHasAbility 
 		If $bIfMachineWasDeployed Then TriggerMachineAbility($bIfMachineHasAbility, $aMachineSlot_XYA)
 		;If _Sleep(1000) Then Return -1
 		_Sleep(1000)
-		$aXXXTentancion = _MultiPixelSearch(366, 5 + $g_iBottomOffsetYnew, 483, 28 + $g_iBottomOffsetYnew, 1, 1, Hex(0xFCD4D3, 6), $offColors, 30) 
-		If IsArray($aXXXTentancion) Then ExitLoop
+		$aOpponentVillageVisible = _MultiPixelSearch(378, 7, 489, 28, 1, 1, Hex(0xFCD4D3, 6), $g_aOpponentVillageVisible, 30) 
+		If IsArray($aOpponentVillageVisible) Then ExitLoop
 	Next
 
 	If $i > 15 Then
@@ -54,7 +53,7 @@ Func BuilderBaseAttackBar($bIfMachineWasDeployed = False, $bIfMachineHasAbility 
 	For $iTro = 0 To 15 
 	$aResultsUnSelected = _ImageSearchXMLBoludoz($g_sBundleAttackBarBB, $g_aBundleAttackBarBBParms[0], $g_aBundleAttackBarBBParms[1], $g_aBundleAttackBarBBParms[2], $g_bDebugBBattack)
 	Next
-	_ArrayDisplay($aResultsUnSelected)
+	;_ArrayDisplay($aResultsUnSelected)
 
 	SetDebugLog("Benchmark Attack bar: " & (Round(_Timer_Diff($hStarttime), 2)) & "'ms")
 	If Not IsArray($aResultsUnSelected) Then
@@ -97,8 +96,8 @@ Func BuilderBaseAttackBar($bIfMachineWasDeployed = False, $bIfMachineHasAbility 
 				If $aAllResults[$i][0] = "Machine" Then
 					$iTroopQty = 1
 				Else
-					$iTroopQty = Number(_getTroopCountSmall($aTempSlot[0], 640 + $g_iBottomOffsetYNew)) ; RC Done ; For small numbers when the troop isn't selected
-					If $iTroopQty < 1 Then $iTroopQty = Number(_getTroopCountBig($aTempSlot[0], 633 + $g_iBottomOffsetYNew)) ; RC Done ; For Big numbers when the troop is selected
+					$iTroopQty = Number(_getTroopCountSmall($aTempSlot[0], 640)) ; RC Done ; For small numbers when the troop isn't selected
+					If $iTroopQty < 1 Then $iTroopQty = Number(_getTroopCountBig($aTempSlot[0], 633)) ; RC Done ; For Big numbers when the troop is selected
 				EndIf
 
 				If $g_bDebugSetlog Then SetDebugLog("OCR : " & $aTempSlot[0] & "|SLOT: " & $aTempSlot[1] & "|QTY: " & $iTroopQty, $COLOR_DEBUG) ;Debug
@@ -144,7 +143,7 @@ Func BuilderBaseAttackBarSlot($iTroopsSlotPosX, ByRef $bScreenCapture, ByRef $iL
 	EndIf
 	For $iTroopsSlotStartPosX = $iTroopsSlotPosX To $iTroopsSlotPosX - $iMaxSelectedSlotSize Step -1
 		If ($iTroopsSlotStartPosX > 0) Then ;Just in case of 12 slot's this value can be in negative
-			If _ColorCheck(_GetPixelColor($iTroopsSlotStartPosX, 722 + $g_iBottomOffsetYNew, False), Hex(0x000000, 6), 20) Then ExitLoop ; RC Done
+			If _ColorCheck(_GetPixelColor($iTroopsSlotStartPosX, 722, False), Hex(0x000000, 6), 20) Then ExitLoop ; RC Done
 		Else
 			ExitLoop
 		EndIf
@@ -277,7 +276,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $AvailableTroops)
 		If StringCompare($NewAvailableTroops[$i][0], $aCamps[$i]) <> 0 Then
 			$Waschanged = True
 			Setlog("Incorrect troop On Camp " & $i + 1 & " - " & $NewAvailableTroops[$i][0] & " -> " & $aCamps[$i])
-			Local $PointSwitch = [$SwicthBtn[$i], 708 + $g_iBottomOffsetYNew] ; RC Done
+			Local $PointSwitch = [$SwicthBtn[$i], 708] ; RC Done
 			ClickP($PointSwitch, 1, 0)
 			If Not _WaitForCheckXML(@ScriptDir & "\imgxml\BuildersBase\Attack\VersusBattle\ChangeTroops\", "0,400,855,25", True, 10000, 250) Then ; RC Done
 				Setlog("_WaitForCheckXML Error at Camps!", $COLOR_ERROR)
@@ -325,8 +324,8 @@ Func BuilderBaseSelectCorrectScript(ByRef $AvailableTroops)
 	For $i = 0 To UBound($AvailableTroops) - 1
 		If Not $g_bRunState Then Return
 		If $AvailableTroops[$i][0] <> "" Then ;We Just Need To redo the ocr for mentioned troop only
-			$AvailableTroops[$i][2] = Number(_getTroopCountBig(Number($AvailableTroops[$i][1]), 633 + $g_iBottomOffsetYNew)) ; RC Done
-			If $AvailableTroops[$i][2] < 1 Then $AvailableTroops[$i][2] = Number(_getTroopCountSmall(Number($AvailableTroops[$i][1]), 640 + $g_iBottomOffsetYNew)) ; RC Done ; For Small numbers when the troop is selected
+			$AvailableTroops[$i][2] = Number(_getTroopCountBig(Number($AvailableTroops[$i][1]), 633)) ; RC Done
+			If $AvailableTroops[$i][2] < 1 Then $AvailableTroops[$i][2] = Number(_getTroopCountSmall(Number($AvailableTroops[$i][1]), 640)) ; RC Done ; For Small numbers when the troop is selected
 			If $AvailableTroops[$i][0] = "Machine" Then $AvailableTroops[$i][2] = 1
 		EndIf
 	Next

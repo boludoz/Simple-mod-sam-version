@@ -5,20 +5,18 @@
 ; Parameters ....: ---
 ; Return values .: ---
 ; Author ........: RoroTiti
-; Modified ......: ---
+; Modified ......: Demen (STOP FOR WAR OCR) / BLD
 ; Remarks .......: This file is part of MyBotRun. Copyright 2017
 ;                  MyBotRun is distributed under the terms of the GNU GPL
 ; Related .......: ---
 ; Link ..........: https://www.mybot.run
 ; Example .......: ---
 ;================================================================================================================================
-
 Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME_WIDTH, $Bottom = $g_iGAME_HEIGHT, $bNeedCapture = True, $Debug = False, $OcrDecode = 3, $OcrSpace = 12) ; EDITED By FENIX MOD
 	;If ($ValueReturned <> "BC1") And ($ValueReturned <> "CX") And ($ValueReturned <> "N1") And ($ValueReturned <> "NX") And ($ValueReturned <> "Q1") And ($ValueReturned <> "QX") And ($ValueReturned <> "NxCx") And ($ValueReturned <> "N1Cx1") And ($ValueReturned <> "OCR") Then ; EDITED By FENIX MOD
 	;	SetLog("Bad parameters during QuickMIS call for MultiSearch...", $COLOR_RED)
 	;	Return
 	;EndIf
-
 	If $bNeedCapture Then _CaptureRegion2($Left, $Top, $Right, $Bottom)
 	Local $Res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $directory, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
 	If @error Then _logErrorDLLCall($g_sLibMyBotPath, @error)
@@ -47,7 +45,7 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 					Return 0
 				Case "NxCx"
 					Return 0
-				Case "OCR" ; EDITED By FENIX MOD
+				Case "OCR" 
 					Return "none"
 			EndSwitch
 
@@ -250,6 +248,8 @@ Func _ImageSearchXMLBoludoz($sTilePath, $Quantity2Match = 0, $saiArea2SearchOri 
 	;If Not IsBool($DebugLog) Then $DebugLog = False
 	;#ce
 	
+	;IsArray($rect) ? $rect : GetRectArray($rect, False)
+	
 	Local $sArea2Search = $saiArea2SearchOri
 	
 	If IsInt($sArea2Search) and $sArea2Search = 0 Then 
@@ -326,7 +326,7 @@ Func _ImageSearchXMLBoludoz($sTilePath, $Quantity2Match = 0, $saiArea2SearchOri 
 		Return $aAllResults
 	Else
 		If $DebugLog = True Or $g_bDebugSetlog Then SetLog("_ImageSearchXMLBoludoz Return: -1", $COLOR_ERROR)
-		Return -1
+		Return 0
 	EndIf
 
 EndFunc   ;==>_ImageSearchXMLBoludoz

@@ -131,11 +131,11 @@ Func SuggestedUpgradeBuildings($bDebug = False)
 	FuncEnter(SuggestedUpgradeBuildings)
 
 	; Check if you are on Builder island
-	If isOnBuilderBase() Then
+	If isOnBuilderBaseEz() Then
 		; Will Open the Suggested Window and check if is OK
 		If ClickOnBuilder() Then
 			SetLog(" - Upg Window Opened successfully", $COLOR_INFO)
-			Local $y = 102 + $g_iMidOffsetYNew, $y1 = 132 + $g_iMidOffsetYNew, $step = 30, $x = 400, $x1 = 540 ; RC Done
+			Local $y = 102, $y1 = 132, $step = 30, $x = 400, $x1 = 540 ; RC Done
 			; Only 3 possible Icons appears on Window
 			For $i = 0 To 2
 				Local $bSkipGoldCheck = False
@@ -226,7 +226,7 @@ Func ClickOnBuilder()
 			Click($aMasterBuilder[0], $aMasterBuilder[1], 1)
 			If _Sleep(2000) Then Return
 			; Let's verify if the Suggested Window open
-			;If QuickMIS("BC1", $g_sImgAutoUpgradeWindow, 330, 85+ $g_iMidOffsetYNew, 550, 145+ $g_iMidOffsetYNew, $Screencap, $Debug) Then ; RC Done
+			;If QuickMIS("BC1", $g_sImgAutoUpgradeWindow, 330, 85+ $g_iMidOffsetY, 550, 145+ $g_iMidOffsetY, $Screencap, $Debug) Then ; RC Done
 			Return True
 			;Else
 			;$sDebugText = "Window didn't opened"
@@ -279,8 +279,8 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False)
 	If $sUpgButtom = "Elixir" Then $sUpgButtom = $g_sImgAutoUpgradeBtnElixir
 	If $sUpgButtom = "Gold" Then $sUpgButtom = $g_sImgAutoUpgradeBtnGold
 
-	If QuickMIS("BC1", $g_sImgAutoUpgradeBtnDir, 300, 650 + $g_iBottomOffsetYNew, 600, 720 + $g_iBottomOffsetYNew, True, $Debug) Then
-		Local $sBuildingName = getNameBuilding(242, 520 + $g_iBottomOffsetY)
+	If QuickMIS("BC1", $g_sImgAutoUpgradeBtnDir, 300, 650, 600, 720, True, $Debug) Then
+		Local $sBuildingName = getNameBuilding(242, 520)
 		If _Sleep(500) Then Return
 		SetLog("Building: " & $sBuildingName, $COLOR_INFO)
 		; Verify if is Builder Hall and If is to Upgrade

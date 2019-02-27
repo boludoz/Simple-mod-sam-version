@@ -24,3 +24,16 @@ Func isOnBuilderBase($bNeedCaptureRegion = False)
 		Return False
 	EndIf
 EndFunc
+
+Global Const $imgPathIsBB = @ScriptDir & "\imgxml\BuildersBase\IsBuilderBase"
+Func isOnBuilderBaseEz($bNeedCaptureRegion = False)
+	_Sleep($DELAYISBUILDERBASE)
+	If QuickMIS("BC1", $imgPathIsBB, 348, 3, 410, 56, True, False) Then
+		If $g_bDebugSetlog Then SetDebugLog("Builder Base Builder detected", $COLOR_DEBUG)
+		Return True
+	Else
+		If $g_bDebugSetlog Then SetDebugLog("Builder Base Builder detected", $COLOR_DEBUG)
+	EndIf
+	Return False
+
+EndFunc

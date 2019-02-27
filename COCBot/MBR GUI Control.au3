@@ -512,13 +512,9 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 					MakeScreenshot($g_sProfileTempPath, "png")
 				EndIf
 			EndIf
-        Case $g_hPicArrowLeft
-            $g_iCurrentReport -= 1
-            If $g_iCurrentReport < $g_iVillageReport Then $g_iCurrentReport = $g_iBBReport
-            btnVillageStat()
-        Case $g_hPicArrowRight
-            $g_iCurrentReport += 1
-            If $g_iCurrentReport > $g_iBBReport Then $g_iCurrentReport = $g_iVillageReport
+		Case $g_hPicTwoArrowShield
+			btnVillageStat()
+		Case $g_hPicArrowLeft, $g_hPicArrowRight
 			btnVillageStat()
 
 			; debug checkboxes and buttons

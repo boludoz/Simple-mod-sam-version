@@ -108,25 +108,26 @@ Global Const $g_sImgTroopsUpgradeTroops = @ScriptDir & "\imgxml\BuildersBase\Tro
 #EndRegion Troops Upgrade Builder Base
 
 #Region Check Army Builder Base
-Global Const $aArmyTrainButtonBB[4] = [46, 572+ $g_iBottomOffsetYNew, 0xE5A439, 10] ; RC Done
-Global Const $g_sImgPathFillArmyCampsWindow = @ScriptDir & "\imgxml\BuildersBase\FillArmyCamps\Window"
-Global Const $g_aBundlePathCamps[3] = [1000, "50,302,816,345", True] ; RC Done ; [0] Quantity2Match [1] Area2Search [2] ForceArea
+Global Const $aArmyTrainButtonBB[4] = [46, 572, 0xE5A439, 10] ; DESRC Done - OKKK
+Global Const $g_sImgPathFillArmyCampsWindow = @ScriptDir & "\imgxml\BuildersBase\FillArmyCamps\Window" 
+Global Const $g_aBundlePathCamps[3] = [1000, "40, 187, 820, 400", True] ; DESRC Done ; [0] Quantity2Match [1] Area2Search [2] ForceArea ; - OKKK
 Global Const $g_sImgPathCamps = @ScriptDir & "\imgxml\BuildersBase\Bundles\Camps\"
 Global Const $g_sImgPathTroopsTrain = @ScriptDir & "\imgxml\BuildersBase\FillArmyCamps\TroopsTrain"
 #EndRegion Check Army Builder Base
 
 #Region Builder Base Attack
-Global Const $g_sXMLOpponentVillageVisible = @ScriptDir & "\imgxml\BuildersBase\Attack\VersusBattle\OpponentVillage\"
-Global Const $g_aXMLOpponentVillageVisibleParms[3] = [1000, "650,0,200,70", True] ; [0] Quantity2Match [1] Area2Search [2] ForceArea
+;Global Const $g_sXMLOpponentVillageVisible = @ScriptDir & "\imgxml\BuildersBase\Attack\VersusBattle\OpponentVillage\"
+;Global Const $g_aXMLOpponentVillageVisibleParms[3] = [1000, "650,0,200,70", True] ; [0] Quantity2Match [1] Area2Search [2] ForceArea
+Global $g_aOpponentVillageVisible[1][3] = [[0xFED5D4, 0, 1]] ; more ez ; samm0d
 
 Global Const $g_sBundleAttackBarBB = @ScriptDir & "\imgxml\BuildersBase\Bundles\AttackBar"
 Global Const $g_sBundleBuilderHall = @ScriptDir & "\imgxml\BuildersBase\Bundles\BuilderHall"
 Global Const $g_sBundleDeployPointsBB = @ScriptDir & "\imgxml\BuildersBase\Bundles\DeployPoints"
 
-Global Const $g_aBundleDeployPointsBBParms[3] = [0, "0,0,860,644", True] ; RC Done ; [0] Quantity2Match [1] Area2Search [2] ForceArea
-Global Const $g_aBundleBuilderHallParms[3] = [1, "0,0,860,644", True] ; RC Done ; [0] Quantity2Match [1] Area2Search [2] ForceArea
-Global Const $g_aBundleAttackBarBBParms[3] = [1000, "42,567,860,614", True] ; RC Done ; [0] Quantity2Match [1] Area2Search [2] ForceArea
-Global Const $g_aBundleAttackBarSwitchBBParms[3] = [1000, "30,452,830,45", False] ; RC Done ; [0] Quantity2Match [1] Area2Search [2] ForceArea
+Global Const $g_aBundleDeployPointsBBParms[3] = [0, "0,0,860,629", True] ; DESRC Done ; [0] Quantity2Match [1] Area2Search [2] ForceArea
+Global Const $g_aBundleBuilderHallParms[3] = [1, "0,0,860,629", True] ; DESRC Done ; [0] Quantity2Match [1] Area2Search [2] ForceArea
+Global Const $g_aBundleAttackBarBBParms[3] = [1000, "0, 657, 801, 694", True] ; DESRC Done ; [0] Quantity2Match [1] Area2Search [2] ForceArea
+Global Const $g_aBundleAttackBarSwitchBBParms[3] = [1000, "0, 696, 801, 722", False] ; DESRC Done ; [0] Quantity2Match [1] Area2Search [2] ForceArea
 
 Global Const $g_sImgOpponentBuildingsBB = @ScriptDir & "\imgxml\BuildersBase\Attack\VersusBattle\Buildings\"
 
@@ -136,7 +137,7 @@ Global Const $g_sImgFullArmyBB = @ScriptDir & "\imgxml\BuildersBase\Attack\Versu
 Global Const $g_sImgHeroStatusRec = @ScriptDir & "\imgxml\BuildersBase\Attack\VersusBattle\ArmyStatus\Hero\Recovering\"
 Global Const $g_sImgHeroStatusUpg = @ScriptDir & "\imgxml\BuildersBase\Attack\VersusBattle\ArmyStatus\Hero\Upgrading\"
 Global Const $g_sImgHeroStatusMachine = @ScriptDir & "\imgxml\BuildersBase\Attack\VersusBattle\ArmyStatus\Hero\Battle Machine\"
-Global Const $g_sImgFindBtnBB = @ScriptDir & "\imgxml\BuildersBase\Attack\VersusBattle\FindNowbtn\"
+;Global Const $g_sImgFindBtnBB = @ScriptDir & "\imgxml\BuildersBase\Attack\VersusBattle\FindNowbtn\"
 Global Const $g_sImgCloudSearch = @ScriptDir & "\imgxml\BuildersBase\Attack\VersusBattle\Clouds\"
 
 ; Report Window : Victory | Draw | Defeat
@@ -149,3 +150,7 @@ Global Const $g_sImgReportResultBB = @ScriptDir & "\imgxml\BuildersBase\Attack\V
 Global Const $g_sBundleWallsBB = @ScriptDir & "\imgxml\BuildersBase\Bundles\Walls\BBWall.DocBundle"
 Global Const $g_aBundleWallsBBParms[3] = [0, "0,50,860,594", False] ; [0] Quantity2Match [1] Area2Search [2] ForceArea
 #EndRegion Builder Base Walls Upgrade
+
+;Machine Ability Pixel Is different with Machine Level ;e.g With 7 $MachineSlot[2] = (7*72)-25 = 479 And Pixel It Contains 479x633 -> E7CE93 Or AE9A88
+Local $aMachineAbilityPixels[3] = [0xAE9A88, 0xE7CE93, 0xCEB385]
+Local $aMachineDeadPixels[3] = [0x4E4E4E, 0x676767, 0x5B5B5B]

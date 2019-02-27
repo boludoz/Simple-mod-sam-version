@@ -49,7 +49,7 @@ Func CheckArmyBuilderBase($test = False)
 	Click($aArmyTrainButtonBB[0], $aArmyTrainButtonBB[1], 1)
 
 	; Wait for Window
-	If Not _WaitForCheckXML($g_sImgPathFillArmyCampsWindow, "302,364,373,412", True, 10000, 100) Then ; RC Done
+	If Not _WaitForCheckXML($g_sImgPathFillArmyCampsWindow, "278, 409, 411, 464", True, 10000, 100) Then ; DESRC Done
 		Setlog("Can't Open The Fill Army Camps Window!", $COLOR_DEBUG)
 		ClickP($aAway, 1, 0, "#0332") ;Click Away
 		Return
@@ -105,7 +105,7 @@ Func CheckArmyBuilderBase($test = False)
 
 				; For Drop and Pekka is necessary a slide before
 				If ArmyCampSelectedNames($aArmyCampSelected[$a]) = "Drop" Or ArmyCampSelectedNames($aArmyCampSelected[$a]) = "Pekka" Then
-					ClickDrag(575, 522 + $g_iMidOffsetYNew, 280, 522 + $g_iMidOffsetYNew, 50) ; RC Done
+					ClickDrag(575, 522, 280, 522, 50) ; RC Done
 					$TroopsResult = Null
 					$detected = False
 					If _Sleep(1500) Then Return
@@ -134,7 +134,7 @@ Func CheckArmyBuilderBase($test = False)
 
 				; For Drop and Pekka is necessary a slide after
 				If ArmyCampSelectedNames($aArmyCampSelected[$a]) = "Drop" Or ArmyCampSelectedNames($aArmyCampSelected[$a]) = "Pekka" Then
-					ClickDrag(280, 522 + $g_iMidOffsetYNew, 575, 522 + $g_iMidOffsetYNew, 50) ; RC Done
+					ClickDrag(280, 522, 575, 522, 50) ; DESRC Done
 					$detected = False
 					$TroopsResult = Null
 					If _Sleep(1500) Then Return
@@ -193,7 +193,7 @@ EndFunc   ;==>DetectCamps
 
 Func DetectTroopsInCamps(ByRef $aCampsCoordinates)
 	; Max 6 armys
-	Local $aResults = QuickMIS("NxCx", $g_sImgPathTroopsTrain, 40, 245 + $g_iMidOffsetYNew, 817, 310 + $g_iMidOffsetYNew, True, False) ; RC Done
+	Local $aResults = QuickMIS("NxCx", $g_sImgPathTroopsTrain, 40, 245, 817, 310, True, False) ; RC Done
 
 	If $aResults = 0 Then Return -1
 
@@ -236,11 +236,11 @@ Func DetectTroopsInCamps(ByRef $aCampsCoordinates)
 EndFunc   ;==>DetectTroopsInCamps
 
 Func DeleteTroop(ByRef $Name, $X, $Y)
-	; FD8992 Is Light Red button to delete the troop :  X+73 and Y-106 are the offsets to Red Button  ; FD898D
+	; FD8992 Is Light Red button to delete the troop :  X+93 and Y-91 are the offsets to Red Button  ; FD898D
 	SetDebugLog("Camp Coordinates: " & $X & "," & $Y)
-	SetDebugLog("Red Color Check: " & _GetPixelColor($X + 73, $Y - 106, True))
-	If _ColorCheck(_GetPixelColor($X + 73, $Y - 106, True), Hex(0xFD8992, 6), 20) Then
-		Click($X + 73, $Y - 106, 1)
+	SetDebugLog("Red Color Check: " & _GetPixelColor($X + 93, $Y - 91, True))
+	If _ColorCheck(_GetPixelColor($X + 93, $Y - 91, True), Hex(0xFD8992, 6), 40) Or _ColorCheck(_GetPixelColor($X + 93, $Y - 91, True), Hex(0xE50E0E, 6), 40) Then
+		Click($X + 93, $Y - 91, 1)
 		$Name = "EmptyCamp"
 	EndIf
 EndFunc   ;==>DeleteTroop
@@ -252,7 +252,7 @@ EndFunc   ;==>ArmyCampSelectedNames
 
 Func DetectTroopsAvailable($log = False)
 
-	Local $aResults = QuickMIS("NxCx", $g_sImgPathTroopsTrain, 45, 480 + $g_iMidOffsetYNew, 815, 560 + $g_iMidOffsetYNew, True, False) ; RC Done
+	Local $aResults = QuickMIS("NxCx", $g_sImgPathTroopsTrain, 37, 240, 820 346, True, False) ; RERC Done
 
 	If $aResults = 0 Then Return -1
 

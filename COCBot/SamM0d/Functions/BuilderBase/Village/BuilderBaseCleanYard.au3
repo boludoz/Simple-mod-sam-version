@@ -31,7 +31,7 @@ Func CleanYardBB() ;Call this function After ClockTower So It can benfit from bu
 
 	Local $bBuilderBase = True
 
-	If isOnBuilderBase() Then ; Double Check to see if Bot is on builder base
+	If isOnBuilderBaseEz() Then ; Double Check to see if Bot is on builder base
 		SetLog("Going to check Builder Base Yard For Obstacles!", $COLOR_INFO)
 		; Timer
 		Local $hObstaclesTimer = __TimerInit()

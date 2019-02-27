@@ -64,7 +64,7 @@ Func StartClockTowerBoost()
 			$aCTCoords[1] = $aCTCoords[1] + 5 ;Add 5 Pixels To Y-axis Fix For Clock Tower Misclicking walls By This It will Click On Clock Tower Center
 			ClickP($aCTCoords)
 			If _Sleep($DELAYCLOCKTOWER1) Then Return
-			If Not QuickMIS("BC1", $g_sImgPathIsCTBoosted, 200, 615+ $g_iBottomOffsetYNew, 200 + 460, 615 + 25+ $g_iBottomOffsetYNew, True, False) Then ; RC Done
+			If Not QuickMIS("BC1", $g_sImgPathIsCTBoosted, 200, 615, 200 + 460, 615 + 25, True, False) Then ; RC Done
 				$aCTBoost = findButton("BoostCT") ; Search for Start Clock Tower Boost Button
 				If IsArray($aCTBoost) Then
 					ClickP($aCTBoost)

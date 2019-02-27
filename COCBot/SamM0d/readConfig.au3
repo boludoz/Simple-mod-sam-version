@@ -252,3 +252,7 @@ Next
 IniReadS($g_bRequestCCForWar, $g_sProfileConfigPath, "war preparation", "RequestCC War", False, "Bool")
 $g_sTxtRequestCCForWar = IniRead($g_sProfileConfigPath, "war preparation", "RequestCC War Text", "War troop please")
 
+; Village mode
+;IniReadS($g_bChkFarmVersion, $g_sProfileConfigPath, "general", "FarmVersion", False, "Bool")
+IniReadS($g_bChkPlayBBOnly, $g_sProfileConfigPath, "general", "PlayBBOnly", False, "Bool")
+

@@ -17,6 +17,11 @@ Func BotDetectFirstTime()
 
 	ClickP($aAway, 1, 0, "#0166") ; Click away
 	If _Sleep($DELAYBOTDETECT1) Then Return
+	
+	If $g_bChkPlayBBOnly = True And IsOnBuilderBaseEz() Then 
+		$g_bFirstRun = True
+		Return
+	EndIf
 
     SetLog("Detecting your Buildings", $COLOR_INFO)
 

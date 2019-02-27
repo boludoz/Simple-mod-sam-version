@@ -8,7 +8,7 @@
 ;                  $iSpeed              - Wait time after click
 ;				   $sdebugtxt		    - String with click debug text
 ; Return values .: None
-; Author ........: Samkie (23 Feb 2017)
+; Author ........: Samkie (23 Feb 2017) / Boludoz (23/2/2019)
 ; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2016
 ;                  MyBot is distributed under the terms of the GNU GPL
@@ -19,16 +19,16 @@
 
 Func LocateTroopButton($TroopButton, $bIsBrewSpell = False)
 	If IsTrainPage() Then
-		Local $aRegionForScan[4] = [17,319,840,538] ; RC DONE
+        Local $aRegionForScan[4] = [26,411,840,536]
 		Local $aButtonXY
 		Local $iPseudoRandomDrag
 		Local $iToClick = 0
 		If $bIsBrewSpell Then $TroopButton = "Spell" & $TroopButton
 		
 		Local Const $sImgTroopButton = $g_sSamM0dImageLocation & "\TrainButtons"
-		Local $aSettingTroopButton[3] = [1000, "17,319,840,538", False] ; RC Done ; [0] Quantity2Match [1] Area2Search [2] ForceArea
+		Local $aSettingTroopButton[2] = [1000, False] ; RC Done ; [0] Quantity2Match [2] ForceArea
 
-		Local $aTroopPosition = _ImageSearchXMLBoludoz($sImgTroopButton, $aSettingTroopButton[0], $aSettingTroopButton[1], $aSettingTroopButton[2], True)
+		Local $aTroopPosition = _ImageSearchXMLBoludoz($sImgTroopButton, $aSettingTroopButton[0], $aRegionForScan, $aSettingTroopButton[1], True)
 			For $i = 0 To UBound($aTroopPosition) - 1
 				If StringInStr($aTroopPosition[$i][0], $TroopButton) > 0 Then
 					$g_iTroopButtonX = Number($aTroopPosition[$i][1])
@@ -70,67 +70,7 @@ Func LocateTroopButton($TroopButton, $bIsBrewSpell = False)
 		_DebugFailedImageDetection("LocateTroopButton")
 		SetLog("Cannot find image file " & $TroopButton & " for scan", $COLOR_ERROR)
 		Return False
-		#cs
-		_CaptureRegion2($aRegionForScan[0],$aRegionForScan[1],$aRegionForScan[2],$aRegionForScan[3])
-		Local $aFileToScan = _FileListToArrayRec($g_sSamM0dImageLocation & "\TrainButtons", $TroopButton & "*.png", $FLTAR_FILES, $FLTAR_NORECUR, $FLTAR_SORT, $FLTAR_NOPATH)
-		If UBound($aFileToScan) > 1 Then
-			For $i = 1 To UBound($aFileToScan) - 1
-				If $g_iSamM0dDebug = 1 Then SetLog("$aFileToScan[" & $i & "]: " & $aFileToScan[$i])
-				If StringInStr($aFileToScan[$i],$TroopButton) Then
-					Local $result = FindImageInPlace($TroopButton, $g_sSamM0dImageLocation & "\TrainButtons\" & $aFileToScan[$i], "0,0," & $aRegionForScan[2] - $aRegionForScan[0] & "," & $aRegionForScan[3] - $aRegionForScan[1], False)
-					If StringInStr($result, ",") > 0 Then
-						$aButtonXY = StringSplit($result, ",", $STR_NOCOUNT)
-						ExitLoop
-					EndIf
-				EndIf
-			Next
-		Else
-			SetLog("Cannot find image file " & $TroopButton & " for scan", $COLOR_ERROR)
-			Return False
-		EndIf
-		_debugSaveHBitmapToImage($g_hHBitmap2, "RegionForScan")
-		If $g_hHBitmap2 <> 0 Then
-			GdiDeleteHBitmap($g_hHBitmap2)
-		EndIf
 
-		If IsArray($aButtonXY) Then
-			$g_iTroopButtonX = $aRegionForScan[0] + $aButtonXY[0]
-			$g_iTroopButtonY = $aRegionForScan[1] + $aButtonXY[1]
-			Return True
-		Else
-		#ce
-
-		#cs
-			_CaptureRegion2($aRegionForScan[0],$aRegionForScan[1],$aRegionForScan[2],$aRegionForScan[3])
-			Local $aFileToScan = _FileListToArrayRec($g_sSamM0dImageLocation & "\TrainButtons", $TroopButton & "*.png", $FLTAR_FILES, $FLTAR_NORECUR, $FLTAR_SORT, $FLTAR_NOPATH)
-			If UBound($aFileToScan) > 1 Then
-				For $i = 1 To UBound($aFileToScan) - 1
-					If $g_iSamM0dDebug = 1 Then SetLog("$aFileToScan[" & $i & "]: " & $aFileToScan[$i])
-					If StringInStr($aFileToScan[$i],$TroopButton) Then
-						Local $result = FindImageInPlace($TroopButton, $g_sSamM0dImageLocation & "\TrainButtons\" & $aFileToScan[$i], "0,0," & $aRegionForScan[2] - $aRegionForScan[0] & "," & $aRegionForScan[3] - $aRegionForScan[1], False)
-						If StringInStr($result, ",") > 0 Then
-							$aButtonXY = StringSplit($result, ",", $STR_NOCOUNT)
-							ExitLoop
-						EndIf
-					EndIf
-				Next
-			Else
-				SetLog("Cannot find image file " & $TroopButton & " for scan", $COLOR_ERROR)
-			EndIf
-
-			_debugSaveHBitmapToImage($g_hHBitmap2, "RegionForScan")
-			If $g_hHBitmap2 <> 0 Then
-				GdiDeleteHBitmap($g_hHBitmap2)
-			EndIf
-
-			If IsArray($aButtonXY) Then
-				$g_iTroopButtonX = $aRegionForScan[0] + $aButtonXY[0]
-				$g_iTroopButtonY = $aRegionForScan[1] + $aButtonXY[1]
-				Return True
-			EndIf
-		EndIf
-	EndIf
-	#ce
 EndFunc
 
 Func PseudoRandomDrag()

@@ -30,7 +30,7 @@ Func WallsUpgradeBB()
 
 	Local $bBuilderBase = True
 
-	If isOnBuilderBase() Then ; Double Check to see if Bot is on builder base
+	If isOnBuilderBaseEz() Then ; Double Check to see if Bot is on builder base
 		SetLog("Start Upgrade BB Wall!", $COLOR_INFO)
 		; Timer
 		Local $hWallBBTimer = __TimerInit()
@@ -60,7 +60,7 @@ Func WallsUpgradeBB()
 					If $g_bDebugSetlog Then SetDebugLog($WallsBBNXY[$i][0] & " found at (" & $WallsBBNXY[$i][1] & "," & $WallsBBNXY[$i][2] & ")", $COLOR_SUCCESS)
 					If IsMainPageBuilderBase() Then Click($WallsBBNXY[$i][1], $WallsBBNXY[$i][2], 1, 0, "#902") ; Click in Wall
 					If _Sleep($DELAYCOLLECT3) Then Return
-					Local $aResult = BuildingInfo(245, 520 + $g_iBottomOffsetY) ; Get building name and level with OCR
+					Local $aResult = BuildingInfo(245, 520) ; Get building name and level with OCR
 					If $aResult[0] = 2 Then ; We found a valid building name
 						If StringInStr($aResult[1], "wall") = True And Number($aResult[2]) = $BBWallLevel Then ; we found a wall
 							SetLog("Position : " & $WallsBBNXY[$i][1] & ", " & $WallsBBNXY[$i][2] & " is a Wall Level: " & $BBWallLevel & ".")

@@ -52,7 +52,7 @@ Global $sTxtBatSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells
 Global $hGUI_MOD = 0
 Local $sTxtTip
 
-$hGUI_MOD = GUICreate("", $_GUI_MAIN_WIDTH - 20, $_GUI_MAIN_HEIGHT - 255 + $resizerc, $_GUI_CHILD_LEFT, $_GUI_CHILD_TOP, $WS_CHILD, -1, $g_hFrmBotEx)
+$hGUI_MOD = GUICreate("", $_GUI_MAIN_WIDTH - 20, ($_GUI_MAIN_HEIGHT - 255) + $resizerc, $_GUI_CHILD_LEFT, $_GUI_CHILD_TOP, $WS_CHILD, -1, $g_hFrmBotEx)
 
 ;GUISetBkColor($COLOR_WHITE, $hGUI_BOT)
 
@@ -60,7 +60,7 @@ GUISwitch($hGUI_MOD)
 
 ;========================Attack=============================
 SplashStep("Loading M0d - smartZap tab...")
-GUICtrlCreateTab(0, 0, $_GUI_MAIN_WIDTH - 20, $_GUI_MAIN_HEIGHT - 255 + $resizerc, $TCS_FLATBUTTONS)
+GUICtrlCreateTab(0, 0, $_GUI_MAIN_WIDTH - 20, ($_GUI_MAIN_HEIGHT - 255) + $resizerc, $TCS_FLATBUTTONS)
 GUICtrlCreateTabItem(GetTranslatedFileIni("sam m0d", 54, "smartZap"))
 
 ;======================smartzap================================

@@ -234,3 +234,7 @@ Next
 _Ini_Add("war preparation", "RequestCC War", $g_bRequestCCForWar ? 1 : 0)
 _Ini_Add("war preparation", "RequestCC War Text", $g_sTxtRequestCCForWar)
 
+; Village mode
+;_Ini_Add("general", "FarmVersion", $g_bChkFarmVersion ? 1 : 0)
+_Ini_Add("general", "PlayBBOnly", $g_bChkPlayBBOnly ? 1 : 0)
+

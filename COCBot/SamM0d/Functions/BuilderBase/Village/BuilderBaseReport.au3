@@ -38,7 +38,7 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True)
 	$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreen(705, 72)
 	If $g_aiCurrentLootBB[$eLootElixirBB] = "" Then getResourcesBonus(705, 72) ; when reach the full Cap the numbers are bigger
 
-	Local $aResult = QuickMIS("CX", $g_sImgAvailableAttacks, 20, 625 + $g_iBottomOffsetYNew, 110, 650 + $g_iBottomOffsetYNew, True) ; RC Done
+	Local $aResult = QuickMIS("CX", $g_sImgAvailableAttacks, 20, 625, 110, 650, True) ; RC Done
 	$g_iAvailableAttacksBB = UBound($aResult)
 
 	If $bSetLog Then SetLog(" [G]: " & _NumberFormat($g_aiCurrentLootBB[$eLootGoldBB]) & " [E]: " & _NumberFormat($g_aiCurrentLootBB[$eLootElixirBB]) & "[T]: " & _NumberFormat($g_aiCurrentLootBB[$eLootTrophyBB]), $COLOR_SUCCESS)
@@ -55,26 +55,26 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True)
 EndFunc   ;==>BuilderBaseReport
 
 Func BuilderBaseStats()
-	; $g_hLblBBResultGoldNow
-	; $g_hLblBBResultGoldHourNow
+	 $g_hLblBBResultGoldNow
+	 $g_hLblBBResultGoldHourNow
 
-	; $g_hLblBBResultElixirNow
-	; $g_hLblBBResultElixirHourNow
+	 $g_hLblBBResultElixirNow
+	 $g_hLblBBResultElixirHourNow
 
-	; $g_hLblBBResultTrophyNow
-	; $g_hLblBBResultBuilderNow
+	 $g_hLblBBResultTrophyNow
+	 $g_hLblBBResultBuilderNow
 
-	;GUICtrlSetData($g_hLblBBResultGoldNow, _NumberFormat($g_aiCurrentLootBB[$eLootGoldBB], True))
-	;GUICtrlSetData($g_hLblBBResultElixirNow, _NumberFormat($g_aiCurrentLootBB[$eLootElixirBB], True))
-	;GUICtrlSetData($g_hLblBBResultTrophyNow, _NumberFormat($g_aiCurrentLootBB[$eLootTrophyBB], True))
-	;GUICtrlSetData($g_hLblBBResultBuilderNow, $g_iFreeBuilderCountBB & "/" & $g_iTotalBuilderCountBB)
+	GUICtrlSetData($g_hLblBBResultGoldNow, _NumberFormat($g_aiCurrentLootBB[$eLootGoldBB], True))
+	GUICtrlSetData($g_hLblBBResultElixirNow, _NumberFormat($g_aiCurrentLootBB[$eLootElixirBB], True))
+	GUICtrlSetData($g_hLblBBResultTrophyNow, _NumberFormat($g_aiCurrentLootBB[$eLootTrophyBB], True))
+	GUICtrlSetData($g_hLblBBResultBuilderNow, $g_iFreeBuilderCountBB & "/" & $g_iTotalBuilderCountBB)
 
 EndFunc   ;==>BuilderBaseStats
 
 Func BuilderBaseResetStats()
-	;GUICtrlSetData($g_hLblBBResultGoldNow, "")
-	;GUICtrlSetData($g_hLblBBResultElixirNow, "")
-	;GUICtrlSetData($g_hLblBBResultTrophyNow, "")
-	;GUICtrlSetData($g_hLblBBResultBuilderNow, "")
+	GUICtrlSetData($g_hLblBBResultGoldNow, "")
+	GUICtrlSetData($g_hLblBBResultElixirNow, "")
+	GUICtrlSetData($g_hLblBBResultTrophyNow, "")
+	GUICtrlSetData($g_hLblBBResultBuilderNow, "")
 EndFunc   ;==>BuilderBaseResetStats
 

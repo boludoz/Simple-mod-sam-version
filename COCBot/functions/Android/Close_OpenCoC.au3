@@ -86,7 +86,7 @@ Func OpenCoC()
         If checkObstacles() Then $iCount += 1
 		If Mod($iCount, 50) = 0 Then 
 			StartAndroidCoC()
-        	SetLog(Starting game I try : x & $iCount, $COLOR_INFO)
+        	SetLog("Starting game I try : x & $iCount", $COLOR_INFO)
 			If $iCount > 250 Then
 				SetLog("Reboot " & $g_sAndroidEmulator & ", could not open the game..", $COLOR_ERROR)
 				RebootAndroid()

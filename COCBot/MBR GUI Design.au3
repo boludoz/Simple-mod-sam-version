@@ -317,6 +317,10 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 		$g_hFrmBot_MAIN_PIC = _GUICtrlCreatePic($g_sLogoPath, 0, $_GUI_MAIN_TOP, $_GUI_MAIN_WIDTH, 40)
 		GUICtrlSetOnEvent(-1, "BotMoveRequest")
 
+		Local $g_hLblAndroidinfos = GUICtrlCreateLabel($g_sAndroidEmulator & " v" & $g_sAndroidVersion & "  ", $_GUI_MAIN_WIDTH - 250, $_GUI_MAIN_TOP + 28, 250, 12, $SS_RIGHT)
+		GUICtrlSetColor($g_hLblAndroidinfos, $COLOR_BLACK)
+		GUICtrlSetBkColor($g_hLblAndroidinfos, $GUI_BKCOLOR_TRANSPARENT)
+
 		$g_hFrmBot_URL_PIC = _GUICtrlCreatePic($g_sLogoUrlPath, 0, $_GUI_MAIN_TOP + 40, $_GUI_MAIN_WIDTH, 13)
 		GUICtrlSetCursor(-1, 0)
 

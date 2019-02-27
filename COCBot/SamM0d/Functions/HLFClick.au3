@@ -20,47 +20,45 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-; - $g_iMidOffsetYAbs 	        -44  	New
-; - $g_iBottomOffsetYAbs        -88 	New 
 
-Global Const $aButtonClose1[9] 	                = [817, 114	- $g_iMidOffsetYAbs, 836, 134 - $g_iMidOffsetYAbs, 824, 121 - $g_iMidOffsetYAbs, 0xFFFFFF, 10, "=-= Close Train [X]"] ; Train window, Close Button
-Global Const $aButtonClose2[9]                  = [755, 106	- $g_iMidOffsetYAbs, 775, 126 - $g_iMidOffsetYAbs, 764, 114 - $g_iMidOffsetYAbs, 0xFFFFFF, 10, "=-= Close Setting [X] | Def / Atk Log [X]"] ; Def / Atk log window / setting window, Close Button
-Global Const $aButtonClose3[9]                  = [815,  65	- $g_iMidOffsetYAbs, 836,  90 - $g_iMidOffsetYAbs, 826,  73 - $g_iMidOffsetYAbs, 0xFFFFFF, 10, "=-= Close Profile/League/Clan Games [X]"] ; Profile / League page/ Clan Games, Close Button
-Global Const $aButtonClose4[9]                  = [620, 180	- $g_iMidOffsetYAbs, 642, 200 - $g_iMidOffsetYAbs, 632, 188 - $g_iMidOffsetYAbs, 0xFFFFFF, 10, "=-= Close Shield Info [X]"] ; PB Info page, Close Button
-Global Const $aButtonClose5[9] 	                = [806,  27	- $g_iMidOffsetYAbs, 828,  52 - $g_iMidOffsetYAbs, 817,  37 - $g_iMidOffsetYAbs, 0xFFFFFF, 10, "=-= Close Shop [X]"] ; Shop, Close Button  / Same area with map editor close button
-Global Const $aButtonClose6[9]                  = [790,  25	- $g_iMidOffsetYAbs, 818,  48 - $g_iMidOffsetYAbs, 804,  33 - $g_iMidOffsetYAbs, 0xFFFFFF, 10, "=-= Close Launch Attack [X]"] ; Launch Attack Page, Close Button
-Global Const $aButtonClose7[9]                  = [720, 134	- $g_iMidOffsetYAbs, 738, 155 - $g_iMidOffsetYAbs, 717, 152 - $g_iMidOffsetYAbs, 0xE91313, 10, "=-= Close Laboratory [X]"] ; Laboratory Page, Close Button
-Global Const $aButtonClose8[9]                  = [696, 180	- $g_iMidOffsetYAbs, 719, 207 - $g_iMidOffsetYAbs, 692, 201 - $g_iMidOffsetYAbs, 0xE91219, 10, "=-= Close Daily Discounts [X]"] ; Laboratory Page, Close Button
-Global Const $aButtonCloseAway[9]               = [150,   4	- $g_iMidOffsetYAbs, 175,  14 - $g_iMidOffsetYAbs,   0,   0 - $g_iMidOffsetYAbs, 0x0     ,  0, "=-= Random Away Coordinate"]
+Global Const $aButtonClose1[9] 	                = [817, 114, 836, 134, 824, 121, 0xFFFFFF, 10, "=-= Close Train [X]"] ; Train window, Close Button
+Global Const $aButtonClose2[9]                  = [755, 106, 775, 126, 764, 114, 0xFFFFFF, 10, "=-= Close Setting [X] | Def / Atk Log [X]"] ; Def / Atk log window / setting window, Close Button
+Global Const $aButtonClose3[9]                  = [815,  65, 836,  90, 826,  73, 0xFFFFFF, 10, "=-= Close Profile/League/Clan Games [X]"] ; Profile / League page/ Clan Games, Close Button
+Global Const $aButtonClose4[9]                  = [620, 180, 642, 200, 632, 188, 0xFFFFFF, 10, "=-= Close Shield Info [X]"] ; PB Info page, Close Button
+Global Const $aButtonClose5[9] 	                = [806,  27, 828,  52, 817,  37, 0xFFFFFF, 10, "=-= Close Shop [X]"] ; Shop, Close Button  / Same area with map editor close button
+Global Const $aButtonClose6[9]                  = [790,  25, 818,  48, 804,  33, 0xFFFFFF, 10, "=-= Close Launch Attack [X]"] ; Launch Attack Page, Close Button
+Global Const $aButtonClose7[9]                  = [720, 134, 738, 155, 717, 152, 0xE91313, 10, "=-= Close Laboratory [X]"] ; Laboratory Page, Close Button
+Global Const $aButtonClose8[9]                  = [696, 180, 719, 207, 692, 201, 0xE91219, 10, "=-= Close Daily Discounts [X]"] ; Laboratory Page, Close Button
+Global Const $aButtonCloseAway[9]               = [150,   4, 175,  14,   0,   0, 0x0     ,  0, "=-= Random Away Coordinate"]
 
 ;~ ; ScreenCoordinates - first 4 values store the region [x1,y1,x2,y2] that can click; values 5,6,7,8 is the color check pixel x,y,color,tolerance level for confirm the button exist if needed.
-Global Const $aButtonArmyTab[9]                 = [ 30, 115	- $g_iMidOffsetYAbs, 150, 140 - $g_iMidOffsetYAbs,  40, 111 - $g_iMidOffsetYAbs, 0xF9F9F7, 20, "=-= Army Tab"]
-Global Const $aButtonTrainTroopsTab[9]          = [190, 115	- $g_iMidOffsetYAbs, 300, 140 - $g_iMidOffsetYAbs, 200, 111 - $g_iMidOffsetYAbs, 0xF9F9F7, 20, "=-= Train Troops Tab"]
-Global Const $aButtonBrewSpellsTab[9]           = [350, 115	- $g_iMidOffsetYAbs, 460, 140 - $g_iMidOffsetYAbs, 360, 111 - $g_iMidOffsetYAbs, 0xF9F9F7, 20, "=-= Brew Spells Tab"]
-                                                                                                                        
-Global Const $aButtonSeigeMachineTab[9]         = [500, 115	- $g_iMidOffsetYAbs, 620, 140 - $g_iMidOffsetYAbs, 625, 111 - $g_iMidOffsetYAbs, 0xFAFAF7, 20, "=-= Seige Machine Tab"]
+Global Const $aButtonArmyTab[9]                 = [ 30, 115, 150, 140,  40, 111, 0xF9F9F7, 20, "=-= Army Tab"]
+Global Const $aButtonTrainTroopsTab[9]          = [190, 115, 300, 140, 200, 111, 0xF9F9F7, 20, "=-= Train Troops Tab"]
+Global Const $aButtonBrewSpellsTab[9]           = [350, 115, 460, 140, 360, 111, 0xF9F9F7, 20, "=-= Brew Spells Tab"]
 
-Global Const $aButtonQuickTrainTab1[9]          = [500, 115	- $g_iMidOffsetYAbs, 620, 140 - $g_iMidOffsetYAbs, 510, 111	- $g_iMidOffsetYAbs, 0xFAFAF7, 20, "=-= Quick Train Tab Without Seige Machine Tab Exist"]
-Global Const $aButtonQuickTrainTab2[9]          = [665, 115	- $g_iMidOffsetYAbs, 770, 140 - $g_iMidOffsetYAbs, 660, 111	- $g_iMidOffsetYAbs, 0xFAFAF7, 20, "=-= Quick Train Tab With Seige Machine Tab Exist"]
+Global Const $aButtonSeigeMachineTab[9]         = [500, 115, 620, 140, 625, 111, 0xFAFAF7, 20, "=-= Seige Machine Tab"]
 
-Global Const $aButtonOpenTrainArmy[9]  	  	    = [ 25, 570 - $g_iBottomOffsetYAbs,  50, 600 - $g_iBottomOffsetYAbs,  50, 567 - $g_iBottomOffsetYAbs, 0xEEAF45, 20, "=-= Open Train Army Page"] ; Main Screen, Army Train Button
-Global Const $aButtonOpenProfile[9]    	  	    = [ 28,  23 - $g_iMidOffsetYAbs,  46,  46 - $g_iMidOffsetYAbs,  38,  18 - $g_iMidOffsetYAbs, 0x10D0F0, 20, "=-= Open Profile Page"] ; Main page, Open Profile Button
+Global Const $aButtonQuickTrainTab1[9]          = [500, 115, 620, 140, 510, 111, 0xFAFAF7, 20, "=-= Quick Train Tab Without Seige Machine Tab Exist"]
+Global Const $aButtonQuickTrainTab2[9]          = [665, 115, 770, 140, 660, 111, 0xFAFAF7, 20, "=-= Quick Train Tab With Seige Machine Tab Exist"]
 
-Global Const $aButtonOpenShieldInfo[9] 	  	    = [430,   7 - $g_iMidOffsetYAbs, 442,  20, 436 - $g_iMidOffsetYAbs,  14 - $g_iMidOffsetYAbs, 0xF5F5ED,  6, "=-= Open Shield Info Page"] ; main page, open shield info page
-Global Const $aButtonOpenLaunchAttack[9] 		= [ 30, 640 - $g_iBottomOffsetYAbs,  90, 700,  22 - $g_iBottomOffsetYAbs, 674 - $g_iBottomOffsetYAbs, 0x9A4916, 30, "=-= Open Launce Attack Page"] ; Main Page, Attack! Button
+Global Const $aButtonOpenTrainArmy[9]  	  	    = [ 25, 570,  50, 600,  50, 567, 0xEEAF45, 20, "=-= Open Train Army Page"] ; Main Screen, Army Train Button
+Global Const $aButtonOpenProfile[9]    	  	    = [ 28,  23,  46,  46,  38,  18, 0x10D0F0, 20, "=-= Open Profile Page"] ; Main page, Open Profile Button
 
-Global Const $aButtonClanWindowOpen[9]   	    = [  8, 355 - $g_iMidOffsetYAbs,  28, 410 - $g_iMidOffsetYAbs,  16, 400 - $g_iMidOffsetYAbs, 0xC55115, 20, "=-= Open Chat Window"] ; main page, clan chat Button
-Global Const $aButtonClanWindowClose[9]  	    = [321, 355 - $g_iMidOffsetYAbs, 342, 410 - $g_iMidOffsetYAbs, 330, 400 - $g_iMidOffsetYAbs, 0xC55115, 20, "=-= Close Chat Window"] ; main page, clan chat Button
-Global Const $aButtonClanChatTab[9]    	  	    = [175,  14 - $g_iMidOffsetYAbs, 275,  30 - $g_iMidOffsetYAbs, 280,  30 - $g_iMidOffsetYAbs, 0x706C50, 20, "=-= Switch to Clan Channel"] ; Chat page, ClanChat Tab
-Global Const $aButtonClanDonateScrollUp[9] 	    = [290, 100 - $g_iMidOffsetYAbs, 300, 112 - $g_iMidOffsetYAbs, 295, 100 - $g_iMidOffsetYAbs, 0xFFFFFF, 10, "=-= Donate Scroll Up"] ; Donate / Chat Page, Scroll up Button
-Global Const $aButtonClanDonateScrollDown[9] 	= [290, 650 - $g_iBottomOffsetYAbs, 300, 662 - $g_iBottomOffsetYAbs, 295, 655 - $g_iBottomOffsetYAbs, 0xFFFFFF, 10, "=-= Donate Scroll Down"] ; Donate / Chat Page, Scroll Down Button
+Global Const $aButtonOpenShieldInfo[9] 	  	    = [430,   7, 442,  20, 436,  14, 0xF5F5ED,  6, "=-= Open Shield Info Page"] ; main page, open shield info page
+Global Const $aButtonOpenLaunchAttack[9] 		= [ 30, 640,  90, 700,  22, 674, 0x9A4916, 30, "=-= Open Launce Attack Page"] ; Main Page, Attack! Button
 
-Global Const $aButtonAttackReturnHome[9]     	= [385, 558 - $g_iBottomOffsetYAbs, 480, 598 - $g_iBottomOffsetYAbs, 440, 588 - $g_iBottomOffsetYAbs, 0x60B010, 20, "=-= Return Home"] ; IsReturnHomeBattlePage, ReturnHome Button
-Global Const $aButtonAttackSurrender[9]      	= [ 25, 585 - $g_iBottomOffsetYAbs, 110, 609 - $g_iBottomOffsetYAbs,  66, 606 - $g_iBottomOffsetYAbs, 0xC00000, 20, "=-= Surrender Battle"] ; Attack Page, Surrender Button
-Global Const $aButtonAttackEndBattle[9]      	= [ 25, 585 - $g_iBottomOffsetYAbs, 110, 609 - $g_iBottomOffsetYAbs,  66, 606 - $g_iBottomOffsetYAbs, 0xC00000, 20, "=-= End Battle"] ; Attack Page, EndBattle Button
-Global Const $aButtonAttackNext[9] 	            = [710, 560 - $g_iBottomOffsetYAbs, 830, 600 - $g_iBottomOffsetYAbs, 780, 576 - $g_iBottomOffsetYAbs, 0xD34300, 20, "=-= Next"] ; Village Search Next Button
-Global Const $aButtonAttackFindMatch[9] 		= [200, 535 - $g_iBottomOffsetYAbs, 300, 600 - $g_iBottomOffsetYAbs, 148, 529 - $g_iBottomOffsetYAbs, 0xF8E0A2, 30, "=-= Find A Match"] ; Attack Page Find A Match Button
-Global Const $aButtonAttackFindMatchWShield[9]  = [200, 490 - $g_iBottomOffsetYAbs, 300, 530 - $g_iBottomOffsetYAbs, 148, 484 - $g_iBottomOffsetYAbs, 0xF8E0A4, 30, "=-= Find A Match (With Shield)"] ; Attack Page Find A Match Button With Shield
+Global Const $aButtonClanWindowOpen[9]   	    = [  8, 355,  28, 410,  16, 400, 0xC55115, 20, "=-= Open Chat Window"] ; main page, clan chat Button
+Global Const $aButtonClanWindowClose[9]  	    = [321, 355, 342, 410, 330, 400, 0xC55115, 20, "=-= Close Chat Window"] ; main page, clan chat Button
+Global Const $aButtonClanChatTab[9]    	  	    = [175,  14, 275,  30, 280,  30, 0x706C50, 20, "=-= Switch to Clan Channel"] ; Chat page, ClanChat Tab
+Global Const $aButtonClanDonateScrollUp[9] 	    = [290, 100, 300, 112, 295, 100, 0xFFFFFF, 10, "=-= Donate Scroll Up"] ; Donate / Chat Page, Scroll up Button
+Global Const $aButtonClanDonateScrollDown[9] 	= [290, 650, 300, 662, 295, 655, 0xFFFFFF, 10, "=-= Donate Scroll Down"] ; Donate / Chat Page, Scroll Down Button
+
+Global Const $aButtonAttackReturnHome[9]     	= [385, 558, 480, 598, 440, 588, 0x60B010, 20, "=-= Return Home"] ; IsReturnHomeBattlePage, ReturnHome Button
+Global Const $aButtonAttackSurrender[9]      	= [ 25, 585, 110, 609,  66, 606, 0xC00000, 20, "=-= Surrender Battle"] ; Attack Page, Surrender Button
+Global Const $aButtonAttackEndBattle[9]      	= [ 25, 585, 110, 609,  66, 606, 0xC00000, 20, "=-= End Battle"] ; Attack Page, EndBattle Button
+Global Const $aButtonAttackNext[9] 	            = [710, 560, 830, 600, 780, 576, 0xD34300, 20, "=-= Next"] ; Village Search Next Button
+Global Const $aButtonAttackFindMatch[9] 		= [200, 535, 300, 600, 148, 529, 0xF8E0A2, 30, "=-= Find A Match"] ; Attack Page Find A Match Button
+Global Const $aButtonAttackFindMatchWShield[9]  = [200, 490, 300, 530, 148, 484, 0xF8E0A4, 30, "=-= Find A Match (With Shield)"] ; Attack Page Find A Match Button With Shield
 
 Global Const $aButtonRequestCC[9] 			    = [720, 582, 836, 610, 752, 587, 0xDDF685, 20, "=-= Request CC"] ; Train, RequestCC Button
 Global Const $aButtonRequestCCText[9] 		    = [370, 130, 510, 170, 430, 170, 0xFFFFFF, 10, "=-= Select Text"] ; RequestCC, TXT Button

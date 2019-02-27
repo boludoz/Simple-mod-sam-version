@@ -15,8 +15,7 @@
 Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 	Local Static $aAttackBar[0][8]
 	Local Static $bDoubleRow = False, $bCheckSlot12 = False
-	Local $aDiamond = [0, 635 + $g_iBottomOffsetYNew, 835, 698 + $g_iBottomOffsetYNew]
-	Local $sSearchDiamond = GetDiamondFromRect($aDiamond)
+	Local $sSearchDiamond = GetDiamondFromRect("0,635,835,698")
 	Local $iYBelowRowOne = 630, $aiOCRLocation[2] = [-1, -1], $aSlotAmountX[0][3]
 
 	If $g_bDraggedAttackBar Then DragAttackBar($g_iTotalAttackSlot, True)
@@ -34,8 +33,7 @@ Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 		;Check if Double Row is enabled aswell as has 12+ Slots
 		If _CheckPixel($aDoubRowAttackBar, True) Then
 			$bDoubleRow = True
-			$aDiamond = [0, 535 + $g_iBottomOffsetYNew, 835, 698 + $g_iBottomOffsetYNew]
-			$sSearchDiamond = GetDiamondFromRect($aDiamond)
+			$sSearchDiamond = GetDiamondFromRect("0,535,835,698")
 		ElseIf _CheckPixel($a12OrMoreSlots, True) Then
 			$bCheckSlot12 = True
 		EndIf
@@ -358,12 +356,12 @@ Func DragAttackBar($iTotalSlot = 20, $bBack = False)
 
 	If Not $bBack Then
 		SetDebugLog("Dragging attack troop bar to 2nd page. Distance = " & $iTotalSlot - 9 & " slots")
-		ClickDrag(25 + 73 * ($iTotalSlot - 9), 660 + $g_iBottomOffsetYNew, 25, 660 + $g_iBottomOffsetYNew, 1000) ; RC Done
+		ClickDrag(25 + 73 * ($iTotalSlot - 9), 660, 25, 660, 1000)
 		If _Sleep(1000 + $iTotalSlot * 25) Then Return
 		$bAlreadyDrag = True
 	Else
 		SetDebugLog("Dragging attack troop bar back to 1st page. Distance = " & $iTotalSlot - 9 & " slots")
-		ClickDrag(25, 660 + $g_iBottomOffsetYNew, 25 + 73 * ($iTotalSlot - 9), 660 + $g_iBottomOffsetYNew, 1000) ; RC Done
+		ClickDrag(25, 660, 25 + 73 * ($iTotalSlot - 9), 660, 1000)
 		If _Sleep(800 + $iTotalSlot * 25) Then Return
 		$bAlreadyDrag = False
 	EndIf
