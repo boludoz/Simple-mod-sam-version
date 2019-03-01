@@ -26,6 +26,7 @@ Func BotDetectFirstTime()
     SetLog("Detecting your Buildings", $COLOR_INFO)
 
     If Not isInsideDiamond($g_aiTownHallPos) Then
+		If $g_bChkPlayBBOnly Then Return
         checkMainScreen()
         Collect(False)
 		_CaptureRegion2()
@@ -56,10 +57,14 @@ Func BotDetectFirstTime()
 	EndIf
     If $g_iTownHallLevel < 2 Or ($g_aiTownHallPos[1] = "" Or $g_aiTownHallPos[1] = -1) Then LocateTownHall(False, False)
 
+	If $g_bChkPlayBBOnly Then Return
+
 	If _Sleep($DELAYBOTDETECT1) Then Return
 	CheckImageType()
 	If _Sleep($DELAYBOTDETECT1) Then Return
-
+	
+	If $g_bChkPlayBBOnly Then Return
+	
 	If GUICtrlRead($g_hChkScreenshotHideName) = $GUI_CHECKED Or $g_bScreenshotHideName Then
 		If _Sleep($DELAYBOTDETECT3) Then Return
 		If $g_aiClanCastlePos[0] = -1 Then
@@ -67,12 +72,16 @@ Func BotDetectFirstTime()
 			SaveConfig()
 		EndIf
 	EndIf
+	
+	If $g_bChkPlayBBOnly Then Return
 
 	If _Sleep($DELAYBOTDETECT3) Then Return
 	If $g_aiLaboratoryPos[0] = "" Or $g_aiLaboratoryPos[0] = -1 Then
         LocateLab(False)
 		SaveConfig()
 	EndIf
+	
+	If $g_bChkPlayBBOnly Then Return
 
     If (GUICtrlRead($g_hCmbBoostBarbarianKing) > 0) Or $g_bUpgradeKingEnable Then
 		If _Sleep($DELAYBOTDETECT3) Then Return
@@ -81,7 +90,9 @@ Func BotDetectFirstTime()
 			SaveConfig()
 		EndIf
 	EndIf
-
+	
+	If $g_bChkPlayBBOnly Then Return
+	
 	If (GUICtrlRead($g_hCmbBoostArcherQueen) > 0) Or $g_bUpgradeQueenEnable Then
 		If _Sleep($DELAYBOTDETECT3) Then Return
 		If $g_aiQueenAltarPos[0] = -1 Then
@@ -89,7 +100,9 @@ Func BotDetectFirstTime()
 			SaveConfig()
 		EndIf
 	EndIf
-
+	
+	If $g_bChkPlayBBOnly Then Return
+	
 	If Number($g_iTownHallLevel) > 10 And ((GUICtrlRead($g_hCmbBoostWarden) > 0) Or $g_bUpgradeWardenEnable) Then
 		If _Sleep($DELAYBOTDETECT3) Then Return
 		If $g_aiWardenAltarPos[0] = -1 Then
@@ -100,7 +113,9 @@ Func BotDetectFirstTime()
 
 	;Display Level TH in Stats
 	GUICtrlSetData($g_hLblTHLevels, "")
-
+	
+	If $g_bChkPlayBBOnly Then Return
+	
 	_GUI_Value_STATE("HIDE", $g_aGroupListTHLevels)
 	If $g_bDebugSetlog Then SetDebugLog("Select TH Level:" & Number($g_iTownHallLevel), $COLOR_DEBUG)
 	GUICtrlSetState($g_ahPicTHLevels[$g_iTownHallLevel], $GUI_SHOW)

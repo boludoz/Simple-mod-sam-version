@@ -57,7 +57,7 @@ Func LocateTroopButton($TroopButton, $bIsBrewSpell = False)
 				EndIf
 			EndIf
 			
-			Local $aTroopPosition = _ImageSearchXMLBoludoz($sImgTroopButton, $aSettingTroopButton[0], $aSettingTroopButton[1], $aSettingTroopButton[2], False)
+			$aTroopPosition = _ImageSearchXMLBoludoz($sImgTroopButton, $aSettingTroopButton[0], $aRegionForScan, $aSettingTroopButton[1], True)
 			For $i = 0 To UBound($aTroopPosition) - 1
 				If StringInStr($aTroopPosition[$i][0], $TroopButton) > 0 Then
 					$g_iTroopButtonX = Number($aTroopPosition[$i][1])

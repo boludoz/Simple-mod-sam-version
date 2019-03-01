@@ -31,12 +31,15 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True)
 
 	getBuilderCount($bSetLog, True) ; update builder data
 	If _Sleep($DELAYRESPOND) Then Return
-
+	
+	;getResourcesMainScreen(701, 23)
+	;getResourcesMainScreen(701, 74)	
+	
 	$g_aiCurrentLootBB[$eLootTrophyBB] = getTrophyMainScreen(67, 84)
-	$g_aiCurrentLootBB[$eLootGoldBB] = getResourcesMainScreen(705, 23)
-	If $g_aiCurrentLootBB[$eLootGoldBB] = "" Then getResourcesBonus(705, 23) ; when reach the full Cap the numbers are bigger
-	$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreen(705, 72)
-	If $g_aiCurrentLootBB[$eLootElixirBB] = "" Then getResourcesBonus(705, 72) ; when reach the full Cap the numbers are bigger
+	$g_aiCurrentLootBB[$eLootGoldBB] = getResourcesMainScreen(696, 23)
+	If $g_aiCurrentLootBB[$eLootGoldBB] = "" Then getResourcesBonus(696, 23) ; when reach the full Cap the numbers are bigger
+	$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreen(696, 74)
+	If $g_aiCurrentLootBB[$eLootElixirBB] = "" Then getResourcesBonus(696, 72) ; when reach the full Cap the numbers are bigger
 
 	Local $aResult = QuickMIS("CX", $g_sImgAvailableAttacks, 20, 625, 110, 650, True) ; DESRC Done
 	$g_iAvailableAttacksBB = UBound($aResult)

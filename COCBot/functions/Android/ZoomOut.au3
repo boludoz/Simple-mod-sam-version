@@ -425,7 +425,7 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 	If Not isOnBuilderBase And $g_aiSearchZoomOutCounter[0] = 10 Then
 		SetLog("Try secondary village measuring...", $COLOR_INFO)
 		; Sometimes the village is to much on TOP and the 2Tree is behind the Gems Values, just Drag a little to down to be visible
-		ClickDrag(Random(158,162), Random(587,592), Random(258,262), Random(640,644), Random(49,51), True)
+		ClickDrag(Random(158,162), Random(587,592), Random(258,262), Random(640,644), 100)
 	 EndIf
 
 	If $g_aiSearchZoomOutCounter[0] < 10 Then

@@ -35,9 +35,9 @@ Func CloseCoC($ReOpenCoC = False, $bCheckRunState = True)
 		AndroidAdbSendShellCommand("am force-stop " & $g_sAndroidGamePackage, Default, Default, False)
 		If GetAndroidProcessPID(Default, False) = 0 Then ExitLoop
         If $g_iSamM0dDebug Then SetLog("Waiting game client close..." & $j, $COLOR_INFO)
+		If $j > 20 Then SetLog("Failed to close game client.", $COLOR_ERROR)
     Next
 	
-	If $j > 20 Then SetLog("Failed to close game client.", $COLOR_ERROR)
 
 	ResetAndroidProcess()
 	;_Sleep($DELAYCLOSEOPEN3000) 

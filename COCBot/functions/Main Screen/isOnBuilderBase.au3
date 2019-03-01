@@ -32,7 +32,7 @@ Func isOnBuilderBaseEz($bNeedCaptureRegion = False)
 		If $g_bDebugSetlog Then SetDebugLog("Builder Base Builder detected", $COLOR_DEBUG)
 		Return True
 	Else
-		If $g_bDebugSetlog Then SetDebugLog("Builder Base Builder detected", $COLOR_DEBUG)
+		If $g_bDebugSetlog Then SetDebugLog("Builder Base Builder no detected", $COLOR_ERROR)
 	EndIf
 	Return False
 
