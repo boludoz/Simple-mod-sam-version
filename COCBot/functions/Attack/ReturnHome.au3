@@ -30,7 +30,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
         
     For $clickss = 0 to 300
         $iSpecialPixel = _MultiPixelSearch(23, 632, 834, 658, 1, 1, Hex(0xFFFDFF, 6), $iSpecialColor, 10)
-        If $iSpecialPixel = 0 Then ExitLoop
+        If Not IsAttackPage() And $iSpecialPixel = 0 Or UBound($iSpecialPixel) <> 2 Then ExitLoop
         SetLog("Dropping event troops" & ": " & $iSpecialPixel[0] & "/" &  $iSpecialPixel[1])
         PureClick($iSpecialPixel[0], $iSpecialPixel[1], 1, 10, "#0000")
         AttackClick(608, 168, 1, SetSleep(0), 0, "#0000")
@@ -43,12 +43,12 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 				If _Sleep($DELAYRETURNHOME1) Then Return
 			WEnd
 
-            ; samm0d
-            If $ichkUseSamM0dZap = 1 Then
-                If IsAttackPage() Then SamM0dZap()
-            Else
+;~            ; samm0d
+;~            If $ichkUseSamM0dZap = 1 Then
+;~                If IsAttackPage() Then SamM0dZap()
+;~            Else
                 If IsAttackPage() Then smartZap(); Check to see if we should zap the DE Drills
-            EndIf
+;~            EndIf
 
 			;If Heroes were not activated: Hero Ability activation before End of Battle to restore health
 			If ($g_bCheckKingPower Or $g_bCheckQueenPower Or $g_bCheckWardenPower) Then

@@ -10,14 +10,15 @@
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
-; Example .......: No
+; Example .......: CollectFreeMagicItems(True) ; For Test
 ; ===============================================================================================================================
 
 Func CollectFreeMagicItems($bTest = False)
-	If Not $g_bChkCollectFreeMagicItems Then Return
-	If Not $g_bRunState Then Return
-
+	If Not BitOr($g_bChkCollectFreeMagicItems, $bTest) Then Return
+	If Not BitOr($g_bRunState, $bTest) Then Return
+		
 	Local Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]
+	
 	If $iLastTimeChecked[$g_iCurAccount] = @MDAY Then Return
 
 	ClickP($aAway, 1, 0, "#0332") ;Click Away
@@ -26,24 +27,33 @@ Func CollectFreeMagicItems($bTest = False)
 
 	SetLog("Collecting Free Magic Items", $COLOR_INFO)
 	If _Sleep($DELAYCOLLECT2) Then Return
-
+	#samm0d - Start
+	Local $sDirectory = $g_sSamM0dImageLocation & "\Trader\"
 	; Check Trader Icon on Main Village
 	If QuickMIS("BC1", $g_sImgTrader, 120, 160, 210, 215, True, False) Then
-		SetLog("Trader available, Entering Daily Discounts", $COLOR_SUCCESS)
 		Click($g_iQuickMISX + 120, $g_iQuickMISY + 160)
 		If _Sleep(1500) Then Return
+	ElseIf QuickMIS("BC1", $sDirectory, 90, 80, 350, 254, True, False) Then
+		Click($g_iQuickMISX - 15 + 90, $g_iQuickMISY + 58 + 80)
+		If _Sleep(1500) Then Return
 	Else
-		SetLog("Trader unvailable", $COLOR_INFO)
+		SetLog("Trader unavailable (1)", $COLOR_INFO)
+		ClickP($aAway, 1, 0, "#0332") ;Click Away
 		Return
 	EndIf
 
 	; Check Daily Discounts Window
 	If Not QuickMIS("BC1", $g_sImgDailyDiscountWindow, 280, 175, 345, 210, True, False) Then
+		SetLog("Trader unavailable (2)", $COLOR_INFO)
 		ClickP($aAway, 1, 0, "#0332") ;Click Away
 		Return
+		Else
+		SetLog("Trader available, Entering Daily Discounts", $COLOR_SUCCESS)
+		ClickP($aAway, 1, 0, "#0332") ;Click Away
 	EndIf
+	#samm0d - end
 
-	If Not $g_bRunState Then Return
+	If Not BitOr($g_bRunState, $bTest) Then Return
 	Local $aOcrPositions[3][2] = [[200, 439], [390, 439], [580, 439]]
 	Local $aResults[3] = ["", "", ""]
 
@@ -70,7 +80,7 @@ Func CollectFreeMagicItems($bTest = False)
 			EndIf
 		EndIf
 
-		If Not $g_bRunState Then Return
+	If Not BitOr($g_bRunState, $bTest) Then Return
 	Next
 
 	SetLog("Daily Discounts: " & $aResults[0] & " | " & $aResults[1] & " | " & $aResults[2])

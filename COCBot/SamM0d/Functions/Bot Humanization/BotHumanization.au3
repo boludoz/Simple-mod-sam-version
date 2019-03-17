@@ -603,6 +603,6 @@ EndFunc   ;==>IsClanOverview
 
 Func IsWarMenu()	
 	Return True
-	;Local $Result = _Wait4Pixel(425, 53, 0xFEF0B8, 40, 5000, "IsWarMenu") ;Wait for War Menu To Be Appear
-	;Return $Result
+	Local $Result = _Wait4Pixel(425, 53, 0xFEF0B8, 40, 5000, "IsWarMenu") ;Wait for War Menu To Be Appear
+	Return $Result
 EndFunc   ;==>IsWarMenu

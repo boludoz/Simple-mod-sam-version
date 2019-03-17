@@ -30,6 +30,7 @@ MAKE  |Z          |FRONT-LEFT |1          |1          |IGNORE     |0          |0
 
       |VECTOR_____|INDEX______|QTY_X_VECT_|TROOPNAME__|DELAY_DROP_|DELAYCHANGE|SLEEPAFTER_|           |
 DROP  |A-B        |1-7        |20         |mine       |10-30      |0          |1500       |           |drop miner
+WFSTD  |4000-4200  |           |           |           |           |           |           |           |           |
 DROP  |A          |1          |1          |king       |0          |0          |100-300    |           |launch king  
 DROP  |B          |1          |1          |queen      |0          |0          |100-300    |           |launch queen
 DROP  |A          |10         |1          |Castle     |0          |50-70      |150-170    |           |           |
@@ -42,15 +43,15 @@ DROP  |A-B        |3-8        |20         |hogs       |10-30      |0          |1
 DROP  |A          |1          |1          |warden     |0          |0          |500        |           |launch warden
 DROP  |F          |2          |1          |HSpell    |0          |0          |150-170    |           |           |
 DROP  |H          |2          |1          |HSpell    |0          |0          |500-550    |           |           |
-WAIT  |3000-4000  |           |           |           |           |           |           |           |
-DROP  |U          |1          |1          |Hspell     |0          |0          |190-230    |           |           |
+WFSTD  |3000-4000  |           |           |           |           |           |           |           |
 DROP  |Z          |1          |1          |Hspell     |0          |0          |200-250    |           |           |
-WAIT  |4000-4200  |           |           |           |           |           |           |           |           |
+DROP  |Z          |1          |1          |Hspell     |0          |0          |200-250    |           |           |
+WFSTD  |4000-4200  |           |           |           |           |           |           |           |           |
 DROP  |G          |1          |1          |FSpell     |0          |0          |100-150    |           |           |
 DROP  |G          |1          |1          |RSpell     |0          |0          |100-1500    |           |           |
 DROP  |L          |1          |1          |RSpell     |0          |0          |100-150    |           |           |
 DROP  |L          |1          |1          |FSpell     |0          |0          |100-1500   |           |           |
-WAIT  |9000-12000  |           |           |           |           |           |           |           |
+WFSTD  |9000-12000  |           |           |           |           |           |           |           |
 DROP  |A          |1          |1          |warden     |0          |0          |500        |           |Force act warden
 
 RECALC|           |           |           |           |           |           |           |           |Recalculate remaining troops and then launch...

@@ -17,7 +17,14 @@
 #include <WinAPISys.au3>
 
 Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "")
-    ; samm0d
+
+    # samm0d - Click Correction
+	If $x <= -1 Or $y <= -1 Then 
+		Return
+	EndIf
+	# samm0d - end
+	
+	; samm0d
     If $ichkEnableHLFClick = 1 Then
         Local $txt =""
         Local $PrevCoor = $x & "," & $y
@@ -272,8 +279,8 @@ Func AttackClick($x, $y, $times = 1, $speed = 0, $afterDelay = 0, $debugtxt = ""
 	; Protect the Attack Bar
 	If $y > 555 + $g_iBottomOffsetY Then $y = 555 + $g_iBottomOffsetY
 	AttackRemainingTime(False) ; flag attack started
-	Local $result = PureClick($x, $y, $times, $speed, $debugtxt)
-	Local $delay = $times * $speed + $afterDelay - __TimerDiff($timer)
+	Local $result = PureClick($x, $y, $times+1, $speed, $debugtxt)
+	Local $delay = $times+1 * $speed + $afterDelay - __TimerDiff($timer)
 	If IsKeepClicksActive() = False And $delay > 0 Then _Sleep($delay, False)
 	Return $result
 EndFunc   ;==>AttackClick

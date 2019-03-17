@@ -12,11 +12,31 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+;Chat IA
+IniReadS($g_sIAVar, $g_sProfileConfigPath, "ChatIA", "String", '0|0|0|0|0', Default)
+$g_aIAVar = StringSplit($g_sIAVar, "|", $STR_NOCOUNT)
+
+;IniReadS($g_sIAVar, $g_sProfileConfigPath, "ChatIA", "String", '0|0#1|0#2|0#3|0#4|0', Default)
+;Local $aIAVarTmp = StringRegExp($g_sIAVar, '[^\#\|]+', 3)
+;Local $iLoop = 0
+;   For $i = 0 To UBound($g_aIAVar) -1
+;	  For $j = 0 To UBound($g_aIAVar,2) -1
+;	  $g_aIAVar[$i][$j] = $aIAVarTmp[$iLoop]
+;	  $iLoop += 1
+;	  Next
+;   Next
+
+; AtkLog Color
+IniReadS($g_bColorfulAttackLog, $g_sProfileConfigPath, "AttackColorLog", "Enable", True, "Bool")
+
+; Machine Date
+IniReadS($g_bFirstRun, $g_sProfileConfigPath, "MachineBB", "Date", '1000/01/01 00:00:00', Default)
+
 ; First Run
-IniReadS($g_bFirstRun, $g_sProfileConfigPath, "Backup", "FirstRun", False, "Bool")
+IniReadS($g_bFirstRun, $g_sProfileConfigPath, "Backup", "FirstRun", "False", "Bool")
 
 ; Backup check
-IniReadS($g_bBackup, $g_sProfileConfigPath, "Backup", "BackupControl", False, "Bool")
+IniReadS($g_bBackup, $g_sProfileConfigPath, "Backup", "BackupControl", "False", "Bool")
 
 Global $iMultiFingerStyle = 0
 
@@ -53,17 +73,17 @@ IniReadS($itxtUnitFactor, $g_sProfileConfigPath, "SetSleep", "UnitFactor", "10",
 IniReadS($ichkWaveFactor, $g_sProfileConfigPath, "SetSleep", "EnableWaveFactor", "1", "Int")
 IniReadS($itxtWaveFactor, $g_sProfileConfigPath, "SetSleep", "WaveFactor", "100","Int")
 
-; SmartZap from ChaCalGyn (LunaEclipse) - DEMEN
-IniReadS($ichkUseSamM0dZap, $g_sProfileConfigPath, "SamM0dZap", "SamM0dZap", "1","Int")
-IniReadS($ichkSmartZapDB, $g_sProfileConfigPath, "SmartZap", "ZapDBOnly", "1","Int")
-IniReadS($ichkSmartZapSaveHeroes, $g_sProfileConfigPath, "SmartZap", "THSnipeSaveHeroes", "1","Int")
-IniReadS($itxtMinDE, $g_sProfileConfigPath, "SmartZap", "MinDE", "400","Int")
-
-; samm0d zap
-IniReadS($ichkSmartZapRnd, $g_sProfileConfigPath, "SamM0dZap", "UseSmartZapRnd", "1","Int")
-IniReadS($ichkDrillExistBeforeZap, $g_sProfileConfigPath, "SamM0dZap", "CheckDrillBeforeZap", "1","Int")
-IniReadS($itxtMinDEGetFromDrill, $g_sProfileConfigPath, "SamM0dZap", "MinDEGetFromDrill", "100","Int")
-IniReadS($ichkPreventTripleZap, $g_sProfileConfigPath, "SamM0dZap", "PreventTripleZap", "1","Int")
+;~ ; SmartZap from ChaCalGyn (LunaEclipse) - DEMEN
+;~ IniReadS($ichkUseSamM0dZap, $g_sProfileConfigPath, "SamM0dZap", "SamM0dZap", "1","Int")
+;~ IniReadS($ichkSmartZapDB, $g_sProfileConfigPath, "SmartZap", "ZapDBOnly", "1","Int")
+;~ IniReadS($ichkSmartZapSaveHeroes, $g_sProfileConfigPath, "SmartZap", "THSnipeSaveHeroes", "1","Int")
+;~ IniReadS($itxtMinDE, $g_sProfileConfigPath, "SmartZap", "MinDE", "400","Int")
+;~
+;~ ; samm0d zap
+;~ IniReadS($ichkSmartZapRnd, $g_sProfileConfigPath, "SamM0dZap", "UseSmartZapRnd", "1","Int")
+;~ IniReadS($ichkDrillExistBeforeZap, $g_sProfileConfigPath, "SamM0dZap", "CheckDrillBeforeZap", "1","Int")
+;~ IniReadS($itxtMinDEGetFromDrill, $g_sProfileConfigPath, "SamM0dZap", "MinDEGetFromDrill", "100","Int")
+;~ IniReadS($ichkPreventTripleZap, $g_sProfileConfigPath, "SamM0dZap", "PreventTripleZap", "1","Int")
 
 ; Check Collectors Outside - Added by TheRevenor
 IniReadS($ichkDBMeetCollOutside, $g_sProfileConfigPath, "search", "DBMeetCollOutside", "0","Int")
@@ -130,10 +150,10 @@ Local $sGiants
 For $j = 0 To 2
 	For $i = 0 To UBound($MyTroops) - 1
 		$sTextTroopsString = IniRead($g_sProfileConfigPath, "MyTroops", $MyTroops[$i][0]&$j, 2 <> $i ? 0 : 16 &"|"&$i + 1)
-		If Not StringInStr($sTextTroopsString, "|") = 0 Then 
+		If Not StringInStr($sTextTroopsString, "|") = 0 Then
 		$sTextTroops = StringSplit($sTextTroopsString, "|", $STR_NOCOUNT)
 			$MyTroopsSetting[$j][$i][0] = Int($sTextTroops[0])
-			$MyTroopsSetting[$j][$i][1] = Int($sTextTroops[1])	
+			$MyTroopsSetting[$j][$i][1] = Int($sTextTroops[1])
 			Else
 			$MyTroopsSetting[$j][$i][0] = Int($sTextTroopsString)
 			$MyTroopsSetting[$j][$i][1] = $i + 1
@@ -157,10 +177,10 @@ Local $sTextSpellsString
 For $j = 0 To 2
 	For $i = 0 To UBound($MySpells) - 1
 	 $sTextSpellsString = IniRead($g_sProfileConfigPath, "MySpells", $MySpells[$i][0]&$j, "0|"&$i + 1&"|0")
-	If Not StringInStr($sTextSpellsString, "|") = 0 Then 
+	If Not StringInStr($sTextSpellsString, "|") = 0 Then
 	$sTextSpells = StringSplit($sTextSpellsString, "|", $STR_NOCOUNT)
 		$MySpellSetting[$j][$i][0] = Int($sTextSpells[0])
-		$MySpellSetting[$j][$i][1] = Int($sTextSpells[1])	
+		$MySpellSetting[$j][$i][1] = Int($sTextSpells[1])
 		$MySpellSetting[$j][$i][2] = Int($sTextSpells[2])
 		Else
 		$MySpellSetting[$j][$i][0] = Int($sTextSpellsString)
@@ -190,10 +210,10 @@ Local $sTextSiegesString
 For $j = 0 To 2
 	For $i = 0 To UBound($MySieges) - 1
 	 $sTextSiegesString = IniRead($g_sProfileConfigPath, "MySieges", $MySieges[$i][0]&$j, "0|"&$i + 1&"|0")
-	If Not StringInStr($sTextSiegesString, "|") = 0 Then 
+	If Not StringInStr($sTextSiegesString, "|") = 0 Then
 	$sTextSieges = StringSplit($sTextSiegesString, "|", $STR_NOCOUNT)
 		$MySiegeSetting[$j][$i][0] = Int($sTextSieges[0])
-		$MySiegeSetting[$j][$i][1] = Int($sTextSieges[1])	
+		$MySiegeSetting[$j][$i][1] = Int($sTextSieges[1])
 		$MySiegeSetting[$j][$i][2] = Int($sTextSieges[2])
 		Else
 		$MySiegeSetting[$j][$i][0] = Int($sTextSiegesString)

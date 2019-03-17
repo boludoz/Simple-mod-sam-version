@@ -22,7 +22,7 @@ Func TestrunBuilderBase()
 	SetDebugLog("** TestrunBuilderBase END**", $COLOR_DEBUG)
 EndFunc   ;==>TestrunBuilderBase
 
-Func runBuilderBase($Test = False)
+Func runBuilderBase($bTestRun = False)
 
 	If Not $g_bRunState Then Return
 
@@ -59,7 +59,8 @@ Func runBuilderBase($Test = False)
 
 	; Upgrade Troops
 	If $g_bRestart = True Then Return
-	If ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Then BuilderBaseUpgradeTroops()
+	If ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Then BattleMachineUpgrade()
+	If ($g_iCmbBoostBarracks = 0 Or $g_bFirstStart) Then StarLaboratory()
 	Local $boosted = False
 	; Fill/check Army Camps only If is necessary attack
 	If $g_bRestart = True Then Return
@@ -81,7 +82,7 @@ Func runBuilderBase($Test = False)
 		If $g_bRestart = True Then Return
 		If Not $g_bRunState Then Return
 
-		BuilderBaseAttack($Test)
+		BuilderBaseAttack($bTestRun)
 		If Not $g_bRunState Then Return
 
 		; Zoomout

@@ -25,7 +25,7 @@ Func LocateTroopButton($TroopButton, $bIsBrewSpell = False)
 		Local $iToClick = 0
 		If $bIsBrewSpell Then $TroopButton = "Spell" & $TroopButton
 		
-		Local Const $sImgTroopButton = $g_sSamM0dImageLocation & "\TrainButtons"
+		Local $sImgTroopButton = $g_sSamM0dImageLocation & "\TrainButtons"
 		Local $aSettingTroopButton[2] = [1000, False] ; RC Done ; [0] Quantity2Match [2] ForceArea
 
 		Local $aTroopPosition = _ImageSearchXMLBoludoz($sImgTroopButton, $aSettingTroopButton[0], $aRegionForScan, $aSettingTroopButton[1], True)

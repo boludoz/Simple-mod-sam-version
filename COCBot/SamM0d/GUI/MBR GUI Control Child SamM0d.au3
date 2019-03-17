@@ -586,13 +586,13 @@ EndFunc
 ;~ 	$AndroidGameClass = IniRead(@ScriptDir & "\COCBot\COCVersions.ini",$iSection,"2ActivityName",$AndroidGameClass)
 ;~ EndFunc
 
-Func cmbZapMethod()
-	If GUICtrlRead($chkUseSamM0dZap) = $GUI_CHECKED Then
-		$ichkUseSamM0dZap = 1
-	Else
-		$ichkUseSamM0dZap = 0
-	EndIf
-EndFunc   ;==>chkSmartLightSpell
+;~ Func cmbZapMethod()
+;~ 	If GUICtrlRead($chkUseSamM0dZap) = $GUI_CHECKED Then
+;~ 		$ichkUseSamM0dZap = 1
+;~ 	Else
+;~ 		$ichkUseSamM0dZap = 0
+;~ 	EndIf
+;~ EndFunc   ;==>chkSmartLightSpell
 
 Func chkEnableHLFClickSetlog()
 	If GUICtrlRead($chkEnableHLFClickSetlog) = $GUI_CHECKED Then

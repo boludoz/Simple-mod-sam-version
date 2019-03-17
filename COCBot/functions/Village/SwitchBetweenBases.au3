@@ -53,10 +53,6 @@ Func SwitchBetweenBases($bCheckMainScreen = True)
 
 		$aButtonCoords = decodeSingleCoord(findImageInPlace($sTile, $sTileDir, $sRegionToSearch))
 		If UBound($aButtonCoords) > 1 Then
-			If isOnBuilderBaseEz(True) And $g_bChkPlayBBOnly = True Then 
-				$bIsOnBuilderBase = True
-				Return True 
-			EndIf
 			SetLog("[" & $i & "] Going to " & $sSwitchTo, $COLOR_INFO)
 			ClickP($aButtonCoords)
 			If _Sleep($DELAYSWITCHBASES1) Then Return

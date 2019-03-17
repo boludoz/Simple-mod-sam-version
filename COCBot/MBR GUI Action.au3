@@ -165,7 +165,9 @@ Func BotStop()
 
 	;DistributorsUpdateGUI()
 	AndroidBotStopEvent() ; signal android that bot is now stopping
-	AndroidAdbTerminateShellInstance() ; terminate shell instance
+    If $g_bTerminateAdbShellOnStop Then
+        AndroidAdbTerminateShellInstance() ; terminate shell instance
+    EndIf
 	AndroidShield("btnStop", Default)
 
 	EnableControls($g_hFrmBotBottom, Default, $g_aFrmBotBottomCtrlState)

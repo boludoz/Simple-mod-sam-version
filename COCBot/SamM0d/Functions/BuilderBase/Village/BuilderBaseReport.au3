@@ -32,9 +32,6 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True)
 	getBuilderCount($bSetLog, True) ; update builder data
 	If _Sleep($DELAYRESPOND) Then Return
 	
-	;getResourcesMainScreen(701, 23)
-	;getResourcesMainScreen(701, 74)	
-	
 	$g_aiCurrentLootBB[$eLootTrophyBB] = getTrophyMainScreen(67, 84)
 	$g_aiCurrentLootBB[$eLootGoldBB] = getResourcesMainScreen(696, 23)
 	If $g_aiCurrentLootBB[$eLootGoldBB] = "" Then getResourcesBonus(696, 23) ; when reach the full Cap the numbers are bigger
@@ -58,15 +55,6 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True)
 EndFunc   ;==>BuilderBaseReport
 
 Func BuilderBaseStats()
-	; $g_hLblBBResultGoldNow
-	; $g_hLblBBResultGoldHourNow
-
-	; $g_hLblBBResultElixirNow
-	; $g_hLblBBResultElixirHourNow
-
-	; $g_hLblBBResultTrophyNow
-	; $g_hLblBBResultBuilderNow
-
 	GUICtrlSetData($g_hLblBBResultGoldNow, _NumberFormat($g_aiCurrentLootBB[$eLootGoldBB], True))
 	GUICtrlSetData($g_hLblBBResultElixirNow, _NumberFormat($g_aiCurrentLootBB[$eLootElixirBB], True))
 	GUICtrlSetData($g_hLblBBResultTrophyNow, _NumberFormat($g_aiCurrentLootBB[$eLootTrophyBB], True))

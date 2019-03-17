@@ -326,15 +326,15 @@ Func DonateCC($bCheckForNewMsg = False)
 		$g_aiDonatePixel = _MultiPixelSearch(200, $y, 230, 660 + $g_iBottomOffsetY, -2, 1, Hex(0x6da725, 6), $aChatDonateBtnColors, 20)
 
 		$iBenchmark = TimerDiff($itime)
-		If $g_bDebugSetlog Then SetDebugLog("Get all Buttons in " & StringFormat("%.2f", $iBenchmark) & "'ms", $COLOR_DEBUG)
+		SetDebugLog("Get all Buttons in " & StringFormat("%.2f", $iBenchmark) & "'ms", $COLOR_DEBUG)
 		$itime = TimerInit()
 
 		If IsArray($g_aiDonatePixel) Then ; if Donate Button found
 			If UBound($g_aiDonatePixel) >= 1 Then
 		
 			$Buttons += 1
-			If $g_bDebugSetlog Then SetDebugLog("***** Donate Request Number " & $Buttons & " *****", $COLOR_ACTION)
-			If $g_bDebugSetlog Then SetDebugLog("$g_aiDonatePixel: (" & $g_aiDonatePixel[0] & "," & $g_aiDonatePixel[1] & ")", $COLOR_DEBUG)
+			SetDebugLog("***** Donate Request Number " & $Buttons & " *****", $COLOR_ACTION)
+			SetDebugLog("$g_aiDonatePixel: (" & $g_aiDonatePixel[0] & "," & $g_aiDonatePixel[1] & ")", $COLOR_DEBUG)
 			; samm0d
 			SetLog(_PadStringCenter(" CC Request ", 54, "="), $COLOR_INFO)
 
@@ -369,7 +369,7 @@ Func DonateCC($bCheckForNewMsg = False)
 						$ClanString = ""
 						SetLog("Using OCR to read " & $log & " derived alphabets.", $COLOR_ACTION)
 						For $j = 0 To 2
-							If $ClanString = "" Or $ClanString = " " Then
+							If StringStripWS($ClanString, $STR_STRIPALL) <> "" Then
 								$ClanString &= $BlankSpaces & getChatString(30, $g_aiDonatePixel[1] - $coordinates[$j], $OcrName)
 								If $g_bDebugSetlog Then SetDebugLog("$OcrName: " & $OcrName)
 								If $g_bDebugSetlog Then SetDebugLog("$coordinates: " & $coordinates[$j])
@@ -380,7 +380,7 @@ Func DonateCC($bCheckForNewMsg = False)
 						Next
 					Else
 						If $Alphabets[$i] Then
-							If $ClanString = "" Or $ClanString = " " Then
+							If StringStripWS($ClanString, $STR_STRIPALL) <> "" Then
 								SetLog("Using OCR to read " & $TextAlphabetsNames[$i] & " alphabets.", $COLOR_ACTION)
 								; Ensure used functions are references in "MBR References.au3"
 								#Au3Stripper_Off
@@ -397,10 +397,10 @@ Func DonateCC($bCheckForNewMsg = False)
 				Next
 
 				$iBenchmark = TimerDiff($itime)
-				If $g_bDebugSetlog Then SetDebugLog("Get Request OCR in " & StringFormat("%.2f", $iBenchmark) & "'ms", $COLOR_DEBUG)
+				SetDebugLog("Get Request OCR in " & StringFormat("%.2f", $iBenchmark) & "'ms", $COLOR_DEBUG)
 				$itime = TimerInit()
 				
-				; samm0d
+				#cs - ; samm0d
 				If $ichkEnableCustomOCR4CCRequest = 1 Then
 					Setlog("Using custom OCR to read cc request message..", $COLOR_ACTION)
 					If $ClanString = "" Then
@@ -410,8 +410,10 @@ Func DonateCC($bCheckForNewMsg = False)
 					EndIf
 					If _Sleep($DELAYRESPOND) Then ExitLoop
 				EndIf
-
-				If $ClanString = "" Or $ClanString = " " Then
+				#ce
+				
+				;If $ClanString = "" Or $ClanString = " " Then
+				If StringStripWS($ClanString, $STR_STRIPALL) <> "" Then ; Samm0d
 					SetLog("Unable to read Chat Request!", $COLOR_ERROR)
 					$bDonate = True
 					$y = $g_aiDonatePixel[1] + 50

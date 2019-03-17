@@ -12,6 +12,8 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+; AtkLog Color
+GUICtrlSetState($g_hChkColorfulAttackLog, ($g_bColorfulAttackLog = True ? $GUI_CHECKED : $GUI_UNCHECKED))
 
 ;~ ; Pause tray tip
 ;~ GUICtrlSetState($chkDisablePauseTrayTip, ($ichkDisablePauseTrayTip = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
@@ -50,24 +52,24 @@ GUICtrlSetData($txtWaveFactor, $itxtWaveFactor)
 chkUnitFactor()
 chkWaveFactor()
 
-; SmartZap from ChaCalGyn (LunaEclipse) - DEMEN
-; ExtremeZap - Added by TheRevenor
-
-GUICtrlSetState($chkUseSamM0dZap, ($ichkUseSamM0dZap = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
-GUICtrlSetState($chkSmartZapDB, ($ichkSmartZapDB = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
-GUICtrlSetState($chkSmartZapSaveHeroes, ($ichkSmartZapSaveHeroes = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
-
-If $itxtMinDE <= 0 Then
-	$itxtMinDE = 400
-EndIf
-GUICtrlSetData($txtMinDark2, $itxtMinDE)
-
-; samm0d zap
-GUICtrlSetState($chkSmartZapRnd, ($ichkSmartZapRnd = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
-GUICtrlSetState($chkDrillExistBeforeZap, ($ichkDrillExistBeforeZap = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
-GUICtrlSetState($chkPreventTripleZap, ($ichkPreventTripleZap = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
-GUICtrlSetData($txtMinDEGetFromDrill, $itxtMinDEGetFromDrill)
-cmbZapMethod()
+;~ ; SmartZap from ChaCalGyn (LunaEclipse) - DEMEN
+;~ ; ExtremeZap - Added by TheRevenor
+;~ 
+;~ GUICtrlSetState($chkUseSamM0dZap, ($ichkUseSamM0dZap = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+;~ GUICtrlSetState($chkSmartZapDB, ($ichkSmartZapDB = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+;~ GUICtrlSetState($chkSmartZapSaveHeroes, ($ichkSmartZapSaveHeroes = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+;~ 
+;~ If $itxtMinDE <= 0 Then
+;~ 	$itxtMinDE = 400
+;~ EndIf
+;~ GUICtrlSetData($txtMinDark2, $itxtMinDE)
+;~ 
+;~ ; samm0d zap
+;~ GUICtrlSetState($chkSmartZapRnd, ($ichkSmartZapRnd = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+;~ GUICtrlSetState($chkDrillExistBeforeZap, ($ichkDrillExistBeforeZap = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+;~ GUICtrlSetState($chkPreventTripleZap, ($ichkPreventTripleZap = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+;~ GUICtrlSetData($txtMinDEGetFromDrill, $itxtMinDEGetFromDrill)
+;~ cmbZapMethod()
 
 ; Check Collectors Outside - Added by TheRevenor
 GUICtrlSetState($chkDBMeetCollOutside, ($ichkDBMeetCollOutside = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))

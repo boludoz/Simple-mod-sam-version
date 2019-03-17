@@ -149,7 +149,8 @@ Func GoldElixirChangeEBO()
 
 		If Number($CurDamage) > Number($g_iPercentageDamage) Then $g_iPercentageDamage = Number($CurDamage)
 
-		If Number($CurDamage) >= 92 Then
+
+		If Number($CurDamage) >= Random(90, 98, 1) Then ; Samm0d
 			If ($g_bCheckKingPower Or $g_bCheckQueenPower Or $g_bCheckWardenPower) Then
 				If $g_bCheckKingPower And $g_iActivateKing = 0 Then
 					SetLog("Activating King's ability to restore some health before leaving with a 3 Star", $COLOR_INFO)

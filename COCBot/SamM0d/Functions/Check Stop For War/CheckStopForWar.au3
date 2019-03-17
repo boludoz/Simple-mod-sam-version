@@ -29,17 +29,17 @@ EndFunc   ;==>IsWarMenu
 Func MultiPSimple($iX, $iY, $iX2, $iY2, $Hex, $iTolerance = 10) ; returns true if the last chat was not by you, false otherwise
 	_CaptureRegion($iX, $iY, $iX2, $iY2)
 	Local $aReturn[2] = [0, 0]
-	
+
 	For $y = $iY To $iY2 - 1
 		For $x = $iX To $iX2 - 1
-			If _ColorCheck(Hex(_GDIPlus_BitmapGetPixel($g_hBitmap, $x, $y), 6), Hex($Hex, 6), $iTolerance) Then 
+			If _ColorCheck(Hex(_GDIPlus_BitmapGetPixel($g_hBitmap, $x, $y), 6), Hex($Hex, 6), $iTolerance) Then
 			$aReturn[0] = $iX + $x
 			$aReturn[1] = $iY + $y
 			ExitLoop
 			EndIf
 		Next
 	Next
-	
+
 	Return $aReturn
 EndFunc   ;==>MultiPSimple
 
@@ -331,7 +331,7 @@ Func StopAndPrepareForWar($iSleepTime)
 				chkAccount($g_iCurAccount)
 				SaveConfig_600_35_2() ; Save config profile after changing botting type
 				ReadConfig_600_35_2() ; Update variables
-				UpdateMultiStats(False)
+				;UpdateMultiStats(False)
 				SetLog("Acc [" & $g_iCurAccount + 1 & "] turned OFF and start over with another account")
 				SetSwitchAccLog("   Acc. " & $g_iCurAccount + 1 & " now Idle for war", $COLOR_ACTION)
 

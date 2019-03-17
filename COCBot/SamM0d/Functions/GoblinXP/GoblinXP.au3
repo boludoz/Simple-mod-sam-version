@@ -542,11 +542,11 @@ Func PrepareSuperXPAttack()
 			EndIf
 		Next
 	EndIf
-	
-	If $g_bDebugSetlog Then SetDebugLog("troopsnumber  = " & $troopsnumber)
-	
+
+   SetDebugLog("troopsnumber  = " & $troopsnumber)
+
 	SetSlotSpecialTroops()
-	
+
 	If $g_bDebugSX Then SetDebugLog("SX|PrepareSuperXPAttack Finished", $COLOR_PURPLE)
 	Return $iTroopNumber
 EndFunc   ;==>PrepareSuperXPAttack

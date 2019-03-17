@@ -9,7 +9,7 @@
 #pragma compile(LegalCopyright, © https://mybot.run)
 #Au3Stripper_Off
 #Au3Stripper_On
-Global $g_sBotVersion = "v7.7.0"
+Global $g_sBotVersion = "v7.7.2"
 Opt("MustDeclareVars", 1)
 Global $g_sBotTitle = ""
 Global $g_hFrmBot = 0
@@ -45332,7 +45332,7 @@ $compare = _SysTrayIconPids($iWin)
 EndSwitch
 If Not IsArray($compare) Then Return -1
 For $i = 0 To UBound($compare) - 1
-If $compare[$i] = $test Then
+If $compare[$i] = $bTestRun Then
 $ret = $i
 ExitLoop
 EndIf
@@ -64025,7 +64025,7 @@ Setlog("Next Event will be " & $aTempSelectChallenges[0][0] & " to make in " & $
 $sEventName = $aTempSelectChallenges[0][0]
 Click($aTempSelectChallenges[0][1], $aTempSelectChallenges[0][2])
 If _Sleep(1750) Then Return
-If $test Then Return
+If $bTestRun Then Return
 If ClickOnEvent($YourAccScore, $ScoreLimits, $sEventName, $getCapture) Then Return
 ClickP($TabChallengesPosition, 2, 0, "#Tab")
 EndIf

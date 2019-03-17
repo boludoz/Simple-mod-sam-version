@@ -304,7 +304,6 @@ Func getMyArmyCapacityMini($hHBitmap, $bShowLog = True)
 
 	$sArmyInfo = getMyOcrArmyCap($hHBitmap)
 	UpdSam($sArmyInfo)
-	If $g_iSamM0dDebug = 1 Then Setlog("getMyArmyCapacityMini $sArmyInfo = " & $sArmyInfo, $COLOR_DEBUG)
 	$aGetArmySize = StringSplit($sArmyInfo, "#")
 	If IsArray($aGetArmySize) Then
 		If $aGetArmySize[0] > 1 Then

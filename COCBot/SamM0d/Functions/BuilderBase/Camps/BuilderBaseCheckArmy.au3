@@ -22,20 +22,20 @@ Func TestCheckArmyBuilderBase()
 	SetDebugLog("** TestCheckArmyBuilderBase END**", $COLOR_DEBUG)
 EndFunc   ;==>TestCheckArmyBuilderBase
 
-Func CheckArmyBuilderBase($test = False)
+Func CheckArmyBuilderBase($bTestRun = False)
 
 	FuncEnter(CheckArmyBuilderBase)
 	If Not $g_bRunState Then Return
 	If Not IsMainPageBuilderBase() Then Return
-	Local Static $WasVerified[8] = [False, False, False, False, False, False, False, False]
+	Local $bWasVerified = False
 
 	SetDebugLog("** Click Away **", $COLOR_DEBUG)
 
 	ClickP($aAway, 1, 0, "#0332") ;Click Away
 
-	If $test Then $WasVerified[$g_iCurAccount] = False
+	If $bTestRun Then $bWasVerified = False
 
-	If Not $g_bChkBuilderAttack Or $WasVerified[$g_iCurAccount] = True Or ($g_iAvailableAttacksBB = 0 And $g_bChkBBStopAt3) Or $g_bChkBBRandomAttack Then Return
+	If Not $g_bChkBuilderAttack Or $bWasVerified = True Or ($g_iAvailableAttacksBB = 0 And $g_bChkBBStopAt3) Or $g_bChkBBRandomAttack Then Return
 
 	Setlog("Entering in Camps!", $COLOR_PURPLE)
 
@@ -148,7 +148,7 @@ Func CheckArmyBuilderBase($test = False)
 	EndIf
 
 	Setlog("Exit from Camps!", $COLOR_PURPLE)
-	$WasVerified[$g_iCurAccount] = True
+	$bWasVerified = True
 	ClickP($aAway, 1, 0, "#0332") ;Click Away
 	FuncReturn()
 

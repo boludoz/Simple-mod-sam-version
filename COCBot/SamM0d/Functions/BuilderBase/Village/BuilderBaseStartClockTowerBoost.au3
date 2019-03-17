@@ -35,11 +35,17 @@ Func StartClockTowerBoost()
 	If Not $g_bRunState Then Return
 	Local $result = False
 
-	ClickP($aAway, 1, 0, "#0332")
-
-	If Not isOnBuilderBase() Then Return
-
 	FuncEnter(StartClockTowerBoost)
+
+	ClickP($aAway, 1, 0, "#0332")
+	
+	If Not IsMainPageBuilderBase() Then
+		ClickP($aAway, 1, 0, "#0332")
+		If Not SwitchBetweenBases() Then Return ; Switching to Builders Base
+	EndIf
+
+	; ZoomOut Check
+	AndroidOnlyZoomOut()
 
 	Local $bCTBoost = True
 	If $g_bChkCTBoostBlderBz Then
@@ -61,11 +67,9 @@ Func StartClockTowerBoost()
 		$sCTCoords = findImage("ClockTowerAvailable", $g_sImgStartCTBoost, "FV", 1, True) ; Search for Clock Tower
 		If $sCTCoords <> "" Then
 			$aCTCoords = StringSplit($sCTCoords, ",", $STR_NOCOUNT)
-			$aCTCoords[1] = $aCTCoords[1] + 5 ;Add 5 Pixels To Y-axis Fix For Clock Tower Misclicking walls By This It will Click On Clock Tower Center
-			ClickP($aCTCoords)
+			Click($aCTCoords[0], $aCTCoords[1] + 15, 1)
 			If _Sleep($DELAYCLOCKTOWER1) Then Return
-			If Not QuickMIS("BC1", $g_sImgPathIsCTBoosted, 200, 615, 200 + 460, 615 + 25, True, False) Then ; RC Done
-				$aCTBoost = findButton("BoostCT") ; Search for Start Clock Tower Boost Button
+			$aCTBoost = findButton("BoostCT") ; Search for Start Clock Tower Boost Button
 				If IsArray($aCTBoost) Then
 					ClickP($aCTBoost)
 					If _Sleep($DELAYCLOCKTOWER1) Then Return
@@ -82,9 +86,6 @@ Func StartClockTowerBoost()
 				Else
 					SetLog("Cannot find the Boost Button of Clock Tower", $COLOR_ERROR)
 				EndIf
-			Else
-				SetLog("Clock Tower is already Boosted, Skip It!", $COLOR_INFO)
-			EndIf
 		Else
 			SetLog("Clock Tower boost is not available!")
 		EndIf

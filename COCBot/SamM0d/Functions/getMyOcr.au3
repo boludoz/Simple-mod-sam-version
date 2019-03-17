@@ -54,9 +54,6 @@ Func getMyOcr($hHOCRBitmap, $x, $y, $width, $height, $OCRType, $bReturnAsNumber 
 		For $i = 0 To $iMax
 			$aPropsValues = $result[$i] ; should be return objectname,objectpoints,objectlevel
 			If UBound($aPropsValues) = 3 then
-				;If $g_iSamM0dDebugOCR = 1 Then SetLog("$aPropsValues[0]: " & $aPropsValues[0], $COLOR_DEBUG)
-				;If $g_iSamM0dDebugOCR = 1 Then SetLog("$aPropsValues[1]: " & $aPropsValues[1], $COLOR_DEBUG)
-				;If $g_iSamM0dDebugOCR = 1 Then SetLog("$aPropsValues[2]: " & $aPropsValues[2], $COLOR_DEBUG)
 				$aCoor = StringSplit($aPropsValues[1],"|",$STR_NOCOUNT) ; objectpoints, split by "|" to get multi coor x,y ; same image maybe can detect at different location.
 				$jMax = UBound($aCoor) - 1
 				For $j = 0 To $jMax  ; process every different location of image if found
@@ -73,14 +70,12 @@ Func getMyOcr($hHOCRBitmap, $x, $y, $width, $height, $OCRType, $bReturnAsNumber 
 							EndIf
 						EndIf
 					EndIf
-					;If $g_iSamM0dDebugOCR = 1 Then SetLog("objectname: " & $aLastResult[$iCount][0], $COLOR_DEBUG)
 					$aCoorXY = StringSplit($aCoor[$j],",",$STR_NOCOUNT) ; objectpoints, split by "," to get coor x,y
 					If IsArray($aCoorXY) Then
 						$aLastResult[$iCount][1] = Number($aCoorXY[0]) - (Number($aPropsValues[2] / 2))  ; get the imagelocation base on coor X
 						$aLastResult[$iCount][2] = Number($aCoorXY[1]) ; get the imagelocation base on coor Y
 					EndIf
 					$aLastResult[$iCount][3] = Number($aPropsValues[2]) ; get image pixel width
-					;If $g_iSamM0dDebugOCR = 1 Then SetLog("$aLastResult: obj-" & $aLastResult[$iCount][0] & " width-" & $aLastResult[$iCount][3] & " coor-"& $aLastResult[$iCount][1] & "," & $aLastResult[$iCount][2], $COLOR_DEBUG)
 					$iCount += 1
 				Next
 			EndIf
@@ -95,15 +90,11 @@ Func getMyOcr($hHOCRBitmap, $x, $y, $width, $height, $OCRType, $bReturnAsNumber 
 		For $i = 0 To $iMax
 			For $j = $i + 1 To $iMax
 				If $aLastResult[$i][0] <> "" Then
-					;If $g_iSamM0dDebugOCR = 1 Then SetLog("$i: " & $i & " - Check If CurX + Width: " & $aLastResult[$i][1] + $aLastResult[$i][3])
-					;If $g_iSamM0dDebugOCR = 1 Then SetLog("$j: " & $j & " - Larger than Next ImageX: " & $aLastResult[$j][1])
 					If ($aLastResult[$i][1] + $aLastResult[$i][3]) > $aLastResult[$j][1] Then
 						; compare with width who the boss
 						If $aLastResult[$i][3] > $aLastResult[$j][3] Then
-							;If $g_iSamM0dDebugOCR = 1 Then SetLog("Remove $j: " & $j & " - " & $aLastResult[$j][0])
 							$aLastResult[$j][0] = ""
 						Else
-							;If $g_iSamM0dDebugOCR = 1 Then SetLog("Remove $i: " & $i & " - " & $aLastResult[$i][0])
 							$aLastResult[$i][0] = ""
 							ExitLoop
 						EndIf
@@ -112,11 +103,6 @@ Func getMyOcr($hHOCRBitmap, $x, $y, $width, $height, $OCRType, $bReturnAsNumber 
 			Next
 			$sReturn = $sReturn & $aLastResult[$i][0]
 		Next
-	EndIf
-
-	If $g_iSamM0dDebugOCR = 1 Or ($sReturn = "" And $tempOCRType <> "ccrequest") Then
-		SetDebugLog("getMyOcr $sReturn: " & $sReturn)
-		_debugSaveHBitmapToImage($hHOCRBitmap, "getMyOcr_" & $OCRType & "_" & $sReturn & "_", True, True)
 	EndIf
 
 	If $bDeleteHBitmapFlag Then
@@ -181,41 +167,9 @@ Func getMyOcrTrainArmyOrBrewSpellCap($hHBitmap = 0)
 	Return $sResult
 EndFunc
 
-Func getMyOcrCurDEFromTrain()
-	; current dark elixir from train troops page or brew spell page, bottom center
-	Local $sResult = getMyOcr(0,400,596,84,12,"elixirontrain",True)
-	Return $sResult
-EndFunc
-
-Func getMyOcrCurElixirFromTrain()
-	; current gold from train troops page or brew spell page, bottom center
-	If _ColorCheck(_GetPixelColor(217,600,True), Hex(0XE8E8E0, 6), 10) Then ; If True mean the current village don't had dark elixir yet
-		Return getMyOcr(0,304,596,102,12,"elixirontrain",True)
-	Else
-		Return getMyOcr(0,230,596,102,12,"elixirontrain",True)
-	EndIf
-EndFunc
-
 Func findMultiImage($hBitmap4Find, $directory, $sCocDiamond, $redLines, $minLevel = 0, $maxLevel = 1000, $maxReturnPoints = 0, $returnProps = "objectname,objectlevel,objectpoints")
 	; same has findButton, but allow custom area instead of button area decoding
 	; nice for dinamic locations
-	If $g_iSamM0dDebug = 1 And $g_iSamM0dDebugOCR = 1 Then
-		SetLog("******** findMultiImage *** START ***", $COLOR_ORANGE)
-		SetLog("findMultiImage : directory : " & $directory, $COLOR_ORANGE)
-		SetLog("findMultiImage : sCocDiamond : " & $sCocDiamond, $COLOR_ORANGE)
-		SetLog("findMultiImage : redLines : " & $redLines, $COLOR_ORANGE)
-		SetLog("findMultiImage : minLevel : " & $minLevel, $COLOR_ORANGE)
-		SetLog("findMultiImage : maxLevel : " & $maxLevel, $COLOR_ORANGE)
-		SetLog("findMultiImage : maxReturnPoints : " & $maxReturnPoints, $COLOR_ORANGE)
-		SetLog("findMultiImage : returnProps : " & $returnProps, $COLOR_ORANGE)
-		SetLog("******** findMultiImage *** START ***", $COLOR_ORANGE)
-	EndIf
-
-	If $g_iSamM0dDebugImage = 1 And $g_iSamM0dDebugOCR = 0 Then
-		Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
-		Local $Time = @HOUR & "." & @MIN & "." & @SEC
-		_debugSaveHBitmapToImage($hBitmap4Find, "findMultiImage_" & $Date & "_" & $Time)
-	EndIf
 
 	Local $error, $extError
 
@@ -233,17 +187,12 @@ Func findMultiImage($hBitmap4Find, $directory, $sCocDiamond, $redLines, $minLeve
 	$extError = @extended
 	If $error Then
 		_logErrorDLLCall($g_sLibMyBotPath, $error)
-		If $g_iSamM0dDebug = 1 And $g_iSamM0dDebugOCR = 1 Then SetLog(" imgloc DLL Error : " & $error & " --- " & $extError)
 		SetError(2, $extError, $aCoords) ; Set external error code = 2 for DLL error
 		Return ""
 	EndIf
 
 	If checkImglocError($result, "findMultiImage") = True Then
-		If $g_iSamM0dDebug = 1 And $g_iSamM0dDebugOCR = 1 Then SetLog("findMultiImage Returned Error or No values : ", $COLOR_DEBUG)
-		If $g_iSamM0dDebug = 1 And $g_iSamM0dDebugOCR = 1 Then SetLog("******** findMultiImage *** END ***", $COLOR_ORANGE)
-		Return ""
-	Else
-		If $g_iSamM0dDebug = 1 And $g_iSamM0dDebugOCR = 1 Then SetLog("findMultiImage found : " & $result[0])
+		Return -1
 	EndIf
 
 	If $result[0] <> "" Then ;despite being a string, AutoIt receives a array[0]
@@ -260,15 +209,11 @@ Func findMultiImage($hBitmap4Find, $directory, $sCocDiamond, $redLines, $minLeve
 		;;lets check if we should get redlinedata
 		If $redLines = "" Then
 			$g_sImglocRedline = RetrieveImglocProperty("redline", "") ;global var set in imglocTHSearch
-			If $g_iSamM0dDebug = 1 And $g_iSamM0dDebugOCR = 1 Then SetLog("findMultiImage : Redline argument is emty, seting global Redlines")
 		EndIf
-		If $g_iSamM0dDebug = 1 And $g_iSamM0dDebugOCR = 1 Then SetLog("******** findMultiImage *** END ***", $COLOR_ORANGE)
 		Return $returnValues
 
 	Else
-		If $g_iSamM0dDebug = 1 And $g_iSamM0dDebugOCR = 1 Then SetLog(" ***  findMultiImage has no result **** ", $COLOR_ORANGE)
-		If $g_iSamM0dDebug = 1 And $g_iSamM0dDebugOCR = 1 Then SetLog("******** findMultiImage *** END ***", $COLOR_ORANGE)
-		Return ""
+		Return -1
 	EndIf
 
 EndFunc   ;==>findMultiImage

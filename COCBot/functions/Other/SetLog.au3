@@ -53,6 +53,10 @@ EndFunc   ;==>SetLog
 ; internal _SetLog(), don't use outside this file
 Func _SetLog($sLogMessage, $Color = Default, $Font = Default, $FontSize = Default, $statusbar = Default, $time = Default, $bConsoleWrite = Default, _
 		$LogPrefix = Default, $bPostponed = Default, $bSilentSetLog = Default, $bWriteToLogFile = Default)
+	
+	#Samm0d - ArrayToString boludoz
+		If IsArray($sLogMessage) Then $sLogMessage = "Array : " & _ArrayToString($sLogMessage)
+	#Samm0d
 
 	Local Static $bActive = False
 	Local Static $hLogCheckFreeSpaceTimer = 0

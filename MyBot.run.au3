@@ -13,6 +13,12 @@
 ; AutoIt pragmas
 #NoTrayIcon
 #RequireAdmin
+#AutoIt3Wrapper_UseX64=7n
+;#AutoIt3Wrapper_Res_HiDpi=Y ; HiDpi will be set during run-time!
+;#AutoIt3Wrapper_Run_AU3Check=n ; enable when running in folder with umlauts!
+#AutoIt3Wrapper_Run_Au3Stripper=y
+#Au3Stripper_Parameters=/rsln /MI=3
+;/SV=0
 
 ; samm0d
 #include <WinAPILocale.au3>
@@ -21,6 +27,8 @@ Global $g_iLCID = _WinAPI_GetUserDefaultLCID()
 ;#AutoIt3Wrapper_Change2CUI=y
 ;#pragma compile(Console, true)
 #include "MyBot.run.version.au3"
+#pragma compile(ProductName, My Bot)
+#pragma compile(Out, MyBot.run.exe) ; Required
 
 ; Enforce variable declarations
 Opt("MustDeclareVars", 1)
@@ -91,19 +99,19 @@ Func InitializeBot()
 
 	; ; samm0d - always enable debug mode
 	; $g_bDevMode = True
-    ; 
-	 If FileExists(@ScriptDir & "\EnableMBRDebug.txt") Then ; Set developer mode
-	 	$g_bDevMode = True
-	 	Local $aText = FileReadToArray(@ScriptDir & "\EnableMBRDebug.txt") ; check if special debug flags set inside EnableMBRDebug.txt file
-	 	If Not @error Then
-	 		For $l = 0 To UBound($aText) - 1
-	 			If StringInStr($aText[$l], "DISABLEWATCHDOG", $STR_NOCASESENSEBASIC) <> 0 Then
-	 				$g_bBotLaunchOption_NoWatchdog = True
-	 				SetDebugLog("Watch Dog disabled by Developer Mode File Command", $COLOR_INFO)
-	 			EndIf
-	 		Next
-	 	EndIf
-	 EndIf
+
+	If FileExists(@ScriptDir & "\EnableMBRDebug.txt") Then ; Set developer mode
+		$g_bDevMode = True
+		Local $aText = FileReadToArray(@ScriptDir & "\EnableMBRDebug.txt") ; check if special debug flags set inside EnableMBRDebug.txt file
+		If Not @error Then
+			For $l = 0 To UBound($aText) - 1
+				If StringInStr($aText[$l], "DISABLEWATCHDOG", $STR_NOCASESENSEBASIC) <> 0 Then
+					$g_bBotLaunchOption_NoWatchdog = True
+					SetDebugLog("Watch Dog disabled by Developer Mode File Command", $COLOR_INFO)
+				EndIf
+			Next
+		EndIf
+	EndIf
 
 	SetupProfileFolder() ; Setup profile folders
 
@@ -131,8 +139,8 @@ Func InitializeBot()
 	;ProcessSetPriority(@AutoItPID, $PROCESS_BELOWNORMAL) ;~ Boost launch time by increasing process priority (will be restored again when finished launching)
 
 	_Crypt_Startup()
-    __GDIPlus_Startup() ; Start GDI+ Engine (incl. a new thread)
-    TCPStartup() ; Start the TCP service.
+	__GDIPlus_Startup() ; Start GDI+ Engine (incl. a new thread)
+	TCPStartup() ; Start the TCP service.
 
 	;InitAndroidConfig()
 	CreateMainGUI() ; Just create the main window
@@ -217,10 +225,10 @@ Func ProcessCommandLine()
 					$g_iGuiMode = 2
 				Case "/nogui", "/ng", "-nogui", "-ng"
 					$g_iGuiMode = 0
-                Case "/hideandroid", "/ha", "-hideandroid", "-ha"
-                    $g_bBotLaunchOption_HideAndroid = True
-                Case "/minimizebot", "/minbot", "/mb", "-minimizebot", "-minbot", "-mb"
-                    $g_bBotLaunchOption_MinimizeBot = True
+				Case "/hideandroid", "/ha", "-hideandroid", "-ha"
+					$g_bBotLaunchOption_HideAndroid = True
+				Case "/minimizebot", "/minbot", "/mb", "-minimizebot", "-minbot", "-mb"
+					$g_bBotLaunchOption_MinimizeBot = True
 				Case "/console", "/c", "-console", "-c"
 					$g_iBotLaunchOption_Console = True
 					ConsoleWindow()
@@ -258,6 +266,7 @@ Func ProcessCommandLine()
 		$g_sProfileCurrentName = StringRegExpReplace($g_asCmdLine[1], '[/:*?"<>|]', '_')
 		If $g_asCmdLine[0] >= 2 Then
 			If StringInStr($g_asCmdLine[2], "BlueStacks3") Then $g_asCmdLine[2] = "BlueStacks2"
+			If StringInStr($g_asCmdLine[2], "BlueStacks4") Then $g_asCmdLine[2] = "BlueStacks2"
 		EndIf
 	ElseIf FileExists($g_sProfilePath & "\profile.ini") Then
 		$g_sProfileCurrentName = StringRegExpReplace(IniRead($g_sProfilePath & "\profile.ini", "general", "defaultprofile", ""), '[/:*?"<>|]', '_')
@@ -488,44 +497,6 @@ EndFunc   ;==>InitializeMBR
 ; Example .......: No
 ; ===============================================================================================================================
 Func SetupFilesAndFolders()
-	; samm0d
-	; =======================================================================================================
-	; MySwitch
-
-	InitializeMySwitch()
-
-	BackupSystem()
-
-	If FileExists(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\") Then
-		If Not FileExists(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images\") Then
-			DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images")
-		EndIf
-	Else
-		DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug")
-		DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images")
-	EndIf
-
-	If $g_iMyTroopsSize = 0 Then
-		SetLog($CustomTrain_MSG_15, $COLOR_ERROR)
-	EndIf
-
-	DirRemove(@ScriptDir & "\profiles\SamM0d", 1)
-	;DirCreate(@ScriptDir & "\profiles\SamM0d")
-	DirCopy(@ScriptDir & "\COCBot\SamM0d\Images",@ScriptDir & "\profiles\SamM0d", $FC_OVERWRITE)
-
-    Local $aSize = DirGetSize(@ScriptDir & "\profiles\SamM0d", 1)
-;~ 	For $i = 0 To UBound($aSize) - 1
-;~ 		SetLog("$aSize[" & $i & "]: " & $aSize[$i])
-;~ 	Next
-	If IsArray($aSize) Then
-		If $aSize[1] >= 235 Then
-			$g_sSamM0dImageLocation = @ScriptDir & "\profiles\SamM0d"
-		EndIf
-	EndIf
-
-	; samm0d log translate
-	;#include "COCBot\SamM0d\Log Msg.au3"
-	; =======================================================================================================
 
 	;DirCreate($sTemplates)
 	DirCreate($g_sProfilePresetPath)
@@ -565,9 +536,36 @@ Func SetupFilesAndFolders()
 		DeleteFiles($g_sProfileTempDebugPath, "*.*", $g_iDeleteTempDays, 0, $FLTAR_RECUR)
 	EndIf
 
+	; samm0d
+	; =======================================================================================================
+	; MySwitch
+
+	InitializeMySwitch()
+
+	BackupSystem()
+
+	If FileExists(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\") Then
+		If Not FileExists(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images\") Then
+			DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images")
+		EndIf
+	Else
+		DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug")
+		DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images")
+	EndIf
+
+	If $g_iMyTroopsSize = 0 Then
+		SetLog($CustomTrain_MSG_15, $COLOR_ERROR)
+	EndIf
+
+	DirRemove(@ScriptDir & "\profiles\SamM0d", 1)
+
+	$g_sSamM0dImageLocation = @ScriptDir & "\COCBot\SamM0d\Images"
+	; =======================================================================================================
+
 	SetDebugLog("$g_sProfilePath = " & $g_sProfilePath)
 	SetDebugLog("$g_sProfileCurrentName = " & $g_sProfileCurrentName)
 	SetDebugLog("$g_sProfileLogsPath = " & $g_sProfileLogsPath)
+
 EndFunc   ;==>SetupFilesAndFolders
 
 ; #FUNCTION# ====================================================================================================================
@@ -730,11 +728,11 @@ EndFunc   ;==>MainLoop
 
 Func runBot() ;Bot that runs everything in order
 	Local $iWaitTime
-	
+
 	; samm0d switch
 	$iDoPerformAfterSwitch = False
 	; *Loop Here
-	
+
 	; samm0d
 	If $g_iSamM0dDebug = 1 And $g_bRestart Then SetLog("Continue loop with restart", $COLOR_DEBUG)
 	If $ichkAutoDock = 1 Then
@@ -759,7 +757,7 @@ Func runBot() ;Bot that runs everything in order
 			If _SleepStatus(15000) = True Then Return
 		WEnd
 	EndIf
-	
+
 	InitiateSwitchAcc()
 	If ProfileSwitchAccountEnabled() And $g_bReMatchAcc and not $ichkEnableMySwitch Then
 		SetLog("Rematching Account [" & $g_iNextAccount + 1 & "] with Profile [" & GUICtrlRead($g_ahCmbProfile[$g_iNextAccount]) & "]")
@@ -788,22 +786,15 @@ Func runBot() ;Bot that runs everything in order
 
 		; samm0d switch
 		If $ichkEnableMySwitch Then
-			If $g_iSamM0dDebug = 1 Then SetLog("$bAvoidSwitch: " & $bAvoidSwitch)
 			$bUpdateStats = True
 			If $g_bIsClientSyncError = False And $g_bIsSearchLimit = False And ($g_bQuickAttack = False) Then
 				DoSwitchAcc()
-				If $g_bRestart = True Or $g_bChkPlayBBOnly = True Then ContinueLoop
-
 				If _Sleep($DELAYRUNBOT1) Then Return
-				;checkMainScreen(False)
-				If $g_bRestart = True Or $g_bChkPlayBBOnly = True Then ContinueLoop
-
 				If $ichkProfileImage = 1 Then ; check with image is that village load correctly
 					If $bAvoidSwitch = False And $bChangeNextAcc = True Then
 						If checkProfileCorrect() = True Then
 							SetLog("Profile match with village.png, profile loaded correctly.", $COLOR_INFO)
 							$iCheckAccProfileError = 0
-							;$bProfileImageChecked = True
 						Else
 							SetLog("Profile not match with village.png, profile load failed.", $COLOR_ERROR)
 							$iCheckAccProfileError += 1
@@ -820,18 +811,10 @@ Func runBot() ;Bot that runs everything in order
 				EndIf
 				; Backup system
 				If not $g_bFirstRun Then BotDetectFirstTime()
-			Else
-				If _Sleep($DELAYRUNBOT1) Then Return
-				;checkMainScreen(False)
-				If $g_bRestart = True Or $g_bChkPlayBBOnly = True Then ContinueLoop
 			EndIf
 			$iDoPerformAfterSwitch = True
-		Else
-			If _Sleep($DELAYRUNBOT1) Then Return
-			;checkMainScreen(False)
-			If $g_bRestart = True Or $g_bChkPlayBBOnly = True Then ContinueLoop
 		EndIf
-		
+
 		If $g_bChkPlayBBOnly Then
 				runBuilderBase()
 				$iDoPerformAfterSwitch = True
@@ -850,12 +833,12 @@ Func runBot() ;Bot that runs everything in order
 					Else
 						$g_bQuickAttack = QuickAttack()
 					EndIf
-			
+
 					If CheckAndroidReboot() = True Then ContinueLoop
 					If $g_bIsClientSyncError = False And $g_bIsSearchLimit = False And ($g_bQuickAttack = False) Then
 						If BotCommand() Then btnStop()
 						If _Sleep($DELAYRUNBOT2) Then Return
-			
+
 						checkMainScreen(False)
 						If $g_bRestart = True Or $g_bChkPlayBBOnly = True Then ContinueLoop
 						If _Sleep($DELAYRUNBOT3) Then Return
@@ -888,9 +871,9 @@ Func runBot() ;Bot that runs everything in order
 							EndIf
 							If $g_bRestart = True Or $g_bChkPlayBBOnly = True Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 						WEnd
-			
+
 						If ($g_iCommandStop = 0 Or $g_iCommandStop = 3) And ProfileSwitchAccountEnabled() And Not $g_abDonateOnly[$g_iCurAccount] Then checkSwitchAcc()
-			
+
 						AddIdleTime()
 						If $g_bRunState = False Then Return
 						If $g_bRestart = True Or $g_bChkPlayBBOnly = True Then ContinueLoop
@@ -941,7 +924,7 @@ Func runBot() ;Bot that runs everything in order
 							If $g_bRestart = True Or $g_bChkPlayBBOnly = True Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 							If UBound($aRndFuncList) > 1 Then
 								$Index = Random(0, UBound($aRndFuncList) - 1, 1)
-			
+
 								_RunFunction($aRndFuncList[$Index])
 								_ArrayDelete($aRndFuncList, $Index)
 							Else
@@ -965,7 +948,7 @@ Func runBot() ;Bot that runs everything in order
 							;$g_bFullArmy1 = $g_bFullArmy
 							If _Sleep($DELAYRUNBOT3) Then Return
 							If $g_bRestart = True Or $g_bChkPlayBBOnly = True Then ContinueLoop
-			
+
 							If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 								AttackMain()
 								$g_bSkipFirstZoomout = False
@@ -1011,7 +994,7 @@ Func runBot() ;Bot that runs everything in order
 						If $g_bRestart = True Or $g_bChkPlayBBOnly = True Then ContinueLoop
 					EndIf
 		EndIf
-		
+
 	WEnd
 	; Loop End
 
@@ -1406,6 +1389,7 @@ Func _RunFunction($action)
 				If _Sleep($DELAYRUNBOT1) = False Then checkMainScreen(False)
 			EndIf
 		Case "DonateCC,Train"
+			; samm0d
 			If $ichkModTrain = 1 Then
 				If $g_bTrainEnabled Then
 					ModTrain()
@@ -1426,6 +1410,7 @@ Func _RunFunction($action)
 					EndIf
 				EndIf
 			Else
+			; samm0d - end
 				If $g_iActiveDonate And $g_bChkDonate Then
 					If $g_bFirstStart Then
 						getArmyTroopCapacity(True, False)
@@ -1452,8 +1437,7 @@ Func _RunFunction($action)
 				Else
 					If $g_bDebugSetlogTrain Then SetLog("Halt mode - training disabled", $COLOR_DEBUG)
 				EndIf
-			EndIf
-
+			EndIf ; samm0d
 		Case "BoostBarracks"
 			BoostBarracks()
 		Case "BoostSpellFactory"
@@ -1467,42 +1451,25 @@ Func _RunFunction($action)
 		Case "BoostEverything"
 			BoostEverything()
 		Case "LabCheck"
-			;Setlog("Checking Lab Status", $COLOR_INFO)
 			;LabGuiDisplay()
-			;_Sleep($DELAYRUNBOT3)
+			_Sleep($DELAYRUNBOT3)
 		Case "RequestCC"
 			RequestCC()
 			If _Sleep($DELAYRUNBOT1) = False Then checkMainScreen(False)
 		Case "Laboratory"
-		;	Laboratory()
-		;	If _Sleep($DELAYRUNBOT3) = False Then checkMainScreen(False)
+			Laboratory()
+			If _Sleep($DELAYRUNBOT3) = False Then checkMainScreen(False)
 		Case "UpgradeHeroes"
 			UpgradeHeroes()
 			_Sleep($DELAYRUNBOT3)
 		Case "UpgradeBuilding"
 			UpgradeBuilding()
 			_Sleep($DELAYRUNBOT3)
- 			AutoUpgrade()
+			AutoUpgrade()
 			_Sleep($DELAYRUNBOT3)
 		Case "BuilderBase"
 			runBuilderBase()
 			_Sleep($DELAYRUNBOT3)
-			;If isOnBuilderBase() Or (($g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades) And SwitchBetweenBases()) Then
-           ;    BuilderBaseReport()
-           ;    CollectBuilderBase()
-           ;    _Sleep($DELAYRUNBOT3)
-           ;    StartClockTowerBoost()
-           ;    _Sleep($DELAYRUNBOT3)
-           ;    StarLaboratory()
-           ;    _Sleep($DELAYRUNBOT3)
-           ;    CleanBBYard()
-           ;    _Sleep($DELAYRUNBOT3)
-           ;    MainSuggestedUpgradeCode()
-           ;    ; switch back to normal village
-           ;    BuilderBaseReport()
-           ;    SwitchBetweenBases()
-           ;EndIf
-           ;_Sleep($DELAYRUNBOT3)
         Case "CollectFreeMagicItems"
             CollectFreeMagicItems()
             _Sleep($DELAYRUNBOT3)
@@ -1524,13 +1491,8 @@ Func FirstCheck()
 	$g_bRestart = False
 	$g_bFullArmy = False
 	$g_iCommandStop = -1
-	;If $g_bChkFarmVersion = False Then BotHumanization() ; Bot Humanization - ADDEDg_sBotVersion
-	;If $g_bChkFarmVersion = False And $g_bEnableSuperXP = True And $g_irbSXTraining = 2 Then ;When Super Xp Only Farm Option is on skip all and just do the Goblin Xp Farming
-	;	MainSuperXPHandler()
-	;	Return
-	;EndIf
-	;If $g_bChkFarmVersion = False Then MainGTFO()
-	;If $g_bChkFarmVersion = False Then MainKickout()
+
+	VillageReport()
 	If Not $g_bRunState Then Return
 
 	If $g_bOutOfGold = True And (Number($g_aiCurrentLoot[$eLootGold]) >= Number($g_iTxtRestartGold)) Then ; check if enough gold to begin searching again

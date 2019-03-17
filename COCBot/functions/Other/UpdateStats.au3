@@ -500,28 +500,28 @@ Func UpdateStats($bForceUpdate = False)
 		GUICtrlSetData($g_hLblTotalTroopsQ, _NumberFormat($g_iTotalDonateStatsTroops, True))
 		GUICtrlSetData($g_hLblTotalTroopsXP, _NumberFormat($g_iTotalDonateStatsTroopsXP, True))
 	EndIf
-	
+
     ; samm0d - samm0dzap
     ; SmartZap DE Gain
-	If $s_iOldSmartZapGain <> $g_iSmartZapGain Then
-		$bStatsUpdated = True
-		GUICtrlSetData($g_hLblSmartZap, _NumberFormat($g_iSmartZapGain, True))
-        GUICtrlSetData($lblMySmartZap, _NumberFormat($g_iSmartZapGain, True))
-		$s_iOldSmartZapGain = $g_iSmartZapGain
-	EndIf
+;~ 	If $s_iOldSmartZapGain <> $g_iSmartZapGain Then
+;~ 		$bStatsUpdated = True
+;~ 		GUICtrlSetData($g_hLblSmartZap, _NumberFormat($g_iSmartZapGain, True))
+;~         GUICtrlSetData($lblMySmartZap, _NumberFormat($g_iSmartZapGain, True))
+;~ 		$s_iOldSmartZapGain = $g_iSmartZapGain
+;~ 	EndIf
 
-	If $s_iOldNumLSpellsUsed <> $g_iNumLSpellsUsed Then
-		$bStatsUpdated = True
-		GUICtrlSetData($g_hLblSmartLightningUsed, _NumberFormat($g_iNumLSpellsUsed, True))
-        GUICtrlSetData($lblMyLightningUsed, _NumberFormat($g_iNumLSpellsUsed, True))
-		$s_iOldNumLSpellsUsed = $g_iNumLSpellsUsed
-	EndIf
+;~ 	If $s_iOldNumLSpellsUsed <> $g_iNumLSpellsUsed Then
+;~ 		$bStatsUpdated = True
+;~ 		GUICtrlSetData($g_hLblSmartLightningUsed, _NumberFormat($g_iNumLSpellsUsed, True))
+;~         GUICtrlSetData($lblMyLightningUsed, _NumberFormat($g_iNumLSpellsUsed, True))
+;~ 		$s_iOldNumLSpellsUsed = $g_iNumLSpellsUsed
+;~ 	EndIf
 
-	If $s_iOldNumEQSpellsUsed <> $g_iNumEQSpellsUsed Then
-		$bStatsUpdated = True
-		GUICtrlSetData($g_hLblSmartEarthQuakeUsed, _NumberFormat($g_iNumEQSpellsUsed, True))
-		$s_iOldNumEQSpellsUsed = $g_iNumEQSpellsUsed
-	EndIf
+;~ 	If $s_iOldNumEQSpellsUsed <> $g_iNumEQSpellsUsed Then
+;~ 		$bStatsUpdated = True
+;~ 		GUICtrlSetData($g_hLblSmartEarthQuakeUsed, _NumberFormat($g_iNumEQSpellsUsed, True))
+;~ 		$s_iOldNumEQSpellsUsed = $g_iNumEQSpellsUsed
+;~ 	EndIf
 
 	$g_aiAttackedCount = 0
 

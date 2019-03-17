@@ -53,6 +53,9 @@ Global $g_iLabel3  = 0
 Global $g_iMultWaitCVS = 1
 Global $g_iSlider[2] = [1, 1]
 
+; ================================================== AtkLog Color =========================================== ;
+Global $g_bColorfulAttackLog = True
+
 ; ================================================== Goblin XP =========================================== ;
 
 ;SuperXP / GoblinXP
@@ -213,28 +216,28 @@ Global $iMultiFingerStyle = 0
 Global Enum  $eCCSpell = $eSkSpell + 1
 Global $lblDBMultiFinger, $cmbDBMultiFinger
 
-; SmartZap GUI variables from ChaCalGyn (LunaEclipse) - DEMEN
-Global $ichkSmartZapDB = 1
-Global $ichkSmartZapSaveHeroes = 1
-Global $ichkSmartZapRnd = 1
-Global $itxtMinDE = 400
-; SmartZap stats from ChaCalGyn (LunaEclipse) - DEMEN
-;Global $smartZapGain = 0
-;Global $numLSpellsUsed = 0
-; SmartZap Array to hold Total Amount of DE available from Drill at each level (1-6) from ChaCalGyn (LunaEclipse) - DEMEN
-;Global Const $drillLevelHold[6] = [120,225,405,630,960,1350]
-; SmartZap Array to hold Amount of DE available to steal from Drills at each level (1-6) from ChaCalGyn (LunaEclipse) - DEMEN
-;Global Const $drillLevelSteal[6] = [59,102,172,251,343,479]
-
-;samm0d zap
-Global $ichkUseSamM0dZap = 1
-Global $ichkDrillExistBeforeZap = 1
-Global $itxtMinDEGetFromDrill = 120
-Global $numLSpellDrop = 0
-Global $debugZapSetLog = 0
-Global $ichkPreventTripleZap = 1
-Global $grpSmartZap, $chkUseSamM0dZap, $lblMinDark2, $txtMinDark2, $chkSmartZapDB2, $chkSmartZapSaveHeroes2, $chkSmartZapRnd, $chkDrillExistBeforeZap, $chkPreventTripleZap, $lblMinDEGetFromDrill, $txtMinDEGetFromDrill, _
-$lblMySmartZap, $lblMyLightningUsed, $chkSmartZapDB, $chkSmartZapSaveHeroes, $txtMinDark
+;~ ; SmartZap GUI variables from ChaCalGyn (LunaEclipse) - DEMEN
+;~ Global $ichkSmartZapDB = 1
+;~ Global $ichkSmartZapSaveHeroes = 1
+;~ Global $ichkSmartZapRnd = 1
+;~ Global $itxtMinDE = 400
+;~ ; SmartZap stats from ChaCalGyn (LunaEclipse) - DEMEN
+;~ ;Global $smartZapGain = 0
+;~ ;Global $numLSpellsUsed = 0
+;~ ; SmartZap Array to hold Total Amount of DE available from Drill at each level (1-6) from ChaCalGyn (LunaEclipse) - DEMEN
+;~ ;Global Const $drillLevelHold[6] = [120,225,405,630,960,1350]
+;~ ; SmartZap Array to hold Amount of DE available to steal from Drills at each level (1-6) from ChaCalGyn (LunaEclipse) - DEMEN
+;~ ;Global Const $drillLevelSteal[6] = [59,102,172,251,343,479]
+;~ 
+;~ ;samm0d zap
+;~ Global $ichkUseSamM0dZap = 1
+;~ Global $ichkDrillExistBeforeZap = 1
+;~ Global $itxtMinDEGetFromDrill = 120
+;~ Global $numLSpellDrop = 0
+;~ Global $debugZapSetLog = 0
+;~ Global $ichkPreventTripleZap = 1
+;~ Global $grpSmartZap, $chkUseSamM0dZap, $lblMinDark2, $txtMinDark2, $chkSmartZapDB2, $chkSmartZapSaveHeroes2, $chkSmartZapRnd, $chkDrillExistBeforeZap, $chkPreventTripleZap, $lblMinDEGetFromDrill, $txtMinDEGetFromDrill, _
+;~ $lblMySmartZap, $lblMyLightningUsed, $chkSmartZapDB, $chkSmartZapSaveHeroes, $txtMinDark
 
 ; samm0d chinese request
 Global $ichkEnableCustomOCR4CCRequest = 0
@@ -516,5 +519,10 @@ Global $g_bChkCollectBuilderBase = False, $g_bChkStartClockTowerBoost = False, $
 
 Global $g_bChkPlayBBOnly = False
 
-; ================================================== Quick MIS ==================================================
+; ================================================== Quick MIS ================================================ ;
 Global $g_iQuickMISWOffSetX = 0, $g_iQuickMISWOffSetY = 0 ; SAMM0D
+
+; ================================================== Chat IA ================================================== ;
+
+Global $g_aIAVar[5] = [0, 0, 0, 0, 0]
+Global $g_sIAVar = '0|0|0|0|0'

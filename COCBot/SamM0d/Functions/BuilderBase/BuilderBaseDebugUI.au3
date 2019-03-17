@@ -23,7 +23,7 @@ Func DebugUI()
 	If $g_hDegubUiForm <> 0 Then Return
 
 	; Variables
-	Local $btnLoadImageSource = 0, $lblSourceImage = 0, $btnClose = 0, $btnFillArmy = 0, $btnLab = 0, $btnAllLoop = 0, $btnSize = 0, $btnZoom = 0, $btnDeploy = 0, $btnHall = 0, $btnDrop = 0, $btnAttackBar = 0, $btnCSV = 0, $btnCleanYard = 0, $btnIMG = 0, $btnImage = 0, $btnClockTower = 0, $btnUpgradeWall = 0
+	Local $btnLoadImageSource = 0, $lblSourceImage = 0, $btnClose = 0, $btnFillArmy = 0, $btnLab = 0, $btnAllLoop = 0, $btnSize = 0, $btnZoom = 0, $btnDeploy = 0, $btnHall = 0, $btnDrop = 0, $btnAttackBar = 0, $btnCSV = 0, $btnCleanYard = 0, $btnIMG = 0, $btnImage = 0, $btnClockTower = 0, $btnUpgradeWall = 0, $btnMachine = 0
 	Local $x = 10, $y = 20
 	; GUI
 	$g_hDegubUiForm = GUICreate("MyBotRun Builder Base DebugUI", 440, 320, -1, -1, $WS_BORDER)
@@ -82,6 +82,9 @@ Func DebugUI()
 	; 3 Row
 		$btnUpgradeWall = GUICtrlCreateButton("UpgradeWall", $x, $y, 75, 25, $WS_GROUP)
 			GUICtrlSetOnEvent($btnUpgradeWall, "TestRunWallsUpgradeBB")
+	$x += 75
+		$btnMachine = GUICtrlCreateButton("BattleMachine", $x, $y, 75, 25, $WS_GROUP)
+			GUICtrlSetOnEvent($btnMachine, "TestBattleMachineUpgrade")
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 

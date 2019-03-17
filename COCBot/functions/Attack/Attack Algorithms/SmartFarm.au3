@@ -433,11 +433,11 @@ Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $BestSideToAttack, $re
 			$tempObbj = StringSplit($aIn[$i][5], "|", $STR_NOCOUNT) ; several detected points
 			For $t = 0 To UBound($tempObbj) - 1
 				$tempObbjs = StringSplit($tempObbj[$t], ",", $STR_NOCOUNT)
-				_GDIPlus_GraphicsDrawRect($hGraphic, $tempObbjs[0], $tempObbjs[1], 5, 5, $hPen2)
+                If UBound($tempObbjs) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $tempObbjs[0], $tempObbjs[1], 5, 5, $hPen2)
 			Next
 		Else
 			$tempObbj = StringSplit($aOut[$i][5], ",", $STR_NOCOUNT)
-			_GDIPlus_GraphicsDrawRect($hGraphic, $tempObbj[0], $tempObbj[1], 5, 5, $hPen2)
+            If UBound($tempObbj) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $tempObbj[0], $tempObbj[1], 5, 5, $hPen2)
 		EndIf
 		$tempObbj = Null
 		$tempObbjs = Null
@@ -452,11 +452,11 @@ Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $BestSideToAttack, $re
 			$tempObbj = StringSplit($aOut[$i][5], "|", $STR_NOCOUNT) ; several detected points
 			For $t = 0 To UBound($tempObbj) - 1
 				$tempObbjs = StringSplit($tempObbj[$t], ",", $STR_NOCOUNT)
-				_GDIPlus_GraphicsDrawRect($hGraphic, $tempObbjs[0], $tempObbjs[1], 5, 5, $hPen2)
+                If UBound($tempObbjs) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $tempObbjs[0], $tempObbjs[1], 5, 5, $hPen2)
 			Next
 		Else
 			$tempObbj = StringSplit($aOut[$i][5], ",", $STR_NOCOUNT)
-			_GDIPlus_GraphicsDrawRect($hGraphic, $tempObbj[0], $tempObbj[1], 5, 5, $hPen2)
+            If UBound($tempObbj) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $tempObbj[0], $tempObbj[1], 5, 5, $hPen2)
 		EndIf
 		$tempObbj = Null
 		$tempObbjs = Null
@@ -470,7 +470,7 @@ Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $BestSideToAttack, $re
 		$aTEMP = StringSplit($redline[$l], "|", 2)
 		For $i = 0 To UBound($aTEMP) - 1
 			$DecodeEachPoint = StringSplit($aTEMP[$i], ",", 2)
-			_GDIPlus_GraphicsDrawRect($hGraphic, $DecodeEachPoint[0], $DecodeEachPoint[1], 5, 5, $hPen2)
+            If UBound($DecodeEachPoint) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $DecodeEachPoint[0], $DecodeEachPoint[1], 5, 5, $hPen2)
 		Next
 	Next
 
@@ -581,8 +581,8 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 				]
 	EndIf
 	
+	; samm0d
     If $ichkDropCCFirst = 1 Then
-	    ; samm0d
 		Local $aFilled[1][5] = [[0, 0, 0, 0, 0]]
         Local $iPos = -1
 		
@@ -596,9 +596,9 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
                 ExitLoop
             EndIf
         Next
-		;_ArrayDisplay($listInfoDeploy)
 		Endif
-		
+	;-------------
+	
 	$g_bIsCCDropped = False
 	$g_aiDeployCCPosition[0] = -1
 	$g_aiDeployCCPosition[1] = -1
@@ -606,7 +606,6 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	$g_aiDeployHeroesPosition[0] = -1
 	$g_aiDeployHeroesPosition[1] = -1
 
-	;-------------
 	LaunchTroopSmartFarm($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $SIDESNAMES)
 
 	If Not $g_bRunState Then Return

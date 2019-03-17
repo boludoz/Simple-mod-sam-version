@@ -16,7 +16,7 @@
 
 Global $g_hChkShareAttack = 0, $g_hLblShareMinLoot = 0, $g_hTxtShareMinGold = 0, $g_hTxtShareMinElixir = 0, $g_hTxtShareMinDark = 0, $g_hTxtShareMessage = 0, _
 	   $g_hChkTakeLootSS = 0, $g_hChkScreenshotLootInfo = 0
-
+Global $g_hChkColorfulAttackLog = 0 ;samm0d atklog color
 Global $g_hLblShareMinGold = 0, $g_hLblShareMinElixir = 0,  $g_hLblShareMinDark = 0
 
 Func CreateAttackSearchOptionsEndBattle()
@@ -58,7 +58,7 @@ Func CreateAttackSearchOptionsEndBattle()
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			GUICtrlSetLimit(-1, 5)
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 182, $y, 16, 16)
-
+ 
 	$y += 25
 	$x += 5
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-EndBattle", "LblRandomMessage", "Use a random message from this list") & ":", $x, $y - 2, -1, -1)
@@ -84,5 +84,16 @@ Func CreateAttackSearchOptionsEndBattle()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-EndBattle", "ChkScreenshotLootInfo_Info_01", "Include loot info in the screenshot filename"))
 			GUICtrlSetState(-1,$GUI_DISABLE)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
+
+#samm0d atklog color
+	$x = 20
+	$y += 55
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-EndBattle", "Group_03", "Attack Log"), $x - 15, $y - 20, $g_iSizeWGrpTab4, 60)
+		$g_hChkColorfulAttackLog = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-EndBattle", "ChkColorfulAttackLog", "Colorful Attack Log"), $x, $y, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-EndBattle", "ChkColorfulAttackLog_Info_01", "When you select this option, the avatar will be displayed in color. Each color indicates a star"))
+			GUICtrlSetState(-1, $GUI_UNCHECKED)
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+
+#samm0d - end
 
 EndFunc   ;==>CreateAttackSearchOptionsEndBattle

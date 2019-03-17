@@ -630,7 +630,7 @@ Func DoSwitchAcc()
 							Local $bShare_replay = $g_bIsFullArmywithHeroesAndSpells
 							If $ichkForcePreTrainB4Switch = 1 Then
 								SetLog("Check train before switch account...",$COLOR_ACTION)
-								If $ichkModTrain = 1 Then 
+								If $ichkModTrain = 1 Then
 									ModTrain(True)
 								Else
 									DoubleTrain($g_bQuickTrainEnable)
@@ -1210,14 +1210,14 @@ Func displayStats($iSlot)
 		EndIf
 	EndIf
 
-;~    ; SmartZap DE Gain - From ChaCalGyn(LunaEclipse) - DEMEN
-	GUICtrlSetData($lblMySmartZap, _NumberFormat($aProfileStats[28][$iSlot+1], True))
-	GUICtrlSetData($g_hLblSmartZap, _NumberFormat($aProfileStats[28][$iSlot+1], True))
+   ; SmartZap DE Gain - From ChaCalGyn(LunaEclipse) - DEMEN
+;~ 	GUICtrlSetData($lblMySmartZap, _NumberFormat($aProfileStats[28][$iSlot+1], True))
+;~ 	GUICtrlSetData($g_hLblSmartZap, _NumberFormat($aProfileStats[28][$iSlot+1], True))
 
-;~ 	; SmartZap Spells Used  From ChaCalGyn(LunaEclipse) - DEMEN
-	GUICtrlSetData($lblMyLightningUsed, _NumberFormat($aProfileStats[30][$iSlot+1], True))
-	GUICtrlSetData($g_hLblSmartLightningUsed, _NumberFormat($aProfileStats[30][$iSlot+1], True))
-	GUICtrlSetData($g_hLblSmartEarthQuakeUsed, _NumberFormat($aProfileStats[29][$iSlot+1], True))
+	; SmartZap Spells Used  From ChaCalGyn(LunaEclipse) - DEMEN
+;~ 	GUICtrlSetData($lblMyLightningUsed, _NumberFormat($aProfileStats[30][$iSlot+1], True))
+;~ 	GUICtrlSetData($g_hLblSmartLightningUsed, _NumberFormat($aProfileStats[30][$iSlot+1], True))
+;~ 	GUICtrlSetData($g_hLblSmartEarthQuakeUsed, _NumberFormat($aProfileStats[29][$iSlot+1], True))
 
 	_GUI_Value_STATE("HIDE",$g_aGroupListTHLevels)
 	If $aProfileStats[25][$iSlot+1] >= 4 And $aProfileStats[25][$iSlot+1] <= 11 Then
@@ -1329,17 +1329,17 @@ Func btnMakeSwitchADBFolder()
 		; Click boton de logro - samm0d bld
 		Local $iSpecialColor[4][3] = [[0x6DAD25, 1, 0], [0x0D0D0D, 2, 0], [0x83C22B, 0, 1], [0x6DAD25, 1, 1]]
 		Local $iSpecialPixel
-		
+
 		For $iLoopGem = 0 To 30
 			For $iProf = 0 To 50
 				Sleep(10)
 				$iSpecialPixel = _MultiPixelSearch(825, 110, 842, 671, 1, 1, Hex(0x81C22B, 6), $iSpecialColor, 30)
-				If IsArray($iSpecialPixel) Then 
+				If IsArray($iSpecialPixel) Then
 					Click($iSpecialPixel[0]-Random(10,50), $iSpecialPixel[1], 1)
 					ExitLoop
 				EndIf
 			Next
-			
+
 			If $iProf < 50 Then
 				AndroidBackButton()
 				If _Sleep($DELAYPROFILEREPORT1*3) Then Return
@@ -1360,7 +1360,7 @@ Func btnMakeSwitchADBFolder()
 				ExitLoop
 			EndIf
 		Next
-		
+
 		Local $hClone = _GDIPlus_BitmapCloneArea($g_hBitmap, 70,127 + $iSecondBaseTabHeight, 80,17, $GDIP_PXF24RGB)
 		_GDIPlus_ImageSaveToFile($hClone, @ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\village_92.png")
 		If FileExists(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\village_92.png") Then
@@ -1607,21 +1607,21 @@ Func checkProfileCorrect()
 
 			If $g_iSamM0dDebug = 1 Then SetLog("_GetPixelColor(85, " & 163 + $iSecondBaseTabHeight & ", True): " & _GetPixelColor(85, 163 + $iSecondBaseTabHeight, $g_bNoCapturePixel))
 			If $g_iSamM0dDebug = 1 Then SetLog("_GetPixelColor(20, " & 295 + $iSecondBaseTabHeight & ", True): " & _GetPixelColor(20, 295 + $iSecondBaseTabHeight, $g_bNoCapturePixel))
-			
+
 			; Click boton de logro - samm0d bld
 			Local $iSpecialColor[4][3] = [[0x6DAD25, 1, 0], [0x0D0D0D, 2, 0], [0x83C22B, 0, 1], [0x6DAD25, 1, 1]]
 			Local $iSpecialPixel
-			
+
 			For $iLoopGem = 0 To 30
 				For $iProf = 0 To 50
 					Sleep(10)
 					$iSpecialPixel = _MultiPixelSearch(825, 110, 842, 671, 1, 1, Hex(0x81C22B, 6), $iSpecialColor, 30)
-					If IsArray($iSpecialPixel) Then 
+					If IsArray($iSpecialPixel) Then
 						Click($iSpecialPixel[0]-Random(10,50), $iSpecialPixel[1], 1)
 						ExitLoop
 					EndIf
 				Next
-				
+
 				If $iProf < 50 Then
 					AndroidBackButton()
 					If _Sleep($DELAYPROFILEREPORT1*3) Then Return

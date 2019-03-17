@@ -390,7 +390,7 @@ Func _ClanGames($test = False)
 			$sEventName = $aTempSelectChallenges[0][0]
 			Click($aTempSelectChallenges[0][1], $aTempSelectChallenges[0][2])
 			If _Sleep(1750) Then Return
-			If $test Then Return
+			If $bTestRun Then Return
 			If ClickOnEvent($YourAccScore, $ScoreLimits, $sEventName, $getCapture) Then Return
 			; Some error occurred let's click on Challenges Tab and proceeds
 			ClickP($TabChallengesPosition, 2, 0, "#Tab")

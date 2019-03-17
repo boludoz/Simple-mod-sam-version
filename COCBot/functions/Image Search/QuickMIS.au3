@@ -732,7 +732,7 @@ Func _ImageSearchXMLBoludoz($XmlPath, $Quantity2Match = 0, $sArea2Search = "0,0,
 
 EndFunc   ;==>BuilderBaseBuildingsDetection
 #ce
-Func _ImageSearchXMLMyBotFunc($XmlPath, $Quantity2Match = 0, $sArea2Search = "0,0,"&$g_iGAME_WIDTH&","&$g_iGAME_HEIGHT, $bForceArea = True, $DebugLog = False, $checkDuplicatedpoints = False, $Distance2check = 25, $iLevel = 0)
+Func _ImageSearchXMLMyBot($XmlPath, $Quantity2Match = 0, $sArea2Search = "0,0,"&$g_iGAME_WIDTH&","&$g_iGAME_HEIGHT, $bForceArea = True, $DebugLog = False, $checkDuplicatedpoints = False, $Distance2check = 25, $iLevel = 0)
 		Return _ImageSearchXMLBoludoz($XmlPath, $Quantity2Match, $sArea2Search, $bForceArea, $DebugLog, $checkDuplicatedpoints, $Distance2check, $iLevel)
 EndFunc   ;==>_ImageSearchXMLMyBot
 

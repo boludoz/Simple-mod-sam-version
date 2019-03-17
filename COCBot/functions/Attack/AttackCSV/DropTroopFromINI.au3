@@ -133,7 +133,7 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
 	If $troopPosition = -1 Or Not $bUseSpell Then
 
 		If $bUseSpell Then
-			SetLog("No " & GetTroopName($iTroopIndex) & "  found in your attack troops list")
+            SetLog("No " & GetTroopName($iTroopIndex) & " found in your attack troops list")
 			debugAttackCSV("No " & GetTroopName($iTroopIndex) & " found in your attack troops list")
 		Else
 			If $g_bDebugSetlog Then SetDebugLog("Discard use " & GetTroopName($iTroopIndex), $COLOR_DEBUG)
@@ -192,15 +192,15 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
 					$delayDrop = Random($delayDropMin, $delayDropMax, 1)
                 Else
                     $delayDrop = $delayDropMin
-		 			EndIf
+		 		EndIf
 ;================== Simple Mod =================
-
 				If ($g_iMatchMode = $DB) Then
-						$delayDrop = Int($delayDrop / $g_iSlider[0])
+						$delayDrop = Int($delayDrop / 100) * (100 + $g_iSlider[0])
+						;If $g_iSlider[0] <> 0 Then SetLog("Delay change delay drop: " & $delayDrop, $COLOR_INFO)
 				Else
-						$delayDrop = Int($delayDrop / $g_iSlider[1])
+						$delayDrop = Int($delayDrop / 100) * (100 + $g_iSlider[1])
+						;If $g_iSlider[1] <> 0 Then SetLog("Delay change delay drop: " & $delayDrop, $COLOR_INFO)
 				EndIf
-				debugAttackCSV("Delay change drop point: " & $delayDrop)
 			EndIf
 ;================== Simple Mod =================
 
@@ -221,9 +221,11 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
                     EndIf
 ;================== Simple Mod =================
 					If ($g_iMatchMode = $DB) Then
-							$delayPoint = Int($delayPoint / $g_iSlider[0])
-					Else                                    
-							$delayPoint = Int($delayPoint / $g_iSlider[1])
+							$delayPoint = Int($delayPoint / 100) * (100 + $g_iSlider[0])
+							;If $g_iSlider[0] <> 0 Then SetLog("Delay change delay point: " & $delayPoint, $COLOR_INFO)
+					Else
+							$delayPoint = Int($delayPoint / 100) * (100 + $g_iSlider[1])
+							;If $g_iSlider[1] <> 0 Then SetLog("Delay change delay point: " & $delayPoint, $COLOR_INFO)
 					EndIf
 ;================== Simple Mod =================
 					
@@ -290,9 +292,11 @@ Func DropTroopFromINI($vectors, $indexStart, $indexEnd, $indexArray, $qtaMin, $q
         EndIf
 ;================== Simple Mod =================
 		If ($g_iMatchMode = $DB) Then
-				$sleepafter = Int($sleepafter / $g_iSlider[0])
-		Else                                    
-				$sleepafter = Int($sleepafter / $g_iSlider[1])
+				$sleepafter = Int($sleepafter / 100) * (100 + $g_iSlider[0])
+				;If $g_iSlider[0] <> 0 Then SetLog("Delay change sleep after: " & $sleepafter, $COLOR_INFO)
+		Else
+				$sleepafter = Int($sleepafter / 100) * (100 + $g_iSlider[1])
+				;If $g_iSlider[1] <> 0 Then SetLog("Delay change sleep after: " & $sleepafter, $COLOR_INFO)
 		EndIf
 ;================== Simple Mod =================
 		If $sleepafter > 0 And IsKeepClicksActive() = False Then

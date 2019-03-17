@@ -4,7 +4,7 @@
 ; Syntax ........:
 ; Parameters ....: ReadChat()
 ; Return values .: Last msg
-; Author ........: Samikie (fragment of code.), rulesss and kychera (chatbot), boludoz (5/7/2018|17/7/2018)
+; Author ........: Samikie (fragment of code.), boludoz (5/7/2018|17/7/2018|5/3/2019)
 ; Modified ......: RK TEAM, boludoz (5/7/2018)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2018
 ;                  MyBot is distributed under the terms of the GNU GPL

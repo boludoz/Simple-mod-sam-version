@@ -180,26 +180,28 @@ Func AttackReport()
 	If _ColorCheck(_GetPixelColor($aWonThreeStarAtkRprt[0], $aWonThreeStarAtkRprt[1], True), Hex($aWonThreeStarAtkRprt[2], 6), $aWonThreeStarAtkRprt[3]) Then $starsearned += 1
 	SetLog("Stars earned: " & $starsearned)
 Local $sAccAct = "-"
-    ; samm0d
+	#Samm0d - Start
     If $ichkEnableMySwitch = 1 Then
         If $iCurActiveAcc <> - 1 Then $sAccAct = String($iCurActiveAcc + 1)
     Else
         $sAccAct = String($g_iCurAccount + 1)
     EndIf
-
+	Local $eWinlose
+	If $starsearned >= 1 Then
+		$eWinlose = "VICTORY"
+	Else
+		$eWinlose = "DEFEAT"
+	EndIf
+	SetLog("RESULT: " & $eWinlose, $COLOR_INFO)
+	#Samm0d - end
 	Local $AtkLogTxt
-	$AtkLogTxt = "  " & $sAccAct & "|" & _NowTime(4) & "|"
+	$AtkLogTxt = "  " & String($sAccAct) & "|" & _NowTime(4) & "|"
 	$AtkLogTxt &= StringFormat("%5d", $g_aiCurrentLoot[$eLootTrophy]) & "|"
 	$AtkLogTxt &= StringFormat("%3d", $g_iSearchCount) & "|"
 	$AtkLogTxt &= StringFormat("%2d", $g_iSidesAttack) & "|"
 	$AtkLogTxt &= StringFormat("%7d", $g_iStatsLastAttack[$eLootGold]) & "|"
  	$AtkLogTxt &= StringFormat("%7d", $g_iStatsLastAttack[$eLootElixir]) & "|"
-     If $numLSpellDrop > 0 Then ;samm0d
-         $AtkLogTxt &=  "z" & $numLSpellDrop & StringFormat("%5d",$g_iStatsLastAttack[$eLootDarkElixir]) & "|"
-         $numLSpellDrop = 0
-     Else
-         $AtkLogTxt &= StringFormat("%7d", $g_iStatsLastAttack[$eLootDarkElixir]) & "|"
-     EndIf
+	$AtkLogTxt &= StringFormat("%4d", $g_iStatsLastAttack[$eLootDarkElixir]) & "|"
 	$AtkLogTxt &= StringFormat("%3d", $g_iStatsLastAttack[$eLootTrophy]) & "|"
 	$AtkLogTxt &= StringFormat("%1d", $starsearned) & "|"
 	$AtkLogTxt &= StringFormat("%3d", $g_iPercentageDamage) & "|"
@@ -224,7 +226,21 @@ Local $sAccAct = "-"
 	$AtkLogTxtExtend = "|"
 	$AtkLogTxtExtend &= $g_CurrentCampUtilization & "/" & $g_iTotalCampSpace & "|"
 	If Int($g_iStatsLastAttack[$eLootTrophy]) >= 0 Then
-		SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $COLOR_BLACK)
+		#Samm0d - Start / AtkLogColor
+		If $g_bColorfulAttackLog Then
+			If ($starsearned = 0) Then
+				SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $COLOR_ERROR)
+			ElseIf ($starsearned = 1) Then
+				SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $COLOR_ORANGE)
+			ElseIf ($starsearned = 2) Then
+				SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $COLOR_INFO)
+			ElseIf ($starsearned = 3) Then
+				SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $COLOR_SUCCESS1)
+			EndIf
+			#Samm0d - end
+		Else
+			SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $COLOR_BLACK)
+		EndIf
 	Else
 		SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $COLOR_ERROR)
 	EndIf
@@ -290,12 +306,12 @@ EndFunc   ;==>AttackReport
 ; *-/ to fix ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; *-/ to fix ; Example .......: No
 ; *-/ to fix ; ===============================================================================================================================
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix Func AttackReport()
 ; *-/ to fix 	Static $iBonusLast = 0 ; last attack Bonus percentage
 ; *-/ to fix 	Local $g_asLeagueDetailsShort = ""
 ; *-/ to fix 	Local $iCount
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix     ; samm0d
 ; *-/ to fix     ;==============================================================================================
 ; *-/ to fix     Local $iTempStatsLastAttack[UBound($g_iStatsLastAttack)]
@@ -304,31 +320,31 @@ EndFunc   ;==>AttackReport
 ; *-/ to fix     Local $iTempOldStatsBonusLast[UBound($g_iStatsBonusLast)]
 ; *-/ to fix     Local $iTempBonusLast, $iTempOldBonusLast
 ; *-/ to fix     Local $bRedo = True
-; *-/ to fix 
-; *-/ to fix 
+; *-/ to fix
+; *-/ to fix
 ; *-/ to fix     SetLog("Preparing attack report.", $COLOR_INFO)
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix     $iCount = 0
 ; *-/ to fix     While $bRedo
 ; *-/ to fix         $bRedo = False
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix         Local $wasForce = OcrForceCaptureRegion(False)
 ; *-/ to fix         _CaptureRegions()
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix         ; check gold loot got value change.
 ; *-/ to fix         $iTempStatsLastAttack[$eLootGold] = getResourcesLoot(333, 289 + $g_iMidOffsetY)
 ; *-/ to fix         If $iTempStatsLastAttack[$eLootGold] <> $iTempOldStatsLastAttack[$eLootGold] Then
 ; *-/ to fix             $iTempOldStatsLastAttack[$eLootGold] = $iTempStatsLastAttack[$eLootGold]
 ; *-/ to fix             $bRedo = True
 ; *-/ to fix         EndIf
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix         ; check elixir got change value or not
 ; *-/ to fix         $iTempStatsLastAttack[$eLootElixir] = getResourcesLoot(333, 328 + $g_iMidOffsetY)
 ; *-/ to fix         If $iTempStatsLastAttack[$eLootElixir] <> $iTempOldStatsLastAttack[$eLootElixir] Then
 ; *-/ to fix             $iTempOldStatsLastAttack[$eLootElixir] = $iTempStatsLastAttack[$eLootElixir]
 ; *-/ to fix             $bRedo = True
 ; *-/ to fix         EndIf
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix 	If _ColorCheck(_GetPixelColor($aAtkRprtDECheck[0], $aAtkRprtDECheck[1], True), Hex($aAtkRprtDECheck[2], 6), $aAtkRprtDECheck[3]) Then ; if the color of the DE drop detected
 ; *-/ to fix 		$g_iStatsLastAttack[$eLootGold] = getResourcesLoot(290, 289 + $g_iMidOffsetY)
 ; *-/ to fix 		If _Sleep($DELAYATTACKREPORT2) Then Return
@@ -346,17 +362,17 @@ EndFunc   ;==>AttackReport
 ; *-/ to fix         Else
 ; *-/ to fix             $iTempStatsLastAttack[$eLootTrophy] = getResourcesLootT(403, 365 + $g_iMidOffsetY)
 ; *-/ to fix         EndIf
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix         If $iTempStatsLastAttack[$eLootTrophy] <> $iTempOldStatsLastAttack[$eLootTrophy] Then
 ; *-/ to fix             $iTempOldStatsLastAttack[$eLootTrophy] = $iTempStatsLastAttack[$eLootTrophy]
 ; *-/ to fix             $bRedo = True
 ; *-/ to fix         EndIf
-; *-/ to fix 
-; *-/ to fix 
+; *-/ to fix
+; *-/ to fix
 ; *-/ to fix         If _ColorCheck(_GetPixelColor($aAtkRprtTrophyCheck[0], $aAtkRprtTrophyCheck[1], $g_bNoCapturePixel), Hex($aAtkRprtTrophyCheck[2], 6), $aAtkRprtTrophyCheck[3]) Then
 ; *-/ to fix             $iTempStatsLastAttack[$eLootTrophy] = -$iTempStatsLastAttack[$eLootTrophy]
 ; *-/ to fix         EndIf
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix         If $iTempStatsLastAttack[$eLootTrophy] >= 0 Then
 ; *-/ to fix             $iTempBonusLast = Number(getResourcesBonusPerc(570, 309 + $g_iMidOffsetY))
 ; *-/ to fix             If ($iTempBonusLast <> $iTempOldBonusLast) Or ($iTempBonusLast = 0) Then
@@ -376,7 +392,7 @@ EndFunc   ;==>AttackReport
 ; *-/ to fix                         $iTempOldStatsBonusLast[$eLootElixir] = $iTempStatsBonusLast[$eLootElixir]
 ; *-/ to fix                         $bRedo = True
 ; *-/ to fix                     EndIf
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix 		If _ColorCheck(_GetPixelColor($aAtkRprtTrophyCheck[0], $aAtkRprtTrophyCheck[1], True), Hex($aAtkRprtTrophyCheck[2], 6), $aAtkRprtTrophyCheck[3]) Then
 ; *-/ to fix 			$g_iStatsLastAttack[$eLootTrophy] = -$g_iStatsLastAttack[$eLootTrophy]
 ; *-/ to fix                         $iTempStatsBonusLast[$eLootDarkElixir] = getResourcesBonus(621, 402 + $g_iMidOffsetY)
@@ -391,20 +407,20 @@ EndFunc   ;==>AttackReport
 ; *-/ to fix                 EndIf
 ; *-/ to fix             EndIf
 ; *-/ to fix         EndIf
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix         If $g_iSamM0dDebug = 1 Then
 ; *-/ to fix             SetLog("Attemp..." & $iCount+1)
 ; *-/ to fix             SetLog("$iTempStatsLastAttack[$eLootGold]: " & $iTempStatsLastAttack[$eLootGold])
 ; *-/ to fix             SetLog("$iTempStatsLastAttack[$eLootElixir]: " & $iTempStatsLastAttack[$eLootElixir])
 ; *-/ to fix             SetLog("$iTempStatsLastAttack[$eLootDarkElixir]: " & $iTempStatsLastAttack[$eLootDarkElixir])
 ; *-/ to fix             SetLog("$iTempStatsLastAttack[$eLootTrophy]: " & $iTempStatsLastAttack[$eLootTrophy])
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix             SetLog("$iTempBonusLast: " & $iTempBonusLast)
 ; *-/ to fix             SetLog("$iTempStatsBonusLast[$eLootGold]: " & $iTempStatsBonusLast[$eLootGold])
 ; *-/ to fix             SetLog("$iTempStatsBonusLast[$eLootElixir]: " & $iTempStatsBonusLast[$eLootElixir])
 ; *-/ to fix             SetLog("$iTempStatsBonusLast[$eLootDarkElixir]: " & $iTempStatsBonusLast[$eLootDarkElixir])
 ; *-/ to fix         EndIf
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix         OcrForceCaptureRegion($wasForce)
 ; *-/ to fix         If _Sleep(250) Then Return
 ; *-/ to fix         If $iCount > 40 Then
@@ -413,49 +429,49 @@ EndFunc   ;==>AttackReport
 ; *-/ to fix 		EndIf
 ; *-/ to fix     WEnd
 ; *-/ to fix     ;==============================================================================================
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix     ; check stars earned
 ; *-/ to fix     Local $starsearned = 0
 ; *-/ to fix     If _ColorCheck(_GetPixelColor($aWonOneStarAtkRprt[0], $aWonOneStarAtkRprt[1], True), Hex($aWonOneStarAtkRprt[2], 6), $aWonOneStarAtkRprt[3]) Then $starsearned += 1
 ; *-/ to fix     If _ColorCheck(_GetPixelColor($aWonTwoStarAtkRprt[0], $aWonTwoStarAtkRprt[1], True), Hex($aWonTwoStarAtkRprt[2], 6), $aWonTwoStarAtkRprt[3]) Then $starsearned += 1
 ; *-/ to fix     If _ColorCheck(_GetPixelColor($aWonThreeStarAtkRprt[0], $aWonThreeStarAtkRprt[1], True), Hex($aWonThreeStarAtkRprt[2], 6), $aWonThreeStarAtkRprt[3]) Then $starsearned += 1
 ; *-/ to fix     SetLog("Stars earned: " & $starsearned)
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix     $g_iStatsLastAttack[$eLootGold] = $iTempStatsLastAttack[$eLootGold]
 ; *-/ to fix     $g_iStatsLastAttack[$eLootElixir] = $iTempStatsLastAttack[$eLootElixir]
 ; *-/ to fix     $g_iStatsLastAttack[$eLootDarkElixir] = $iTempStatsLastAttack[$eLootDarkElixir]
 ; *-/ to fix     $g_iStatsLastAttack[$eLootTrophy] = $iTempStatsLastAttack[$eLootTrophy]
-; *-/ to fix 
-; *-/ to fix 
+; *-/ to fix
+; *-/ to fix
 ; *-/ to fix     If _ColorCheck(_GetPixelColor($aAtkRprtDECheck[0], $aAtkRprtDECheck[1], $g_bNoCapturePixel), Hex($aAtkRprtDECheck[2], 6), $aAtkRprtDECheck[3]) Then ; if the color of the DE drop detected
 ; *-/ to fix 		SetLog("Loot: [G]: " & _NumberFormat($g_iStatsLastAttack[$eLootGold]) & " [E]: " & _NumberFormat($g_iStatsLastAttack[$eLootElixir]) & " [DE]: " & _NumberFormat($g_iStatsLastAttack[$eLootDarkElixir]) & " [T]: " & $g_iStatsLastAttack[$eLootTrophy], $COLOR_SUCCESS)
 ; *-/ to fix 	Else
 ; *-/ to fix 		SetLog("Loot: [G]: " & _NumberFormat($g_iStatsLastAttack[$eLootGold]) & " [E]: " & _NumberFormat($g_iStatsLastAttack[$eLootElixir]) & " [T]: " & $g_iStatsLastAttack[$eLootTrophy], $COLOR_SUCCESS)
 ; *-/ to fix 	EndIf
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix 	If $g_iStatsLastAttack[$eLootTrophy] >= 0 Then
 ; *-/ to fix         $iBonusLast = $iTempBonusLast
 ; *-/ to fix         If $iBonusLast > 0 Then
 ; *-/ to fix             $g_iStatsBonusLast[$eLootGold] = $iTempStatsBonusLast[$eLootGold]
 ; *-/ to fix             $g_iStatsBonusLast[$eLootElixir] = $iTempStatsBonusLast[$eLootElixir]
 ; *-/ to fix             $g_iStatsBonusLast[$eLootDarkElixir] = $iTempStatsBonusLast[$eLootDarkElixir]
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix 			SetLog("Bonus Percentage: " & $iBonusLast & "%")
 ; *-/ to fix 			Local $iCalcMaxBonus = 0, $iCalcMaxBonusDark = 0
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix             If _ColorCheck(_GetPixelColor($aAtkRprtDECheck2[0], $aAtkRprtDECheck2[1], $g_bNoCapturePixel), Hex($aAtkRprtDECheck2[2], 6), $aAtkRprtDECheck2[3]) Then
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix 				If $iBonusLast = 100 Then
 ; *-/ to fix 					$iCalcMaxBonus = $g_iStatsBonusLast[$eLootGold]
 ; *-/ to fix 					SetLog("Bonus [G]: " & _NumberFormat($g_iStatsBonusLast[$eLootGold]) & " [E]: " & _NumberFormat($g_iStatsBonusLast[$eLootElixir]) & " [DE]: " & _NumberFormat($g_iStatsBonusLast[$eLootDarkElixir]), $COLOR_SUCCESS)
 ; *-/ to fix 				Else
 ; *-/ to fix                     $iCalcMaxBonus = Number($g_iStatsBonusLast[$eLootGold] / ($iBonusLast / 100))
 ; *-/ to fix                     $iCalcMaxBonusDark = Number($g_iStatsBonusLast[$eLootDarkElixir] / ($iBonusLast / 100))
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix 					SetLog("Bonus [G]: " & _NumberFormat($g_iStatsBonusLast[$eLootGold]) & " out of " & _NumberFormat($iCalcMaxBonus) & " [E]: " & _NumberFormat($g_iStatsBonusLast[$eLootElixir]) & " out of " & _NumberFormat($iCalcMaxBonus) & " [DE]: " & _NumberFormat($g_iStatsBonusLast[$eLootDarkElixir]) & " out of " & _NumberFormat($iCalcMaxBonusDark), $COLOR_SUCCESS)
 ; *-/ to fix 				EndIf
 ; *-/ to fix 			Else
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix 				If $iBonusLast = 100 Then
 ; *-/ to fix 					$iCalcMaxBonus = $g_iStatsBonusLast[$eLootGold]
 ; *-/ to fix 					SetLog("Bonus [G]: " & _NumberFormat($g_iStatsBonusLast[$eLootGold]) & " [E]: " & _NumberFormat($g_iStatsBonusLast[$eLootElixir]), $COLOR_SUCCESS)
@@ -464,7 +480,7 @@ EndFunc   ;==>AttackReport
 ; *-/ to fix 					SetLog("Bonus [G]: " & _NumberFormat($g_iStatsBonusLast[$eLootGold]) & " out of " & _NumberFormat($iCalcMaxBonus) & " [E]: " & _NumberFormat($g_iStatsBonusLast[$eLootElixir]) & " out of " & _NumberFormat($iCalcMaxBonus), $COLOR_SUCCESS)
 ; *-/ to fix 				EndIf
 ; *-/ to fix 			EndIf
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix 			$g_asLeagueDetailsShort = "--"
 ; *-/ to fix 			For $i = 1 To 21 ; skip 0 = Bronze III, see "No Bonus" else section below
 ; *-/ to fix 				If $g_asLeagueDetails[$i][0] = $iCalcMaxBonus Then
@@ -477,7 +493,7 @@ EndFunc   ;==>AttackReport
 ; *-/ to fix             $g_iStatsBonusLast[$eLootGold] = 0
 ; *-/ to fix             $g_iStatsBonusLast[$eLootElixir] = 0
 ; *-/ to fix             $g_iStatsBonusLast[$eLootDarkElixir] = 0
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix 			$g_asLeagueDetailsShort = "--"
 ; *-/ to fix 			If $g_aiCurrentLoot[$eLootTrophy] + $g_iStatsLastAttack[$eLootTrophy] >= 400 And $g_aiCurrentLoot[$eLootTrophy] + $g_iStatsLastAttack[$eLootTrophy] < 500 Then ; Bronze III has no League bonus
 ; *-/ to fix 				SetLog("Your league level is: " & $g_asLeagueDetails[0][1])
@@ -486,7 +502,7 @@ EndFunc   ;==>AttackReport
 ; *-/ to fix 		EndIf
 ; *-/ to fix         ;Display League in Stats ==>
 ; *-/ to fix         GUICtrlSetData($g_hLblLeague, "")
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix         ;samm0d
 ; *-/ to fix         If StringInStr($g_asLeagueDetailsShort, "1") > 1 Then
 ; *-/ to fix             GUICtrlSetData($g_hLblLeague, "1")
@@ -534,9 +550,9 @@ EndFunc   ;==>AttackReport
 ; *-/ to fix 		$g_iStatsBonusLast[$eLootDarkElixir] = 0
 ; *-/ to fix 		$g_asLeagueDetailsShort = "--"
 ; *-/ to fix 	EndIf
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix 	Local $AtkLogTxt
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix     ; samm0d
 ; *-/ to fix     If $ichkEnableMySwitch Then
 ; *-/ to fix         If $iCurActiveAcc <> - 1 Then
@@ -567,14 +583,14 @@ EndFunc   ;==>AttackReport
 ; *-/ to fix 	$AtkLogTxt &= StringFormat("%6d", $g_iStatsBonusLast[$eLootElixir]) & "|"
 ; *-/ to fix 	$AtkLogTxt &= StringFormat("%4d", $g_iStatsBonusLast[$eLootDarkElixir]) & "|"
 ; *-/ to fix     $AtkLogTxt &= $g_asLeagueDetailsShort & "  |"
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix     ; samm0d
 ; *-/ to fix     If $ichkEnableMySwitch Then
 ; *-/ to fix         If $iCurActiveAcc <> - 1 Then
 ; *-/ to fix             $AtkLogTxt &= " " & $icmbWithProfile[$iCurActiveAcc]
 ; *-/ to fix         EndIf
 ; *-/ to fix     EndIf
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix 	; Stats Attack
 ; *-/ to fix 	$g_sTotalDamage = $g_iPercentageDamage
 ; *-/ to fix 	$g_sAttacksides = $g_iSidesAttack
@@ -585,7 +601,7 @@ EndFunc   ;==>AttackReport
 ; *-/ to fix 	$g_sBonusGold = $g_iStatsBonusLast[$eLootGold]
 ; *-/ to fix 	$g_sBonusElixir = $g_iStatsBonusLast[$eLootElixir]
 ; *-/ to fix 	$g_sBonusDE = $g_iStatsBonusLast[$eLootDarkElixir]
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix 	Local $AtkLogTxtExtend
 ; *-/ to fix 	$AtkLogTxtExtend = "|"
 ; *-/ to fix 	$AtkLogTxtExtend &= $g_CurrentCampUtilization & "/" & $g_iTotalCampSpace & "|"
@@ -594,12 +610,12 @@ EndFunc   ;==>AttackReport
 ; *-/ to fix 	Else
 ; *-/ to fix 		SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $COLOR_ERROR)
 ; *-/ to fix 	EndIf
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix 	; rename or delete zombie
 ; *-/ to fix 	If $g_bDebugDeadBaseImage Then
 ; *-/ to fix 		setZombie($g_iStatsLastAttack[$eLootElixir])
 ; *-/ to fix 	EndIf
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix 	; Share Replay
 ; *-/ to fix 	If $g_bShareAttackEnable Then
 ; *-/ to fix 		If (Number($g_iStatsLastAttack[$eLootGold]) >= Number($g_iShareMinGold)) And (Number($g_iStatsLastAttack[$eLootElixir]) >= Number($g_iShareMinElixir)) And (Number($g_iStatsLastAttack[$eLootDarkElixir]) >= Number($g_iShareMinDark)) Then
@@ -610,7 +626,7 @@ EndFunc   ;==>AttackReport
 ; *-/ to fix 			$g_bShareAttackEnableNow = False
 ; *-/ to fix 		EndIf
 ; *-/ to fix 	EndIf
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix 	If $g_iFirstAttack = 0 Then $g_iFirstAttack = 1
 ; *-/ to fix 	$g_iStatsTotalGain[$eLootGold] += $g_iStatsLastAttack[$eLootGold] + $g_iStatsBonusLast[$eLootGold]
 ; *-/ to fix 	$g_aiTotalGoldGain[$g_iMatchMode] += $g_iStatsLastAttack[$eLootGold] + $g_iStatsBonusLast[$eLootGold]
@@ -638,5 +654,5 @@ EndFunc   ;==>AttackReport
 ; *-/ to fix 	$g_iActualTrainSkip = 0
 ; *-/ to fix 	$g_iPercentageDamage = 0
 ; *-/ to fix 	$g_iSidesAttack = 0
-; *-/ to fix 
+; *-/ to fix
 ; *-/ to fix EndFunc   ;==>AttackReport

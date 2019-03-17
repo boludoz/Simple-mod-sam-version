@@ -65,7 +65,7 @@ Func Initiate()
 		EndIf
 		If Not $g_bRunState Then Return
 
-		AndroidShield("Initiate", True)
+		;AndroidShield("Initiate", True)
 		checkMainScreen()
 		If Not $g_bRunState Then Return
 
@@ -73,7 +73,7 @@ Func Initiate()
 		If Not $g_bRunState Then Return
 
 		If Not $g_bSearchMode Then
-			BotDetectFirstTime()
+		;	BotDetectFirstTime()
 			If Not $g_bRunState Then Return
 
 			If $g_bCheckGameLanguage Then TestLanguage()
@@ -155,7 +155,6 @@ EndFunc   ;==>IsStopped
 
 Func btnStart()
 	; decide when to run
-	EnableControls($g_hFrmBotBottom, False, $g_aFrmBotBottomCtrlState)
 	Local $bRunNow = $g_iBotAction <> $eBotNoAction
 	If $bRunNow Then
 		BotStart()
@@ -167,8 +166,9 @@ EndFunc   ;==>btnStart
 
 Func btnStop()
 	If $g_bRunState Then
+		GUICtrlSetState($g_hBtnDisableGUI, $GUI_HIDE)
+		GUICtrlSetState($g_hBtnEnableGUI, $GUI_HIDE)
 		; always invoked in MyBot.run.au3!
-		EnableControls($g_hFrmBotBottom, False, $g_aFrmBotBottomCtrlState)
 		$g_bRunState = False ; Exit BotStart()
 	EndIf
 	$g_iBotAction = $eBotStop
@@ -176,8 +176,6 @@ EndFunc   ;==>btnStop
 
 Func btnSearchMode()
 	; decide when to run
-	EnableControls($g_hFrmBotBottom, False, $g_aFrmBotBottomCtrlState)
-	Local $bRunNow = $g_iBotAction <> $eBotNoAction
 	If $bRunNow Then
 		BotSearchMode()
 	Else

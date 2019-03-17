@@ -982,6 +982,24 @@ Func btnTestGetLocationBuildingImage()
 EndFunc   ;==>btnTestGetLocationBuildingImage
 
 Func btnTestFindButton()
+	#samm0d 
+	Local $currentRunState = $g_bRunState
+	$g_bRunState = True
+
+	Local $result
+	Local $sButton = GUICtrlRead($g_hTxtTestFindButton)
+	SetLog("Execute : " & $sButton, $COLOR_INFO)
+
+	Local $sExecResult = Execute($sButton)
+	
+	If $sExecResult = "" And @error <> 0 Then 
+		Setlog("Result : Error", $COLOR_ERROR)
+	Else
+		Setlog("Result : " & $sExecResult, $COLOR_INFO)
+	EndIf
+	
+	$g_bRunState = $currentRunState
+#cs
 	BeginImageTest()
 	Local $result
 	Local $sButton = GUICtrlRead($g_hTxtTestFindButton)
@@ -992,6 +1010,7 @@ Func btnTestFindButton()
 	SetLog("Result findButton(""" & $sButton & """) = " & $result, $COLOR_INFO)
 	SetLog("Testing findButton(""" & $sButton & """) DONE", $COLOR_INFO)
 	EndImageTest()
+#ce
 EndFunc   ;==>btnTestFindButton
 
 Func btnTestCleanYard()

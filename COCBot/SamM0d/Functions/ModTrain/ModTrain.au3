@@ -212,10 +212,6 @@ Func ModTrain($ForcePreTrain = False)
 
 	ClickP($aAway, 1, 250, "#0504")
 	If _Sleep(250) Then Return
-	; 	Local $bSmartQueueSystem = True
-	; 	If $bSmartQueueSystem Then
-			;TNRQT(False, True, True, True)
-	; 	EndIf
 
 	EndGainCost("Train")
 	UpdateStats()

@@ -12,6 +12,17 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+;Chat IA
+$g_sIAVar = _ArrayToString($g_aIAVar)
+_Ini_Add("ChatIA", "String", $g_sIAVar)
+;Local $g_sIAVar = _ArrayToString($g_aIAVar, "|", -1, -1, "#")
+;_Ini_Add("ChatIA", "String", $g_sIAVar)
+
+; AtkLog Color
+_Ini_Add("AttackColorLog", "Enable", (GUICtrlRead($g_hChkColorfulAttackLog) = $GUI_CHECKED ? True : False ))
+
+; Machine Date
+_Ini_Add("MachineBB", "Date", $g_sMachineTime)
 
 ; First Run
 _Ini_Add("Backup", "FirstRun", $g_bFirstRun)
@@ -55,17 +66,17 @@ _Ini_Add("SetSleep", "UnitFactor", GUICtrlRead($txtUnitFactor))
 _Ini_Add("SetSleep", "EnableWaveFactor", (GUICtrlRead($chkWaveFactor) = $GUI_CHECKED ? 1 : 0))
 _Ini_Add("SetSleep", "WaveFactor", GUICtrlRead($txtWaveFactor))
 
-; SmartZap Settings from ChaCalGyn (LunaEclipse) - DEMEN
-_Ini_Add("SamM0dZap", "SamM0dZap", (GUICtrlRead($chkUseSamM0dZap) = $GUI_CHECKED ? 1 : 0))
-_Ini_Add("SmartZap", "ZapDBOnly", (GUICtrlRead($chkSmartZapDB) = $GUI_CHECKED ? 1 : 0))
-_Ini_Add("SmartZap", "THSnipeSaveHeroes", (GUICtrlRead($chkSmartZapSaveHeroes) = $GUI_CHECKED ? 1 : 0))
-_Ini_Add("SmartZap", "MinDE", GUICtrlRead($txtMinDark2))
-
-; samm0d zap
-_Ini_Add("SamM0dZap", "UseSmartZapRnd", (GUICtrlRead($chkSmartZapRnd) = $GUI_CHECKED ? 1 : 0))
-_Ini_Add("SamM0dZap", "CheckDrillBeforeZap", (GUICtrlRead($chkDrillExistBeforeZap) = $GUI_CHECKED ? 1 : 0))
-_Ini_Add("SamM0dZap", "PreventTripleZap", (GUICtrlRead($chkPreventTripleZap) = $GUI_CHECKED ? 1 : 0))
-_Ini_Add("SamM0dZap", "MinDEGetFromDrill", GUICtrlRead($txtMinDEGetFromDrill))
+;~ ; SmartZap Settings from ChaCalGyn (LunaEclipse) - DEMEN
+;~ _Ini_Add("SamM0dZap", "SamM0dZap", (GUICtrlRead($chkUseSamM0dZap) = $GUI_CHECKED ? 1 : 0))
+;~ _Ini_Add("SmartZap", "ZapDBOnly", (GUICtrlRead($chkSmartZapDB) = $GUI_CHECKED ? 1 : 0))
+;~ _Ini_Add("SmartZap", "THSnipeSaveHeroes", (GUICtrlRead($chkSmartZapSaveHeroes) = $GUI_CHECKED ? 1 : 0))
+;~ _Ini_Add("SmartZap", "MinDE", GUICtrlRead($txtMinDark2))
+;~
+;~ ; samm0d zap
+;~ _Ini_Add("SamM0dZap", "UseSmartZapRnd", (GUICtrlRead($chkSmartZapRnd) = $GUI_CHECKED ? 1 : 0))
+;~ _Ini_Add("SamM0dZap", "CheckDrillBeforeZap", (GUICtrlRead($chkDrillExistBeforeZap) = $GUI_CHECKED ? 1 : 0))
+;~ _Ini_Add("SamM0dZap", "PreventTripleZap", (GUICtrlRead($chkPreventTripleZap) = $GUI_CHECKED ? 1 : 0))
+;~ _Ini_Add("SamM0dZap", "MinDEGetFromDrill", GUICtrlRead($txtMinDEGetFromDrill))
 
 ; Check Collectors Outside
 _Ini_Add("search", "DBMeetCollOutside", (GUICtrlRead($chkDBMeetCollOutside) = $GUI_CHECKED ? 1 : 0))
@@ -187,7 +198,7 @@ For $j = 0 To 2
 	Next
 Next
 
-; Friendly Challenge 
+; Friendly Challenge
 Local $string = ""
 For $i = 0 To 23
 	$string &= (GUICtrlRead($g_ahChkFriendlyChallengehours[$i]) = $GUI_CHECKED ? 1: 0) & "|"

@@ -1,443 +1,454 @@
 ; #FUNCTION# ====================================================================================================================
-; Name ..........: BuilderBaseUpgradeTroops
-; Description ...: Builder Base Upgrade Troops
-; Syntax ........: BBUpgradeTroops()
+; Name ..........: StarLaboratory
+; Description ...:
+; Syntax ........: StarLaboratory()
 ; Parameters ....:
 ; Return values .: None
-; Author ........: ProMac (03-2018)
+; Author ........: TripleM
 ; Modified ......:
-; Remarks .......: This file is part of MyBot, previously known as Mybot and ClashGameBot. Copyright 2015-2018
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
 
+Global Const $sStarColorNA = Hex(0xD3D3CB, 6) ; relative location: 47,1; Troop not unlocked in Lab, beige pixel in center just below edge for troop
+Global Const $sStarColorNoLoot = Hex(0xFF7B72, 6) ; relative location: 67,79 & 67,82; Not enough loot available to upgrade, find pink pixel in value
+Global Const $sStarColorMaxLvl = Hex(0xFFFFFF, 6) ; relative location: 76,76 & 76,80; Upgrade already at MAX level, white in last "l"
+Global Const $sStarColorLabUgReq = Hex(0x757575, 6) ; relative location: 0,20 or 93,20 lab upgrade required, Look for Gray pixel inside left border
+Global Const $sStarColorMaxTroop = Hex(0xFFC360, 6) ; relative location: 23,60; troop already MAX
+Global Const $sStarColorBG = Hex(0xD3D3CB, 6) ; background color in laboratory
+Global Const $aiStarCloseDefaultPOS[2] = [706,143]
 
 Func TestBBUpgradeTroops()
-	Setlog("** TestBBUpgradeTroops START**", $COLOR_DEBUG)
-	Local $gbDebugOcr = $g_bDebugOcr
-	Local $Status = $g_bRunState
-	$g_bDebugOcr = True
+	Return TestStarLaboratory()
+EndFunc
+
+Func TestStarLaboratory()
+	Local $bWasRunState = $g_bRunState
+	Local $sWasStarLabUpgradeTime = $g_sStarLabUpgradeTime
+	Local $bWasStarLabUpgradeEnable = $g_bAutoStarLabUpgradeEnable
 	$g_bRunState = True
-	BuilderBaseReport()
-	; 1 Test Troops, 2 Test machine , 3 Test the first Check
-	BuilderBaseUpgradeTroops(2)
-	$g_bRunState = $Status
-	$g_bDebugOcr = $gbDebugOcr
-	Setlog("** TestBBUpgradeTroops END**", $COLOR_DEBUG)
-EndFunc   ;==>TestBBUpgradeTroops
+	$g_bAutoStarLabUpgradeEnable = True
+	$g_sStarLabUpgradeTime = ""
+	BattleMachineUpgrade(3)
+	Local $Result = StarLaboratory(True)
+	$g_bRunState = $bWasRunState
+	$g_sStarLabUpgradeTime = $sWasStarLabUpgradeTime
+	$g_bAutoStarLabUpgradeEnable = $bWasStarLabUpgradeEnable
+	Return $Result
+EndFunc
 
-Func BuilderBaseUpgradeTroops($Test = 0)
+Func StarLaboratory($bTestRun = False)
 
-	; If is to run
-	If Not $g_bChkUpgradeTroops And $Test = 0 Then Return
+	If Not $g_bAutoStarLabUpgradeEnable Then Return ; Lab upgrade not enabled.
 
-	;Just to debug
-	FuncEnter(BuilderBaseUpgradeTroops)
-
-	ClickP($aAway, 1, 0, "#0900") ;Click Away
-
-	; Static Variables
-	Local Static $bIsFirstRun[8] = [True, True, True, True, True, True, True, True]
-	; [0] = Remain Upgrade time for next level  [1] = Machine next Level , [2] = Machine Next level cost
-	Local Static $aMachineStatus[8][3]
-
-	Local Static $aRemainLabtime[8]
-	Local Static $aElixirStorageCap[8]
-	Local Static $TimerToCheck[8]
-
-	; [8] total accounts , [2] = Name and Upgrade value
-	Local Static $aTroopsToUpgrade[8][2]
-
-	;Local Varibales
-	Local $MachineUpgTimes[25] = [12, 12, 12, 24, 24, 24, 24, 24, 24, 24, 48, 48, 48, 48, 48, 72, 72, 72, 72, 72, 72, 72, 72, 72, 72] ; Hours
-	Local $MachineUpgCost[25] = [900000, 1000000, 1100000, 1200000, 1300000, 1500000, 1600000, 1700000, 1800000, 1900000, 2100000, 2200000, 2300000, 2400000, 2500000, 2600000, 2700000, 2800000, 2900000, 3000000, 3100000, 3200000, 3300000, 3400000, 3500000]
-	Local $bDoNotProceedWithMachine = False
-
-	; Just to force each day to update all values , example if the Elixir Stroage was updated the Cap is differente
-	If @YDAY <> $TimerToCheck[$g_iCurAccount] Then $bIsFirstRun[$g_iCurAccount] = True
-
-	; Just for tests
-	If $Test = 3 Then $bIsFirstRun[$g_iCurAccount] = True
-
+	;Create local array to hold upgrade values
+	Local $aUpgradeValue[11] = [-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+	Local $iAvailElixir, $sElixirCount, $TimeDiff, $aArray, $Result, $aSearchForTroop
+	Local $iXMoved = 0, $iYMoved = 0, $iFirstPageOffset = 0, $iLastPageOffset = 0
+	Local $iSelectedUpgrade = $g_iCmbStarLaboratory
+	
 	; ZoomOut Check
 	AndroidOnlyZoomOut()
+	
+	If $g_sStarLabUpgradeTime <> "" Then $TimeDiff = _DateDiff("n", _NowCalc(), $g_sStarLabUpgradeTime) ; what is difference between end time and now in minutes?
+	If @error Then _logErrorDateDiff(@error)
+	If $g_bDebugSetlog Then SetDebugLog($g_avStarLabTroops[$g_iCmbStarLaboratory][3] & " Lab end time: " & $g_sStarLabUpgradeTime & ", DIFF= " & $TimeDiff, $COLOR_DEBUG)
 
-	; First Round
-	; First run Check the Machine if exist or not => $aMachineStatus[8][3] , [0] = Remain Upgrade time for next level  [1] = Machine next Level , [2] = Machine Next level cost
-	; Check Machine level , reserve the update values => $aMachineStatus[8][3]
-	; we need to peek the Cap Elixir Storages value on Main at Elixir values , why? if we don't have enough capacity for Machine Upgrade value?! => $aElixirStorageCap[8]
-
-	; First run Check the Lab
-	; If is running reserve the Remain time =>  $aRemainLabtime[8] each account
-	; Peek the correct Troops to upgrade => $aTroopsToUpgrade[8][2] = [8] total accounts , [2] = Name and Upgrade value
-	; Select the correct from UI or ANY with lower value
-
-	If $bIsFirstRun[$g_iCurAccount] Then
-		Setlog("Upgrades troops first Check started!", $COLOR_ACTION)
-		;Reset and populate variables
-		For $i = 0 To 2
-			$aMachineStatus[$g_iCurAccount][$i] = -1
-		Next
-		$aRemainLabtime[$g_iCurAccount] = -1
-		$aElixirStorageCap[$g_iCurAccount] = -1
-		$bIsFirstRun[$g_iCurAccount] = False
-		$TimerToCheck[$g_iCurAccount] = @YDAY
-		$aTroopsToUpgrade[$g_iCurAccount][0] = -1
-		$aTroopsToUpgrade[$g_iCurAccount][1] = -1
-
-		; Verify Machine
-		If $g_bChkUpgradeMachine Then BuilderBaseCheckMachine($aMachineStatus, $Test)
-
-		;Verify Elixir Storage Cap
-		If $g_bChkUpgradeMachine Then BuilderBaseCheckElixirStorageCap($aElixirStorageCap, $Test)
-
-		;Verify Lab
-		BuilderBaseCheckLab($aRemainLabtime, $Test)
-
-		;Verify what troop is selected on UI
-		$aTroopsToUpgrade[$g_iCurAccount][0] = $g_iCmbBBLaboratory < 10 ? $g_asBBTroopNames[$g_iCmbBBLaboratory] : "Any"
-
-		Setlog("Upgrades troops first Check ended!", $COLOR_ACTION)
-		If _Sleep(500) Then Return
-		ClickP($aAway, 2, 100, "#0900") ;Click Away
-		FuncReturn()
-		Return
-	EndIf
-
-	; Remain Times and if we are waiting or Not
-	Local $TimeDiff = 0
-	; what is difference between end time and now in minutes? and reserve it at $TimeDiff
-	If $aRemainLabtime[$g_iCurAccount] <> 0 Then $TimeDiff = _DateDiff("n", _NowCalc(), $aRemainLabtime[$g_iCurAccount])
-
-	; Verify Level and Cost from machine, if is not exist or is maxed
-	If $aMachineStatus[$g_iCurAccount][1] > 0 And $aMachineStatus[$g_iCurAccount][1] < 25 And $g_bChkUpgradeMachine Then
-		Local $MachineLevel = $aMachineStatus[$g_iCurAccount][1]
-		$aMachineStatus[$g_iCurAccount][0] = $MachineUpgTimes[$MachineLevel]
-		$aMachineStatus[$g_iCurAccount][2] = $MachineUpgCost[$MachineLevel]
-		Setlog("Current Machine level is " & $aMachineStatus[$g_iCurAccount][1], $COLOR_INFO)
-		Setlog("Next Upgrade will cost " & $MachineUpgCost[$MachineLevel], $COLOR_INFO)
-		Setlog("With remain time of " & $MachineUpgTimes[$MachineLevel] & " hours", $COLOR_INFO)
-		; Verifing Elixir Storage Cap and Machine Value
-		If Number($MachineUpgCost[$MachineLevel]) > Number($aElixirStorageCap[$g_iCurAccount]) Then
-			$bDoNotProceedWithMachine = True
-			Setlog("Elixir Storage Capacity lower than Upg value!", $COLOR_WARNING)
-		EndIf
-		; Verify if is a specific troop selected
-		If $aTroopsToUpgrade[$g_iCurAccount][0] <> "Any" Then
-			$bDoNotProceedWithMachine = True
-			Setlog($aTroopsToUpgrade[$g_iCurAccount][0] & " selected to upgrade", $COLOR_INFO)
-		EndIf
+	If Not $g_bRunState Then Return
+	If $TimeDiff <= 0 Then
+		SetLog("Checking Troop Upgrade in Star Laboratory", $COLOR_INFO)
 	Else
-		; Machine is not to Upgrade
-		$bDoNotProceedWithMachine = True
+		SetLog("Star Laboratory Upgrade in progress, waiting for completion", $COLOR_INFO)
+		Return False
 	EndIf
 
-	; Is Not to proceed with Machine
-	If $bDoNotProceedWithMachine Or $Test = 1 Then
-		;Check the remain Lab Times
-		If $TimeDiff <= 0 Or $Test > 0 Then
-			; If the Troop Upgrade Value is > Elixir or was not cheked
-			If Number($aTroopsToUpgrade[$g_iCurAccount][1]) < Number($g_aiCurrentLootBB[$eLootElixirBB]) Or Number($aTroopsToUpgrade[$g_iCurAccount][1]) = -1 Then
-				SetLog("Checking Troop Upgrade in Lab ...", $COLOR_INFO)
-				If BuilderBaseUpgradeTroop($aRemainLabtime, $aTroopsToUpgrade, $Test) Then
-					;Verify what troop is selected on UI , reset
-					$aTroopsToUpgrade[$g_iCurAccount][0] = "Any"
-					$aTroopsToUpgrade[$g_iCurAccount][1] = -1
+	$sElixirCount = getResourcesMainScreen(705, 74)
+	SetLog("Updating village values [E]: " & $sElixirCount, $COLOR_SUCCESS)
+	$iAvailElixir = Number($sElixirCount)
+
+	If Not LocateStarLab() Then Return False
+
+	; Find Research Button
+	Local $aResearchButton = findButton("Research", Default, 1, True)
+	If IsArray($aResearchButton) And UBound($aResearchButton, 1) = 2 Then
+		If $g_bDebugImageSave Then DebugImageSave("StarLabUpgrade") ; Debug Only
+		ClickP($aResearchButton)
+		If _Sleep($DELAYLABORATORY1) Then Return ; Wait for window to open
+	Else
+		SetLog("Cannot find the Star Laboratory Research Button!", $COLOR_ERROR)
+		ClickP($aAway, 2, $DELAYLABORATORY4, "#0199")
+		Return False
+	EndIf
+
+	; Lab window coor correction
+	Local $aiCloseBtn = findButton("CloseWindow")
+	If IsArray($aiCloseBtn) Then
+		$iXMoved = $aiCloseBtn[0] - $aiStarCloseDefaultPOS[0]
+		$iYMoved = $aiCloseBtn[1] - $aiStarCloseDefaultPOS[1]
+		If $g_bDebugSetlog Then Setlog("Lab window off: (" & $iXMoved & ", " & $iYMoved & ")", $COLOR_DEBUG)
+	Else
+		SetLog("Trouble finding lab close button, try again...", $COLOR_WARNING)
+		ClickP($aAway, 2, $DELAYLABORATORY4, "#0199")
+		Return False
+	EndIf
+
+	; check for upgrade in process - Look for light green in upper right corner of lab window.
+	If $g_bDebugSetlog Then SetLog("_GetPixelColor(" & 720 + $iXMoved & "," & 190 + $iYMoved & "): " & _GetPixelColor(720 + $iXMoved, 190 + $iYMoved, True) & ":A2CB6C", $COLOR_DEBUG)
+	If _ColorCheck(_GetPixelColor(720 + $iXMoved, 190 + $iYMoved, True), Hex(0xA2CB6C, 6), 20) Then
+		SetLog("Laboratory Upgrade in progress, waiting for completion", $COLOR_INFO)
+		If _Sleep($DELAYLABORATORY2) Then Return
+		; upgrade in process and time not recorded so update completion time!
+		Local $sLabTimeOCR = getRemainTLaboratory(260 + $iXMoved, 257 + $iYMoved)
+		Local $iLabFinishTime = ConvertOCRTime("Lab Time", $sLabTimeOCR, False)
+		SetDebugLog("$sLabTimeOCR: " & $sLabTimeOCR & ", $iLabFinishTime = " & $iLabFinishTime & " m")
+		If $iLabFinishTime > 0 Then
+			$g_sStarLabUpgradeTime = _DateAdd('n', Ceiling($iLabFinishTime), _NowCalc())
+			If @error Then _logErrorDateAdd(@error)
+			SetLog("Research will finish in " & $sLabTimeOCR & " (" & $g_sStarLabUpgradeTime & ")")
+			LabStatusGUIUpdate() ; Update GUI flag
+		ElseIf $g_bDebugSetlog Then
+			SetLog("Invalid getRemainTLaboratory OCR", $COLOR_DEBUG)
+		EndIf
+		ClickP($aAway, 2, $DELAYLABORATORY4, "#0328")
+		Return False
+	EndIf
+
+	; reset lab troop positions to default
+	For $i = 1 to UBound($g_avStarLabTroops) - 1
+		$g_avStarLabTroops[$i][0] = -1
+		$g_avStarLabTroops[$i][1] = -1
+	Next
+	; find upgradeable troops by elixir image
+	$aSearchForTroop = decodeMultipleCoords(findImage("TroopPositions", $g_sImgStarLabElex, GetDiamondFromRect("100,375,730,575"), 0, True, Default))
+	If IsArray($aSearchForTroop) And UBound($aSearchForTroop, 1) > 0 Then
+		For $i = 0 To UBound($aSearchForTroop) - 1
+			Local $aTempArray = $aSearchForTroop[$i]
+			If IsArray($aTempArray) And UBound($aTempArray) = 2 Then
+				Local $iCurrentTroop = 2 * Int(($aTempArray[0] - 160) / 103) + Int(($aTempArray[1] - 375) / 100) + 1 ; calculating troop index from found elixir coords
+				$g_avStarLabTroops[$iCurrentTroop][0] = $aTempArray[0] - 80 ; setting troop position relativ to found elixir coords
+				$g_avStarLabTroops[$iCurrentTroop][1] = $aTempArray[1] - 82 ; setting troop position relativ to found elixir coords
+				If $g_bDebugSetlog Then
+					Setlog("New icon X position of " & $g_avStarLabTroops[$iCurrentTroop][3] & " : " & $g_avStarLabTroops[$iCurrentTroop][0], $COLOR_DEBUG)
+					Setlog("New icon Y position of " & $g_avStarLabTroops[$iCurrentTroop][3] & " : " & $g_avStarLabTroops[$iCurrentTroop][1], $COLOR_DEBUG)
 				EndIf
+			EndIf
+		Next
+	Else
+		SetLog("No upgradable troop found!", $COLOR_ERROR)
+		ClickP($aAway, 2, $DELAYLABORATORY4, "#0328")
+		Return False
+	EndIf
+
+	If $g_bDebugSetlog Then StarLabTroopImages(1, 10)
+	For $i = 1 To 10
+		If $g_avStarLabTroops[$i][0] = -1 Or $g_avStarLabTroops[$i][1] = -1 Then
+			$aUpgradeValue[$i] = -1
+			If $g_bDebugSetlog Then SetLog($g_avStarLabTroops[$i][3] & " is not upgradeable, now = " & $aUpgradeValue[$i], $COLOR_DEBUG)
+		Else
+			$aUpgradeValue[$i] = getStarLabUpgrdResourceRed($g_avStarLabTroops[$i][0] + 2, $g_avStarLabTroops[$i][1] + 74)
+			If $g_bDebugSetlog Then SetLog($g_avStarLabTroops[$i][3] & " Red text upgrade value = " & $aUpgradeValue[$i], $COLOR_DEBUG)
+			If $aUpgradeValue[$i] = "" Or Int($aUpgradeValue[$i]) < 3000 Then ; check if blank or below min value for any upgrade
+				$aUpgradeValue[$i] = getLabUpgrdResourceWht($g_avStarLabTroops[$i][0] + 2, $g_avStarLabTroops[$i][1] + 74)
+				If $g_bDebugSetlog Then SetLog($g_avStarLabTroops[$i][3] & " White text upgrade value = " & $aUpgradeValue[$i], $COLOR_DEBUG)
+			EndIf
+			If $aUpgradeValue[$i] = "" Or Int($aUpgradeValue[$i]) < 3000 Then ; check if blank or below min value for any upgrade
+				$aUpgradeValue[$i] = 0
+				If $g_bDebugSetlog Then SetLog("Failed to read cost of " & $g_avStarLabTroops[$i][3], $COLOR_DEBUG)
+				StarLabTroopImages($i, $i) ; Make Troop capture, when elixir icon was found, but cost not
+			EndIf
+		EndIf
+		If Not $g_bRunState Then Return
+		$aUpgradeValue[$i] = Number($aUpgradeValue[$i])
+	Next
+
+	If $aUpgradeValue[$g_iCmbStarLaboratory] = -1 Then
+		Local $iCheapestCost = 0
+		If $g_iCmbStarLaboratory = 0 Then
+			SetLog("No dedicated troop for upgrade selected.", $COLOR_INFO)
+		Else
+			SetLog("No upgrade for " & $g_avStarLabTroops[$g_iCmbStarLaboratory][3] & " available.", $COLOR_INFO)
+		EndIf
+		For $i = 1 To 10
+			If $aUpgradeValue[$i] > 0 Then ; is upgradeable
+				If $g_bDebugSetlog Then SetLog($g_avStarLabTroops[$i][3] & " is upgradeable, Value = " & $aUpgradeValue[$i], $COLOR_DEBUG)
+				If $iCheapestCost = 0 Or $aUpgradeValue[$i] < $iCheapestCost Then
+					$iSelectedUpgrade = $i
+					$iCheapestCost = $aUpgradeValue[$i]
+				EndIf
+			EndIf
+		Next
+		If $g_iCmbStarLaboratory = $iSelectedUpgrade Then
+			SetLog("No alternate troop for upgrade found", $COLOR_WARNING)
+			ClickP($aAway, 2, $DELAYLABORATORY4, "#0353")
+			Return False
+		Else
+			SetLog($g_avStarLabTroops[$iSelectedUpgrade][3] & " selected for upgrade, upgrade cost = " & $aUpgradeValue[$iSelectedUpgrade], $COLOR_INFO)
+		EndIf
+	EndIf
+
+	; Try to upgrade - LabUpgrade(), check insufficient resource first
+	If $iAvailElixir < $aUpgradeValue[$iSelectedUpgrade] Then
+		SetLog("Insufficent Elixir for " & $g_avStarLabTroops[$iSelectedUpgrade][3] & ", Lab requires: " & $aUpgradeValue[$iSelectedUpgrade] & ", available: " & $iAvailElixir, $COLOR_INFO)
+		ClickP($aAway, 2, $DELAYLABORATORY4, "#0355")
+		Return False
+	ElseIf StarLabUpgrade($iSelectedUpgrade, $iXMoved, $iYMoved, $bTestRun) = True Then
+		SetLog("Elixir used = " & $aUpgradeValue[$iSelectedUpgrade], $COLOR_INFO)
+		ClickP($aAway, 2, $DELAYLABORATORY4, "#0356")
+		Return True
+	EndIf
+
+	ClickP($aAway, 2, $DELAYLABORATORY4, "#0359")
+	Return False
+
+EndFunc   ;==>Laboratory
+;
+Func StarLabUpgrade($iSelectedUpgrade, $iXMoved = 0, $iYMoved = 0, $bTestRun = False)
+	Local $StartTime, $EndTime, $EndPeriod, $Result, $TimeAdd = 0
+	Select
+		Case _ColorCheck(_GetPixelColor($g_avStarLabTroops[$iSelectedUpgrade][0] + 47, $g_avStarLabTroops[$iSelectedUpgrade][1] + 1, True), $sStarColorNA, 20) = True
+			; check for beige pixel in center just below edge for troop not unlocked
+			SetLog($g_avStarLabTroops[$iSelectedUpgrade][3] & " not unlocked yet, select another troop", $COLOR_WARNING)
+			If _Sleep($DELAYLABUPGRADE2) Then Return
+
+		Case _PixelSearch($g_avStarLabTroops[$iSelectedUpgrade][0] + 66, $g_avStarLabTroops[$iSelectedUpgrade][1] + 79, $g_avStarLabTroops[$iSelectedUpgrade][0] + 68, $g_avStarLabTroops[$iSelectedUpgrade][1] + 82, $sStarColorNoLoot, 20) <> 0
+			; Check for Pink pixels last zero of loot value to see if enough loot is available.
+			; this case should never be run if value check is working right!
+			SetLog("Value check error and Not enough Loot to upgrade " & $g_avStarLabTroops[$iSelectedUpgrade][3] & "...", $COLOR_ERROR)
+			If _Sleep($DELAYLABUPGRADE2) Then Return
+
+		Case _ColorCheck(_GetPixelColor($g_avStarLabTroops[$iSelectedUpgrade][0] + 22, $g_avStarLabTroops[$iSelectedUpgrade][1] + 60, True), Hex(0xFFC360, 6), 20) = True
+			; Look for Golden pixel inside level indicator for max troops
+			SetLog($g_avStarLabTroops[$iSelectedUpgrade][3] & " already max level, select another troop", $COLOR_ERROR)
+			If _Sleep($DELAYLABUPGRADE2) Then Return
+
+		Case _ColorCheck(_GetPixelColor($g_avStarLabTroops[$iSelectedUpgrade][0] + 3, $g_avStarLabTroops[$iSelectedUpgrade][1] + 19, True), Hex(0xB7B7B7, 6), 20) = True
+			; Look for Gray pixel inside left border if Lab upgrade required or if we missed that upgrade is in process
+			SetLog("Laboratory upgrade not available now for " & $g_avStarLabTroops[$iSelectedUpgrade][3] & "...", $COLOR_ERROR)
+			If _Sleep($DELAYLABUPGRADE2) Then Return
+
+		Case Else
+			; If none of other error conditions apply, begin upgrade process
+			Click($g_avStarLabTroops[$iSelectedUpgrade][0] + 40, $g_avStarLabTroops[$iSelectedUpgrade][1] + 40, 1, 0, "#0200") ; Click Upgrade troop button
+			If _Sleep($DELAYLABUPGRADE1) Then Return ; Wait for window to open
+			If $g_bDebugImageSave Then DebugImageSave("StarLabUpgrade")
+
+			; double check if maxed?
+			If _ColorCheck(_GetPixelColor(258 + $iXMoved, 192 + $iYMoved, True), Hex(0xFF1919, 6), 20) And _ColorCheck(_GetPixelColor(272 + $iXMoved, 194 + $iYMoved, True), Hex(0xFF1919, 6), 20) Then
+				SetLog($g_avStarLabTroops[$iSelectedUpgrade][3] & " Previously maxxed, select another troop", $COLOR_ERROR) ; oops, we found the red warning message
+				If _Sleep($DELAYLABUPGRADE2) Then Return
+				ClickP($aAway, 2, $DELAYLABUPGRADE3, "#0201")
+				Return False
+			EndIf
+
+			; double check enough elixir?
+			If _PixelSearch($g_avStarLabTroops[$iSelectedUpgrade][0] + 67, $g_avStarLabTroops[$iSelectedUpgrade][1] + 79, $g_avStarLabTroops[$iSelectedUpgrade][0] + 69, $g_avStarLabTroops[$iSelectedUpgrade][0] + 84, $sStarColorNoLoot, 20) <> 0 Then ; Check for Red Zero = means not enough loot!
+				SetLog("Missing Loot to upgrade " & $g_avStarLabTroops[$iSelectedUpgrade][3] & " (secondary check after Upgrade Value read failed)", $COLOR_ERROR)
+				If _Sleep($DELAYLABUPGRADE2) Then Return
+				ClickP($aAway, 2, $DELAYLABUPGRADE3, "#0333")
+				Return False
+			EndIf
+
+			; triple check for upgrade in process by gray upgrade button
+			If _ColorCheck(_GetPixelColor(625 + $iXMoved, 250 + $g_iMidOffsetY + $iYMoved, True), Hex(0x848484, 6), 20) And _ColorCheck(_GetPixelColor(660 + $iXMoved, 250 + $g_iMidOffsetY + $iYMoved, True), Hex(0x848484, 6), 20) Then
+				SetLog("Upgrade in progress, waiting for completion of other troops", $COLOR_WARNING)
+				If _Sleep($DELAYLABORATORY2) Then Return
+				ClickP($aAway, 2, $DELAYLABORATORY4, "#0000")
+				Return False
 			Else
-				SetLog("Not Enough Elixir to Upgrade " & $aTroopsToUpgrade[$g_iCurAccount][0], $COLOR_INFO)
+				; get upgrade time from window
+				$Result = getLabUpgradeTime(554 + $iXMoved, 491 + $iYMoved) ; Try to read white text showing time for upgrade
+				Local $iLabFinishTime = ConvertOCRTime("Lab Time", $Result, False)
+				SetLog($g_avStarLabTroops[$iSelectedUpgrade][3] & " Upgrade OCR Time = " & $Result & ", $iLabFinishTime = " & $iLabFinishTime & " m", $COLOR_INFO)
+				$StartTime = _NowCalc() ; what is date:time now
+				If $g_bDebugSetlog Then SetDebugLog($g_avStarLabTroops[$iSelectedUpgrade][3] & " Upgrade Started @ " & $StartTime, $COLOR_SUCCESS)
+				If $iLabFinishTime > 0 Then
+					$g_sStarLabUpgradeTime = _DateAdd('n', Ceiling($iLabFinishTime), $StartTime)
+					SetLog($g_avStarLabTroops[$iSelectedUpgrade][3] & " Upgrade Finishes @ " & $Result & " (" & $g_sStarLabUpgradeTime & ")", $COLOR_SUCCESS)
+				Else
+					SetLog("Error processing upgrade time required, try again!", $COLOR_WARNING)
+					Return False
+				EndIf
+
+				If Not $bTestRun Then Click(645 + $iXMoved, 530 + $g_iMidOffsetY + $iYMoved, 1, 0, "#0202") ; Everything is good - Click the upgrade button
+				If _Sleep($DELAYLABUPGRADE1) Then Return
+			EndIf
+
+			If isGemOpen(True) = False Then ; check for gem window
+				; check for green button to use gems to finish upgrade, checking if upgrade actually started
+				If Not (_ColorCheck(_GetPixelColor(625 + $iXMoved, 218 + $g_iMidOffsetY + $iYMoved, True), Hex(0x6fbd1f, 6), 15) Or _ColorCheck(_GetPixelColor(660 + $iXMoved, 218 + $g_iMidOffsetY + $iYMoved, True), Hex(0x6fbd1f, 6), 15)) Then
+					SetLog("Something went wrong with " & $g_avStarLabTroops[$iSelectedUpgrade][3] & " Upgrade, try again.", $COLOR_ERROR)
+					ClickP($aAway, 2, $DELAYLABUPGRADE3, "#0360")
+					Return False
+				EndIf
+				SetLog("Upgrade " & $g_avStarLabTroops[$iSelectedUpgrade][3] & " in your star laboratory started with success...", $COLOR_SUCCESS)
+				StarLabStatusGUIUpdate()
+				PushMsg("StarLabSuccess")
+				If _Sleep($DELAYLABUPGRADE2) Then Return
+
+				ClickP($aAway, 2, 0, "#0204")
+
+				Return True
+			Else
+				SetLog("Oops, Gems required for " & $g_avStarLabTroops[$iSelectedUpgrade][3] & " Upgrade, try again.", $COLOR_ERROR)
+			EndIf
+	EndSelect
+	ClickP($aAway, 2, $DELAYLABUPGRADE3, "#0205")
+	Return False
+
+EndFunc   ;==>StarLabUpgrade
+
+Func StarDebugIconSave($sTxtName = "Unknown", $iLeft = 0, $iTop = 0) ; Debug Code to save images before zapping for later review, time stamped to align with logfile!
+	SetLog("Taking debug icon snapshot for later review", $COLOR_SUCCESS)
+	Local $iIconLength = 94
+	Local $Date = @MDAY & "_" & @MON & "_" & @YEAR
+	Local $Time = @HOUR & "_" & @MIN & "_" & @SEC
+	Local $sName =  $g_sProfileTempDebugPath & "StarLabUpgrade\" & $sTxtName & "_" & $Date & "_" & $Time & ".png"
+	DirCreate($g_sProfileTempDebugPath & "StarLabUpgrade\")
+	ForceCaptureRegion()
+	_CaptureRegion($iLeft, $iTop, $iLeft + $iIconLength, $iTop + $iIconLength)
+	_GDIPlus_ImageSaveToFile($g_hBitmap, $sName)
+	If @error Then SetLog("DebugIconSave failed to save StarLabUpgrade image: " & $sName, $COLOR_WARNING)
+	If _Sleep($DELAYLABORATORY2) Then Return
+EndFunc   ;==>StarDebugIconSave
+
+Func StarLabTroopImages($iStart, $iEnd) ; Debug function to record pixel values for troops
+	If $g_bDebugImageSave Then DebugImageSave("StarLabUpgrade")
+	For $i = $iStart To $iEnd
+		If $g_avStarLabTroops[$i][0] <> -1 And $g_avStarLabTroops[$i][1] <> -1 Then
+			StarDebugIconSave($g_avStarLabTroops[$i][3], $g_avStarLabTroops[$i][0], $g_avStarLabTroops[$i][1])
+			SetDebugLog($g_avStarLabTroops[$i][3], $COLOR_WARNING)
+			SetDebugLog("_GetPixelColor(+47, +1): " & _GetPixelColor($g_avStarLabTroops[$i][0] + 47, $g_avStarLabTroops[$i][1] + 1, True) & ":" & $sStarColorNA & " =Not unlocked", $COLOR_DEBUG)
+			SetDebugLog("_GetPixelColor(+67, +79): " & _GetPixelColor($g_avStarLabTroops[$i][0] + 67, $g_avStarLabTroops[$i][1] + 79, True) & ":" & $sStarColorNoLoot & " =No Loot1", $COLOR_DEBUG)
+			SetDebugLog("_GetPixelColor(+67, +82): " & _GetPixelColor($g_avStarLabTroops[$i][0] + 67, $g_avStarLabTroops[$i][1] + 82, True) & ":" & $sStarColorNoLoot & " =No Loot2", $COLOR_DEBUG)
+			SetDebugLog("_GetPixelColor(+81, +82): " & _GetPixelColor($g_avStarLabTroops[$i][0] + 81, $g_avStarLabTroops[$i][1] + 82, True) & ":XXXXXX =Loot type", $COLOR_DEBUG)
+			SetDebugLog("_GetPixelColor(+76, +76): " & _GetPixelColor($g_avStarLabTroops[$i][0] + 76, $g_avStarLabTroops[$i][1] + 76, True) & ":" & $sStarColorMaxLvl & " =Max L", $COLOR_DEBUG)
+			SetDebugLog("_GetPixelColor(+76, +80): " & _GetPixelColor($g_avStarLabTroops[$i][0] + 76, $g_avStarLabTroops[$i][1] + 80, True) & ":" & $sStarColorMaxLvl & " =Max L", $COLOR_DEBUG)
+			SetDebugLog("_GetPixelColor(+0, +20): " & _GetPixelColor($g_avStarLabTroops[$i][0] + 0, $g_avStarLabTroops[$i][1] + 20, True) & ":" & $sStarColorLabUgReq & " =Lab Upgrade", $COLOR_DEBUG)
+			SetDebugLog("_GetPixelColor(+93, +20): " & _GetPixelColor($g_avStarLabTroops[$i][0] + 93, $g_avStarLabTroops[$i][1] + 20, True) & ":" & $sStarColorLabUgReq & " =Lab Upgrade", $COLOR_DEBUG)
+			SetDebugLog("_GetPixelColor(+23, +60): " & _GetPixelColor($g_avStarLabTroops[$i][0] + 23, $g_avStarLabTroops[$i][1] + 60, True) & ":" & $sStarColorMaxTroop & " =Max troop", $COLOR_DEBUG)
+		EndIf
+	Next
+EndFunc   ;==>StarLabTroopImages
+
+Func LocateStarLab()
+	; Zoomout before locating
+	ZoomOut()
+
+	If $g_aiStarLaboratoryPos[0] > 0 And $g_aiStarLaboratoryPos[1] > 0 Then
+		BuildingClickP($g_aiStarLaboratoryPos, "#0197")
+		If _Sleep($DELAYLABORATORY1) Then Return ; Wait for description to popup
+
+		Local $aResult = BuildingInfo(245, 522 + $g_iBottomOffsetY) ; Get building name and level with OCR
+		If $aResult[0] = 2 Then ; We found a valid building name
+			If StringInStr($aResult[1], "Lab") = True Then ; we found the Star Laboratory
+				SetLog("Star Laboratory located.", $COLOR_INFO)
+				SetLog("It reads as Level " & $aResult[2] & ".", $COLOR_INFO)
+				Return True
+			Else
+				ClickP($aAway, 1, 0, "#0931") ;Click Away
+				SetDebugLog("Stored Star Laboratory Position is not valid.", $COLOR_ERROR)
+				SetDebugLog("Found instead: " & $aResult[1] & ", " & $aResult[2] & " !", $COLOR_DEBUG)
+				SetDebugLog("Village position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
+				ConvertToVillagePos($g_aiStarLaboratoryPos[0],$g_aiStarLaboratoryPos[1])
+				SetDebugLog("Real position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
+				$g_aiStarLaboratoryPos[0] = -1
+				$g_aiStarLaboratoryPos[1] = -1
 			EndIf
 		Else
-			SetLog("Lab Upgrade in progress until " & $aRemainLabtime[$g_iCurAccount] & "...", $COLOR_INFO)
-		EndIf
-	ElseIf $Test = 2 Or Not $bDoNotProceedWithMachine Then
-		If Number($aMachineStatus[$g_iCurAccount][2]) < Number($g_aiCurrentLootBB[$eLootElixirBB]) Then
-			BuilderBaseUpgradeMachine($Test)
-		Else
-			SetLog("Not Enough Elixir to Upgrade Machine!", $COLOR_INFO)
+			ClickP($aAway, 1, 0, "#0932") ;Click Away
+			SetDebugLog("Stored Star Laboratory Position is not valid.", $COLOR_ERROR)
+			SetDebugLog("Village position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
+			ConvertToVillagePos($g_aiStarLaboratoryPos[0],$g_aiStarLaboratoryPos[1])
+			SetDebugLog("Real position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
+			$g_aiStarLaboratoryPos[0] = -1
+			$g_aiStarLaboratoryPos[1] = -1
 		EndIf
 	EndIf
 
-	If _Sleep(2000) Then Return
-	ClickP($aAway, 2, 1000, "#0900") ;Click Away
-	FuncReturn()
-EndFunc   ;==>BuilderBaseUpgradeTroops
+	SetLog("Looking for Star Laboratory...", $COLOR_ACTION)
 
+	Local $sCocDiamond = "FV"
+	Local $sRedLines = $sCocDiamond
+	Local $iMinLevel = 0
+	Local $iMaxLevel = 1000
+	Local $iMaxReturnPoints = 1
+	Local $sReturnProps = "objectname,objectpoints"
+	Local $bForceCapture = True
 
-; Extra Methods
-; First Check
-Func BuilderBaseCheckMachine(ByRef $aMachineStatus, $Test = 0)
-	ClickP($aAway, 2, 300, "#900") ;Click Away
-	; $aMachineStatus[X][0] = Remain Upgrade time for next level  [1] = Machine next Level , [2] = Machine Next level cost
-
-	If IsMainPageBuilderBase() Then
-		; Machine Detection
-		Local $MachinePosition = _ImageSearchXMLMyBot($g_sXMLTroopsUpgradeMachine, $g_aXMLToForceBuilderBaseParms[0], $g_aXMLToForceBuilderBaseParms[1], $g_aXMLToForceBuilderBaseParms[2], $Test)
-		If IsArray($MachinePosition) And UBound($MachinePosition) > 0 Then
-			If $Test > 0 Then Setlog("Machine Found: " & _ArrayToString($MachinePosition))
-			Click($MachinePosition[0][1], $MachinePosition[0][2], 1, 0, "#901")
-
-			For $i = 0 To 10
-				If _Sleep(200) Then Return
-				; $aResult[1] = Name , $aResult[2] = Level
-				Local $aResult = BuildingInfo(242, 520)
-				If UBound($aResult) >= 2 Then ExitLoop
-				If $i = 10 Then
-					Setlog("Error geting the Machine Info!!", $COLOR_ERROR)
-					ClickP($aAway, 2, 300, "#900") ;Click Away
-					Return
+	; DETECTION IMGLOC
+	Local $aResult = findMultiple($g_sImgStarLaboratory, $sCocDiamond, $sRedLines, $iMinLevel, $iMaxLevel, $iMaxReturnPoints, $sReturnProps, $bForceCapture)
+	If IsArray($aResult) And UBound($aResult) > 0 Then ; we have an array with data of images found
+		For $i = 0 To UBound($aResult) - 1
+			If _Sleep(50) Then Return ; just in case on PAUSE
+			If Not $g_bRunState Then Return ; Stop Button
+			SetDebugLog(_ArrayToString($aResult[$i]))
+			Local $aTEMP = $aResult[$i]
+			Local $sObjectname = String($aTEMP[0])
+			SetDebugLog("Image name: " & String($aTEMP[0]), $COLOR_INFO)
+			Local $aObjectpoints = $aTEMP[1] ; number of  objects returned
+			SetDebugLog("Object points: " & String($aTEMP[1]), $COLOR_INFO)
+			If StringInStr($aObjectpoints, "|") Then
+				$aObjectpoints = StringReplace($aObjectpoints, "||", "|")
+				Local $sString = StringRight($aObjectpoints, 1)
+				If $sString = "|" Then $aObjectpoints = StringTrimRight($aObjectpoints, 1)
+				Local $tempObbjs = StringSplit($aObjectpoints, "|", $STR_NOCOUNT) ; several detected points
+				For $j = 0 To UBound($tempObbjs) - 1
+					; Test the coordinates
+					Local $tempObbj = StringSplit($tempObbjs[$j], ",", $STR_NOCOUNT) ;  will be a string : 708,360
+					If UBound($tempObbj) = 2 Then
+						$g_aiStarLaboratoryPos[0] = Number($tempObbj[0]) + 9
+						$g_aiStarLaboratoryPos[1] = Number($tempObbj[1]) + 15
+						ConvertFromVillagePos($g_aiStarLaboratoryPos[0],$g_aiStarLaboratoryPos[1])
+						ExitLoop 2
+					EndIf
+				Next
+			Else
+				; Test the coordinate
+				Local $tempObbj = StringSplit($aObjectpoints, ",", $STR_NOCOUNT) ;  will be a string : 708,360
+				If UBound($tempObbj) = 2 Then
+					$g_aiStarLaboratoryPos[0] = Number($tempObbj[0]) + 9
+					$g_aiStarLaboratoryPos[1] = Number($tempObbj[1]) + 15
+					ConvertFromVillagePos($g_aiStarLaboratoryPos[0],$g_aiStarLaboratoryPos[1])
+					ExitLoop
 				EndIf
-			Next
-			$aMachineStatus[$g_iCurAccount][1] = $aResult[2] <> "Broken" ? Number($aResult[2]) : 0
-			If $Test > 0 Then Setlog("Machine Level: " & $aMachineStatus[$g_iCurAccount][1])
-		Else
-			 _DebugFailedImageDetection("Machine")
-			$aMachineStatus[$g_iCurAccount][1] = 0
-		EndIf
-	EndIf
-	ClickP($aAway, 2, 300, "#900") ;Click Away
-EndFunc   ;==>BuilderBaseCheckMachine
-
-Func BuilderBaseCheckElixirStorageCap(ByRef $aElixirStorageCap, $Test = 0)
-	ClickP($aAway, 1, 1000, "#900") ;Click Away
-	If IsMainPageBuilderBase() Then
-		Local $ElixirStorageCapPosition[2] = [750, 80]
-		ClickP($ElixirStorageCapPosition, 1, 300, "ElixirCap")
-		For $i = 0 To 10
-			If _sleep(200) Then Return
-			$aElixirStorageCap[$g_iCurAccount] = Number(getResourcesMainScreen(738, 113)) ;  coc-bonus
-			If $aElixirStorageCap[$g_iCurAccount] = "" Then getResourcesBonus(738, 113) ; when reach the full Cap the numbers are bigger
-			If IsNumber($aElixirStorageCap[$g_iCurAccount]) And $aElixirStorageCap[$g_iCurAccount] > 0 Then ExitLoop
-			If $i = 10 Then Setlog("Error getting thge Elixir Storage Cap", $COLOR_ERROR)
+			EndIf
 		Next
 	EndIf
-	If $Test > 0 Then Setlog("Elixir Storage Cap: " & $aElixirStorageCap[$g_iCurAccount])
-	ClickP($aAway, 2, 300, "#900") ;Click Away
-EndFunc   ;==>BuilderBaseCheckElixirStorageCap
 
-Func BuilderBaseCheckLab(ByRef $aRemainLabtime, $Test = 0)
-	ClickP($aAway, 2, 300, "#900") ;Click Away
-	If IsMainPageBuilderBase() Then
-		If Not DetectedLaboratory() Then Return
+	If $g_aiStarLaboratoryPos[0] > 0 And $g_aiStarLaboratoryPos[1] > 0 Then
+		BuildingClickP($g_aiStarLaboratoryPos, "#0197")
+		If _Sleep($DELAYLABORATORY1) Then Return ; Wait for description to popup
 
-		If Not DetectButton() Then Return
-
-		If Not DetectLaboratoryWindow() Then Return
-
-		IsLaboratyAvailable($aRemainLabtime, $Test)
-	EndIf
-	ClickP($aAway, 2, 300, "#900") ;Click Away
-EndFunc   ;==>BuilderBaseCheckLab
-
-
-; Machine
-Func BuilderBaseUpgradeMachine($Test = 0)
-
-	If IsMainPageBuilderBase() Then
-		; Machine Detection
-		Local $MachinePosition = _ImageSearchXMLBoludoz($g_sXMLTroopsUpgradeMachine, $g_aXMLToForceBuilderBaseParms[0], $g_aXMLToForceBuilderBaseParms[1], $g_aXMLToForceBuilderBaseParms[2], $Test)
-		If IsArray($MachinePosition) And UBound($MachinePosition) > 0 Then
-			SetDebugLog("Machine Found: " & _ArrayToString($MachinePosition))
-			Click($MachinePosition[0][1], $MachinePosition[0][2], 1, 0, "#9010")
-			If _Sleep(2000) Then Return
-			If GetUpgradeButton("Elixir", $Test) Then Return True
+		Local $aResult = BuildingInfo(245, 522 + $g_iBottomOffsetY) ; Get building name and level with OCR
+		If $aResult[0] = 2 Then ; We found a valid building name
+			If StringInStr($aResult[1], "Lab") = True Then ; we found the Star Laboratory
+				SetLog("Star Laboratory located.", $COLOR_INFO)
+				SetLog("It reads as Level " & $aResult[2] & ".", $COLOR_INFO)
+				Return True
+			Else
+				ClickP($aAway, 1, 0, "#0931") ;Click Away
+				SetDebugLog("Found Star Laboratory Position is not valid.", $COLOR_ERROR)
+				SetDebugLog("Found instead: " & $aResult[1] & ", " & $aResult[2] & " !", $COLOR_DEBUG)
+				SetDebugLog("Village position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
+				ConvertToVillagePos($g_aiStarLaboratoryPos[0],$g_aiStarLaboratoryPos[1])
+				SetDebugLog("Real position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
+				$g_aiStarLaboratoryPos[0] = -1
+				$g_aiStarLaboratoryPos[1] = -1
+			EndIf
 		Else
-			 _DebugFailedImageDetection("UpgradeMachine")
+			ClickP($aAway, 1, 0, "#0932") ;Click Away
+			SetDebugLog("Found Star Laboratory Position is not valid.", $COLOR_ERROR)
+			SetDebugLog("Village position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
+			ConvertToVillagePos($g_aiStarLaboratoryPos[0],$g_aiStarLaboratoryPos[1])
+			SetDebugLog("Real position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
+			$g_aiStarLaboratoryPos[0] = -1
+			$g_aiStarLaboratoryPos[1] = -1
 		EndIf
 	EndIf
+
+	SetLog("Can not find Star Laboratory.", $COLOR_ERROR)
 	Return False
-EndFunc   ;==>BuilderBaseUpgradeMachine
-
-
-; laboratory
-Func BuilderBaseUpgradeTroop(ByRef $aRemaintime, ByRef $aTroopsToUpgrade, $Test = 0)
-	If isOnBuilderBaseEz() Then
-
-		If Not DetectedLaboratory() Then Return
-
-		If Not DetectButton() Then Return
-
-		If Not DetectLaboratoryWindow() Then Return
-
-		If IsLaboratyAvailable($aRemaintime, $Test) Then
-
-			If IsElixirAvailable($aTroopsToUpgrade) Then
-				Local $slot = SlotTroop($g_iQuickMISX, $g_iQuickMISY)
-				If $Test <> 0 Then
-					Setlog("$slot: " & _ArrayToString($slot))
-				Else
-					Click($g_iQuickMISX, $g_iQuickMISY, 1)
-				EndIf
-				If $slot[2] = "" Or $slot[2] = 0 Then $slot[2] = 1
-				Setlog("Start Upgrading " & SlotName($slot) & " to Level " & $slot[2] + 1, $COLOR_SUCCESS)
-				Setlog("Changing Lab to Any Troop!", $COLOR_INFO)
-				$g_iCmbBBLaboratory = 10
-				_GUICtrlComboBox_SetCurSel($g_hCmbBBLaboratory, $g_iCmbBBLaboratory)
-				_GUICtrlSetImage($g_hPicBBLabUpgrade, $g_sLibBBIconPath, $g_iCmbBBLaboratory + 1)
-				If _sleep(2000) Then Return
-				; 74c223 650,570 , green button [OK]
-				If _ColorCheck(_GetPixelColor(650, 570, True), Hex(0x74c223, 6), 10) Then ; RC Done
-					Click(650, 570 , 1)
-					Return True
-				EndIf
-			EndIf
-		EndIf
-	Else
-		Setlog("You are not at Builder Base!", $COLOR_WARNING)
-	EndIf
-	Return False
-EndFunc   ;==>BuilderBaseUpgradeTroop
-
-Func DetectedLaboratory()
-	If QuickMIS("BC1", $g_sImgTroopsUpgradeLab, 100, 100, 840, 650, True, False) Then ; RC Done
-		SetDebugLog("Laboratory detected: " & $g_iQuickMISWOffSetX & "," & $g_iQuickMISWOffSetY)
-		Click($g_iQuickMISWOffSetX + 10, $g_iQuickMISWOffSetY + 10, 1)
-		If _Sleep(2000) Then Return
-		Return True
-	Else
-		SetLog("Laboratory not available...", $COLOR_WARNING)
-	EndIf
-	Return False
-EndFunc   ;==>DetectedLaboratory
-
-Func DetectButton()
-	If QuickMIS("BC1", $g_sImgTroopsUpgradeButton, 230, 640) Then ; RC Done
-		SetDebugLog("Button Research detected: " & $g_iQuickMISWOffSetX & "," & $g_iQuickMISWOffSetY)
-		Click($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY, 1)
-		If _Sleep(2000) Then Return
-		Return True
-	Else
-		SetLog("Button Research not available...", $COLOR_WARNING)
-	EndIf
-	Return False
-EndFunc   ;==>DetectButton
-
-Func DetectLaboratoryWindow()
-	If QuickMIS("BC1", $g_sImgTroopsUpgradeLabWindow, 320, 130, 510, 160) Then ; RC Done
-		SetDebugLog("Upg Units window detected: " & $g_iQuickMISWOffSetX & "," & $g_iQuickMISWOffSetY)
-		Return True
-	Else
-		SetLog("Upg Units window not available...", $COLOR_WARNING)
-	EndIf
-	Return False
-EndFunc   ;==>DetectLaboratoryWindow
-
-Func IsLaboratyAvailable(ByRef $aRemaintime, $Test = 0) ; passing the all structure
-	; x = 660 , y = 250
-	; 8088B0 : yes
-	; A2CB6C : No
-	If _ColorCheck(_GetPixelColor(660, 250, True), Hex(0x8088B0, 6), 5) Then ; RC Done
-		SetDebugLog("Unit upgrade Available...")
-		$aRemaintime[$g_iCurAccount] = 0
-		Return True
-	EndIf
-
-	SetLog("Unit Upgrade in progress...", $COLOR_WARNING)
-	; Let's get the remain lab time  : coc-RemainLaboratory
-	$aRemaintime[$g_iCurAccount] = getRemainTLaboratory(255, 256) ; RC Done
-	Setlog("Remain Lab time is " & $aRemaintime[$g_iCurAccount], $COLOR_INFO)
-	Local $return = ConvertOCRTime("Builder Base Lab", $aRemaintime[$g_iCurAccount], True)
-	$aRemaintime[$g_iCurAccount] = ($return <> False) ? $return : 0
-
-	Return False
-EndFunc   ;==>IsLaboratyAvailable
-
-Func IsElixirAvailable(ByRef $aTroopsToUpgrade)
-
-	Local $Temp = QuickMIS("CX", $g_sImgTroopsUpgradeAvaiTroops, 160, 385, 685, 570) ; RC Done
-	If IsArray($Temp) Then
-		_ArraySort($Temp, 0, 0, 0, 0)
-		SetDebugLog("IsElixirAvailable shorted array: " & _ArrayToString($Temp))
-		For $i = 0 To UBound($Temp) - 1
-			Local $Coordinate = StringSplit($Temp[$i], ",", $STR_NOCOUNT)
-			$g_iQuickMISX = 160 + $Coordinate[0] - 60
-			$g_iQuickMISY = 385 + $Coordinate[1] - 20 ; RC Done
-			SetDebugLog("IsElixirAvailable[" & $i & "] Name: " & SlotName(SlotTroop($g_iQuickMISX, $g_iQuickMISY)))
-			SetDebugLog("IsElixirAvailable[" & $i & "] Detection at X:" & $g_iQuickMISX & " Y:" & $g_iQuickMISY)
-
-			If $g_iCmbBBLaboratory > 9 Or $g_asBBTroopShortNames[$g_iCmbBBLaboratory] = SlotShortName(SlotTroop($g_iQuickMISX, $g_iQuickMISY)) Then
-				Local $x = $g_iQuickMISX
-				Local $y = $g_iQuickMISY
-				If QuickMIS("BC1", $g_sImgTroopsUpgradeElixir, $x, $y , $x + 60, $y + 50 ) Then ; RC Done
-					$g_iQuickMISX += $x
-					$g_iQuickMISY += $y
-					Return True
-				Else
-					$aTroopsToUpgrade[$g_iCurAccount][1] = getBBLabUpgrdResourceRed($x - 20, $y + 14)
-					SetDebugLog("$ocr: " & $aTroopsToUpgrade[$g_iCurAccount][1])
-					SetLog("Insuf. Elixir to Upgrade " & SlotName(SlotTroop($g_iQuickMISX, $g_iQuickMISY)) & " with " & $aTroopsToUpgrade[$g_iCurAccount][1], $COLOR_WARNING)
-					If $g_iCmbBBLaboratory < 10 Then Return False
-				EndIf
-			EndIf
-			If $i = UBound($Temp) - 1 Then
-				Local $text = $g_iCmbBBLaboratory > 9 ? "Any Troop" : $g_asBBTroopNames[$g_iCmbBBLaboratory]
-				SetLog("Doesn't Exist '" & $text & "' to Upgrade!", $COLOR_WARNING)
-			EndIf
-		Next
-	Else
-		Local $text = $g_iCmbBBLaboratory > 9 ? "Any Troop" : $g_asBBTroopNames[$g_iCmbBBLaboratory]
-		SetLog("Doesn't Exist '" & $text & "' to Upgrade!", $COLOR_WARNING)
-	EndIf
-
-	Return False
-EndFunc   ;==>IsElixirAvailable
-
-
-; Slots And Names
-Func SlotTroop($x, $y)
-
-	; SlotTroop[XY]: [X] 456/[Y] 457
-	SetDebugLog("SlotTroop at [X: " & $x & "]-[Y:" & $y & "]")
-	Local $slot[3] = [0, 0, 0]
-
-	If $y > 325 And $y < 425 Then $slot[1] = 1 ; RC Done
-	If $y > 425 Then $slot[1] = 2 ; RC Done
-	Switch $x
-		Case $x > 160 And $x < 263
-			$slot[0] = 1
-		Case $x > 263 And $x < 370
-			$slot[0] = 2
-		Case $x > 370 And $x < 477
-			$slot[0] = 3
-		Case $x > 477 And $x < 578
-			$slot[0] = 4
-		Case $x > 578 And $x < 685
-			$slot[0] = 5
-	EndSwitch
-
-	Local $OcrX[5] = [173, 275, 377, 482, 590]
-	Local $OcrY[2] = [420, 520] ; RC Done
-
-	$slot[2] = getTroopLevel($OcrX[$slot[0] - 1], $OcrY[$slot[1] - 1])
-	SetDebugLog("SlotTroop OCR at Column: " & $slot[0] & " Row: " & $slot[1] & " troop level: " & $slot[2])
-
-	Return $slot
-EndFunc   ;==>SlotTroop
-
-Func SlotName($slot)
-	; SlotName[$slot]: [0] 3/[1] 1
-	Local $SlotsNames[2][5] = [["Raged Barbarian", "Boxer Giant", "Bomber", "Cannon Cart", "Drop Ship"], ["Sneaky Archer", "Beta Minion", "Baby Dragon", "Night Witch", "Super Pekka"]]
-	If $g_bDebugSetlog Then SetDebugLog("SlotName[$slot]: [" & $slot[0] & "][" & $slot[1] & "]")
-	Return $SlotsNames[$slot[1] - 1][$slot[0] - 1]
-EndFunc   ;==>SlotName
-
-Func SlotShortName($slot)
-	; SlotName[$slot]: [0] 3/[1] 1
-	Local $SlotsNames[2][5] = [["Barb", "Giant", "Bomb", "Cannon", "Drop"], ["Arch", "Beta", "BabyDragon", "Night", "Pekka"]]
-	If $g_bDebugSetlog Then SetDebugLog("SlotShortName[$slot]: [" & $slot[0] & "][" & $slot[1] & "]")
-	Return $SlotsNames[$slot[1] - 1][$slot[0] - 1]
-EndFunc   ;==>SlotShortName
-
-; OCRS
-Func getTroopLevel($x_start, $y_start)
-	Return getOcrAndCapture("coc-bbtroopslevel", $x_start, $y_start, 25, 36, True)
-EndFunc   ;==>getTroopLevel
-
-Func getBBLabUpgrdResourceRed($x_start, $y_start) ; -> Gets complete value of Elixir/DE on the troop buttons,  xxx,xxx for "laboratory.au3" when red text
-	Return getOcrAndCapture("coc-bblab-r", $x_start, $y_start, 70, 14, True)
-EndFunc   ;==>getBBLabUpgrdResourceRed
-
-
-
+EndFunc   ;==>LocateStarLab()

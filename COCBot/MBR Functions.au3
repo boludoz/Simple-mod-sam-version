@@ -20,7 +20,7 @@
 #include "functions\Other\OnAutoItErrorRegisterBot.au3"
 
 ;===========Samm0d collection==============================
-#include "SamM0d\Functions\SamM0dZap.au3"
+;~ #include "SamM0d\Functions\SamM0dZap.au3"
 #include "SamM0d\Functions\AreCollectorsNearRedline.au3"
 #include "SamM0d\Functions\HLFClick.au3"
 #include "SamM0d\Functions\getMyOcr.au3"
@@ -52,7 +52,6 @@
 #include "SamM0d\Functions\ModTrain\CheckAvailableCCUnit.au3"
 #include "SamM0d\Functions\ModTrain\CheckAvailableCCSpellUnit.au3"
 #include "SamM0d\Functions\ModTrain\TrainSieges.au3"
-#include "SamM0d\Functions\ModTrain\TNRQT.au3"
 
 ;---------------------------------------------------------------
 #include "SamM0d\Functions\Other\_debugSaveHBitmapToImage.au3"
@@ -87,17 +86,21 @@
 #include "SamM0d\Functions\BuilderBase\Attack\BuilderBaseImageDetection.au3"
 #include "SamM0d\Functions\BuilderBase\Attack\BuilderBaseCSV.au3"
 #include "SamM0d\Functions\BuilderBase\Camps\BuilderBaseCheckArmy.au3"
-#include "SamM0d\Functions\BuilderBase\Village\BuilderBaseStartClockTowerBoost.au3" ;#include "functions\Village\BuilderBase\StartClockTowerBoost.au3"
-#include "SamM0d\Functions\BuilderBase\Village\BuilderBaseReport.au3" ;#include "functions\Village\BuilderBase\BuilderBaseReport.au3"
+#include "SamM0d\Functions\BuilderBase\Village\BuilderBaseStartClockTowerBoost.au3" ;#include "functions\Village\BuilderBase\StartClockTowerBoost.au3" /// Peding
+#include "SamM0d\Functions\BuilderBase\Village\BuilderBaseReport.au3" ;#include "functions\Village\BuilderBase\BuilderBaseReport.au3" /// Peding to fix
 #include "SamM0d\Functions\BuilderBase\Village\BuilderBaseSuggestedUpgrades.au3" ;#include "functions\Village\BuilderBase\SuggestedUpgrades.au3"
 #include "SamM0d\Functions\BuilderBase\Village\BuilderBaseCollect.au3" ;#include "functions\Village\BuilderBase\Collect.au3"
-#include "SamM0d\Functions\BuilderBase\Village\BuilderBaseUpgradeTroops.au3" ;#include "functions\Village\BuilderBase\StarLaboratory.au3"
+#include "SamM0d\Functions\BuilderBase\Village\BuilderBaseUpgradeTroops.au3" ;#include "functions\Village\BuilderBase\StarLaboratory.au3" /// Peding
 #include "SamM0d\Functions\BuilderBase\Village\BuilderBaseCleanYard.au3" ;#include "functions\Village\BuilderBase\CleanBBYard.au3"
 #include "SamM0d\Functions\BuilderBase\Village\BuilderBaseUpgradeWalls.au3"
+#include "SamM0d\Functions\BuilderBase\Village\BattleMachineUpgrade.au3"
 ;----------------------------------------------------------------
 ; Edicion exclusiva
 #include "SamM0d\Functions\OcrBypass.au3"
 #include "SamM0d\Functions\Check Stop For War\CheckStopForWar.au3"
+#include "SamM0d\Functions\IACHAT.au3"
+#include "SamM0d\Functions\IsSlotDead.au3"
+
 ;==========================================================
 
 #include "functions\Attack\AttackReport.au3"

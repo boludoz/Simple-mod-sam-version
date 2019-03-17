@@ -757,28 +757,56 @@ EndFunc   ;==>DetectInstalledAndroid
 
 ; Find preferred Adb Path. Current Android ADB is used and saved in profile.ini and shared across instances.
 Func FindPreferredAdbPath()
-	Local $adbPath, $i
-	If $g_bAndroidAdbUseMyBot Then
-		Local $sAdb = @ScriptDir & "\lib\adb\adb.exe"
-		If FileExists($sAdb) Then Return $sAdb
-	EndIf
+	Global $g_sAndroidADBversion
+	Local $sPathAdbv140 = @ScriptDir & "\lib\adb\adb.exe"
+	Local $sPathAdbvdll = @ScriptDir & "\lib\adb\AdbWinApi.dll"
+	Local $sPathAdbvdll1 = @ScriptDir & "\lib\adb\AdbWinUsbApi.dll"
+	Local $adbPath = ""
 
+	; get the Adb Path from INI file
 	If FileExists($g_sAndroidAdbPath) Then
-		Return $g_sAndroidAdbPath
+		$adbPath = $g_sAndroidAdbPath
+	Else
+		$adbPath = Execute("Get" & $g_sAndroidEmulator & "AdbPath()")
+		If $adbPath = "" Then
+			; first first of support Android
+			For $i = 0 To UBound($g_avAndroidAppConfig) - 1
+				$adbPath = Execute("Get" & $g_avAndroidAppConfig[$i][0] & "AdbPath()")
+				If $adbPath <> "" Then ExitLoop
+			Next
+		EndIf
+		If $adbPath <> "" Then
+			_SaveProfileConfigAdbPath()
+		EndIf
 	EndIf
-	$adbPath = Execute("Get" & $g_sAndroidEmulator & "AdbPath()")
 
-	If $adbPath = "" Then
-		; first first of support Android
-		For $i = 0 To UBound($g_avAndroidAppConfig) - 1
-			$adbPath = Execute("Get" & $g_avAndroidAppConfig[$i][0] & "AdbPath()")
-			If $adbPath <> "" Then ExitLoop
-		Next
+	; Get the adb version
+	Local $iPID = Run($adbPath & " version", "", @SW_SHOW, $STDOUT_CHILD)
+	ProcessWaitClose($iPID, 10)
+	Local $sOutput = StdoutRead($iPID)
+	Local $array = StringSplit($sOutput, @CRLF, $STR_NOCOUNT)
+	If UBound($array) > 1 Then
+		$g_sAndroidADBversion = StringReplace($array[0], "Android Debug Bridge version ", "")
+		SetDebugLog("Adb Version: " & $g_sAndroidADBversion)
+	Else
+		SetDebugLog("Adb Get version Error!")
 	EndIf
-	If $adbPath <> "" Then
-		; Not used anymore since MBR v7.6.7
-		;_SaveProfileConfigAdbPath(Default, $adbPath) ; ensure profile.ini is saved as quickly as possible with new ADB path
+
+	; Compare with our internal version
+	Local $Version = GetVersionNormalized($g_sAndroidADBversion)
+	Local $NewVersion = GetVersionNormalized("1.0.40")
+
+	; If necessaru copy to Emulator folder
+	If $Version < $NewVersion Then
+		SetDebugLog("Let's Update the adb version!", $COLOR_ACTION)
+		Local $DirPath = $g_sAndroidEmulator <> "BlueStacks2" And $g_sAndroidEmulator <> "BlueStacks" ? StringReplace($adbPath, "adb.exe", "") : StringReplace($adbPath, "HD-Adb.exe", "")
+		SetDebugLog("ADB Destination Dir: " & $DirPath)
+		SetDebugLog("ADB EXE : " & $adbPath)
+		If FileCopy($sPathAdbv140, $adbPath, $FC_OVERWRITE) = 0 Then SetDebugLog("Adb was not updated!", $COLOR_ERROR)
+		If FileCopy($sPathAdbvdll, $DirPath & "AdbWinApi.dll", $FC_OVERWRITE) = 0 Then SetDebugLog("AdbWinApi was not updated!", $COLOR_ERROR)
+		If FileCopy($sPathAdbvdll1, $DirPath & "AdbWinUsbApi.dll", $FC_OVERWRITE) = 0 Then SetDebugLog("AdbWinUsbApi was not updated!", $COLOR_ERROR)
 	EndIf
+
 	Return $adbPath
 EndFunc   ;==>FindPreferredAdbPath
 
@@ -794,6 +822,67 @@ Func IncrUpdate(ByRef $i, $ReturnInitial = True)
 	If $ReturnInitial Then Return $i2
 	Return $i
 EndFunc   ;==>IncrUpdate
+
+Func InitAndroidAdbPorts($bForce = False)
+
+	If $g_bAndroidAdbPortPerInstance Then
+		If $bForce Then $g_bAndroidAdbPort = 0
+		If Not $g_bAndroidAdbPort Then
+			; dynamically select port to use by mutex
+			Local $iPortStart = 5038, $iPortRange = 255
+			Local $iPort = $iPortStart, $iTcpIdx = 1, $iTcpMtIdx = 0, $iMtPort
+			Local $hMutex = 0
+			$g_sAndroidAdbGlobalOptions = ""
+			Local $aTcpTable = _TcpTable(5, "LISTENING")
+			If $g_hMutex_AdbDaemon Then
+				; release prior mutex
+				ReleaseMutex($g_hMutex_AdbDaemon)
+				$g_hMutex_AdbDaemon = 0
+			EndIf
+			While Not $hMutex And $iPort < $iPortStart + $iPortRange
+				; find next free port
+				For $i = $iTcpIdx To UBound($aTcpTable) -1
+					If $aTcpTable[$i][2] < $iPort Then
+						$iTcpIdx = $i + 1
+						ContinueLoop
+					ElseIf $aTcpTable[$i][0] = "adb.exe" Or $aTcpTable[$i][2] > $iPort Then
+						; re-use adb.exe or port is free
+						ExitLoop
+					Else
+						; cannot use that port
+						$iPort += 1
+					EndIf
+				Next
+				; now check for free minitouch port
+				$iMtPort = 0
+				$iTcpMtIdx = _ArrayBinarySearch($aTcpTable, $iPort + 1000, 0, 0, 2)
+				If $iTcpMtIdx = -1 Or ($iTcpMtIdx > 0 And $aTcpTable[$iTcpMtIdx][0] = "adb.exe") Then
+					; use minitouch port
+					$iMtPort = $iPort + 1000
+				EndIf
+				If $iMtPort Then
+					; try to use it
+					$hMutex = CreateMutex("MyBot.run/Adb-Port-" & $iPort)
+					If $hMutex Then
+						;_ArrayDisplay($aTcpTable)
+						$g_hMutex_AdbDaemon = $hMutex
+						$g_bAndroidAdbPort = $iPort
+						$g_bAndroidAdbMinitouchPort = $iMtPort
+						ExitLoop
+					EndIf
+				EndIf
+				$iPort += 1 ; try next port
+			WEnd
+		EndIf
+	EndIf
+	If $g_bAndroidAdbPort Then
+		SetDebugLog("Using ADB Daemon port " & $g_bAndroidAdbPort)
+		$g_sAndroidAdbGlobalOptions = "-P " & $g_bAndroidAdbPort
+	Else
+		SetDebugLog("Cannot aquire ADB Daemon port, using default", $COLOR_ERROR)
+		$g_bAndroidAdbMinitouchPort = 1111
+	EndIf
+EndFunc   ;==>InitAndroidAdbPorts
 
 Func InitAndroid($bCheckOnly = False, $bLogChangesOnly = True)
 	FuncEnter(InitAndroid)
@@ -849,56 +938,7 @@ Func InitAndroid($bCheckOnly = False, $bLogChangesOnly = True)
 	Local $successful = @error = 0, $process_killed
 	If Not $bCheckOnly And $Result Then
 
-		If $g_bAndroidAdbPortPerInstance Then
-			If Not $g_bAndroidAdbPort Then
-				; dynamically select port to use by mutex
-				Local $iPortStart = 5038, $iPortRange = 255
-				Local $iPort = $iPortStart, $iTcpIdx = 1, $iTcpMtIdx = 0, $iMtPort
-				Local $hMutex = 0
-				$g_sAndroidAdbGlobalOptions = ""
-				Local $aTcpTable = _TcpTable(5, "LISTENING")
-				While Not $hMutex And $iPort < $iPortStart + $iPortRange
-					; find next free port
-					For $i = $iTcpIdx To UBound($aTcpTable) -1
-						If $aTcpTable[$i][2] < $iPort Then
-							$iTcpIdx = $i + 1
-							ContinueLoop
-						ElseIf $aTcpTable[$i][0] = "adb.exe" Or $aTcpTable[$i][2] > $iPort Then
-							; re-use adb.exe or port is free
-							ExitLoop
-						Else
-							; cannot use that port
-							$iPort += 1
-						EndIf
-					Next
-					; now check for free minitouch port
-					$iMtPort = 0
-					$iTcpMtIdx = _ArrayBinarySearch($aTcpTable, $iPort + 1000, 0, 0, 2)
-					If $iTcpMtIdx = -1 Or ($iTcpMtIdx > 0 And $aTcpTable[$iTcpMtIdx][0] = "adb.exe") Then
-						; use minitouch port
-						$iMtPort = $iPort + 1000
-					EndIf
-					If $iMtPort Then
-						; try to use it
-						$hMutex = CreateMutex("MyBot.run/Adb-Port-" & $iPort)
-						If $hMutex Then
-							$g_hMutex_AdbDaemon = $hMutex
-							$g_bAndroidAdbPort = $iPort
-							$g_bAndroidAdbMinitouchPort = $iMtPort
-							ExitLoop
-						EndIf
-					EndIf
-					$iPort += 1 ; try next port
-				WEnd
-			EndIf
-		EndIf
-		If $g_bAndroidAdbPort Then
-			SetDebugLog("Using ADB Daemon port " & $g_bAndroidAdbPort)
-			$g_sAndroidAdbGlobalOptions = "-P " & $g_bAndroidAdbPort
-		Else
-			SetDebugLog("Cannot aquire ADB Daemon port, using default", $COLOR_ERROR)
-			$g_bAndroidAdbMinitouchPort = 1111
-		EndIf
+		InitAndroidAdbPorts()
 
 		; exclude Android for WerFault reporting
 		If $b_sAndroidProgramWerFaultExcluded = True Then
@@ -929,57 +969,21 @@ Func InitAndroid($bCheckOnly = False, $bLogChangesOnly = True)
 
 		Local $i = 0
 		Local $sText = ""
-; simplemod - samm0d - Fast CODE
-		If $bLogChangesOnly = False Then
-				SetDebugLog("Android: " & $g_sAndroidEmulator)
-				SetDebugLog("Android Config: " & $g_iAndroidConfig)
-				SetDebugLog("Android Version: " & $g_sAndroidVersion)
-				SetDebugLog("Android Instance: " & $g_sAndroidInstance)
-				SetDebugLog("Android Window Title: " & $g_sAndroidTitle)
-				SetDebugLog("Android Program Path: " & $g_sAndroidProgramPath)
-				SetDebugLog("Android Program Parameter: " & GetAndroidProgramParameter())
-				$sText = ((IsArray($g_avAndroidProgramFileVersionInfo) ? _ArrayToString($g_avAndroidProgramFileVersionInfo, ",", 1) : "not available"))
-				SetDebugLog("Android Program FileVersionInfo: " & $sText)		
-				SetDebugLog("Android SecureME setting: " & $g_iAndroidSecureFlags)		
-				SetDebugLog("Android ADB Path: " & $g_sAndroidAdbPath)		
-				SetDebugLog("Android ADB Global Options: " & $g_sAndroidAdbGlobalOptions)
-				SetDebugLog("Android VBoxManage Path: " & $__VBoxManage_Path)		
-				SetDebugLog("Android ADB Device: " & $g_sAndroidAdbDevice)
-				SetDebugLog("Android ADB Shared Folder: " & $g_sAndroidPicturesPath)
-			Else
-				Switch False 
-					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidEmulator)         
-						SetDebugLog("Android: " & $g_sAndroidEmulator)
-					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_iAndroidConfig)    
-						SetDebugLog("Android Config: " & $g_iAndroidConfig)		
-					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidVersion)  
-						SetDebugLog("Android Version: " & $g_sAndroidVersion)
-					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidInstance)   
-						SetDebugLog("Android Instance: " & $g_sAndroidInstance)	
-					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidTitle)     
-						SetDebugLog("Android Window Title: " & $g_sAndroidTitle)		
-					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidProgramPath)    
-						SetDebugLog("Android Program Path: " & $g_sAndroidProgramPath)		
-					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], GetAndroidProgramParameter())
-						SetDebugLog("Android Program Parameter: " & GetAndroidProgramParameter())
-					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $sText)   
-						$sText = ((IsArray($g_avAndroidProgramFileVersionInfo) ? _ArrayToString($g_avAndroidProgramFileVersionInfo, ",", 1) : "not available"))
-						SetDebugLog("Android Program FileVersionInfo: " & $sText)		
-					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_iAndroidSecureFlags)   
-						SetDebugLog("Android SecureME setting: " & $g_iAndroidSecureFlags)		
-					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidAdbPath)         
-						SetDebugLog("Android ADB Path: " & $g_sAndroidAdbPath)		
-					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidAdbGlobalOptions)
-						SetDebugLog("Android ADB Global Options: " & $g_sAndroidAdbGlobalOptions)
-					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $__VBoxManage_Path)      
-						SetDebugLog("Android VBoxManage Path: " & $__VBoxManage_Path)		
-					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidAdbDevice)
-						SetDebugLog("Android ADB Device: " & $g_sAndroidAdbDevice)
-					Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidPicturesPath)  
-						SetDebugLog("Android ADB Shared Folder: " & $g_sAndroidPicturesPath)
-				EndSwitch
-		EndIf	
-
+		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidEmulator) Or $bLogChangesOnly = False Then SetDebugLog("Android: " & $g_sAndroidEmulator)
+		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_iAndroidConfig) Or $bLogChangesOnly = False Then SetDebugLog("Android Config: " & $g_iAndroidConfig)
+		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidVersion) Or $bLogChangesOnly = False Then SetDebugLog("Android Version: " & $g_sAndroidVersion)
+		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidInstance) Or $bLogChangesOnly = False Then SetDebugLog("Android Instance: " & $g_sAndroidInstance)
+		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidTitle) Or $bLogChangesOnly = False Then SetDebugLog("Android Window Title: " & $g_sAndroidTitle)
+		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidProgramPath) Or $bLogChangesOnly = False Then SetDebugLog("Android Program Path: " & $g_sAndroidProgramPath)
+		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], GetAndroidProgramParameter()) Or $bLogChangesOnly = False Then SetDebugLog("Android Program Parameter: " & GetAndroidProgramParameter())
+		$sText = ((IsArray($g_avAndroidProgramFileVersionInfo) ? _ArrayToString($g_avAndroidProgramFileVersionInfo, ",", 1) : "not available"))
+		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $sText) Or $bLogChangesOnly = False Then SetDebugLog("Android Program FileVersionInfo: " & $sText)
+		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_iAndroidSecureFlags) Or $bLogChangesOnly = False Then SetDebugLog("Android SecureME setting: " & $g_iAndroidSecureFlags)
+		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidAdbPath) Or $bLogChangesOnly = False Then SetDebugLog("Android ADB Path: " & $g_sAndroidAdbPath)
+		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidAdbGlobalOptions) Or $bLogChangesOnly = False Then SetDebugLog("Android ADB Global Options: " & $g_sAndroidAdbGlobalOptions)
+		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $__VBoxManage_Path) Or $bLogChangesOnly = False Then SetDebugLog("Android VBoxManage Path: " & $__VBoxManage_Path)
+		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidAdbDevice) Or $bLogChangesOnly = False Then SetDebugLog("Android ADB Device: " & $g_sAndroidAdbDevice)
+		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidPicturesPath) Or $bLogChangesOnly = False Then SetDebugLog("Android ADB Shared Folder: " & $g_sAndroidPicturesPath)
 		; check if share folder exists
 		If FileExists($g_sAndroidPicturesHostPath) Then
 			If ($g_sAndroidPicturesHostFolder <> "" Or BitAND($g_iAndroidSecureFlags, 1) = 1) Then
@@ -989,43 +993,15 @@ Func InitAndroid($bCheckOnly = False, $bLogChangesOnly = True)
 			SetLog("Shared Folder doesn't exist, please fix:", $COLOR_ERROR)
 			SetLog($g_sAndroidPicturesHostPath, $COLOR_ERROR)
 		EndIf
-		
-				If $bLogChangesOnly = False Then
-						SetDebugLog("Android ADB Shared Folder on Host: " & $g_sAndroidPicturesHostPath)
-						SetDebugLog("Android ADB Shared SubFolder: " & $g_sAndroidPicturesHostFolder)
-						SetDebugLog("Android Mouse Device: " & $g_sAndroidMouseDevice)
-						SetDebugLog("Android ADB screencap command enabled: " & $g_bAndroidAdbScreencap)
-						SetDebugLog("Android ADB input command enabled: " & $g_bAndroidAdbInput)
-						SetDebugLog("Android ADB Mouse Click enabled: " & $g_bAndroidAdbClick)
-						SetDebugLog("Android ADB Click Drag enabled: " & $g_bAndroidAdbClickDrag)
-						SetDebugLog("Bot Background Mode for screen capture: " & ($g_bChkBackgroundMode = True ? "enabled" : "disabled"))
-						SetDebugLog("No Focus Tampering: " & $g_bNoFocusTampering)
-					Else
-						Switch False
-							Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidPicturesHostPath)                                             
-								SetDebugLog("Android ADB Shared Folder on Host: " & $g_sAndroidPicturesHostPath)
-							Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidPicturesHostFolder)                                           
-								SetDebugLog("Android ADB Shared SubFolder: " & $g_sAndroidPicturesHostFolder)
-							Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidMouseDevice)                                                  
-								SetDebugLog("Android Mouse Device: " & $g_sAndroidMouseDevice)
-							Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_bAndroidAdbScreencap)                                                
-								SetDebugLog("Android ADB screencap command enabled: " & $g_bAndroidAdbScreencap)
-							Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_bAndroidAdbInput)                                                  	
-								SetDebugLog("Android ADB input command enabled: " & $g_bAndroidAdbInput)
-							Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_bAndroidAdbClick)                                                  	
-								SetDebugLog("Android ADB Mouse Click enabled: " & $g_bAndroidAdbClick)
-							Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_bAndroidAdbClickDrag)
-								SetDebugLog("Android ADB Click Drag enabled: " & $g_bAndroidAdbClickDrag)
-							Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], ($g_bChkBackgroundMode = True ? "enabled" : "disabled"))				   	
-								SetDebugLog("Bot Background Mode for screen capture: " & ($g_bChkBackgroundMode = True ? "enabled" : "disabled"))
-							Case CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_bNoFocusTampering)                                                 	
-								SetDebugLog("No Focus Tampering: " & $g_bNoFocusTampering)
-						EndSwitch
-				EndIf
-	
-		
-		; LOGICMOD OPTIMIZATION End
-		
+		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidPicturesHostPath) Or $bLogChangesOnly = False Then SetDebugLog("Android ADB Shared Folder on Host: " & $g_sAndroidPicturesHostPath)
+		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidPicturesHostFolder) Or $bLogChangesOnly = False Then SetDebugLog("Android ADB Shared SubFolder: " & $g_sAndroidPicturesHostFolder)
+		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidMouseDevice) Or $bLogChangesOnly = False Then SetDebugLog("Android Mouse Device: " & $g_sAndroidMouseDevice)
+		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_bAndroidAdbScreencap) Or $bLogChangesOnly = False Then SetDebugLog("Android ADB screencap command enabled: " & $g_bAndroidAdbScreencap)
+		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_bAndroidAdbInput) Or $bLogChangesOnly = False Then SetDebugLog("Android ADB input command enabled: " & $g_bAndroidAdbInput)
+		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_bAndroidAdbClick) Or $bLogChangesOnly = False Then SetDebugLog("Android ADB Mouse Click enabled: " & $g_bAndroidAdbClick)
+		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_bAndroidAdbClickDrag) Or $bLogChangesOnly = False Then SetDebugLog("Android ADB Click Drag enabled: " & $g_bAndroidAdbClickDrag)
+		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], ($g_bChkBackgroundMode = True ? "enabled" : "disabled")) Or $bLogChangesOnly = False Then SetDebugLog("Bot Background Mode for screen capture: " & ($g_bChkBackgroundMode = True ? "enabled" : "disabled"))
+		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_bNoFocusTampering) Or $bLogChangesOnly = False Then SetDebugLog("No Focus Tampering: " & $g_bNoFocusTampering)
 		;$g_hAndroidWindow = WinGetHandle($g_sAndroidTitle) ;Handle for Android window
 		WinGetAndroidHandle() ; Set $g_hAndroidWindow and $g_sAndroidTitle for Android window
 		InitAndroidTimeLag()
@@ -1874,7 +1850,7 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 					If $path = "" Then ContinueLoop
 					If StringRight($path, 1) <> "/" Then $path &= "/"
 					$s = AndroidAdbSendShellCommand("set result=$(ls '" & $path & $dummyFile & "' >&2)", 10000, $wasRunState, False) ; use timeout of 10 Seconds
-					If StringInStr($s, $dummyFile) > 0 And StringInStr($s, "No such file or directory") = 0 And StringInStr($s, "syntax error:") = 0 Then
+					If StringInStr($s, $dummyFile) > 0 And StringInStr($s, $dummyFile & ":") = 0 And StringInStr($s, "No such file or directory") = 0 And StringInStr($s, "syntax error") = 0 And StringInStr($s, "Permission denied") = 0 Then
 						$pathFound = True
 						$g_sAndroidPicturesPath = $path
 						SetDebugLog("Using " & $g_sAndroidPicturesPath & " for Android shared folder")
@@ -1950,6 +1926,15 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 			; forward minitouch port
 			Local $process_killed
 			Local $output = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " forward tcp:" & $g_bAndroidAdbMinitouchPort & " localabstract:minitouch", $process_killed)
+			If StringInStr($output, "cannot bind") > 0 Then
+				; cannot bind TCP port, not available "anymore"
+				SetLog("Initialize Android ADB ports...")
+				; try again
+				AndroidAdbTerminateShellInstance()
+				InitAndroidAdbPorts(True)
+				_AndroidAdbLaunchShellInstance($wasRunState, $rebootAndroidIfNeccessary)
+				Return
+			EndIf
 			; connect socket
 			$g_bAndroidAdbMinitouchSocket = TCPConnect("127.0.0.1", $g_bAndroidAdbMinitouchPort)
 		EndIf
@@ -1976,7 +1961,7 @@ Func AndroidAdbTerminateShellInstance()
 		If ClosePipe($g_iAndroidAdbProcess[0], $g_iAndroidAdbProcess[1], $g_iAndroidAdbProcess[2], $g_iAndroidAdbProcess[3], $g_iAndroidAdbProcess[4]) = 1 Then
 			SetDebugLog("ADB shell terminated, PID = " & $g_iAndroidAdbProcess[0])
 		Else
-			SetDebugLog("ADB shell not terminated, PID = " & $g_iAndroidAdbProcess[0], $COLOR_ERROR)
+			SetDebugLog("ADB shell already terminated, PID = " & $g_iAndroidAdbProcess[0])
 		EndIf
 		$g_iAndroidAdbProcess[0] = 0
 	EndIf
@@ -2356,6 +2341,33 @@ Func __GDIPlus_BitmapCreateFromMemory($dImage, $bHBITMAP = False)
 	Return $hBitmap
 EndFunc   ;==>__GDIPlus_BitmapCreateFromMemory
 
+#samm0d - Start
+Func CheckScreenDim(ByRef $iLeft, ByRef $iTop, ByRef $iWidth, ByRef $iHeight)
+	; Just For Logs
+	Local $i_OldLeft = $iLeft, $i_OldTop = $iTop, $i_OldWidth = $iWidth, $i_OldHeight = $iHeight
+	; First Check
+	$iLeft = $iLeft < 0 ? 0 : $iLeft
+	$iTop = $iTop < 0 ? 0 : $iTop
+	$iWidth = $iWidth < 1 ? 1 : $iWidth
+	$iHeight = $iHeight < 1 ? 1 : $iHeight
+
+	; Second Check If higher than WIDTH or HEIGHT
+	$iLeft = $iLeft > $g_iGAME_WIDTH - 1 ? $g_iGAME_WIDTH - 1 : $iLeft
+	$iTop = $iTop > $g_iGAME_HEIGHT - 1 ? $g_iGAME_HEIGHT - 1 : $iTop
+	$iWidth = $iWidth > $g_iGAME_WIDTH ? $g_iGAME_WIDTH : $iWidth
+	$iHeight = $iHeight > $g_iGAME_HEIGHT ? $g_iGAME_HEIGHT : $iHeight
+
+	; Third Check
+	If $iLeft + $iWidth > $g_iGAME_WIDTH Then $iWidth = $g_iGAME_WIDTH - $iLeft
+	If $iTop + $iHeight > $g_iGAME_HEIGHT Then $iHeight = $g_iGAME_HEIGHT - $iTop
+	; Check If Some Cord Was Fixed Let's Show Some Debug Error So Dev Can Check
+	If ($i_OldLeft <> $iLeft Or $i_OldTop <> $iTop Or $i_OldWidth <> $iWidth Or $i_OldHeight <> $iHeight) Then
+		If $g_bDebugSetlog Then SetDebugLog("CheckScreenDim iLeft:" & $iLeft & " Or iTop:" & $iTop & " Or iWidth:" & $iWidth & " Or iHeight:" & $iHeight & " Is Outside 860x644 Cords, Please FIX Cords", $COLOR_ERROR)
+	EndIf
+
+EndFunc   ;==>CheckScreenDim
+#samm0d - End
+
 Func AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 	Local $wasAllowed = $g_bTogglePauseAllowed
 	$g_bTogglePauseAllowed = False
@@ -2365,17 +2377,8 @@ Func AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 EndFunc   ;==>AndroidScreencap
 
 Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
-	; ensure dimensions are not exceeding buffer, DLL might crash with exception code c0000005
-	If $iWidth > $g_iGAME_WIDTH Then $iWidth = $g_iGAME_WIDTH
-	If $iHeight > $g_iGAME_HEIGHT Then $iHeight = $g_iGAME_HEIGHT
-	If $iWidth < 1 Then $iWidth = 1
-	If $iHeight < 1 Then $iHeight = 1
-	If $iLeft > $g_iGAME_WIDTH - 1 Then $iLeft = $g_iGAME_WIDTH - 1
-	If $iTop > $g_iGAME_HEIGHT - 1 Then $iTop = $g_iGAME_HEIGHT - 1
-	If $iLeft < 0 Then $iLeft = 0
-	If $iTop < 0 Then $iTop = 0
-	If $iLeft + $iWidth > $g_iGAME_WIDTH Then $iWidth = $g_iGAME_WIDTH - $iLeft
-	If $iTop + $iHeight > $g_iGAME_HEIGHT Then $iHeight = $g_iGAME_HEIGHT - $iTop
+	;Just To Insure Requested Cords Not Outside In 860x644 to avoid exception
+	CheckScreenDim($iLeft, $iTop, $iWidth, $iHeight)
 	Local $startTimer = __TimerInit()
 	Local $hostPath = $g_sAndroidPicturesHostPath & $g_sAndroidPicturesHostFolder
 	Local $androidPath = $g_sAndroidPicturesPath & StringReplace($g_sAndroidPicturesHostFolder, "\", "/")
@@ -2494,9 +2497,7 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 					EndIf
 				WEnd
 				$g_iAndroidAdbScreencapWidth = DllStructGetData($tHeader, "w")
-				If $g_iAndroidAdbScreencapWidth > $g_iGAME_WIDTH Then $g_iAndroidAdbScreencapWidth = $g_iGAME_WIDTH
 				$g_iAndroidAdbScreencapHeight = DllStructGetData($tHeader, "h")
-				If $g_iAndroidAdbScreencapHeight > $g_iGAME_HEIGHT Then $g_iAndroidAdbScreencapHeight = $g_iGAME_HEIGHT
 				$iF = DllStructGetData($tHeader, "f")
 				$hTimer = __TimerInit()
 				If $iSize - $iHeaderSize < $iDataSize Then $iDataSize = $iSize - $iHeaderSize
@@ -2731,16 +2732,21 @@ Func AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default)
 	AndroidAdbLaunchShellInstance($wasRunState)
 	If $g_bAndroidAdbMinitouchSocket < 1 Then
 		SetLog("Minitouch not available", $COLOR_ERROR)
-		Return SetError(1, 0)
+		Return SetError(1, 0, 0)
 	EndIf
 
 	TCPRecv($g_bAndroidAdbMinitouchSocket, 256, 1)
 	Local $recv_state = [@error, @extended]
 	Local $bytes = TCPSend($g_bAndroidAdbMinitouchSocket, @LF)
 	Local $send_state = [@error, $bytes]
-	If $recv_state[0] Or $send_state[0] Or $send_state[1] <> 1 Then
-		SetLog("Cannot send minitouch data to " & $g_sAndroidEmulator & ", received " & $recv_state[1] & ", send " & $send_state[1], $COLOR_ERROR)
-		Return SetError(1, 0)
+	If ($recv_state[0] Or $send_state[0] Or $send_state[1] <> 1) Then
+		If $wasRunState Then
+			SetLog("Cannot send minitouch data to " & $g_sAndroidEmulator & ", received " & $recv_state[1] & ", send " & $send_state[1], $COLOR_ERROR)
+			; restart adb session that hopefully fixes the tcp issues
+			AndroidAdbTerminateShellInstance()
+			Return AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, False)
+		EndIf
+		Return SetError(1, 0, 0)
 	EndIf
 
 	Local $sleepStart = 250
@@ -3208,6 +3214,51 @@ Func _AndroidFastClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect = Tru
 	EndIf
 EndFunc   ;==>_AndroidFastClick
 
+; User for docked mouse touches, $iaAction: 0 = move, 1 = down, 2 = up
+; return bytes sent
+Func Minitouch($x, $y, $iAction = 0, $iDelay = 1)
+	If $g_bAndroidAdbMinitouchSocket < 1 Then Return -1
+
+	Static $x_dn, $y_dn
+	$x = Int($x)
+	$y = Int($y)
+	Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x,$y)")
+
+	Local $iBytes = 0
+	Local $s
+	Local $t = ""
+	Switch $iAction
+		Case 0, 2 ; move or up
+			If $iAction = 0 Or $x_dn <> $x Or $y_dn <> $y Then
+				$s = "m 0 " & $x & " " & $y & " 50" & @LF & "c" & @LF
+				$t &= $s
+				$iBytes += TCPSend($g_bAndroidAdbMinitouchSocket, $s)
+			EndIf
+			If $iAction = 2 Then ; up
+				;$s = "w " & $iDelay & @LF & "u 0 " & @LF & "c" & @LF
+				$s = "u 0 " & @LF & "c" & @LF
+				;For $i = 1 To 9
+				;	$s &= "u " & $i & @LF & "c" & @LF
+				;Next
+				$t &= $s
+				$iBytes += TCPSend($g_bAndroidAdbMinitouchSocket, $s)
+			EndIf
+		Case 1 ; down
+			;$s = "d 0 " & $x & " " & $y & " 50" & @LF & "w " & $iDelay & @LF & "c" & @LF
+			$s = "d 0 " & $x & " " & $y & " 50" & @LF & "c" & @LF
+			$t &= $s
+			$iBytes += TCPSend($g_bAndroidAdbMinitouchSocket, $s)
+			$x_dn = $x
+			$y_dn = $y
+	EndSwitch
+
+	If $g_bDebugAndroid Then
+		SetDebugLog("Minitouch: " & StringReplace($t, @LF, ";"), $COLOR_INFO, True)
+	EndIf
+
+	Return $iBytes
+EndFunc   ;==>Minitouch
+
 Func AndroidMinitouchClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect = True, $iRetryCount = 0)
 	Local $minSleep = $g_iAndroidControlClickDownDelay
 	Local $iDelay = $g_iAndroidControlClickDelay
@@ -3233,8 +3284,6 @@ Func AndroidMinitouchClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect =
 		Return
 	EndIf
 
-	$x = Int($x)
-	$y = Int($y)
 	Local $wasRunState = $g_bRunState
 	Local $hostPath = $g_sAndroidPicturesHostPath & $g_sAndroidPicturesHostFolder
 	Local $androidPath = $g_sAndroidPicturesPath & StringReplace($g_sAndroidPicturesHostFolder, "\", "/")
@@ -3263,11 +3312,25 @@ Func AndroidMinitouchClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect =
 	Local $recv_state = [@error, @extended]
 	Local $bytes = TCPSend($g_bAndroidAdbMinitouchSocket, @LF)
 	Local $send_state = [@error, $bytes]
-	If $recv_state[0] Or $send_state[0] Or $send_state[1] <> 1 Then
+	If ($recv_state[0] Or $send_state[0] Or $send_state[1] <> 1) Then
 		SetLog("Cannot send minitouch data to " & $g_sAndroidEmulator & ", received " & $recv_state[1] & ", send " & $send_state[1], $COLOR_ERROR)
+		If $iRetryCount < 1 Then
+			; restart adb session that hopefully fixes the tcp issues
+			AndroidAdbTerminateShellInstance()
+			Return AndroidMinitouchClick($x, $y, $times, $speed, $checkProblemAffect, $iRetryCount + 1)
+		EndIf
 		Return SetError(1, 0)
 	EndIf
 
+	; consistency check
+	Local $ReleaseClicksCheck = ($x = Default And $y = Default And $g_aiAndroidAdbClicks[0] > 0)
+	If $ReleaseClicks <> $ReleaseClicksCheck Then
+		SetDebugLog("AndroidMinitouchClick: Release clicks condition changed from " & $ReleaseClicks & " to " & $ReleaseClicksCheck)
+		Return AndroidMinitouchClick($x, $y, $times, $speed, $checkProblemAffect, $iRetryCount)
+	EndIf
+
+	$x = Int($x)
+	$y = Int($y)
 	Local $loops = 1
 	Local $remaining = 0
 	Local $adjustSpeed = 0
@@ -3281,7 +3344,6 @@ Func AndroidMinitouchClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect =
 		If $ReleaseClicks = False Then $adjustSpeed = $speed
 		$speed = 0 ; no need for speed now!
 	EndIf
-	Local $recordsNum = 10
 	Local $recordsClicks = ($times < $g_iAndroidAdbClickGroup ? $times : $g_iAndroidAdbClickGroup)
 	If $ReleaseClicks = True Then
 		If $g_bDebugAndroid Or $g_bDebugClick Then SetDebugLog("Release clicks: queue size = " & $g_aiAndroidAdbClicks[0])
@@ -3314,7 +3376,7 @@ Func AndroidMinitouchClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect =
 				Local $BTN_TOUCH_DOWN = True
 				Local $BTN_TOUCH_UP = True
 				If $ReleaseClicks = True Then
-					$Click = $aiAndroidAdbClicks[($i - 1) * $recordsNum + $j + 1] ; fixed Array variable has incorrect number of subscripts
+					$Click = $aiAndroidAdbClicks[($i - 1) * $recordsClicks + $j + 1] ; seen here incorrect number of subscripts error
 					$x = $Click[0]
 					$y = $Click[1]
 					Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x,$y)")
@@ -3735,6 +3797,9 @@ Func GetAndroidProcessPID($sPackage = Default, $bForeground = True, $iRetryCount
 	; u0_a58    4395  580   1135308 187040     14    -6        0      0     ffffffff 00000000    S      com.supercell.clashofclans
 	; u0_a27    2912  142   663800  98656      30    10        0      3     ffffffff b7591617    S      com.tencent.tmgp.supercell.clashofclans
 	; u0_a26    2740  73    1601704 76380      20    0         0      0     ffffffff b7489435    S      com.supercell.clashofclans.guopan
+	;USER      PID   PPID  VSIZE  RSS  PRIO  NICE  RTPRI SCHED  WCHAN            PC  NAME
+	;u0_a54    12560 84    1336996 189660 10    -10   0     0     futex_wait b7725424 S com.supercell.clashofclans
+	;u0_a54    13303 84    1338548 188464 16    -4    0     0     sys_epoll_ b7725424 S com.supercell.clashofclans
 	If AndroidInvalidState() Then Return 0
 	Local $cmd = "set result=$(ps -p|grep """ & $g_sAndroidGamePackage & """ >&2)"
 	Local $output = AndroidAdbSendShellCommand($cmd)
@@ -4296,6 +4361,7 @@ Func PushSharedPrefs($sProfile = $g_sProfileCurrentName, $bCloseGameIfRunning = 
 				SetLog("Cannot create empty folder " & $androidFolder & "/shared_prefs", $COLOR_ERROR)
 			EndIf
 		Else
+			SetDebugLog("ADB command: ls -l /data/data/" & $g_sAndroidGamePackage & "/" & @LF & $cmdOutput)
 			SetLog($g_sAndroidGamePackage & " has no shared_prefs or cannot be accessed, please launch game first", $COLOR_ERROR)
 		EndIf
 	EndIf

@@ -162,7 +162,7 @@ EndFunc   ;==>_SysTrayIconProcesses
 ;
 ; Function Name:    _SysTrayIconIndex($test, $mode = 0, $iWin = 1)
 ; Description:      Get list of all processes id"s that have systray icon
-; Parameter(s):     $test       - process name / window title text / process PID
+; Parameter(s):     $bTestRun       - process name / window title text / process PID
 ;                   $mode
 ;                   | 0         - get index by process name (default)
 ;                   | 1         - get index by window title
@@ -190,7 +190,7 @@ Func _SysTrayIconIndex($test, $mode = 0, $iWin = 1)
 	EndSwitch
 	If Not IsArray($compare) Then Return -1
 	For $i = 0 To UBound($compare) - 1
-		If $compare[$i] = $test Then
+		If $compare[$i] = $bTestRun Then
 			$ret = $i
 			ExitLoop
 		EndIf

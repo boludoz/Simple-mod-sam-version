@@ -274,8 +274,9 @@ Func FriendlyChallenge()
 
 	ClickP($aAway, 1, 0, "#0167") ;Click Away
 	Setlog("Checking Friendly Challenge at Clan Chat", $COLOR_INFO)
-
+	
 	ForceCaptureRegion()
+	
 	If _CheckColorPixel($aButtonClanWindowOpen[4], $aButtonClanWindowOpen[5], $aButtonClanWindowOpen[6], $aButtonClanWindowOpen[7], $g_bCapturePixel, "aButtonClanWindowOpen") Then
 		Click($aButtonClanWindowOpen[0], $aButtonClanWindowOpen[1], 1, 0, "#0168")
 		If _Wait4Pixel($aButtonClanWindowClose[4], $aButtonClanWindowClose[5], $aButtonClanWindowClose[6], $aButtonClanWindowClose[7], 1500) = False Then
@@ -284,9 +285,10 @@ Func FriendlyChallenge()
 			Return False
 		EndIf
 	EndIf
-
+	
 	Local $iLoopCount = 0
 	Local $iCount = 0
+	
 	While 1
 		;If Clan tab is selected.
 		ForceCaptureRegion()
@@ -308,176 +310,42 @@ Func FriendlyChallenge()
 		EndIf
 		If _Sleep($DELAYDONATECC1) Then Return ; delay Allow 15x
 	WEnd
-
-	Local $bDoFriendlyChallenge = True
-	Local $iBaseForShare = $aBaseForShare[Random(0,UBound($aBaseForShare)-1,1)]
-
-	If $ichkOnlyOnRequest = 1 Then
-		$bDoFriendlyChallenge = False
-		ForceCaptureRegion()
-		_CaptureRegion2(260,85,272,624)
-		Local $aLastResult[1][2]
-		Local $sDirectory = $g_sSamM0dImageLocation & "\Chat\"
-		Local $returnProps="objectpoints"
-		Local $aCoor
-		Local $aPropsValues
-		Local $aCoorXY
-		Local $result
-		Local $sReturn = ""
-
-		Local $iMax = 0
-		Local $jMax = 0
-		Local $i, $j, $k
-		Local $ClanString
-
-		Local $hHBitmapDivider = GetHHBitmapArea($g_hHBitmap2,0,0,10,539)
-
-		Local $result = findMultiImage($hHBitmapDivider, $sDirectory ,"FV" ,"FV", 0, 0, 0 , $returnProps)
-		If $hHBitmapDivider <> 0 Then GdiDeleteHBitmap($hHBitmapDivider)
-
-		$iCount = 0
-		If IsArray($result) then
-			$iMax = UBound($result) -1
-			For $i = 0 To $iMax
-				$aPropsValues = $result[$i] ; should be return objectname,objectpoints,objectlevel
-				If UBound($aPropsValues) = 1 then
-					If $g_iSamM0dDebug = 1 Then SetLog("$aPropsValues[0]: " & $aPropsValues[0], $COLOR_DEBUG)
-					$aCoor = StringSplit($aPropsValues[0],"|",$STR_NOCOUNT) ; objectpoints, split by "|" to get multi coor x,y ; same image maybe can detect at different location.
-					If IsArray($aCoor) Then
-						For $j =  0 to UBound($aCoor) - 1
-							$aCoorXY = StringSplit($aCoor[$j],",",$STR_NOCOUNT)
-							ReDim $aLastResult[$iCount + 1][2]
-							$aLastResult[$iCount][0] = Int($aCoorXY[0])
-							$aLastResult[$iCount][1] = Int($aCoorXY[1]) + 82
-							$iCount += 1
-						Next
-					EndIf
-				EndIf
-			Next
-			If $iCount >= 1 Then
-				_ArraySort($aLastResult, 1, 0, 0, 1) ; rearrange order by coor Y
-				$iMax = UBound($aLastResult) -1
-				If $g_iSamM0dDebug = 1 Then SetLog("Total Chat Message: " & $iMax + 1, $COLOR_ERROR)
-				_CaptureRegion2(0,0,287,732)
-				For $i = 0 To $iMax
-					If $g_bChkExtraAlphabets Then
-						; Chat Request using "coc-latin-cyr" xml: Latin + Cyrillic derived alphabets / three paragraphs
-						If $g_iSamM0dDebug = 1 Then Setlog("Using OCR to read Latin and Cyrillic derived alphabets..", $COLOR_ACTION)
-						$ClanString = ""
-						$ClanString = getOcrAndCapture("coc-latin-cyr", 30, $aLastResult[$i][1] + 17, 280, 17, Default, Default, False)
-						If $ClanString = "" Then
-							$ClanString = getOcrAndCapture("coc-latin-cyr", 30, $aLastResult[$i][1] + 31, 280, 17, Default, Default, False)
-						Else
-							$ClanString &= " " & getOcrAndCapture("coc-latin-cyr", 30, $aLastResult[$i][1] + 31, 280, 17, Default, Default, False)
-						EndIf
-						If $ClanString = "" Or $ClanString = " " Then
-							$ClanString = getOcrAndCapture("coc-latin-cyr", 30, $aLastResult[$i][1] + 44, 280, 17, Default, Default, False)
-						Else
-							$ClanString &= " " & getOcrAndCapture("coc-latin-cyr", 30, $aLastResult[$i][1] + 44, 280, 17, Default, Default, False)
-						EndIf
-						If _Sleep($DELAYDONATECC2) Then ExitLoop
-					Else ; default
-						; Chat Request using "coc-latinA" xml: only Latin derived alphabets / three paragraphs
-						If $g_iSamM0dDebug = 1 Then Setlog("Using OCR to read Latin derived alphabets..", $COLOR_ACTION)
-						$ClanString = ""
-						$ClanString = getOcrAndCapture("coc-latinA", 30, $aLastResult[$i][1] + 17, 280, 17, Default, Default, False)
-						If $ClanString = "" Then
-							$ClanString = getOcrAndCapture("coc-latinA", 30, $aLastResult[$i][1] + 31, 280, 17, Default, Default, False)
-						Else
-							$ClanString &= " " & getOcrAndCapture("coc-latinA", 30, $aLastResult[$i][1] + 31, 280, 17, Default, Default, False)
-						EndIf
-						If $ClanString = "" Or $ClanString = " " Then
-							$ClanString = getOcrAndCapture("coc-latinA", 30, $aLastResult[$i][1] + 44, 280, 17, Default, Default, False)
-						Else
-							$ClanString &= " " & getOcrAndCapture("coc-latinA", 30, $aLastResult[$i][1] + 44, 280, 17, Default, Default, False)
-						EndIf
-						If _Sleep($DELAYDONATECC2) Then ExitLoop
-					EndIf
-					; Chat Request using IMGLOC: Chinese alphabet / one paragraph
-					If $g_bChkExtraChinese Then
-						If $g_iSamM0dDebug = 1 Then Setlog("Using OCR to read the Chinese alphabet..", $COLOR_ACTION)
-						If $ClanString = "" Then
-							$ClanString = getOcrAndCapture("chinese-bundle", 30, $aLastResult[$i][1] + 43, 160, 15, Default, True, False)
-						Else
-							$ClanString &= " " & getOcrAndCapture("chinese-bundle", 30, $aLastResult[$i][1] + 43, 160, 15, Default, True, False)
-						EndIf
-						If _Sleep($DELAYDONATECC2) Then ExitLoop
-					EndIf
-					; Chat Request using IMGLOC: Korean alphabet / one paragraph
-					If $g_bChkExtraKorean Then
-						If $g_iSamM0dDebug = 1 Then Setlog("Using OCR to read the Korean alphabet..", $COLOR_ACTION)
-						If $ClanString = "" Then
-							$ClanString = getOcrAndCapture("korean-bundle", 30, $aLastResult[$i][1] + 43, 160, 15, Default, True, False)
-						Else
-							$ClanString &= " " & getOcrAndCapture("korean-bundle", 30, $aLastResult[$i][1] + 43, 160, 15, Default, True, False)
-						EndIf
-						If _Sleep($DELAYDONATECC2) Then ExitLoop
-					EndIf
-					; Chat Request using IMGLOC: Persian alphabet / one paragraph
-					If $g_bChkExtraPersian Then
-						If $g_iSamM0dDebug = 1 Then Setlog("Using OCR to read the Persian alphabet..", $COLOR_ACTION)
-						If $ClanString = "" Then
-							$ClanString = getChatStringPersianMod(30, $aLastResult[$i][1] + 36)
-						Else
-							$ClanString &= " " & getChatStringPersianMod(30, $aLastResult[$i][1] + 36)
-						EndIf
-						If _Sleep($DELAYDONATECC2) Then ExitLoop
-					EndIf
-					If $ichkEnableCustomOCR4CCRequest = 1 Then
-						If $g_iSamM0dDebug = 1 Then Setlog("Using custom OCR to read cc request message..", $COLOR_ACTION)
-						Local $hHBitmapCustomOCR = GetHHBitmapArea($g_hHBitmap2,30, $aLastResult[$i][1] + 43, 190, $aLastResult[$i][1] + 43 + 15)
-						If $ClanString = "" Then
-							$ClanString = getMyOcr($hHBitmapCustomOCR, 30, $aLastResult[$i][1] + 43,160,15,"ccrequest",False,True)
-						Else
-							$ClanString &= " " & getMyOcr($hHBitmapCustomOCR, 30, $aLastResult[$i][1] + 43,160,15,"ccrequest",False,True)
-						EndIf
-
-						If $hHBitmapCustomOCR <> 0 Then GdiDeleteHBitmap($hHBitmapCustomOCR)
-					EndIf
-
-					If $ClanString = "" Or $ClanString = " " Then
-						If $g_iSamM0dDebug = 1 Then SetLog("Unable to read Chat!", $COLOR_ERROR)
-					Else
-						SetLog("Chat: " & $ClanString)
-						Local $asFCKeyword = StringSplit($stxtKeywordForRequest, @CRLF, $STR_ENTIRESPLIT)
-						For $j = 1 To UBound($asFCKeyword) - 1
-							;SetLog("$asFCKeyword[" & $j & "]: " & $asFCKeyword[$j])
-							If StringInStr($ClanString, $asFCKeyword[$j], 2) Then
-								Setlog("Keyword found: " & $asFCKeyword[$j], $COLOR_SUCCESS)
-								$bDoFriendlyChallenge = True
-								Local $ret = StringRegExp($ClanString, '\d+', 1)
-								If IsArray($ret) Then
-									For $k = 0 To UBound($aBaseForShare) - 1
-										If $aBaseForShare[$k] = Int($ret[0] - 1) Then
-											$iBaseForShare = Int($ret[0] - 1)
-											SetLog("User request challenge base: " & $iBaseForShare + 1, $COLOR_INFO)
-											ExitLoop
-										EndIf
-									Next
-								EndIf
-								ExitLoop 2
-							EndIf
-						Next
-					EndIf
-				Next
-			EndIf
-		Else
-			If $g_iSamM0dDebug = 1 Then SetLog("divide not found.", $COLOR_DEBUG)
-		EndIf
-		If $g_hHBitmap2 <> 0 Then GdiDeleteHBitmap($g_hHBitmap2)
-	EndIf
+	
+	Local $bDoFriendlyChallenge = False
+	
+	If $ichkOnlyOnRequest = 1 Then ;1
+		Local $ClanString, $iBaseForShare, $ret
+		
+			If ReadChatIA($ClanString, $stxtKeywordForRequest, False) = True Then ;2
+				$ret = StringRegExp($ClanString, '\d+', 1)
+				$bDoFriendlyChallenge = True
+			
+					If IsArray($ret) Then ;3
+						$iBaseForShare = $aBaseForShare[Random(0,UBound($aBaseForShare)-1,1)]
+				
+							For $k = 0 To UBound($aBaseForShare) - 1
+								If $aBaseForShare[$k] = Int($ret[0] - 1) Then ;4
+									$iBaseForShare = Int($ret[0] - 1)
+									SetLog("User request challenge base: " & $iBaseForShare + 1, $COLOR_INFO)
+								EndIf ;4
+							Next
+					EndIf ;3
+			EndIf ;2
+			Else
+			$bDoFriendlyChallenge = True
+	EndIf ;1
 	
 	Local $bIsBtnStartOk = False
 
 	If $bDoFriendlyChallenge Then
 		SetLog("Prepare for select base: " & $iBaseForShare + 1, $COLOR_INFO)
-		If _Wait4Pixel($aButtonFriendlyChallenge[4], $aButtonFriendlyChallenge[5], $aButtonFriendlyChallenge[6], $aButtonFriendlyChallenge[7], 1500, 150, "$aButtonFriendlyChallenge") Then
+		If _Wait4PixelFake($aButtonFriendlyChallenge[4], $aButtonFriendlyChallenge[5], $aButtonFriendlyChallenge[6], $aButtonFriendlyChallenge[7], 1500, 150, "$aButtonFriendlyChallenge") Then
 			Click($aButtonFriendlyChallenge[4], $aButtonFriendlyChallenge[5], 1, 0, "#BtnFC")
-			If _Wait4Pixel($aButtonFCChangeLayout[4], $aButtonFCChangeLayout[5], $aButtonFCChangeLayout[6], $aButtonFCChangeLayout[7], 1500, 150, "$aButtonFCChangeLayout") Then
+			If _Wait4PixelFake($aButtonFCChangeLayout[4], $aButtonFCChangeLayout[5], $aButtonFCChangeLayout[6], $aButtonFCChangeLayout[7], 1500, 150, "$aButtonFCChangeLayout") Then
 				Click($aButtonFCChangeLayout[4], $aButtonFCChangeLayout[5], 1, 0, "#BtnFCCL")
-				If _Wait4Pixel($aButtonFCBack[4], $aButtonFCBack[5], $aButtonFCBack[6], $aButtonFCBack[7], 1500, 150, "$aButtonFCBack") Then
+				If _Wait4PixelFake($aButtonFCBack[4], $aButtonFCBack[5], $aButtonFCBack[6], $aButtonFCBack[7], 1500, 150, "$aButtonFCBack") Then
 					If CheckNeedSwipeFriendlyChallengeBase($iBaseForShare) Then
-						If _Wait4Pixel($aButtonFCStart[4], $aButtonFCStart[5], $aButtonFCStart[6], $aButtonFCStart[7], 1500, 150, "$aButtonFCStart") Then
+						If _Wait4PixelFake($aButtonFCStart[4], $aButtonFCStart[5], $aButtonFCStart[6], $aButtonFCStart[7], 1500, 150, "$aButtonFCStart") Then
 							If $stxtChallengeText <> "" Then
 								Click(Random(440,620,1),Random(165,185,1))
 								If _Sleep(100) Then Return False
@@ -492,7 +360,7 @@ Func FriendlyChallenge()
 								EndIf
 								If _Sleep(200) Then Return
 							EndIf
-							If _Wait4Pixel($aButtonFCStart[4], $aButtonFCStart[5], $aButtonFCStart[6], $aButtonFCStart[7], 1500, 200, "$aButtonFCStart") Then $bIsBtnStartOk = True
+							If _Wait4PixelFake($aButtonFCStart[4], $aButtonFCStart[5], $aButtonFCStart[6], $aButtonFCStart[7], 1500, 200, "$aButtonFCStart") Then $bIsBtnStartOk = True
 							If _Sleep(200) Then Return
 
 							If $bIsBtnStartOk = True Then
@@ -515,6 +383,11 @@ Func FriendlyChallenge()
 	ClostChatTab()
 	Return False
 EndFunc
+
+Func _Wait4PixelFake($x, $y, $sColor, $iColorVariation, $iWait = 1000, $sMsglog = Default, $iDelay = 100)
+	If _Sleep($iWait) Then Return False
+	Return True
+EndFunc 
 
 Func CheckNeedSwipeFriendlyChallengeBase($iBaseSlot)
 	If _Sleep(100) Then Return False
@@ -581,44 +454,3 @@ Func ClostChatTab()
 	If _Sleep(100) Then Return
 EndFunc
 
-Func getChatStringPersianMod($x_start, $y_start, $bConvert = True) ; -> Get string chat request - Persian - "DonateCC.au3"
-	Local $bUseOcrImgLoc = True
-	Local $OCRString = getOcrAndCapture("persian-bundle", $x_start, $y_start, 240, 21, Default, $bUseOcrImgLoc, False)
-	If $bConvert = True Then
-		$OCRString = StringReverse($OCRString)
-		$OCRString = StringReplace($OCRString, "A", "?")
-		$OCRString = StringReplace($OCRString, "B", "?")
-		$OCRString = StringReplace($OCRString, "C", "?")
-		$OCRString = StringReplace($OCRString, "D", "?")
-		$OCRString = StringReplace($OCRString, "F", "?")
-		$OCRString = StringReplace($OCRString, "G", "?")
-		$OCRString = StringReplace($OCRString, "J", "?")
-		$OCRString = StringReplace($OCRString, "H", "?")
-		$OCRString = StringReplace($OCRString, "R", "?")
-		$OCRString = StringReplace($OCRString, "K", "?")
-		$OCRString = StringReplace($OCRString, "K", "?")
-		$OCRString = StringReplace($OCRString, "M", "?")
-		$OCRString = StringReplace($OCRString, "N", "?")
-		$OCRString = StringReplace($OCRString, "P", "?")
-		$OCRString = StringReplace($OCRString, "S", "?")
-		$OCRString = StringReplace($OCRString, "T", "?")
-		$OCRString = StringReplace($OCRString, "V", "?")
-		$OCRString = StringReplace($OCRString, "Y", "?")
-		$OCRString = StringReplace($OCRString, "L", "?")
-		$OCRString = StringReplace($OCRString, "Z", "?")
-		$OCRString = StringReplace($OCRString, "X", "?")
-		$OCRString = StringReplace($OCRString, "Q", "?")
-		$OCRString = StringReplace($OCRString, ",", ",")
-		$OCRString = StringReplace($OCRString, "0", " ")
-		$OCRString = StringReplace($OCRString, "1", ".")
-		$OCRString = StringReplace($OCRString, "22", "?")
-		$OCRString = StringReplace($OCRString, "44", "?")
-		$OCRString = StringReplace($OCRString, "55", "?")
-		$OCRString = StringReplace($OCRString, "66", "?")
-		$OCRString = StringReplace($OCRString, "77", "?")
-		$OCRString = StringReplace($OCRString, "88", "??")
-		$OCRString = StringReplace($OCRString, "99", "?")
-		$OCRString = StringStripWS($OCRString, 1 + 2)
-	EndIf
-	Return $OCRString
-EndFunc   ;==>getChatStringPersian

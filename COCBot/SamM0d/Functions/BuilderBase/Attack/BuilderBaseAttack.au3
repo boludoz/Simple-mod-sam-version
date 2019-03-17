@@ -25,7 +25,7 @@ Func TestBuilderBaseAttack()
 	Setlog("** TestBuilderBaseAttack END**", $COLOR_DEBUG)
 EndFunc   ;==>TestBuilderBaseAttack
 
-Func BuilderBaseAttack($Test = False)
+Func BuilderBaseAttack($bTestRun = False)
 
 	If Not $g_bRunState Then Return
 
@@ -70,8 +70,8 @@ Func BuilderBaseAttack($Test = False)
 	Local $HeroStatus = HeroStatus()
 
 
-	If $Test Then $IsToDropTrophies = True
-	$IsReaddy = True
+	If $bTestRun Then $IsToDropTrophies = True
+
 	; User LOG
 	SetLog(" - Are you ready to Battle? " & $IsReaddy, $COLOR_INFO)
 	SetLog(" - Is To Drop Trophies? " & $IsToDropTrophies, $COLOR_INFO)
@@ -100,7 +100,7 @@ Func BuilderBaseAttack($Test = False)
 			If Not $g_bRunState Then Return
 
 			; Start the Attack realing one troop and surrender
-			If Not $Test Then BuilderBaseAttackToDrop($AvailableTroops)
+			If Not $bTestRun Then BuilderBaseAttackToDrop($AvailableTroops)
 
 			; Attack Report Window
 			BuilderBaseAttackReport()
@@ -334,8 +334,8 @@ Func BuilderBaseAttackToDrop($AvailableTroops)
 	Next
 
 	; Get the Surrender Window [Cancel] [Ok]
-	Local $CancelBtn = [350, 445] ; RC Done
-	Local $OKbtn = [520, 445] ; RC Done
+	Local $CancelBtn = [350, 445] ; DESRC Done
+	Local $OKbtn = [520, 445] ; DESRC Done
 	For $i = 0 To 10
 		If Not $g_bRunState Then Return
 		; [Cancel] = 350 , 445 : DB4E1D
@@ -463,10 +463,10 @@ Func BuilderBaseAttackReport()
 	; Get the LOOT :
 	Local $gain[3]
 	; To get trophies getOcrOverAllDamage(493, 480 + $g_iMidOffsetYNew)
-	$gain[$eLootTrophyBB] = Number(getOcrOverAllDamage(493, 480))
-	$gain[$eLootGoldBB] = Number(getTrophyVillageSearch(150, 483))
-	$gain[$eLootElixirBB] = Number(getTrophyVillageSearch(310, 483))
-	Local $iLastDamage = Number(_getTroopCountBig(222, 304))
+	$gain[$eLootTrophyBB] = Int(getOcrOverAllDamage(493, 480))
+	$gain[$eLootGoldBB] = Int(getTrophyVillageSearch(150, 483))
+	$gain[$eLootElixirBB] = Int(getTrophyVillageSearch(310, 483))
+	Local $iLastDamage = Int(_getTroopCountBig(222, 304))
 	If $iLastDamage > $g_iLastDamage Then $g_iLastDamage = $iLastDamage
 
 	If StringInStr($ResultName, "Victory") > 0 Then
