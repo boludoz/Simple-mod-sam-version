@@ -239,8 +239,8 @@ Func CreateBottomPanel()
 	   GUICtrlSetState(-1, $GUI_HIDE)
 	   $g_hLblResultRuntimeNow = GUICtrlCreateLabel("00:00:00", $x + 13, $y - 2, 43, 15, $SS_RIGHT)
 	   GUICtrlSetState(-1, $GUI_HIDE)
-	   ;$g_hPicResultRuntimeNow = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnHourGlass, $x +57, $y - 4, 16, 16)
-	   ;GUICtrlSetState(-1, $GUI_HIDE)
+	   $g_hPicResultRuntimeNow = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnHourGlass, $x +57, $y - 4, 16, 16)
+	   GUICtrlSetState(-1, $GUI_HIDE)
 
 	   ;builders/attacked
 	   $g_hLblResultBuilderNow = GUICtrlCreateLabel("", $x + 13, $y + 18, 43, 15, $SS_RIGHT)
@@ -251,16 +251,16 @@ Func CreateBottomPanel()
 		   GUICtrlSetState(-1, $GUI_HIDE)
 	   $g_hLblResultAttackedHourNow = GUICtrlCreateLabel("0", $x + 13, $y + 18, 43, 15, $SS_RIGHT)
 	   GUICtrlSetState(-1, $GUI_HIDE)
-	  ; $g_hPicResultAttackedHourNow = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBldgTarget, $x +59, $y + 16, 16, 16)
-	  ; GUICtrlSetState(-1, $GUI_HIDE)
+	   $g_hPicResultAttackedHourNow = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBldgTarget, $x +59, $y + 16, 16, 16)
+	   GUICtrlSetState(-1, $GUI_HIDE)
 
 	   ;gems/skipped
 	   $g_hLblResultGemNow = GUICtrlCreateLabel("", $x + 13, $y + 38, 43, 15, $SS_RIGHT)
 	   $g_hPicResultGemNow = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnGem, $x + 59, $y + 36, 16, 16)
 	   $g_hLblResultSkippedHourNow = GUICtrlCreateLabel("0", $x + 13, $y + 38, 43, 15, $SS_RIGHT)
 	   GUICtrlSetState(-1, $GUI_HIDE)
-	   ;$g_hPicResultSkippedHourNow = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnBldgX, $x + 59, $y + 36, 16, 16)
-	   ;GUICtrlSetState(-1, $GUI_HIDE)
+	   $g_hPicResultSkippedHourNow = GUICtrlCreateIcon ($g_sLibIconPath, $eIcnBldgX, $x + 59, $y + 36, 16, 16)
+	   GUICtrlSetState(-1, $GUI_HIDE)
 
 	   $x = 335
 	   $g_hLblVillageReportTemp = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Bottom", "LblVillageReportTemp_01", "Village Report") & @CRLF & GetTranslatedFileIni("MBR GUI Design Bottom", "LblVillageReportTemp_02", "will appear here") & @CRLF & GetTranslatedFileIni("MBR GUI Design Bottom", "LblVillageReportTemp_03", "on first run."), $x , $y + 5, 80, 45, BITOR($SS_CENTER, $BS_MULTILINE))

@@ -15,17 +15,17 @@
 ; ===============================================================================================================================
 
 Func checkMainScreen($bSetLog = Default, $bBuilderBase = Default) ;Checks if in main screen
-	If $g_bChkPlayBBOnly = True And IsOnBuilderBaseEz() Then 
-		If $bSetLog Then
-			SetLog("Builder Base : Main Screen located", $COLOR_SUCCESS)
-		Else
-			SetLog("Builder Base : Main Screen not located", $COLOR_ERROR)
-		EndIf
-
-		ZoomOut()
-		ClickP($aAway, 1, 0, "#0000")
-		Return True
-	EndIf
+	;If $g_bChkPlayBBOnly = True And IsOnBuilderBaseEz() Then 
+	;	If $bSetLog Then
+	;		SetLog("Builder Base : Main Screen located", $COLOR_SUCCESS)
+	;	Else
+	;		SetLog("Builder Base : Main Screen not located", $COLOR_ERROR)
+	;	EndIf
+    ;
+	;	ZoomOut()
+	;	ClickP($aAway, 1, 0, "#0000")
+	;	Return True
+	;EndIf
 	FuncEnter(checkMainScreen)
 	Return FuncReturn(_checkMainScreen($bSetLog, $bBuilderBase))
 EndFunc   ;==>checkMainScreen
@@ -111,12 +111,12 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default) ;Checks if in
 		EndIf
 	EndIf
 	
-	If $g_bChkPlayBBOnly = True And Not IsOnBuilderBaseEz() Then 
-		If SwitchBetweenBases() Then
-			ClickP($aAway, 1, 0, "#0000")
-			Return True
-		EndIf
-	EndIf
+	;If $g_bChkPlayBBOnly = True And Not IsOnBuilderBaseEz() Then 
+	;	If SwitchBetweenBases() Then
+	;		ClickP($aAway, 1, 0, "#0000")
+	;		Return True
+	;	EndIf
+	;EndIf
 
 	;After checkscreen dispose windows
 	DisposeWindows()

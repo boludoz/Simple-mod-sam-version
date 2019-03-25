@@ -96,7 +96,7 @@ Func AttackTHParseCSV($test = False)
 
 						AttackTHGrid(Eval("e" & $command))
 
-					Case StringInStr(StringUpper("-HSpell-RSpell-LSpell-JSpell-FSpell-PSpell-ESpell-HaSpell"), "-" & $command & "-") > 0
+					Case StringInStr(StringUpper("-HSpell-RSpell-LSpell-JSpell-FSpell-PSpell-ESpell-HaSpell-BtSpell"), "-" & $command & "-") > 0
 						If $g_bDebugSetlog Then SetDebugLog(">> SpellTHGrid($e" & $command & ")")
 
 						SpellTHGrid(Eval("e" & $command))

@@ -220,17 +220,17 @@ Func SmartFarmDetection($txtBuildings = "Mines")
 	Switch $txtBuildings
 		Case "Mines"
 			If $g_iDetectedImageType = 1 Then
-				$sdirectory = @ScriptDir & "\imgxml\Storages\Mines_Snow"
-			Else
 				$sdirectory = @ScriptDir & "\imgxml\Storages\GoldMines"
+			Else
+				$sdirectory = @ScriptDir & "\imgxml\Storages\Mines_Snow"
 			EndIf
 			$iMaxReturnPoints = 7
 			$iMaxLevel = 13
 		Case "Collectors"
 			If $g_iDetectedImageType = 1 Then
-				$sdirectory = @ScriptDir & "\imgxml\Storages\Collectors_Snow"
-			Else
 				$sdirectory = @ScriptDir & "\imgxml\Storages\Collectors"
+				Else
+				$sdirectory = @ScriptDir & "\imgxml\Storages\Collectors_Snow"
 			EndIf
 			$iMaxReturnPoints = 7
 			$iMaxLevel = 13

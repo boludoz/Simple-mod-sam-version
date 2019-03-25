@@ -69,7 +69,6 @@ EndFunc   ;==>CloseCoC
 ; ===============================================================================================================================
 
 Func OpenCoC()
-; samm0d bld
 	FuncEnter(OpenCoC)
 	ResumeAndroid()
 	If Not $g_bRunState Then Return FuncReturn()
@@ -79,30 +78,20 @@ Func OpenCoC()
 	;AndroidHomeButton()
 	If _Sleep($DELAYCLOSEOPEN500) Then Return FuncReturn()
 	If Not $g_bRunState Then Return FuncReturn()
-    If Not StartAndroidCoC() Then Return FuncReturn()
-    While _CheckPixel($aIsMain, True) = False ; Wait for MainScreen
-		Sleep(10) ; CPU Strees out
-        $iCount += 1
-        If checkObstacles() Then $iCount += 1
-		If Mod($iCount, 50) = 0 Then 
-			StartAndroidCoC()
-        	SetLog("Starting game I try : x & $iCount", $COLOR_INFO)
-			If $iCount > 250 Then
-				SetLog("Reboot " & $g_sAndroidEmulator & ", could not open the game..", $COLOR_ERROR)
-				RebootAndroid()
-				WinGetAndroidHandle()
-				If _Sleep(250) Then Return FuncReturn()
-				If Not StartAndroidCoC() Then Return FuncReturn()
-				ExitLoop
-			EndIf
-		EndIf
-        If Not $g_bRunState Then ExitLoop
-    WEnd
+	If Not StartAndroidCoC() Then Return FuncReturn()
+	While _CheckPixel($aIsMain, True) = False ; Wait for MainScreen
+		$iCount += 1
+		If _Sleep($DELAYCLOSEOPEN500) Then Return FuncReturn()
+		If checkObstacles() Then $iCount += 1
+		If $iCount > 250 Then ExitLoop ; samm0d bld
+		If Not $g_bRunState Then ExitLoop
+	    Sleep(100) ; CPU Strees out - samm0d bld
+	WEnd
+	; samm0d bld
     ; Let's Rearm and check tombs
     $g_abNotNeedAllTime[0] = True
     $g_abNotNeedAllTime[1] = True
-    FuncReturn()
-;-------------
+	FuncReturn()
 EndFunc   ;==>OpenCoC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

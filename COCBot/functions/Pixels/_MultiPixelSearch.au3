@@ -26,8 +26,8 @@
 ; rotate y first, x second: search in columns
 Func _MultiPixelSearch($iLeft, $iTop, $iRight, $iBottom, $xSkip, $ySkip, $firstColor, $offColor, $iColorVariation)
 ; Reset global if error
-$g_iMultiPixelOffSet[0] = Null
-$g_iMultiPixelOffSet[1] = Null
+$g_iMultiPixelOffSet[0] = Null ; Samm0d
+$g_iMultiPixelOffSet[1] = Null ; Samm0d
 
 	_CaptureRegion($iLeft, $iTop, $iRight, $iBottom)
 	Local $offColorVariation = UBound($offColor, 2) > 3
@@ -57,7 +57,7 @@ $g_iMultiPixelOffSet[1] = Null
 				If $allchecked Then
 					$g_iMultiPixelOffSet[0] = $iLeft + $x
 					$g_iMultiPixelOffSet[1] = $iTop + $y
-					Return $g_iMultiPixelOffSet
+					Return $g_iMultiPixelOffSet ; Samm0d
 				EndIf
 			EndIf
 		Next

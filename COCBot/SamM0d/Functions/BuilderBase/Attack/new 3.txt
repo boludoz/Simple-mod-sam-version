@@ -183,7 +183,6 @@ Func BuilderBaseSelectCorrectScript(ByRef $AvailableTroops)
 		;Setlog("Attack using the " & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & " script.", $COLOR_INFO)
 		;Return
 		Else
-
 		; Random script , but not the last
 		For $i = 0 To 10
 			$g_iBuilderBaseScript = Random(0, 2, 1)
@@ -192,9 +191,8 @@ Func BuilderBaseSelectCorrectScript(ByRef $AvailableTroops)
 				ExitLoop
 			EndIf
 		Next
-
 	EndIf
-
+	
 	Local $aCamps[0]
 
 	; Move backwards through the array deleting the blanks
@@ -218,7 +216,13 @@ Func BuilderBaseSelectCorrectScript(ByRef $AvailableTroops)
 	Local $aArmyCampSelected[6] = [$g_iCmbBBArmy1, $g_iCmbBBArmy2, $g_iCmbBBArmy3, $g_iCmbBBArmy4, $g_iCmbBBArmy5, $g_iCmbBBArmy6]
 	Local $bCantSwitch = True
 	
-	If ArmyCampSelectedNames($g_iCmbBBArmy1) = "EmptyCamp" Then $bCantSwitch = False
+	$aCamps[0] = ArmyCampSelectedNames($g_iCmbBBArmy1)
+	
+	If $aCamps[0] = "EmptyCamp" Then 
+		$bCantSwitch = False
+		Else
+		ReDim $aCamps[6]
+	EndIf
 
 	#Switch Troops - Start
 	If Not BitOr($g_bChkBBRandomAttack, $bCantSwitch) Then
@@ -247,15 +251,14 @@ Func BuilderBaseSelectCorrectScript(ByRef $AvailableTroops)
 				EndIf
 			Next
 		EndIf
+		
 	#Switch Troops 
 	Else
 
 	For $iCampsTroop = 0 To UBound($aArmyCampSelected) - 1
-		ReDim $aCamps[UBound($aCamps) + 1]
 		$aCamps[$iCampsTroop] = ArmyCampSelectedNames($iCampsTroop)
-		If $aCamps[$iCampsTroop] = "EmptyCamp" And UBound($aCamps) <= 1 Then 
-			$aCamps[$iCampsTroop] = $aCamps[UBound($aCamps) -1]
-		EndIf
+		If $aCamps[$iCampsTroop] = "EmptyCamp" And $aCamps[$iCampsTroop-1] <= 0 Then 
+			$aCamps[$iCampsTroop] = $aCamps[$iCampsTroop -1]
 	Next
 
 	EndIf

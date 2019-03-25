@@ -460,7 +460,7 @@ $yStart = 10
 
 Local $x = $xStart, $y = $yStart
 
-	$chkModTrain = GUICtrlCreateCheckbox(GetTranslatedFileIni("sam m0d", 66, "Enable Custom Train and spell"),$x+10, $y+20)
+	$g_hChkModTrain = GUICtrlCreateCheckbox(GetTranslatedFileIni("sam m0d", 66, "Enable Custom Train and spell"),$x+10, $y+20)
 		_GUICtrlSetTip(-1, "Use Custom Train and Spell replace for official train system.")
 		GUICtrlSetState(-1, $GUI_UNCHECKED)
 		GUICtrlSetOnEvent(-1, "chkCustomTrain")

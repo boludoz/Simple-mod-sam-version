@@ -96,6 +96,12 @@ Global Const $aButtonTrainArmy3[9]              = [750, 583, 800, 602, 735, 586,
 
 Global $aIsOnBuilderBaseGrayed[4] = [359, 9, 0x3B5F72, 6] ; Check the Gold Coin from resources , is a square not round
 
+;Clients
+Global $aTopLeftClient[4] = [1, 1, 0x000000, 0] ; TopLeftClient: Tolerance not needed
+Global $aTopMiddleClient[4] = [475, 1, 0x000000, 0] ; TopMiddleClient: Tolerance not needed
+Global $aTopRightClient[4] = [850, 1, 0x000000, 0] ; TopRightClient: Tolerance not needed
+Global $aBottomRightClient[4] = [850, 675 + $g_iBottomOffsetY, 0x000000, 0] ; BottomRightClient: Tolerance not needed
+
 Func CheckClickMsg(ByRef $x, ByRef $y, ByRef $times, ByRef $speed, ByRef $MsgCode)
 	; return 0, do nothing
 	; return 1, success do randomize and let continue perform click

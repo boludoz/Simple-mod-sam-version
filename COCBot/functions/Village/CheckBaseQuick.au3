@@ -48,7 +48,7 @@ Func CheckBaseQuick($bStopRecursion = False, $sReturnHome = "")
             EndIf
 
             ; samm0d
-        If $ichkModTrain = 0 Then
+        If $g_bChkModTrain = False Then
             DonateCC() ; donate troops
             If _Sleep($DELAYRUNBOT1) Then Return
             checkMainScreen(False) ; required here due to many possible function exits

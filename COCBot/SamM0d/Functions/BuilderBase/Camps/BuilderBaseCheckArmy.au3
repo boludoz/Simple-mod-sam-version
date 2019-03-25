@@ -252,7 +252,8 @@ EndFunc   ;==>ArmyCampSelectedNames
 
 Func DetectTroopsAvailable($log = False)
 
-	Local $aResults = QuickMIS("NxCx", $g_sImgPathTroopsTrain, 37, 240, 820 346, True, False) ; RERC Done
+	Local $aResults = 0
+	$aResults = QuickMIS("NxCx", $g_sImgPathTroopsTrain, 37, 240, 820, 346, True, False) ; RC Done
 
 	If $aResults = 0 Then Return -1
 

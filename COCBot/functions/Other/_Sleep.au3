@@ -15,38 +15,14 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #include-once
-; samm0d 
+; samm0d
 Func _Sleep($iDelay, $iSleep = 0, $CheckRunState = True, $SleepWhenPaused = True)
 	Static $hTimer_SetTime = 0
 	Static $hTimer_PBRemoteControlInterval = 0
-	;Static $hTimer_PBDeleteOldPushesInterval = 0
 	Static $hTimer_EmptyWorkingSetAndroid = 0
 	Static $hTimer_EmptyWorkingSetBot = 0
-	Static $b_Sleep_Active = False
 
 	Local $iBegin = __TimerInit()
-
-	If $b_Sleep_Active = True Then
-		; ups, prevent bad recursion
-		#cs Disabled for now, maybe fix Pause button state and re-activate
-			Local $iRemaining = $iDelay - __TimerDiff($iBegin)
-			While $iRemaining > 0
-			DllCall($g_hLibNTDLL, "dword", "ZwYieldExecution")
-			If $CheckRunState = True And $g_bRunState = False Then
-			Return True
-			EndIf
-			$iRemaining = $iDelay - __TimerDiff($iBegin)
-			If $iRemaining >= $DELAYSLEEP Then
-			_SleepMilli($DELAYSLEEP)
-			Else
-			_SleepMilli($iRemaining)
-			EndIf
-			WEnd
-			Return False
-		#ce
-	EndIf
-
-	$b_Sleep_Active = True
 
 	debugGdiHandle("_Sleep")
 	CheckBotRequests() ; check if bot window should be moved, minized etc.
@@ -71,10 +47,6 @@ Func _Sleep($iDelay, $iSleep = 0, $CheckRunState = True, $SleepWhenPaused = True
 				NotifyRemoteControl()
 				$hTimer_PBRemoteControlInterval = __TimerInit()
 			EndIf
-;~ 			If __TimerDiff($hTimer_PBDeleteOldPushesInterval) >= $g_iPBDeleteOldPushesInterval  Then
-;~ 				PushBulletDeleteOldPushes()
-;~ 				$hTimer_PBDeleteOldPushesInterval = __TimerInit()
-;~ 			EndIf
 
 			; Android & Bot Stuff
 			If (($g_iEmptyWorkingSetAndroid > 0 And __TimerDiff($hTimer_EmptyWorkingSetAndroid) >= $g_iEmptyWorkingSetAndroid * 1000) Or $hTimer_EmptyWorkingSetAndroid = 0) And $g_bRunState And TestCapture() = False Then
@@ -92,7 +64,6 @@ Func _Sleep($iDelay, $iSleep = 0, $CheckRunState = True, $SleepWhenPaused = True
 
 			If BotCloseRequestProcessed() Then
 				BotClose() ; improve responsive bot close
-				$b_Sleep_Active = False
 				; samm0d
 				ReduceBotAndAndroidMemory()
 				Return True
@@ -102,7 +73,6 @@ Func _Sleep($iDelay, $iSleep = 0, $CheckRunState = True, $SleepWhenPaused = True
 
 	If $CheckRunState And Not $g_bRunState Then
 		ResumeAndroid()
-		$b_Sleep_Active = False
 		; samm0d - Reduce mem android and bot by Boludoz
 		ReduceBotAndAndroidMemory()
 		Return True
@@ -112,7 +82,6 @@ Func _Sleep($iDelay, $iSleep = 0, $CheckRunState = True, $SleepWhenPaused = True
 		DllCall($g_hLibNTDLL, "dword", "ZwYieldExecution")
 		If $CheckRunState = True And $g_bRunState = False Then
 			ResumeAndroid()
-			$b_Sleep_Active = False
 			; samm0d - Reduce mem android and bot by Boludoz
 			ReduceBotAndAndroidMemory()
 			Return True
@@ -127,6 +96,7 @@ Func _Sleep($iDelay, $iSleep = 0, $CheckRunState = True, $SleepWhenPaused = True
 					MakeScreenshot($g_sProfileTempPath, "png")
 				EndIf
 			EndIf
+
 			If __TimerDiff($g_hTxtLogTimer) >= $g_iTxtLogTimerTimeout Then
 				If $g_bRunState And Not $g_bSearchMode And Not $g_bBotPaused And ($hTimer_SetTime = 0 Or __TimerDiff($hTimer_SetTime) >= 750) Then
 					SetTime()
@@ -145,7 +115,6 @@ Func _Sleep($iDelay, $iSleep = 0, $CheckRunState = True, $SleepWhenPaused = True
 		EndIf
 		CheckBotRequests() ; check if bot window should be moved
 	WEnd
-	$b_Sleep_Active = False
 	; samm0d - Reduce mem android and bot by Boludoz
 	ReduceBotAndAndroidMemory()
 	Return False
@@ -162,9 +131,8 @@ EndFunc   ;==>_SleepMilli
 
 ; samm0d (deprecated / only compatibility)
 Func randomSleep($SleepTime, $Range = 0)
-	If $g_bRunState = False Then Return
 	If $Range = 0 Then $Range = Round($SleepTime / 5)
 	Local $SleepTimeF = Random($SleepTime - $Range, $SleepTime + $Range, 1)
-	If $g_bDebugClick Then SetLog("Default sleep : " & $SleepTime & " - Random sleep : " & $SleepTimeF, $COLOR_ORANGE)
+	SetDebuggLog("Default sleep : " & $SleepTime & " - Random sleep : " & $SleepTimeF, $COLOR_ORANGE)
 	If _Sleep($SleepTimeF) Then Return
 EndFunc   ;==>randomSleep

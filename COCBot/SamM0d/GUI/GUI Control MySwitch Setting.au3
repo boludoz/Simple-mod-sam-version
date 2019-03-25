@@ -20,6 +20,7 @@ Func chkEnableAcc()
 	SaveEnableAcc()
 	ReadEnableAcc()
 	ApplyEnableAcc()
+	chkLabelTime()
 EndFunc
 
 Func SelectAccForSwitch()

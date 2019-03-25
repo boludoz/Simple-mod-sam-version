@@ -13,19 +13,16 @@
 
 Func BotDetectFirstTime()
 
-    If $g_bIsClientSyncError Then Return ; if restart after OOS, and User stop/start bot, skip this.
+	If $g_bIsClientSyncError = True Then Return ; if restart after OOS, and User stop/start bot, skip this.
 
 	ClickP($aAway, 1, 0, "#0166") ; Click away
 	If _Sleep($DELAYBOTDETECT1) Then Return
 	
-	If $g_bChkPlayBBOnly = True And IsOnBuilderBaseEz() Then 
-		$g_bFirstRun = True
-		Return
-	EndIf
+	If $g_bChkPlayBBOnly = True And IsOnBuilderBaseEz() Then Return
 
     SetLog("Detecting your Buildings", $COLOR_INFO)
 
-    If Not isInsideDiamond($g_aiTownHallPos) Then
+	If (isInsideDiamond($g_aiTownHallPos) = False) Then
 		If $g_bChkPlayBBOnly Then Return
         checkMainScreen()
         Collect(False)
@@ -120,5 +117,4 @@ Func BotDetectFirstTime()
 	If $g_bDebugSetlog Then SetDebugLog("Select TH Level:" & Number($g_iTownHallLevel), $COLOR_DEBUG)
 	GUICtrlSetState($g_ahPicTHLevels[$g_iTownHallLevel], $GUI_SHOW)
 	GUICtrlSetData($g_hLblTHLevels, $g_iTownHallLevel)
-	$g_bFirstRun = True
 EndFunc   ;==>BotDetectFirstTime

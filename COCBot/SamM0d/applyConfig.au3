@@ -22,7 +22,7 @@ GUICtrlSetState($chkBotLogLineLimit, ($ichkBotLogLineLimit = 1 ? $GUI_CHECKED : 
 GUICtrlSetData($txtLogLineLimit, $itxtLogLineLimit)
 chkBotLogLineLimit()
 
-; use Event troop
+; use Skip Build
 GUICtrlSetState($g_hEnableSkipBuild, ($g_bEnableSkipBuild = True ? $GUI_CHECKED : $GUI_UNCHECKED))
 
 ; donate only when troop pre train ready
@@ -127,7 +127,7 @@ chkIncreaseGlobalDelay()
 GUICtrlSetData($txtStickToTrainWindow, $itxtStickToTrainWindow)
 txtStickToTrainWindow()
 
-GUICtrlSetState($chkModTrain, ($ichkModTrain = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
+GUICtrlSetState($g_hChkModTrain, ($g_bChkModTrain = True ? $GUI_CHECKED : $GUI_UNCHECKED))
 GUICtrlSetState($chkForcePreTrainTroops, ($ichkForcePreTrainTroops = 1 ? $GUI_CHECKED : $GUI_UNCHECKED))
 GUICtrlSetData($txtForcePreTrainStrength, $itxtForcePreTrainStrength)
 _GUICtrlComboBox_SetCurSel($cmbTroopSetting,$icmbTroopSetting)

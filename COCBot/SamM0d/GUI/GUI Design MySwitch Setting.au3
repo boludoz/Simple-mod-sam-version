@@ -17,22 +17,22 @@ $cmbSwitchMethod = GUICtrlCreateCombo("", $x + 300 , $y + 15, 100, 18, BitOR($CB
 	GUICtrlSetState(-1, $GUI_SHOW)
 	GUICtrlSetOnEvent(-1, "cmbSwitchMethod")
 
-;$lblActiveAcc = GUICtrlCreateLabel("Current Active Acc:", $x+200, $y+15, 220, 50,$SS_CENTER)
-
+$lblActiveAcc = GUICtrlCreateLabel("Current Active Acc:", $x+150, $y-15, 220, 50,$SS_CENTER)
 $y += 45
 For $i = 0 To 7
-	$chkEnableAcc[$i] = GUICtrlCreateCheckbox(GetTranslatedFileIni("sam m0d", 27 + $i, "Google Account slot " & $i + 1 & " with profile: "), $x, $y, -1, -1)
+	$chkEnableAcc[$i] = GUICtrlCreateCheckbox(GetTranslatedFileIni("sam m0d", 27 + $i, "Account " & $i + 1 & " : "), $x, $y, -1, -1)
 		GUICtrlSetOnEvent(-1, "SelectAccForSwitch")
-	$cmbWithProfile[$i] = GUICtrlCreateCombo("", $x + 185, $y + 1, 110, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+	$cmbWithProfile[$i] = GUICtrlCreateCombo("", $x + 80, $y + 1, 80, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 		GUICtrlSetOnEvent(-1, "chkEnableAcc")
-	$cmbAtkDon[$i] = GUICtrlCreateCombo("", $x + 300, $y + 1, 58, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+	$cmbAtkDon[$i] = GUICtrlCreateCombo("", $x + 170, $y + 1, 58, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 		GUICtrlSetData(-1, GetTranslatedFileIni("sam m0d", "SwitchTypeAttack", "Attack") & "|" & GetTranslatedFileIni("sam m0d", "SwitchTypeDonate", "Donate"), GetTranslatedFileIni("sam m0d", "SwitchTypeAttack", "Attack"))
 		GUICtrlSetOnEvent(-1, "chkEnableAcc")
-	$cmbStayTime[$i] = GUICtrlCreateCombo("", $x + 363, $y + 1, 38, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-		GUICtrlSetData(-1, "0|5|10|15|30","0")
-		_GUICtrlSetTip(-1, GetTranslatedFileIni("sam m0d", "Setting for Stay how long (minutes) with this account.", "Setting for Stay how long (minutes) with this account."))
+	$hLabelTime[$i] = GUICtrlCreateLabel($icmbStayTime[$i], $x + 170 + 58 + 10 + 100, $y + 1 , 25, 18, $SS_CENTER)
+	$cmbStayTime[$i] = GUICtrlCreateSlider($x + 170 + 58 + 10, $y + 1, 100, 18, $WS_EX_STATICEDGE)
+		GUICtrlSetLimit(-1, 120, 0)
 		GUICtrlSetOnEvent(-1, "chkEnableAcc")
-	$chkPriority[$i] = GUICtrlCreateCheckbox(" ", $x + 405, $y + 6, 12, 12)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("sam m0d", "Setting for Stay how long (minutes) with this account.", "Setting for Stay how long (minutes) with this account."))
+	$chkPriority[$i] = GUICtrlCreateCheckbox(" ", $x + 360, $y + 4, 12, 12)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("sam m0d", "High Priority", "High Priority - Always switch to this account when troops ready."))
 	GUICtrlSetOnEvent(-1, "chkEnableAcc")
 	$y += 23

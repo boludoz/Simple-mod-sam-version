@@ -543,7 +543,7 @@ Func PrepareSuperXPAttack()
 		Next
 	EndIf
 
-   SetDebugLog("troopsnumber  = " & $troopsnumber)
+   ;SetDebugLog("troopsnumber  = " & $troopsnumber)
 
 	SetSlotSpecialTroops()
 

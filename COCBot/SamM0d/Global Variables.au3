@@ -324,7 +324,7 @@ Global $g_ahLblStatsSwitchTotal[4]
 Global $g_ahLblStatsSwitchGPH[4]
 Global $grpMySwitch, $chkEnableMySwitch, $chkProfileImage, $g_hLblProfileName, $arrowleft2, $arrowright2, $btnMakeSwitchADBFolder, $cmbSwitchMethod, $btnPushshared_prefs
 ;Global $chkUseADBLoadVillage
-Global $chkEnableAcc[8], $cmbWithProfile[8], $cmbAtkDon[8], $cmbStayTime[8], $chkPriority[8]
+Global $chkEnableAcc[8], $cmbWithProfile[8], $cmbAtkDon[8], $cmbStayTime[8], $chkPriority[8], $hLabelTime[8]
 
 ;Global $ichkUseADBLoadVillage = 0
 Global $icmbSwitchMethod = 0
@@ -357,6 +357,9 @@ Global $ichkEnableContinueStay, $chkEnableContinueStay, $itxtTrainTimeLeft, $txt
 Global $ichkSwitchDonTypeOnlyWhenAtkTypeNotReady = False
 Global $bAvoidSwitch = False
 ;Global $bNowWaitingConfirm = False
+
+; Custom Chat OCR
+Global $g_sGetOcrMod = ""
 
 ;===============SamM0d Mod skip ====================
 Global $g_bEnableSkipBuild, $g_hEnableSkipBuild

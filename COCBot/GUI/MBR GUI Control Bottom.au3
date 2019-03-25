@@ -65,7 +65,7 @@ Func Initiate()
 		EndIf
 		If Not $g_bRunState Then Return
 
-		;AndroidShield("Initiate", True)
+		AndroidShield("Initiate", True)
 		checkMainScreen()
 		If Not $g_bRunState Then Return
 
@@ -73,12 +73,12 @@ Func Initiate()
 		If Not $g_bRunState Then Return
 
 		If Not $g_bSearchMode Then
-		;	BotDetectFirstTime()
+			BotDetectFirstTime()
 			If Not $g_bRunState Then Return
 
 			If $g_bCheckGameLanguage Then TestLanguage()
 			If Not $g_bRunState Then Return
-
+			$g_bFirstRun = True
 			runBot()
 		EndIf
 	Else
@@ -176,6 +176,7 @@ EndFunc   ;==>btnStop
 
 Func btnSearchMode()
 	; decide when to run
+    Local $bRunNow = $g_iBotAction <> $eBotNoAction
 	If $bRunNow Then
 		BotSearchMode()
 	Else

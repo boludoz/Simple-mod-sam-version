@@ -630,7 +630,7 @@ Func DoSwitchAcc()
 							Local $bShare_replay = $g_bIsFullArmywithHeroesAndSpells
 							If $ichkForcePreTrainB4Switch = 1 Then
 								SetLog("Check train before switch account...",$COLOR_ACTION)
-								If $ichkModTrain = 1 Then
+								If $g_bChkModTrain = True Then
 									ModTrain(True)
 								Else
 									DoubleTrain($g_bQuickTrainEnable)
@@ -1744,4 +1744,10 @@ Func SmartWait4TrainMini($iWaitTime, $iFlagCloseAndOpenType = 0)
 		Case 1
 			WaitnOpenCoC($iWaitTime * 1000, $bFullRestart, $bSuspendComputer, True)
 	EndSwitch
+EndFunc
+
+Func chkLabelTime()
+	For $i = 0 To UBound($icmbStayTime) - 1
+		GUICtrlSetData($hLabelTime[$i], $icmbStayTime[$i])
+	Next
 EndFunc

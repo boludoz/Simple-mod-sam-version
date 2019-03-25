@@ -128,6 +128,7 @@ EndFunc   ;==>debugMBRFunctions
 Func setAndroidPID($pid = GetAndroidPid())
 	If $g_hLibMyBot = -1 Then Return ; Bot didn't finish launch yet
 	SetDebugLog("setAndroidPID: $pid=" & $pid)
+    ;Local $result = DllCall($g_hLibMyBot, "str", "setAndroidPID", "int", $pid, "str", $g_sBotVersion, "str", $g_sAndroidEmulator, "str", $g_sAndroidVersion, "str", $g_sAndroidInstance) ;samm0d
 	Local $result = DllCall($g_hLibMyBot, "str", "setAndroidPID", "int", $pid)
 	If @error Then
 		_logErrorDLLCall($g_sLibMyBotPath & ", setAndroidPID:", @error)

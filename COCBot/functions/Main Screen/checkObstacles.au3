@@ -19,7 +19,7 @@ Func checkObstacles($bTmpBuilderBase = False) ;Checks if something is in the way
 	If $g_bChkPlayBBOnly = True Then $bBuilderBase = True
 		
 	FuncEnter(checkObstacles)
-	Static $checkObstaclesActive = False
+    Static $iRecursive = 0
 
 	If TestCapture() = False And WinGetAndroidHandle() = 0 Then
 		; Android not available
@@ -35,13 +35,11 @@ Func checkObstacles($bTmpBuilderBase = False) ;Checks if something is in the way
 	;	_Sleep(1000)
 	;	Return FuncReturn(True)
 	;EndIf
-	Local $wasForce = OcrForceCaptureRegion(False)
-	Local $checkObstaclesWasActive = $checkObstaclesActive
-	$checkObstaclesActive = True
-	Local $Result = _checkObstacles($bBuilderBase, $checkObstaclesWasActive)
-	OcrForceCaptureRegion($wasForce)
-	$checkObstaclesActive = $checkObstaclesWasActive
-	Return FuncReturn($Result)
+    Local $wasForce = OcrForceCaptureRegion(False)
+    $iRecursive += 1
+    Local $Result = _checkObstacles($bBuilderBase, $iRecursive > 5)
+    OcrForceCaptureRegion($wasForce)
+    $iRecursive -= 1
 EndFunc   ;==>checkObstacles
 
 Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if something is in the way for mainscreen
@@ -143,7 +141,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 					Return checkObstacles_StopBot($msg) ; stop bot
 				EndIf
 				SetLog("Connection lost, Reloading CoC...", $COLOR_ERROR)
-				If $g_bChkSharedPrefs And HaveSharedPrefs() Then
+                If ($g_bChkSharedPrefs Or $g_bUpdateSharedPrefs) And HaveSharedPrefs() Then
 					SetLog("Please wait for loading CoC...!")
 					PushSharedPrefs()
 					If Not $bRecursive Then OpenCoC()
@@ -231,7 +229,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 					BanMsgBox()
 					Return checkObstacles_StopBot($msg) ; stop bot
 				EndIf
-				SetLog("Warning: Can not find type of Reload error message", $COLOR_ERROR)
+                SetLog("Warning: Cannot find type of Reload error message", $COLOR_ERROR)
 		EndSelect
 		If TestCapture() Then Return "Village is out of sync or inactivity or connection lost or maintenance"
 		Return checkObstacles_ReloadCoC($aReloadButton, "#0131", $bRecursive) ; Click for out of sync or inactivity or connection lost or maintenance

@@ -1,6 +1,6 @@
 Global $g_iXYOCRTR[4] = [0, 0, 0, 0]
 
-Global $chkModTrain, $lblMyQuickTrain, $cmbMyQuickTrain, $grpOtherTroops, $chkMyTroopsOrder, $cmbTroopSetting, $btnResetTroops, $btnResetOrder, $btnResetSpells, $btnResetSpellOrder, $lblTotalCapacityOfMyTroops, $idProgressbar, _
+Global $g_hChkModTrain, $lblMyQuickTrain, $cmbMyQuickTrain, $grpOtherTroops, $chkMyTroopsOrder, $cmbTroopSetting, $btnResetTroops, $btnResetOrder, $btnResetSpells, $btnResetSpellOrder, $lblTotalCapacityOfMyTroops, $idProgressbar, _
 $chkDisablePretrainTroops, $chkEnableDeleteExcessTroops, $lblStickToTrainWindow, $txtStickToTrainWindow, $chkForcePreTrainTroops, $txtForcePreTrainStrength
 Global $grpSpells,$lblTotalSpell,$txtTotalCountSpell2
 
@@ -9,7 +9,7 @@ Global $lblLightningSpell,$lblHealSpell,$lblRageSpell,$lblJumpSpell,$lblFreezeSp
 Global $txtNumLightningSpell,$txtNumHealSpell,$txtNumRageSpell,$txtNumJumpSpell,$txtNumFreezeSpell,$txtNumCloneSpell,$txtNumPoisonSpell,$txtNumEarthSpell,$txtNumHasteSpell,$txtNumSkeletonSpell,$txtNumBatSpell
 Global $lblTimesLightS, $lblTimesHealS,$lblTimesRageS,$lblTimesJumpS,$lblFreezeS,$lblCloneS,$lblTimesPoisonS,$lblTimesEarthquakeS,$lblTimesHasteS,$lblTimesSkeletonS,$lblTimesBatS
 
-Global $ichkModTrain = 0
+Global $g_bChkModTrain = False
 Global $g_aiTroopsMaxCamp[2] = [0,0]
 Global $g_aiSpellsMaxCamp[2] = [0,0]
 

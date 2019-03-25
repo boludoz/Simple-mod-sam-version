@@ -12,7 +12,9 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func debugAttackCSV($string)
+Func debugAttackCSV($string, $sColor = $COLOR_YELLOW)
+	If not $g_bDebugAttackCSV Then Return     ; Samm0d
+	SetLog("CSV Info : " & $string, $sColor)  ; Samm0d
 	If $g_bDebugAttackCSV Then
 		_ConsoleWrite("A " & TimeDebug() & $string & @CRLF)
 		Local $hfile = FileOpen($g_sProfileLogsPath & "debugAttackCSV.log", $FO_APPEND)

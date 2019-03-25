@@ -37,7 +37,7 @@ _Ini_Add("MultiFinger", "Select", _GUICtrlComboBox_GetCurSel($cmbDBMultiFinger))
 _Ini_Add("BotLogLineLimit", "Enable", (GUICtrlRead($chkBotLogLineLimit) = $GUI_CHECKED ? 1 : 0 ))
 _Ini_Add("BotLogLineLimit", "LimitValue", GUICtrlRead($txtLogLineLimit))
 
-; use Event troop
+; use Skip Build
 _Ini_Add("EnableSkipBuild", "Enable", (GUICtrlRead($g_hEnableSkipBuild) = $GUI_CHECKED ? True : False ))
 
 ; donate only when troop pre train ready
@@ -127,11 +127,11 @@ _Ini_Add("GlobalDelay", "DelayPercentage", GUICtrlRead($txtIncreaseGlobalDelay))
 _Ini_Add("StickToTrainPage", "Minutes", GUICtrlRead($txtStickToTrainWindow))
 
 ; My Troops
+_Ini_Add("MyTroops", "EnableModTrain", (GUICtrlRead($g_hChkModTrain) = $GUI_CHECKED ? True : False))
 _Ini_Add("MyTroops", "ForcePreTrainTroop", (GUICtrlRead($chkForcePreTrainTroops) = $GUI_CHECKED ? 1 : 0))
 _Ini_Add("MyTroops", "ForcePreTrainStrength", GUICtrlRead($txtForcePreTrainStrength))
 _Ini_Add("MyTroops", "NoPreTrain", (GUICtrlRead($chkDisablePretrainTroops) = $GUI_CHECKED ? 1 : 0))
 _Ini_Add("MyTroops", "DeleteExcess", (GUICtrlRead($chkEnableDeleteExcessTroops) = $GUI_CHECKED ? 1 : 0))
-_Ini_Add("MyTroops", "EnableModTrain", (GUICtrlRead($chkModTrain) = $GUI_CHECKED ? 1 : 0))
 _Ini_Add("MyTroops", "Order", (GUICtrlRead($chkMyTroopsOrder) = $GUI_CHECKED ? 1 : 0))
 _Ini_Add("MyTroops", "TrainCombo", _GUICtrlComboBox_GetCurSel($cmbMyQuickTrain))
 

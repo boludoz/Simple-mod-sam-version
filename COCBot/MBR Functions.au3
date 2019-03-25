@@ -100,6 +100,7 @@
 #include "SamM0d\Functions\Check Stop For War\CheckStopForWar.au3"
 #include "SamM0d\Functions\IACHAT.au3"
 #include "SamM0d\Functions\IsSlotDead.au3"
+#include "SamM0d\Functions\CustomLoop.au3"
 
 ;==========================================================
 

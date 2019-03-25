@@ -303,8 +303,6 @@ Func OcrForceCaptureRegion($bForce = Default)
 	Return $wasForce
 EndFunc   ;==>OcrForceCaptureRegion
 
-Global $g_sGetOcrMod = ""
-
 Func getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpace = Default, $bImgLoc = Default, $bForceCaptureRegion = Default)
 	$g_sGetOcrMod = ""
 	If $removeSpace = Default Then $removeSpace = False

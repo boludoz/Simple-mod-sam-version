@@ -127,7 +127,7 @@ Global Const $g_sBundleDeployPointsBB = @ScriptDir & "\imgxml\BuildersBase\Bundl
 Global Const $g_aBundleDeployPointsBBParms[3] = [0, "0,0,860,629", True] ; DESRC Done ; [0] Quantity2Match [1] Area2Search [2] ForceArea
 Global Const $g_aBundleBuilderHallParms[3] = [1, "0,0,860,629", True] ; DESRC Done ; [0] Quantity2Match [1] Area2Search [2] ForceArea
 Global Const $g_aBundleAttackBarBBParms[3] = [1000, "0, 657, 801, 694", True] ; DESRC Done ; [0] Quantity2Match [1] Area2Search [2] ForceArea
-Global Const $g_aBundleAttackBarSwitchBBParms[3] = [1000, "0, 696, 801, 722", False] ; DESRC Done ; [0] Quantity2Match [1] Area2Search [2] ForceArea
+Global Const $g_aBundleAttackBarSwitchBBParms[3] = [1000, "0, 526, 857, 616", True] ; DESRC Done ; [0] Quantity2Match [1] Area2Search [2] ForceArea
 
 Global Const $g_sImgOpponentBuildingsBB = @ScriptDir & "\imgxml\BuildersBase\Attack\VersusBattle\Buildings\"
 
@@ -152,5 +152,9 @@ Global Const $g_aBundleWallsBBParms[3] = [0, "0,50,860,594", False] ; [0] Quanti
 #EndRegion Builder Base Walls Upgrade
 
 ;Machine Ability Pixel Is different with Machine Level ;e.g With 7 $MachineSlot[2] = (7*72)-25 = 479 And Pixel It Contains 479x633 -> E7CE93 Or AE9A88
-Local $aMachineAbilityPixels[3] = [0xAE9A88, 0xE7CE93, 0xCEB385]
-Local $aMachineDeadPixels[3] = [0x4E4E4E, 0x676767, 0x5B5B5B]
+;Local $aMachineAbilityPixels[3] = [0xAE9A88, 0xE7CE93, 0xCEB385]
+;Local $aMachineDeadPixels[3] = [0x4E4E4E, 0x676767, 0x5B5B5B]
+
+;Builder Base Walls
+Global $aWallUpgrade[4] = [521, 580 + 88 , 0x7B412B, 20] ; Upgrade Button main screen     ;norc
+Global $aWallUpgradeOK[4] = [483, 496 + 88, 0xFFDC15, 20] ; Ok Button on main screen      ;norc

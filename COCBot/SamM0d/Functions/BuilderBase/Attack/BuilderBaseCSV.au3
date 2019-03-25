@@ -735,22 +735,17 @@ Func TriggerMachineAbility(ByRef $bIfMachineHasAbility, $aMachineSlot_XYA, $isFi
 
 	If Not $g_bRunState Then Return
 
-	;$aMachineSlot_XYA[2] Contains e.g With 5 $aMachineSlot_XYA[2] = (5*72)+10 = 370 And Pixel It Contains 370x633 -> EFC88A Or AE9A88
-	Local $pColor = _GetPixelColor($aMachineSlot_XYA[2], 633 + 88, True, "Machine Ability Needed?") ; DESRC Done ?
 	Static $hTimer = TimerInit()
 	Local $fDiff = TimerDiff($hTimer)
 	If $fDiff > 500 Or $isFirstTime Then ; Although This Check is not needed now as we are using pixel logic but to avoid frequent check added a 2 sec delay
 
-		If IsMachinePixelMactched($aMachineAbilityPixels, $pColor) Then
+		If IsMachinePixelMactched(-1, -1) Then
 			SetLog("Machine Ability Triggered")
 			ClickP($aMachineSlot_XYA, 1, 0)
 			If _Sleep(150) Then Return
-		ElseIf IsMachinePixelMactched($aMachineDeadPixels, $pColor) Then
+		ElseIf IsMachinePixelMactched(-1, -1) Then
 			SetLog("Machine Dead Skip Ability Check")
 			$bIfMachineHasAbility = False ; No Need to click on ability when machine dead
-		Else
-			SetDebugLog("Machine Ability Needed?, Expected: " & _PixelArrayToString($aMachineAbilityPixels) & ", Tolerance: 25 at X,Y: " & $aMachineSlot_XYA[2] & ",633 Found: " & $pColor)
-			SetDebugLog("Machine Dead?, Expected: " & _PixelArrayToString($aMachineDeadPixels) & ", Tolerance: 25 at X,Y: " & $aMachineSlot_XYA[2] & ",633 Found: " & $pColor)
 		EndIf
 		$hTimer = TimerInit()
 	EndIf
@@ -781,45 +776,34 @@ Func IsMachineDepoloyed($sTroopName, $aSlot_XY, $iSlotNumber, ByRef $bIfMachineW
 EndFunc   ;==>IsMachineDepoloyed
 
 Func FindMachinePosXAbilityPixel($iMachineSlotPosX)
-	;e.g It Contains -> EFC88A Or AE9A88
-	Local $iSlotStartingPoint = 14 ;This is used in BuilderBaseAttackBarSlot it means slot starting point was -14 of $iMachineSlotPosX
+	;Local $iSlotStartingPoint = 14 ;This is used in BuilderBaseAttackBarSlot it means slot starting point was -14 of $iMachineSlotPosX / Deprecated
 	Local $bFoundAbilityPixel = False
-	_CaptureRegion()
-	For $iTroopsAbilityPixelPosX = $iMachineSlotPosX To $iMachineSlotPosX - $iSlotStartingPoint Step -1
-		Local $pColor = _GetPixelColor($iTroopsAbilityPixelPosX, 633 + 88, False, "Find Machine Ability Pixel?") ; DESRC Done ?
-		If IsMachinePixelMactched($aMachineAbilityPixels, $pColor) Then
-			$bFoundAbilityPixel = True
-			ExitLoop
-		EndIf
-	Next
-	If $bFoundAbilityPixel Then Return $iTroopsAbilityPixelPosX
+	If IsMachinePixelMactched(-1, -1) Then $bFoundAbilityPixel = True
+	If $bFoundAbilityPixel Then Return $g_iMultiPixelOffSet[0] - 20
 	Return -1 ;If Ability Pixel Not Found
 EndFunc   ;==>FindMachinePosXAbilityPixel
 
 Func _PixelArrayToString($aPixelsList)
-	Local $sPixel = ""
-	For $i = 0 To UBound($aPixelsList) - 1
-		If $i = UBound($aPixelsList) - 1 Then $sPixel = $sPixel & Hex($aPixelsList[$i], 6)
-		If $i <> UBound($aPixelsList) - 1 Then $sPixel = $sPixel & Hex($aPixelsList[$i], 6) & ","
-	Next
-	Return $sPixel
+	Return -1
 EndFunc   ;==>_PixelArrayToString
 
-Func IsMachinePixelMactched($aMachinePixelsList, $pColor, $tolerance = 25)
-	For $i = 0 To UBound($aMachinePixelsList) - 1
-		If _ColorCheck($pColor, Hex($aMachinePixelsList[$i], 6), $tolerance) Then
-			Return True
-		EndIf
+Func IsMachinePixelMactched($aMachinePixelsList = -1, $pColor = -1, $tolerance = 35)
+	Local $iOffColor[3][3] = [[0x4C49D5, 0, 1], [0x4C49D5, 0, 1], [0x4C49D5, 0, 1]]
+	For $i = 0 To 5 - 1
+		If _MultiPixelSearch(22, 658, 472, 726, 1, 1, Hex(0x4C49D5, 6), $iOffColor, $tolerance) <> 0 Then Return True ; Samm0d
+		Sleep(50)
 	Next
 	Return False
 EndFunc   ;==>IsMachinePixelMactched
 
 Func BattleIsOver($bIfMachineHasAbility, $aSlot_XY)
 	Local $SurrenderBtn = [65, 607 + 88] ; DESRC Done ???
-
+	Local $bExtraCheckBBMachine = False
+	; $bIfMachineHasAbility deprecated
 	For $i = 0 To 180
 		If Not $g_bRunState Then Return
-		TriggerMachineAbility($bIfMachineHasAbility, $aSlot_XY) ;Keep Clicking on Machine Ability After every 5 seconds
+		$bExtraCheckBBMachine = IsMachinePixelMactched()
+		TriggerMachineAbility($bExtraCheckBBMachine, $aSlot_XY) ;Keep Clicking on Machine Ability After every 5 seconds
 		Local $Damage = Number(getOcrOverAllDamage(780, 527 + 88)) ; ?
 		If Int($Damage) > Int($g_iLastDamage) Then
 			$g_iLastDamage = Int($Damage)

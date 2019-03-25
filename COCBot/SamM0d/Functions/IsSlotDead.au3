@@ -26,14 +26,64 @@ Func IsSlotDead($iSlotNumber)
 	Return False
 EndFunc   ;==>IsSlotDead
 
-Func CheckIfSiegeDroppedTheTroops(ByRef $bIsDeadByRef, $command, $hSleepTimer, $iSlotNumber)
+Func CheckIfSiegeDroppedTheTroops($hSleepTimer, $iSlotNumber, ByRef $bIsDeadByRef)
 	If $bIsDeadByRef = True Then Return True
-	If $command = "WFSTD" Then
-		If IsSlotDead($iSlotNumber) Then
-			SetDebugLog("Siege Got Destroyed After " & Round(__TimerDiff($hSleepTimer)) & "ms", $COLOR_SUCCESS)
-			$bIsDeadByRef = True
-			Return True
-		EndIf
+	
+	If IsSlotDead($iSlotNumber) Then
+		SetDebugLog("Siege Got Destroyed After " & Round(__TimerDiff($hSleepTimer)) & "ms", $COLOR_SUCCESS)
+		$bIsDeadByRef = True
+		Return True
 	EndIf
+	
 	Return False
 EndFunc   ;==>CheckIfSiegeDroppedTheTroops
+
+Func MoDspell($S)
+
+		If _Sleep(10) Then Return
+		If $g_bRestart = True Then Return
+
+		If $g_iTHi <= 15 Or $g_iTHside = 0 Or $g_iTHside = 2 Then
+			Switch $g_iTHside
+				Case 0
+					MoDspellDpl($S, 114 + $g_iTHi * 16 + Ceiling(-2 * 16), 359 - $g_iTHi * 12 + Ceiling(-2 * 12))
+				Case 1
+					MoDspellDpl($S, 117 + $g_iTHi * 16 + Ceiling(-2 * 16), 268 + $g_iTHi * 12 - Floor(-2 * 12))
+				Case 2
+					MoDspellDpl($S, 743 - $g_iTHi * 16 - Floor(-2 * 16), 358 - $g_iTHi * 12 + Ceiling(-2 * 12))
+				Case 3
+					MoDspellDpl($S, 742 - $g_iTHi * 16 - Floor(-2 * 16), 268 + $g_iTHi * 12 - Floor(-2 * 12))
+			EndSwitch
+		EndIf
+
+		If $g_iTHi > 15 And ($g_iTHside = 1 Or $g_iTHside = 3) Then
+			MoDspellDpl($S, $g_iTHx, $g_iTHy)
+		EndIf
+
+EndFunc   ;==>MoDspell
+
+Func MoDspellDpl($THSpell, $x, $y)
+
+	Local $Spell = -1
+	Local $name = ""
+
+	If _Sleep(10) Then Return
+	If $g_bRestart = True Then Return
+
+	For $i = 0 To UBound($g_avAttackTroops) - 1
+		If $g_avAttackTroops[$i][0] = $THSpell Then
+			$Spell = $i
+			$name = GetTroopName($THSpell)
+		EndIf
+	Next
+
+	If $Spell > -1 Then
+		SetLog("Dropping remain Spell " & $name, $COLOR_SUCCESS)
+		SelectDropTroop($Spell)
+		If _Sleep($DELAYATTCKTHGRID1) Then Return
+		If IsAttackPage() Then Click($x, $y, 1, 0, "#0029")
+	Else
+		If $g_bDebugSetlog Then SetDebugLog("No " & $name & " Found")
+	EndIf
+
+EndFunc   ;==>MoDspellDpl

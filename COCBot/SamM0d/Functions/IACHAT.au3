@@ -4,7 +4,7 @@
 ; Syntax ........:
 ; Parameters ....: ReadChat()
 ; Return values .: Last msg
-; Author ........: Boludoz/Boldina 
+; Author ........: Boludoz/Boldina
 ; Modified ......: Boludoz (5/7/2018|17/7/2018|5/3/2019)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
@@ -23,7 +23,7 @@ Func ReadChatIA(ByRef $sOCRString, ByRef $sCondition, $bFast = True, $bMyChat = 
 
 	Local $bResult = True
 
-	
+
 		$bResult = False
 		ForceCaptureRegion()
 		_CaptureRegion2(260,85,272,624)
@@ -46,9 +46,9 @@ Func ReadChatIA(ByRef $sOCRString, ByRef $sCondition, $bFast = True, $bMyChat = 
 		If $hHBitmapDivider <> 0 Then GdiDeleteHBitmap($hHBitmapDivider)
 
 		Local $iCount = 0
-		
+
 			If Not IsArray($result) Then Return False
-		
+
 			$iMax = UBound($result) -1
 			For $i = 0 To $iMax
 				$aPropsValues = $result[$i] ; should be return objectname,objectpoints,objectlevel
@@ -138,7 +138,7 @@ Func getChatStringMod($x_start, $y_start, $language) ; -> Get string chat reques
 		If getOcrAndCapture($language, $x_start, $y_start, 280, 16) <> "" Then
 		$sReturn &= $g_sGetOcrMod
 			For $i = 1 To 4
-				If getOcrAndCapture($language, $x_start, $y_start + ($i*13), 280, 16) <> "" Then 
+				If getOcrAndCapture($language, $x_start, $y_start + ($i*13), 280, 16) <> "" Then
 					$sReturn &= " "
 					$sReturn &= $g_sGetOcrMod
 				Else
@@ -152,11 +152,11 @@ EndFunc   ;==>getChatString
 Func getChatStringChineseMod($x_start, $y_start) ; -> Get string chat request - Chinese - "DonateCC.au3"
 	Local $sReturn = ""
 	Local $bUseOcrImgLoc = True
-	
+
 		If getOcrAndCapture("chinese-bundle", $x_start, $y_start, 160, 14, Default, $bUseOcrImgLoc) <> "" Then
 		$sReturn &= $g_sGetOcrMod
 			For $i = 1 To 4
-				If getOcrAndCapture("chinese-bundle", $x_start, $y_start + ($i*13), 160, 14, Default, $bUseOcrImgLoc) <> "" Then 
+				If getOcrAndCapture("chinese-bundle", $x_start, $y_start + ($i*13), 160, 14, Default, $bUseOcrImgLoc) <> "" Then
 					$sReturn &= " "
 					$sReturn &= $g_sGetOcrMod
 				Else
@@ -174,7 +174,7 @@ Func getChatStringKoreanMod($x_start, $y_start) ; -> Get string chat request - K
 		If getOcrAndCapture("korean-bundle", $x_start, $y_start, 160, 14, Default, $bUseOcrImgLoc) <> "" Then
 		$sReturn &= $g_sGetOcrMod
 			For $i = 1 To 4
-				If getOcrAndCapture("korean-bundle", $x_start, $y_start + ($i*13), 160, 14, Default, $bUseOcrImgLoc) <> "" Then 
+				If getOcrAndCapture("korean-bundle", $x_start, $y_start + ($i*13), 160, 14, Default, $bUseOcrImgLoc) <> "" Then
 					$sReturn &= " "
 					$sReturn &= $g_sGetOcrMod
 				Else
@@ -192,7 +192,7 @@ Func getChatStringPersianMod($x_start, $y_start) ; -> Get string chat request - 
 		If getOcrAndCapture("persian-bundle", $x_start, $y_start, 240, 20, Default, $bUseOcrImgLoc, True) <> "" Then
 		$sReturn &= $g_sGetOcrMod
 			For $i = 1 To 4
-				If getOcrAndCapture("persian-bundle", $x_start, $y_start + ($i*13), 240, 20, Default, $bUseOcrImgLoc, True) <> "" Then 
+				If getOcrAndCapture("persian-bundle", $x_start, $y_start + ($i*13), 240, 20, Default, $bUseOcrImgLoc, True) <> "" Then
 					$sReturn &= " "
 					$sReturn &= $g_sGetOcrMod
 				Else
@@ -200,7 +200,7 @@ Func getChatStringPersianMod($x_start, $y_start) ; -> Get string chat request - 
 				EndIf
 			Next
 		EndIf
-	
+
 		$sReturn = StringReverse($sReturn)
 		$sReturn = StringReplace($sReturn, "A", "ا")
 		$sReturn = StringReplace($sReturn, "B", "ب")

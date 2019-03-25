@@ -133,8 +133,7 @@ IniReadS($itxtIncreaseGlobalDelay, $g_sProfileConfigPath, "GlobalDelay", "DelayP
 IniReadS($itxtStickToTrainWindow, $g_sProfileConfigPath, "StickToTrainPage", "Minutes", "2","Int")
 
 ; My Troops
-$ichkModTrain = 1
-;IniReadS($ichkModTrain, $g_sProfileConfigPath, "MyTroops", "EnableModTrain", "1","Int")
+IniReadS($g_bChkModTrain, $g_sProfileConfigPath, "MyTroops", "EnableModTrain", "True","Bool")
 IniReadS($ichkMyTroopsOrder, $g_sProfileConfigPath, "MyTroops", "Order", "0","Int")
 IniReadS($ichkEnableDeleteExcessTroops, $g_sProfileConfigPath, "MyTroops", "DeleteExcess", "0","Int")
 IniReadS($ichkForcePreTrainTroops, $g_sProfileConfigPath, "MyTroops", "ForcePreTrainTroop", "0","Int")

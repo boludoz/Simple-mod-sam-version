@@ -236,7 +236,8 @@ Func SpellTHGrid($S)
 			($S = $eFSpell And $g_abAttackUseFreezeSpell[$TS]) Or _
 			($S = $ePSpell And $g_abAttackUsePoisonSpell[$TS]) Or _
 			($S = $eHaSpell And $g_abAttackUseHasteSpell[$TS]) Or _
-			($S = $eESpell And $g_abAttackUseEarthquakeSpell[$TS])) Or _
+			($S = $eESpell And $g_abAttackUseEarthquakeSpell[$TS]) Or _
+			($S = $eBtSpell And $g_abAttackUseBatSpell[$TS])) Or _ ; Samm0d
 			$g_bDuringMilkingAttack = True And (($S = $eHSpell And $g_abAttackUseHealSpell[$DB]) Or _
 			($S = $eLSpell And $g_abAttackUseLightSpell[$DB]) Or _
 			($S = $eRSpell And $g_abAttackUseRageSpell[$DB]) Or _
@@ -244,7 +245,8 @@ Func SpellTHGrid($S)
 			($S = $eFSpell And $g_abAttackUseFreezeSpell[$DB]) Or _
 			($S = $ePSpell And $g_abAttackUsePoisonSpell[$DB]) Or _
 			($S = $eHaSpell And $g_abAttackUseHasteSpell[$DB]) Or _
-			($S = $eESpell And $g_abAttackUseEarthquakeSpell[$DB])) Then
+			($S = $eESpell And $g_abAttackUseEarthquakeSpell[$DB]) Or _
+			($S = $eBtSpell And $g_abAttackUseBatSpell[$TS])) Then ; Samm0d
 
 		If _Sleep(10) Then Return
 		If $g_bRestart = True Then Return

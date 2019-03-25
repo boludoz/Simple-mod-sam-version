@@ -167,7 +167,7 @@ EndFunc
 ;~ EndFunc
 
 Func chkCustomTrain()
-	$ichkModTrain = (GUICtrlRead($chkModTrain) = $GUI_CHECKED ? 1 : 0)
+	$g_bChkModTrain = (GUICtrlRead($g_hChkModTrain) = $GUI_CHECKED ? 1 : 0)
 EndFunc
 
 Func cmbTroopSetting()

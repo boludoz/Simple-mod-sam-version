@@ -100,7 +100,7 @@ Func IsSearchModeActiveSamM0d($g_iMatchMode, $nocheckHeroes = False, $bNoLog = F
 EndFunc
 
 Func IsSearchModeActive($g_iMatchMode, $nocheckHeroes = False, $bNoLog = False)
-    If $ichkModTrain = 1 Then
+    If $g_bChkModTrain = True Then
         Return IsSearchModeActiveSamM0d($g_iMatchMode, $nocheckHeroes, $bNoLog)
     EndIf
 
