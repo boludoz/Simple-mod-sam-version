@@ -58,11 +58,6 @@ Func DestroySplashScreen($bReleaseMutex = True)
         GUIDelete($g_hSplash)
         $g_hSplash = 0
     EndIf
-	If $bReleaseMutex Then
-		; allow now other bots to launch
-		ReleaseMutex($g_hSplashMutex)
-		$g_hSplashMutex = 0
-	EndIf
 EndFunc   ;==>DestroySplashScreen
 
 Func MoveSplashScreen()

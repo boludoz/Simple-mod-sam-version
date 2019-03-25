@@ -77,7 +77,7 @@ Func CreateSplashScreen($iSteps = Default)
 		; Create Splash container
 		$g_hSplash = GUICreate("", $iX, $iHeight, $iLeft, $iTop, $WS_POPUP, BitOR($WS_EX_TOPMOST, $WS_EX_WINDOWEDGE, $WS_EX_TOOLWINDOW))
 		GUISetBkColor($COLOR_WHITE, $g_hSplash)
-		WinSetTrans($g_hSplash, "", 170) ;samm0d
+		WinSetTrans($g_hSplash, "", 170)
 
 		$g_lSplashPic = _GUICtrlCreatePic($hSplashImg, 0, $iT) ; Splash Image
 		GUICtrlSetOnEvent(-1, "MoveSplashScreen")
@@ -86,10 +86,6 @@ Func CreateSplashScreen($iSteps = Default)
 		;$g_hSplashProgress = GUICtrlCreateProgress(15, $iY + $iT + $iB + 20, $iX - 30, 10, $PBS_SMOOTH, BitOR($WS_EX_TOPMOST, $WS_EX_WINDOWEDGE, $WS_EX_TOOLWINDOW)) ; Splash Progress
 		;$g_lSplashStatus = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_Loading", "Loading..."), 15, $iY + $iT + $iB + 38, $iX - 30, 15, $SS_CENTER) ; Splash Title
 		;GUICtrlSetOnEvent(-1, "MoveSplashScreen")
-        Else
-            $g_lSplashTitle = 0
-            $g_hSplashProgress = 0
-            $g_lSplashStatus = 0
 
 		; Cleanup GDI resources
 		_GDIPlus_BitmapDispose($hSplashImg)
