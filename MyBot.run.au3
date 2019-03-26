@@ -553,24 +553,68 @@ Func SetupFilesAndFolders()
 	; =======================================================================================================
 	; MySwitch
 
-	InitializeMySwitch()
+	;InitializeMySwitch()
 
-	BackupSystem()
+	
+	If FileExists(@ScriptDir & "\Profiles\MySwitch.ini") Then
+		FileCopy(@ScriptDir & "\Profiles\MySwitch.ini", @ScriptDir & "\Profiles\BackupMySwitch.ini", $FC_OVERWRITE)
+		
+		Local $hFileOpen = FileOpen(@ScriptDir & '\SwitchAccount.01.ini', 9)
+		FileWrite($hFileOpen, '')
+		
+		SaveConfig_600_35_2()
+		
+		$g_iCmbSwitchAcc = 1
 
-	If FileExists(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\") Then
-		If Not FileExists(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images\") Then
-			DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images")
+		For $i = 0 To 7
+			$g_bChkSwitchAcc = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "EnableAcc" & $i + 1, "0") ; OK
+			$g_asProfileName[$i] = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "WithProfile" & $i + 1, "0") ; OK
+			$g_abDonateOnly[$i] = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "AtkDon" & $i + 1, "0") ; OK ?
+			$icmbStayTime[$i] = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "Stay" & $i + 1, "0")
+			$ichkPriority[$i] = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "Priority" & $i + 1, "0")
+		Next
+		;$icmbSwitchMethod = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "SwitchMethod", "0")
+		;$ichkProfileImage = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "CheckVillage", "0")
+		;$ichkEnableContinueStay = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "EnableContinueStay", "0")
+		$g_iTrainTimeToSkip = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "TrainTimeLeft", "5")
+		;$ichkForcePreTrainB4Switch = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "ForcePreTrainB4Switch", "0")
+		$g_bChkSmartSwitch = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "EnableSmartWait", "0")
+		;$itxtCanCloseGameTime = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "EnableSmartWaitTime", "60")
+		
+		Local $sSwitchAccFile = $g_sProfilePath & "\SwitchAccount.01.ini"
+		IniWrite($sSwitchAccFile, "SwitchAccount", "Enable", $g_bChkSwitchAcc ? 1 : 0)
+		IniWrite($sSwitchAccFile, "SwitchAccount", "GooglePlay", $g_bChkGooglePlay ? 1 : 0)
+		IniWrite($sSwitchAccFile, "SwitchAccount", "SuperCellID", $g_bChkSuperCellID ? 1 : 0)
+		IniWrite($sSwitchAccFile, "SwitchAccount", "SharedPrefs", $g_bChkSharedPrefs ? 1 : 0)
+		IniWrite($sSwitchAccFile, "SwitchAccount", "SmartSwitch", $g_bChkSmartSwitch ? 1 : 0)
+		IniWrite($sSwitchAccFile, "SwitchAccount", "DonateLikeCrazy", $g_bDonateLikeCrazy ? 1 : 0)
+		IniWrite($sSwitchAccFile, "SwitchAccount", "TotalCocAccount", $g_iTotalAcc)
+		IniWrite($sSwitchAccFile, "SwitchAccount", "TrainTimeToSkip", $g_iTrainTimeToSkip)
+		For $i = 0 To 7
+			IniWrite($sSwitchAccFile, "SwitchAccount", "AccountNo." & $i, $g_abAccountNo[$i] ? 1 : 0)
+			IniWrite($sSwitchAccFile, "SwitchAccount", "ProfileName." & $i, $g_asProfileName[$i])
+			IniWrite($sSwitchAccFile, "SwitchAccount", "DonateOnly." & $i, $g_abDonateOnly[$i] ? 1 : 0)
+		Next
+		
+		ReadConfig_SwitchAccounts()
+		SaveConfig_600_35_2()
 		EndIf
-	Else
-		DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug")
-		DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images")
-	EndIf
 
-	If $g_iMyTroopsSize = 0 Then
-		SetLog($CustomTrain_MSG_15, $COLOR_ERROR)
-	EndIf
-
-	DirRemove(@ScriptDir & "\profiles\SamM0d", 1)
+	;If FileExists(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\") Then
+	;	If Not FileExists(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images\") Then
+	;		DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images")
+	;	EndIf
+	;Else
+	;	DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug")
+	;	DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images")
+	;EndIf
+    ;
+	;If $g_iMyTroopsSize = 0 Then
+	;	SetLog($CustomTrain_MSG_15, $COLOR_ERROR)
+	;EndIf
+    ;
+	;DirRemove(@ScriptDir & "\profiles\SamM0d", 1)
+	BackupSystem()
 
 	$g_sSamM0dImageLocation = @ScriptDir & "\COCBot\SamM0d\Images"
 	; =======================================================================================================
