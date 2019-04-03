@@ -92,16 +92,19 @@ Func BattleMachineUpgrade($bTestRun = False)
 	ElseIf $aMachineStatus[1] = 0 Then
 		Local $aArea[4] = [355,450,521,532]
 		If FastBottomGreen($aArea) Then
-		ClickP($g_iMultiPixelOffSet, 1)
-
-			If isGemOpen(True) = False Or FastBottomGreen($aArea) Then ; check for gem window
+			ClickP($g_iMultiPixelOffSet, 1)
+			
+			If FastBottomGreen($aArea) Then
 			; check for green button to use gems to finish upgrade, checking if upgrade actually started
 				SetLog("Something went wrong with Battle Machine Upgrade, try again.", $COLOR_ERROR)
-				ClickP($aAway, 2, $DELAYLABUPGRADE3, "#0360")
+				ClickP($aAway, 2, $DELAYLABUPGRADE3, "#0900") ;Click Away
 				Return False
-			Else
+			ElseIf isGemOpen(True) = False Then ; check for gem window
 				SetLog("Oops, Gems required for " & "Battle Machine" & " Upgrade, try again.", $COLOR_ERROR)
-				ClickP($aAway, 2, 1000, "#0900") ;Click Away
+				ClickP($aAway, 2, $DELAYLABUPGRADE3, "#0900") ;Click Away
+				Return False
+				Else
+				$g_sMachineTime = _DateAdd('h', 12, $sStartTime)
 			EndIf
 
 		EndIf
@@ -142,7 +145,7 @@ Func BuilderBaseCheckMachine(ByRef $aMachineStatus, $bTestRun = 0)
 			For $i = 0 To 10
 				If _Sleep(200) Then Return
 				; $aResult[1] = Name , $aResult[2] = Level
-				Local $aResult = BuildingInfo(242, 520 + $g_iBottomOffsetY) ; 860x780
+				Local $aResult = BuildingInfo(242, 520 - 30 + $g_iBottomOffsetY) ; 860x780
 				If Not IsArray($aResult) Then ExitLoop
 				Setlog("Machine LVL : " &  $aResult[2], $COLOR_INFO)
 				If UBound($aResult) >= 2 Then ExitLoop

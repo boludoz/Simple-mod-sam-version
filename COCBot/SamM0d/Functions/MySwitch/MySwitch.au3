@@ -820,7 +820,7 @@ Func DoVillageLoadSucess($iAcc)
 
 	;$iShouldRearm = (Random(0,1,1) = 0 ? 1 : 0)
 
-	If $g_abNotNeedAllTime[0] = False Then $g_abNotNeedAllTime[0] = (Random(0,1,1) = 1 ? True : False) ; check rearm
+	;If $g_abNotNeedAllTime[0] = False Then $g_abNotNeedAllTime[0] = (Random(0,1,1) = 1 ? True : False) ; check rearm
 	If $g_abNotNeedAllTime[1] = False Then $g_abNotNeedAllTime[1] = (Random(0,1,1) = 1 ? True : False) ; check tomb
 
 	$g_iCommandStop = -1

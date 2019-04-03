@@ -866,7 +866,7 @@ Func runBot() ;Bot that runs everything in order
 			If _Sleep($DELAYRUNBOT5) Then Return
 			checkMainScreen(False)
 			If $g_bRestart = True Or $g_bChkPlayBBOnly = True Then ContinueLoop
-			Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'ReArm', 'CleanYard']
+			Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard']
 			While 1
 				If $g_bRunState = False Then Return
 				If $g_bRestart = True Or $g_bChkPlayBBOnly = True Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
@@ -1375,8 +1375,6 @@ Func _RunFunction($action)
 			CheckTombs()
 		Case "CleanYard"
 			CleanYard()
-		Case "ReArm"
-			ReArm()
 		Case "ReplayShare"
 			ReplayShare($g_bShareAttackEnableNow)
 		Case "NotifyReport"

@@ -12,7 +12,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-
+#cs dummy
 Func ReArm()
 
 	If Not $g_bChkTrap Then Return ; If re-arm is not enable in GUI return and skip this code
@@ -80,3 +80,4 @@ Func ReArm()
 	checkMainScreen(False) ; check for screen errors while running function
 
 EndFunc   ;==>ReArm
+#ce

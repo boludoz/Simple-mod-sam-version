@@ -89,7 +89,7 @@ Func OpenCoC()
 	WEnd
 	; samm0d bld
     ; Let's Rearm and check tombs
-    $g_abNotNeedAllTime[0] = True
+    ;$g_abNotNeedAllTime[0] = True
     $g_abNotNeedAllTime[1] = True
 	FuncReturn()
 EndFunc   ;==>OpenCoC

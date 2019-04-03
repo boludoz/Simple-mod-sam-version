@@ -85,7 +85,7 @@ Func MainGTFO()
 
 		If $g_aiTimeTrain[0] > 10 Then
 			SetLog("Let's wait for a few minutes!", $COLOR_INFO)
-			Local $aRndFuncList = ['Collect', 'CheckTombs', 'ReArm', 'CleanYard', 'BuilderBase', 'Boost']
+			Local $aRndFuncList = ['Collect', 'CheckTombs', 'CleanYard', 'BuilderBase', 'Boost']
 			While 1
 				If Not $g_bRunState Then Return
 				If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
