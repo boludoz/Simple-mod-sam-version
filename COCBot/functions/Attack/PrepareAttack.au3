@@ -53,7 +53,7 @@ Func PrepareAttack($pMatchMode, $bRemaining = False) ;Assigns troops
         Local $bClearSlot = True ; by default clear the slot, if no corresponding slot is found in attackbar detection
         If $bRemaining Then
             ; keep initial heroes to avoid possibly "losing" them when not dropped yet
-            ;Local $bSlotDetectedAgain = UBound($avAttackBar, 1) > $i And $g_avAttackTroops[$i][0] = Number($avAttackBar[$i][0]) ; wrong, as attackbar array on remain is shorter
+            Local $bSlotDetectedAgain = UBound($avAttackBar, 1) > $i And $g_avAttackTroops[$i][0] = Number($avAttackBar[$i][0]) ; wrong, as attackbar array on remain is shorter
             Local $bDropped = Default
             Local $iTroopIndex = $g_avAttackTroops[$i][0]
             Switch $iTroopIndex
@@ -69,7 +69,7 @@ Func PrepareAttack($pMatchMode, $bRemaining = False) ;Assigns troops
                 $iTroopNumber += $g_avAttackTroops[$i][2]
                 ContinueLoop
             EndIf
-            If $bDropped = True Then
+            If $bDropped = True or $bSlotDetectedAgain Then
                 ;If $bSlotDetectedAgain Then
                     ; ok, hero was dropped, really? don't know yet... TODO add check if hero was really dropped...
                 ;EndIf
@@ -238,8 +238,8 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $XCoord, $iCmbSiege)
 			If _Sleep(750) Then Return
 		EndIf
 	EndIf
+	Click(Random(11, 28 ,1), Random(630, 632,1), 1, 0)
 	If $g_bDebugSetlog Then SetDebugLog("Benchmark Switch Siege Detection: " & StringFormat("%.2f", _Timer_Diff($hStarttime)) & "'ms")
-
 EndFunc   ;==>SelectCastleOrSiege
 
 Func SelectWardenMode($iMode, $XCoord)
@@ -284,8 +284,8 @@ Func SelectWardenMode($iMode, $XCoord)
 			EndIf
 		EndIf
 	EndIf
+	Click(Random(11, 28 ,1), Random(630, 632,1), 1, 0)
 	Return $sLogText
-
 EndFunc   ;==>SelectWardenMode
 
 Func IsUnitUsed($iMatchMode, $iTroopIndex)

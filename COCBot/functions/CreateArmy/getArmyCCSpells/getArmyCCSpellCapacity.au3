@@ -36,11 +36,12 @@ Func getArmyCCSpellCapacity($bOpenArmyWindow = False, $bCloseArmyWindow = False,
 	Local $sCCSpellsInfo = ""
 
 	; Verify spell current and total capacity
-	$sCCSpellsInfo = getArmyCampCap($g_aArmyCCSpellSize[0], $g_aArmyCCSpellSize[1], $bNeedCapture) ; OCR read Spells and total capacity
-
 	$iCount = 0 ; reset OCR loop counter
 	While $sCCSpellsInfo = "" ; In case the CC donations recieved msg are blocking, need to keep checking numbers till valid
-		$sCCSpellsInfo = getArmyCampCap($g_aArmyCCSpellSize[0], $g_aArmyCCSpellSize[1], $bNeedCapture) ; OCR read Spells and total capacity
+		For $i = 4 to 0 Step -1
+			$sCCSpellsInfo = getArmyCampCap($g_aArmyCCSpellSize[0], $g_aArmyCCSpellSize[1] - $i, $bNeedCapture) ; OCR read Spells and total capacity
+			If $sCCSpellsInfo <> "" And StringInStr($sCCSpellsInfo, "#" ) > 0 Then ExitLoop(2)
+		NExt
 		$iCount += 1
 		If $iCount > 10 Then ExitLoop ; try reading 30 times for 250+150ms OCR for 4 sec
 		If _Sleep($DELAYCHECKARMYCAMP5) Then Return ; Wait 250ms

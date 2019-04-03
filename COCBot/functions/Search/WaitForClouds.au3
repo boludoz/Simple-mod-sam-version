@@ -164,7 +164,7 @@ Func EnableLongSearch()
 		
 		; Samm0d
 		For $i = 0 To 4
-			If _MultiPixelSearch(251, 253, 610, 426 + $g_iBottomOffsetY, -2, 1, Hex(0xFFF5AE, 6), $aSearchOpp, 20) = 0 Then
+			If _MultiPixelSearch(251, 253, 610, 426 + $g_iBottomOffsetY, -2, 1, Hex(0xFFF5AE, 6), $aSearchOpp, 20) = 0 and IsAttackPage(False) Then
 				If $g_bDebugSetlog Then SetDebugLog("Cloud Search Text not found...", $COLOR_DEBUG)
 				$iCountTrue = 1
 			Else

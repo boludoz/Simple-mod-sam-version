@@ -51,7 +51,6 @@ Func AccountNoActive()
 EndFunc   ;==>AccountNoActive
 
 Func InitiateSwitchAcc() ; Checking profiles setup in Mybot, First matching CoC Acc with current profile, Reset all Timers relating to Switch Acc Mode.
-
 	If Not ProfileSwitchAccountEnabled() Or Not $g_bInitiateSwitchAcc Then Return
 	UpdateMultiStats()
 	$g_iNextAccount = -1
@@ -81,18 +80,9 @@ Func InitiateSwitchAcc() ; Checking profiles setup in Mybot, First matching CoC 
 	SwitchAccountVariablesReload("Reset")
 	SetLog("Let's start with Account [" & $g_iNextAccount + 1 & "]")
 	SwitchCOCAcc($g_iNextAccount)
-
 EndFunc   ;==>InitiateSwitchAcc
 
 Func CheckSwitchAcc()
-
-				
-							   
-												  
-						 
-		
-	  
-
 	Local $abAccountNo = AccountNoActive()
 
 	Local $aActiveAccount = _ArrayFindAll($abAccountNo, True)
@@ -352,7 +342,7 @@ Func SwitchCOCAcc($NextAccount)
 
 		SetSwitchAccLog("Switched to Acc [" & $NextAccount + 1 & "]", $COLOR_SUCCESS)
 
-		If $g_bChkSharedPrefs Then
+		If $g_bChkSharedPrefs And Not ($g_bUpdateSharedPrefs And $g_bUpdateSharedPrefsGoogleDisconnected) Then
 			; disconnect account again for saving shared_prefs
 			waitMainScreen()
 			If IsMainPage() Then
@@ -469,7 +459,6 @@ Func SwitchCOCAcc_ClickAccount(ByRef $bResult, $iNextAccount, $bStayDisconnected
 				For $j = 0 To UBound($aSearchForAccount) - 1
 					$aTempArray = $aSearchForAccount[$j]
 					_ArrayAdd($aCoordinates, $aTempArray[0] & "|" & $aTempArray[1], 0, "|", @CRLF, $ARRAYFILL_FORCE_NUMBER)
-												  
 				Next
 
 				_ArraySort($aCoordinates, 0, 0, 0, 1) ; short by column 1 [Y]
@@ -738,7 +727,6 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 4)
 							For $j = 0 To UBound($aSearchForAccount) - 1
 								$aTempArray = $aSearchForAccount[$j]
 								_ArrayAdd($aCoordinates, $aTempArray[0] & "|" & $aTempArray[1], 0, "|", @CRLF, $ARRAYFILL_FORCE_NUMBER)
-													 
 							Next
 
 							_ArraySort($aCoordinates, 0, 0, 0, 1) ; short by column 1 [Y]
@@ -1002,7 +990,6 @@ EndFunc   ;==>CheckLoginWithSupercellID
 Func CheckLoginWithSupercellIDScreen()
 
 	Local $aSearchForAccount, $aCoordinates[0][2], $aTempArray
-						   
 	Local $acount = $g_iWhatSCIDAccount2Use
 
 	If $g_bChkSuperCellID And ProfileSwitchAccountEnabled() Then
@@ -1024,7 +1011,6 @@ Func CheckLoginWithSupercellIDScreen()
 				For $j = 0 To UBound($aSearchForAccount) - 1
 					$aTempArray = $aSearchForAccount[$j]
 					_ArrayAdd($aCoordinates, $aTempArray[0] & "|" & $aTempArray[1], 0, "|", @CRLF, $ARRAYFILL_FORCE_NUMBER)
-												  
 				Next
 				_ArraySort($aCoordinates, 0, 0, 0, 1) ; short by column 1 [Y]
 

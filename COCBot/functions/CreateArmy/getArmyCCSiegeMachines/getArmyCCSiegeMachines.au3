@@ -38,17 +38,17 @@ Func getArmyCCSiegeMachines($bOpenArmyWindow = False, $bCloseArmyWindow = False,
 	Local $aTempCCSiegeArray, $aCCSiegeCoords
 	Local $sCCSiegeName = ""
 	Local $iCCSiegeIndex = -1
-	Local $aCurrentCCSiegeEmpty[$eSiegeMachineCount] = [0, 0, 0] ; Local Copy to reset Siege Machine Array
+    Local $aCurrentCCSiegeEmpty[$eSiegeMachineCount] = [0, 0, 0] ; Local Copy to reset Siege Machine Array
 
-	$g_aiCurrentCCSiegeMachines = $aCurrentCCSiegeEmpty ; Reset Current Siege Machine Array
+    $g_aiCurrentCCSiegeMachines = $aCurrentCCSiegeEmpty ; Reset Current Siege Machine Array
 
 	; Get CC Siege Capacities
-	Local $sSiegeInfo = getArmyCampCap(650, 468, $bNeedCapture) ; OCR read Siege built and total
+	Local $sSiegeInfo = getArmyCampCap(650, 438 + $g_iMidOffsetY, $bNeedCapture) ; OCR read Siege built and total
 	If $g_bDebugSetlogTrain Then SetLog("OCR $sSiegeInfo = " & $sSiegeInfo, $COLOR_DEBUG)
 	Local $aGetSiegeCap = StringSplit($sSiegeInfo, "#", $STR_NOCOUNT) ; split the built Siege number from the total Siege number
-	If $bSetLog And Ubound($aGetSiegeCap) = 2 Then
+	If $bSetLog And UBound($aGetSiegeCap) = 2 Then
 		SetLog("Total Siege CC Capacity: " & $aGetSiegeCap[0] & "/" & $aGetSiegeCap[1])
-		If Number($aGetSiegeCap[0]) = 0 then Return
+		If Number($aGetSiegeCap[0]) = 0 Then Return
 	Else
 		Return
 	EndIf
@@ -61,7 +61,7 @@ Func getArmyCCSiegeMachines($bOpenArmyWindow = False, $bCloseArmyWindow = False,
 
 			$aCCSiegeCoords = StringSplit($aTempCCSiegeArray[1], ",", $STR_NOCOUNT) ; Split the Coordinates where the Troop got found into X and Y
 
-			If $iCCSiegeIndex = -1 Then ContinueLoop
+            If $iCCSiegeIndex < 0 Then ContinueLoop
 
 			$g_aiCurrentCCSiegeMachines[$iCCSiegeIndex] = Number(getBarracksNewTroopQuantity(650, 498, $bNeedCapture)) ; Get The Quantity of the Troop, Slot() Does return the exact spot to read the Number from
 
@@ -78,4 +78,4 @@ Func getArmyCCSiegeMachines($bOpenArmyWindow = False, $bCloseArmyWindow = False,
 		ClickP($aAway, 1, 0, "#0000") ;Click Away
 		If _Sleep($DELAYCHECKARMYCAMP4) Then Return
 	EndIf
-EndFunc   ;==>getArmyTroops
+EndFunc   ;==>getArmyCCSiegeMachines

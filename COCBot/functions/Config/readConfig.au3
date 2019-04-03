@@ -157,8 +157,7 @@ Func ReadRegularConfig()
 	If $g_iThreads < 0 Then $g_iThreads = 0
 	IniReadS($g_iBotDesignFlags, $g_sProfileConfigPath, "general", "botDesignFlags", 0, "int") ; Default for existing profiles is 0, for new is 3
 
-    ; samm0d
-    If $ichkEnableMySwitch = 0 And $g_bRunState = False Then
+    If $g_bRunState = False Then
         ; Window positions
         IniReadS($g_iFrmBotPosX, $g_sProfileConfigPath, "general", "frmBotPosX", $g_iFrmBotPosX, "int")
         IniReadS($g_iFrmBotPosY, $g_sProfileConfigPath, "general", "frmBotPosY", $g_iFrmBotPosY, "int")

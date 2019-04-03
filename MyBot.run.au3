@@ -510,6 +510,60 @@ Func SetupFilesAndFolders()
             SetLog("Moved shared_prefs profiles to " & $g_sPrivateProfilePath, $COLOR_SUCCESS)
         EndIf
     EndIf
+	; samm0d
+	; =======================================================================================================
+	; MySwitch
+	Local $ichkProfileImage = 0
+	Local $ichkEnableAcc[8] = [0,0,0,0,0,0,0,0]
+	Local $icmbWithProfile[8] = [0,0,0,0,0,0,0,0]
+	Local $icmbAtkDon[8] = [0,0,0,0,0,0,0,0]
+	Local $icmbStayTime[8] = [0,0,0,0,0,0,0,0]
+	Local $ichkPriority[8] = [0,0,0,0,0,0,0,0]
+	Local $sIniFile = $g_sProfilePath & "\profile.ini"
+	
+	If FileExists(@ScriptDir & "\Profiles\MySwitch.ini") Then
+		FileCopy(@ScriptDir & "\Profiles\MySwitch.ini", @ScriptDir & "\Profiles\BackupMySwitch.ini", $FC_OVERWRITE)
+		FileDelete(@ScriptDir & "\Profiles\SwitchAccount.01.ini")
+		
+		Local $hFileOpen = FileOpen(@ScriptDir & "\Profiles\SwitchAccount.01.ini", 9)
+		FileWrite($hFileOpen, '')
+		
+		Local $sLastName = "", $iTotalAcc = 1
+		
+		For $i = 0 To 7
+			If "" <> IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "WithProfile" & $i + 1, "") Then $iTotalAcc = $i
+			If "" <> IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "EnableAcc" & $i + 1, "") Then $sLastName = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "WithProfile" & $i + 1, "")
+		Next
+
+		For $i = 0 To $iTotalAcc
+			$icmbStayTime[$i] = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "Stay" & $i + 1, "0")
+			$ichkPriority[$i] = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "Priority" & $i + 1, "0")
+		Next
+		$g_iTrainTimeToSkip = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "TrainTimeLeft", "5")
+		$g_bChkSmartSwitch = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "EnableSmartWait", "0")
+
+		Local $sSwitchAccFile = $g_sProfilePath & "\SwitchAccount.01.ini"
+		IniWrite($sSwitchAccFile, "SwitchAccount", "Enable", 1)
+		IniWrite($sSwitchAccFile, "SwitchAccount", "GooglePlay", 0)
+		IniWrite($sSwitchAccFile, "SwitchAccount", "SuperCellID", 0)
+		IniWrite($sSwitchAccFile, "SwitchAccount", "SharedPrefs", 1)
+		IniWrite($sSwitchAccFile, "SwitchAccount", "SmartSwitch", 1)
+		IniWrite($sSwitchAccFile, "SwitchAccount", "DonateLikeCrazy", 0)
+		IniWrite($sSwitchAccFile, "SwitchAccount", "TotalCocAccount", $iTotalAcc)
+		IniWrite($sSwitchAccFile, "SwitchAccount", "TrainTimeToSkip", $g_iTrainTimeToSkip)
+		
+		For $i = 0 To $iTotalAcc
+			IniWrite($sSwitchAccFile, "SwitchAccount", "AccountNo." & $i, IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "EnableAcc" & $i + 1, ""))
+			IniWrite($sSwitchAccFile, "SwitchAccount", "ProfileName." & $i, IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "WithProfile" & $i + 1, ""))
+			IniWrite($sSwitchAccFile, "SwitchAccount", "DonateOnly." & $i, IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "AtkDon" & $i + 1, ""))
+		Next
+		
+	IniWrite($sIniFile, "general", "defaultprofile", $sLastName)
+	IniRead($sIniFile, "general", "defaultprofile", $sLastName)
+	EndIf
+
+	FileDelete(@ScriptDir & "\Profiles\MySwitch.ini")
+	; =======================================================================================================
 
 	;DirCreate($sTemplates)
 	DirCreate($g_sProfilePresetPath)
@@ -552,70 +606,7 @@ Func SetupFilesAndFolders()
 	; samm0d
 	; =======================================================================================================
 	; MySwitch
-
-	;InitializeMySwitch()
-
-	
-	If FileExists(@ScriptDir & "\Profiles\MySwitch.ini") Then
-		FileCopy(@ScriptDir & "\Profiles\MySwitch.ini", @ScriptDir & "\Profiles\BackupMySwitch.ini", $FC_OVERWRITE)
-		
-		Local $hFileOpen = FileOpen(@ScriptDir & '\SwitchAccount.01.ini', 9)
-		FileWrite($hFileOpen, '')
-		
-		SaveConfig_600_35_2()
-		
-		$g_iCmbSwitchAcc = 1
-
-		For $i = 0 To 7
-			$g_bChkSwitchAcc = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "EnableAcc" & $i + 1, "0") ; OK
-			$g_asProfileName[$i] = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "WithProfile" & $i + 1, "0") ; OK
-			$g_abDonateOnly[$i] = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "AtkDon" & $i + 1, "0") ; OK ?
-			$icmbStayTime[$i] = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "Stay" & $i + 1, "0")
-			$ichkPriority[$i] = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "Priority" & $i + 1, "0")
-		Next
-		;$icmbSwitchMethod = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "SwitchMethod", "0")
-		;$ichkProfileImage = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "CheckVillage", "0")
-		;$ichkEnableContinueStay = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "EnableContinueStay", "0")
-		$g_iTrainTimeToSkip = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "TrainTimeLeft", "5")
-		;$ichkForcePreTrainB4Switch = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "ForcePreTrainB4Switch", "0")
-		$g_bChkSmartSwitch = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "EnableSmartWait", "0")
-		;$itxtCanCloseGameTime = IniRead(@ScriptDir & "\Profiles\MySwitch.ini", "MySwitch", "EnableSmartWaitTime", "60")
-		
-		Local $sSwitchAccFile = $g_sProfilePath & "\SwitchAccount.01.ini"
-		IniWrite($sSwitchAccFile, "SwitchAccount", "Enable", $g_bChkSwitchAcc ? 1 : 0)
-		IniWrite($sSwitchAccFile, "SwitchAccount", "GooglePlay", $g_bChkGooglePlay ? 1 : 0)
-		IniWrite($sSwitchAccFile, "SwitchAccount", "SuperCellID", $g_bChkSuperCellID ? 1 : 0)
-		IniWrite($sSwitchAccFile, "SwitchAccount", "SharedPrefs", $g_bChkSharedPrefs ? 1 : 0)
-		IniWrite($sSwitchAccFile, "SwitchAccount", "SmartSwitch", $g_bChkSmartSwitch ? 1 : 0)
-		IniWrite($sSwitchAccFile, "SwitchAccount", "DonateLikeCrazy", $g_bDonateLikeCrazy ? 1 : 0)
-		IniWrite($sSwitchAccFile, "SwitchAccount", "TotalCocAccount", $g_iTotalAcc)
-		IniWrite($sSwitchAccFile, "SwitchAccount", "TrainTimeToSkip", $g_iTrainTimeToSkip)
-		For $i = 0 To 7
-			IniWrite($sSwitchAccFile, "SwitchAccount", "AccountNo." & $i, $g_abAccountNo[$i] ? 1 : 0)
-			IniWrite($sSwitchAccFile, "SwitchAccount", "ProfileName." & $i, $g_asProfileName[$i])
-			IniWrite($sSwitchAccFile, "SwitchAccount", "DonateOnly." & $i, $g_abDonateOnly[$i] ? 1 : 0)
-		Next
-		
-		ReadConfig_SwitchAccounts()
-		SaveConfig_600_35_2()
-		EndIf
-
-	;If FileExists(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\") Then
-	;	If Not FileExists(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images\") Then
-	;		DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images")
-	;	EndIf
-	;Else
-	;	DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug")
-	;	DirCreate(@ScriptDir & "\profiles\" & $g_sProfileCurrentName & "\SamM0d Debug\Images")
-	;EndIf
-    ;
-	;If $g_iMyTroopsSize = 0 Then
-	;	SetLog($CustomTrain_MSG_15, $COLOR_ERROR)
-	;EndIf
-    ;
-	;DirRemove(@ScriptDir & "\profiles\SamM0d", 1)
 	BackupSystem()
-
 	$g_sSamM0dImageLocation = @ScriptDir & "\COCBot\SamM0d\Images"
 	; =======================================================================================================
 
@@ -797,23 +788,42 @@ Func runBot() ;Bot that runs everything in order
 	Local $iWaitTime
 
 	; samm0d switch
-	$iDoPerformAfterSwitch = False
+	;$iDoPerformAfterSwitch = False
 
 	InitiateSwitchAcc()
-	If ProfileSwitchAccountEnabled() And $g_bReMatchAcc And not $ichkEnableMySwitch Then ; Samm0d
+	If ProfileSwitchAccountEnabled() And $g_bReMatchAcc Then
 		SetLog("Rematching Account [" & $g_iNextAccount + 1 & "] with Profile [" & GUICtrlRead($g_ahCmbProfile[$g_iNextAccount]) & "]")
 		SwitchCoCAcc($g_iNextAccount)
 	EndIf
 
-	If Not $g_bChkPlayBBOnly Then FirstCheck()
+	checkMainScreen()
+	$g_bSkipFirstZoomout = False
+	Zoomout()
+
+
+	If $g_bChkPlayBBOnly Then
+		SetLog("Let's Play Builder Base Only")
+		;runBuilderBase()
+	Else
+		FirstCheck()
+		VillageReport()
+	EndIf
+	
 
 	While 1
 		# SamM0d - TeleLoop / Start
-		If CustomModLoop() = "Return" Then 
-			Return 
-		ElseIf CustomModLoop() = "ContinueLoop" Then 
-			ContinueLoop
-		EndIf
+		Switch CustomModLoop() 
+			Case "Return"  
+				Return
+			Case "Return True"  
+				Return True
+			Case "Return False"  
+				Return False
+			Case "ContinueLoop"  
+				ContinueLoop
+			Case "ExitLoop"  
+				ExitLoop
+		EndSwitch
 		# SamM0d - TeleLoop / End
 
 		chkShieldStatus()
@@ -1012,31 +1022,31 @@ Func _Idle() ;Sequence that runs until Full Army
 
 	# samm0d - check make donate type account enter idle loop / Start
 	Local $bSkipEnterIdleLoop = False
-	Local $bDonateTypeAcc = False
-	If $ichkEnableMySwitch Then
-		If $iCurActiveAcc <> -1 Then
-			For $i = 0 To UBound($aSwitchList) - 1
-				If $aSwitchList[$i][4] = $iCurActiveAcc Then
-					If $aSwitchList[$i][2] = 1 Then
-						$bDonateTypeAcc = True
-						ExitLoop
-					EndIf
-				EndIf
-			Next
-		EndIf
-		If $bDonateTypeAcc = False Then
-			If $bAvoidSwitch = False Then
-				If $g_bIsFullArmywithHeroesAndSpells = False Then
-					$g_bRestart = True
-				EndIf
-				$bSkipEnterIdleLoop = True
-			Else
-				SetLog("Enter Idle Loop, troops getting ready or soon.", $COLOR_INFO)
-			EndIf
-		EndIf
-	Else
+	;~Local $bDonateTypeAcc = False
+	;~If $ichkEnableMySwitch Then
+	;~	If $iCurActiveAcc <> -1 Then
+	;~		For $i = 0 To UBound($aSwitchList) - 1
+	;~			If $aSwitchList[$i][4] = $iCurActiveAcc Then
+	;~				If $aSwitchList[$i][2] = 1 Then
+	;~					$bDonateTypeAcc = True
+	;~					ExitLoop
+	;~				EndIf
+	;~			EndIf
+	;~		Next
+	;~	EndIf
+	;~	If $bDonateTypeAcc = False Then
+	;~		If $bAvoidSwitch = False Then
+	;~			If $g_bIsFullArmywithHeroesAndSpells = False Then
+	;~				$g_bRestart = True
+	;~			EndIf
+	;~			$bSkipEnterIdleLoop = True
+	;~		Else
+	;~			SetLog("Enter Idle Loop, troops getting ready or soon.", $COLOR_INFO)
+	;~		EndIf
+	;~	EndIf
+	;~Else
 		$bSkipEnterIdleLoop = $g_bIsFullArmywithHeroesAndSpells
-	EndIf
+	;~EndIf
 
 	While $bSkipEnterIdleLoop = False
 	# samm0d - check make donate type account enter idle loop / End
@@ -1202,25 +1212,25 @@ Func _Idle() ;Sequence that runs until Full Army
 		
 		# samm0d - MySwitch / Start
 
-		If $ichkEnableMySwitch Then
-			; perform switch acc since army still need waiting
-			If $g_bIsFullArmywithHeroesAndSpells = False Then
+;~		If $ichkEnableMySwitch Then
+;~			; perform switch acc since army still need waiting
+;~			If $g_bIsFullArmywithHeroesAndSpells = False Then
 ;~ 				If $ichkEnableContinueStay = 1 Then
-					If $bAvoidSwitch = False Then
-						$g_bRestart = True
-						ExitLoop
-					Else
-						SetLog("Avoid switch, troops getting ready or soon.", $COLOR_INFO)
-					EndIf
-			Else
-				; if donate type acc, perform switch account too
-				If $bDonateTypeAcc Then
-					$bAvoidSwitch = False
-					$g_bRestart = True
-					ExitLoop
-				EndIf
-			EndIf
-		EndIf
+;~					If $bAvoidSwitch = False Then
+;~						$g_bRestart = True
+;~						ExitLoop
+;~					Else
+;~						SetLog("Avoid switch, troops getting ready or soon.", $COLOR_INFO)
+;~					EndIf
+;~			Else
+;~				; if donate type acc, perform switch account too
+;~				If $bDonateTypeAcc Then
+;~					$bAvoidSwitch = False
+;~					$g_bRestart = True
+;~					ExitLoop
+;~				EndIf
+;~			EndIf
+;~		EndIf
 		# samm0d - g_bChkModTrain - ichkEnableMySwitch / End
 		
 		# samm0d - Start
@@ -1263,24 +1273,24 @@ Func AttackMain() ;Main control for attack functions
 			PrepareSearch()
 			If Not $g_bRunState Then Return
 			If $g_bOutOfGold = True Then Return ; Check flag for enough gold to search
-			If $g_bRestart = True Then Return
+			If $g_bRestart = True Or $g_bChkPlayBBOnly = True Then Return
 			VillageSearch()
 			If $g_bOutOfGold = True Then Return ; Check flag for enough gold to search
 			If Not $g_bRunState Then Return
-			If $g_bRestart = True Then Return
+			If $g_bRestart = True Or $g_bChkPlayBBOnly = True Then Return
 			PrepareAttack($g_iMatchMode)
 			If Not $g_bRunState Then Return
-			If $g_bRestart = True Then Return
+			If $g_bRestart = True Or $g_bChkPlayBBOnly = True Then Return
 			Attack()
 			If Not $g_bRunState Then Return
-			If $g_bRestart = True Then Return
+			If $g_bRestart = True Or $g_bChkPlayBBOnly = True Then Return
 			ReturnHome($g_bTakeLootSnapShot)
-			If Not $g_bRunState Then Return
+			If $g_bRestart = True Or $g_bChkPlayBBOnly = True Then Return
 			If _Sleep($DELAYATTACKMAIN2) Then Return
 			Return True
 		Else
-            SetLog("None of search condition match:", $COLOR_WARNING)
-            SetLog("Search, Trophy or Army Camp % are out of range in search setting", $COLOR_WARNING)
+			SetLog("No one of search condition match:", $COLOR_WARNING)
+			SetLog("Waiting on troops, heroes and/or spells according to search settings", $COLOR_WARNING)
 			$g_bIsSearchLimit = False
 			$g_bIsClientSyncError = False
 			$g_bQuickAttack = False

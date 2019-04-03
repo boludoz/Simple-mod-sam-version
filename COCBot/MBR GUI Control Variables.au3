@@ -309,18 +309,18 @@ Func InitializeControlVariables()
     $oAlwaysEnabledControls($g_hTabAbout) = 1
 
     ; samm0d
-    $oAlwaysEnabledControls($g_hChkSamM0dDebugOCR) = 1
-    $oAlwaysEnabledControls($g_hChkSamM0dDebug) = 1
-    $oAlwaysEnabledControls($g_hchkSamM0dImage) = 1
-    $oAlwaysEnabledControls($grpMySwitch) = 1
-    $oAlwaysEnabledControls($chkProfileImage) = 1
-    ;$oAlwaysEnabledControls($btnMakeSwitchADBFolder) = 1
-    $oAlwaysEnabledControls($chkUseADBLoadVillage) = 1
-    $oAlwaysEnabledControls($chkEnableContinueStay) = 1
-    $oAlwaysEnabledControls($txtTrainTimeLeft) = 1
-    $oAlwaysEnabledControls($chkCanCloseGame) = 1
-    $oAlwaysEnabledControls($txtCanCloseGameTime) = 1
-    $oAlwaysEnabledControls($chkForcePreTrainB4Switch) = 1
+    ;$oAlwaysEnabledControls($g_hChkSamM0dDebugOCR) = 1
+    ;$oAlwaysEnabledControls($g_hChkSamM0dDebug) = 1
+    ;$oAlwaysEnabledControls($g_hchkSamM0dImage) = 1
+    ;;$oAlwaysEnabledControls($grpMySwitch) = 1
+    ;$oAlwaysEnabledControls($chkProfileImage) = 1
+    ;;$oAlwaysEnabledControls($btnMakeSwitchADBFolder) = 1
+    ;$oAlwaysEnabledControls($chkUseADBLoadVillage) = 1
+    ;$oAlwaysEnabledControls($chkEnableContinueStay) = 1
+    ;$oAlwaysEnabledControls($txtTrainTimeLeft) = 1
+    ;$oAlwaysEnabledControls($chkCanCloseGame) = 1
+    ;$oAlwaysEnabledControls($txtCanCloseGameTime) = 1
+    ;;$oAlwaysEnabledControls($chkForcePreTrainB4Switch) = 1
 
 	For $i In $aTabControlsVillage
 		$oAlwaysEnabledControls($i) = 1

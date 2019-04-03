@@ -27,18 +27,18 @@ Func TrainSiege()
 
 	Local $aCheckIsOccupied[4] = [822, 206, 0xE00D0D, 10]
 	Local $aCheckIsFilled[4] = [802, 186, 0xD7AFA9, 10]
-	Local $aCheckIsAvailableSiege[4] = [58, 556, 0x47717E, 10]
-	Local $aCheckIsAvailableSiege1[4] = [229, 556, 0x47717E, 10]
-	Local $aCheckIsAvailableSiege2[4] = [400, 556, 0x47717E, 10]
+	Local $aCheckIsAvailableSiege[3][4] = [[58, 556, 0x47717E, 10], [229, 556, 0x47717E, 10], [400, 556, 0x47717E, 10]] ;0->WallWracker,1->BattleBlimp,2->StoneSlammer
 
-	Local $ToMake[3], $g_aiQueuedSiege[3]
+	; Local $ToMake[3], $g_aiQueuedSiege[3]
 
 	; $ToMake[$eSiegeWallWrecker] = $g_aiArmyCompSiegeMachine[$eSiegeWallWrecker] - ($g_aiCurrentSiegeMachines[$eSiegeWallWrecker] + $g_aiCurrentCCSiegeMachines[$eSiegeWallWrecker] + $g_aiQueuedSiege[$eSiegeWallWrecker])
 	; $ToMake[$eSiegeBattleBlimp] = $g_aiArmyCompSiegeMachine[$eSiegeBattleBlimp] - ($g_aiCurrentSiegeMachines[$eSiegeBattleBlimp] + $g_aiCurrentCCSiegeMachines[$eSiegeBattleBlimp]+ $g_aiQueuedSiege[$eSiegeBattleBlimp])
+	; $ToMake[$eSiegeStoneSlammer] = $g_aiArmyCompSiegeMachine[$eSiegeStoneSlammer] - ($g_aiCurrentSiegeMachines[$eSiegeStoneSlammer] + $g_aiCurrentCCSiegeMachines[$eSiegeStoneSlammer]+ $g_aiQueuedSiege[$eSiegeStoneSlammer])
 	; If $g_abChkDonateTroop[$eTroopCount + $g_iCustomDonateConfigs + $eSiegeWallWrecker] ; Donate WallWrecker
 	; If $g_abChkDonateTroop[$eTroopCount + $g_iCustomDonateConfigs + $eSiegeBattleBlimp] ; Donate BattleBlimp
+	; If $g_abChkDonateTroop[$eTroopCount + $g_iCustomDonateConfigs + $eSiegeStoneSlammer] ; Donate StoneSlammer
 
-	Local $TextToUse = ["Clan Castle", $g_asSiegeMachineNames[0], $g_asSiegeMachineNames[1], $g_asSiegeMachineNames[2]]
+	Local $TextToUse = ["Clan Castle", $g_asSiegeMachineNames[0], $g_asSiegeMachineNames[1], $g_asSiegeMachineNames[2], "Any Available Siege"] ; EDITED By FENIX MOD
 
 	If $g_bDebugSetlogTrain Then
 		For $iSiegeIndex = $eSiegeWallWrecker To $eSiegeMachineCount - 1
@@ -57,10 +57,7 @@ Func TrainSiege()
 		For $iSiegeIndex = $eSiegeWallWrecker To $eSiegeMachineCount - 1
 			If $g_aiArmyCompSiegeMachine[$iSiegeIndex] = 0 Then ContinueLoop
 			; Check if is available to make
-			Local $checkPixel
-            If $iSiegeIndex = $eSiegeWallWrecker Then $checkPixel = $aCheckIsAvailableSiege
-            If $iSiegeIndex = $eSiegeBattleBlimp Then $checkPixel = $aCheckIsAvailableSiege1
-            If $iSiegeIndex = $eSiegeStoneSlammer Then $checkPixel = $aCheckIsAvailableSiege2
+			Local $checkPixel[4] = [$aCheckIsAvailableSiege[$iSiegeIndex][0], $aCheckIsAvailableSiege[$iSiegeIndex][1], $aCheckIsAvailableSiege[$iSiegeIndex][2], $aCheckIsAvailableSiege[$iSiegeIndex][3]]
 			If _CheckPixel($checkPixel, True, Default, $g_asSiegeMachineNames[$iSiegeIndex]) Then
 				; ::: Just making the Siege to use :::
 				If ($g_aiAttackUseSiege[$DB] = $iSiegeIndex + 1 Or $g_aiAttackUseSiege[$LB] = $iSiegeIndex + 1) And $g_aiCurrentCCSiegeMachines[$iSiegeIndex] = 0 Then
@@ -93,17 +90,14 @@ Func TrainSiege()
 		If Not OpenArmyTab(False, "TrainSiege()") Then Return
 		If _sleep(500) Then Return
 		getArmySiegeMachines(False, False, False, False) ; Last parameter is to check the Army Window
-		If _sleep(500) Then Return
+		If _sleep(750) Then Return
 		If Not OpenSiegeMachinesTab(False, "TrainSiege()") Then Return
 		If _sleep(500) Then Return
 		For $iSiegeIndex = $eSiegeWallWrecker To $eSiegeMachineCount - 1
 			If $g_aiArmyCompSiegeMachine[$iSiegeIndex] = 0 Then ContinueLoop
 			If $g_aiCurrentSiegeMachines[$iSiegeIndex] < $g_aiArmyCompSiegeMachine[$iSiegeIndex] Then
 				Local $HowMany = $g_aiArmyCompSiegeMachine[$iSiegeIndex] - $g_aiCurrentSiegeMachines[$iSiegeIndex]
-				Local $checkPixel
-                If $iSiegeIndex = $eSiegeWallWrecker Then $checkPixel = $aCheckIsAvailableSiege
-                If $iSiegeIndex = $eSiegeBattleBlimp Then $checkPixel = $aCheckIsAvailableSiege1
-                If $iSiegeIndex = $eSiegeStoneSlammer Then $checkPixel = $aCheckIsAvailableSiege2
+				Local $checkPixel[4] = [$aCheckIsAvailableSiege[$iSiegeIndex][0], $aCheckIsAvailableSiege[$iSiegeIndex][1], $aCheckIsAvailableSiege[$iSiegeIndex][2], $aCheckIsAvailableSiege[$iSiegeIndex][3]]
 				If _CheckPixel($checkPixel, True, Default, $g_asSiegeMachineNames[$iSiegeIndex]) Then
 					PureClick($checkPixel[0], $checkPixel[1], $HowMany, $g_iTrainClickDelay)
 					Local $sSiegeName = $HowMany >= 2 ? $g_asSiegeMachineNames[$iSiegeIndex] & "s" : $g_asSiegeMachineNames[$iSiegeIndex] & ""

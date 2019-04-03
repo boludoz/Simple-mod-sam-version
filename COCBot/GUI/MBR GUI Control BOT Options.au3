@@ -547,7 +547,7 @@ Func btnTestAttackBar()
 
 	SetLog(_PadStringCenter(" Begin AttackBar Detection", 54, "="), $COlOR_INFO)
 
-    Local $avAttackBar = GetAttackBar(False, $DB, True)
+	Local $avAttackBar = GetAttackBar(False, $DB, True)
 
 	If IsArray($avAttackBar) And UBound($avAttackBar, 1) >= 1 Then
 	SetLog("Found " & UBound($avAttackBar, 1) & " Slots", $COlOR_SUCCESS)
@@ -718,16 +718,18 @@ EndFunc   ;==>btnTestDeadBase
 
 Func btnTestDeadBaseFolder()
 
+	;Local $directory = FileOpenDialog("Select folder of CoC village screenshot to test for dead base", $g_sProfileTempPath, "Image (*.png)", $FD_PATHMUSTEXIST, "", $g_hFrmBot)
 	Local $directory = FileSelectFolder("Select folder of CoC village screenshot to test for dead base", "", $FSF_NEWDIALOG, @ScriptDir, $g_hFrmBot)
-	If @error Then SetLog("btnTestDeadBaseFolder cancelled", $COLOR_ERROR)
+	If @error <> 0 Then
+		SetLog("btnTestDeadBaseFolder cancelled", $COLOR_INFO)
+	EndIf
 
-	; ### Change this to proceeds with a comparison between OLD images and the NEW Images
-	Local $NewElixirCollectorFillPath = FileSelectFolder("Select folder from new images ElixirCollectorFill", "", $FSF_NEWDIALOG, @ScriptDir, $g_hFrmBot)
-	If @error Then SetLog("$NewElixirCollectorFillPath cancelled", $COLOR_ERROR)
-	Local $newElixirCollectorLvl = FileSelectFolder("Select folder from new images ElixirCollectorLvl", "", $FSF_NEWDIALOG, @ScriptDir, $g_hFrmBot)
-	If @error Then SetLog("$newElixirCollectorLvl cancelled", $COLOR_ERROR)
+	;checkDeadBaseFolder($directory, "checkDeadBaseNew()", "checkDeadBaseSuperNew()")
+	Local $oldFill = 'checkDeadBaseSuperNew(False, "' & @ScriptDir & "\imgxml\deadbase\elix\fill\old\" & '")'
+	Local $newFill = 'checkDeadBaseSuperNew(False, "' & @ScriptDir & "\imgxml\deadbase\elix\fill\new\" & '")'
 
-	checkDeadBaseFolder($directory, $NewElixirCollectorFillPath, $newElixirCollectorLvl)
+	checkDeadBaseFolder($directory, $oldFill, $newFill)
+
 
 EndFunc   ;==>btnTestDeadBaseFolder
 

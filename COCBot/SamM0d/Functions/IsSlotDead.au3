@@ -12,19 +12,28 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: IsSlotDead(1)
 ; ===============================================================================================================================
-Func IsSlotDead($iSlotNumber)
-	Local $aSlotPosition = GetSlotPosition($iSlotNumber)
-	Local $aSearchOpp[3][3] = [[0x000000, 1, 0], [0x4A4A4A, 0, 1], [0x4A4A4A, 1, 1]]
+Func IsSlotDead($iSlotNumber, $bIndex = False)
+	Local $aSlotPosition = ($bIndex) ? (GetSlotPosition($iSlotNumber)) : ($iSlotNumber)
+	Local $aSearchOpp[3][3] = [[0x656565, 1, 1], [0x656565, 2, 1], [0x656565, 3, 1]]
 	Local $aSearchOpp_2[3][3] = [[0x000000, 1, 0], [0x505050, 0, 1], [0x515151, 1, 1]]
+	Local $aSearchOpp_3[3][3] = [[0x5B5B5B, 1, 1], [0x5B5B5B, 2, 1], [0x5B5B5B, 3, 1]]
 	
-	For $i = 0 To 1 
-		If _MultiPixelSearch($aSlotPosition[0] - 25, $aSlotPosition[1] -20 , $aSlotPosition[0], $aSlotPosition[1], -2, 1, Hex(0x000000, 6), $aSearchOpp, 25) = 0 Then Return True ; Normal Slot
-		Sleep(50)
-		If _MultiPixelSearch($aSlotPosition[0] - 25, $aSlotPosition[1] -20 , $aSlotPosition[0], $aSlotPosition[1], -2, 1, Hex(0x000000, 6), $aSearchOpp_2, 25) = 0 Then Return True ; King/Big Slot
+	For $i = 0 To 3 
+		If _MultiPixelSearch($aSlotPosition[0] - 25, $aSlotPosition[1] -20 , $aSlotPosition[0], $aSlotPosition[1], -2, 1, Hex(0x000000, 6), $aSearchOpp, 25) <> 0 Then Return True ; Normal Slot
+		If _MultiPixelSearch($aSlotPosition[0] - 25, $aSlotPosition[1] -20 , $aSlotPosition[0], $aSlotPosition[1], -2, 1, Hex(0x000000, 6), $aSearchOpp_2, 25) <> 0 Then Return True ; King/Big Slot		
+		If _MultiPixelSearch($aSlotPosition[0] - 25, $aSlotPosition[1] -20 , $aSlotPosition[0], $aSlotPosition[1], -2, 1, Hex(0x000000, 6), $aSearchOpp_3, 25) <> 0 Then Return True ; Spell		
+		Sleep(10)
 	Next
 	
 	Return False
 EndFunc   ;==>IsSlotDead
+
+; ClickPDrop : takes an array[2] (or array[4]) as a parameter [x,y], prevent Click in switch 
+Func ClickPDrop($point, $howMuch = 1, $speed = 0, $debugtxt = "")
+		Local $iX = Abs(Number($point[0]) - Random(-4, 4, 1)), $iY = Abs(Number($g_iGAME_HEIGHT) - Random(52, 86, 1))
+        If $g_bDebugClick Then SetLog("ClickPDrop " & $point[0] & "," & $iY & "," & $howMuch & "," & $speed & " " & $debugtxt, $COLOR_YELLOW, "Verdana", "7.5", 0)
+		Click($iX, $iY, $howMuch, $speed, $debugtxt)
+EndFunc   ;==>ClickPDrop
 
 Func CheckIfSiegeDroppedTheTroops($hSleepTimer, $iSlotNumber, ByRef $bIsDeadByRef)
 	If $bIsDeadByRef = True Then Return True
@@ -58,6 +67,8 @@ Func MoDspell($S)
 
 		If $g_iTHi > 15 And ($g_iTHside = 1 Or $g_iTHside = 3) Then
 			MoDspellDpl($S, $g_iTHx, $g_iTHy)
+			Else
+			MoDspellDpl($S, $g_iTHx + 313, $g_iTHy)
 		EndIf
 
 EndFunc   ;==>MoDspell
@@ -87,3 +98,8 @@ Func MoDspellDpl($THSpell, $x, $y)
 	EndIf
 
 EndFunc   ;==>MoDspellDpl
+
+Func resetCloudSearchParms()
+	$g_iTotalCloudSearchTime = 0
+	$g_iTotalSearchTime = 0
+EndFunc   ;==>resetCloudSearchParms

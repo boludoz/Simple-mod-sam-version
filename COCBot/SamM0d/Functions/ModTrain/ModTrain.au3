@@ -48,13 +48,13 @@ Func ModTrain($ForcePreTrain = False)
 			EndIf
 		EndIf
 	EndIf
-	
+
 	If _Sleep(250) Then Return
 
 	; 	; Get Current available troops
 	; 	getArmyTroops(False, False, False, False)
 	; 	getArmySpells(False, False, False, False)
-    ; 	
+    ;
 	; 	If _Sleep(250) Then Return
 	; 	Local $TroopsToTrain = WhatToTrainSam(False, False)
 	; 	_ArrayDisplay($TroopsToTrain)
@@ -111,7 +111,7 @@ Func ModTrain($ForcePreTrain = False)
 		;Local $bKingTrue = False
 		getArmyTroopTime(False,False)
 		$iKTime[4] = $g_aiTimeTrain[0]
-		
+
 		If BitAND($g_aiSearchHeroWaitEnable[$DB], $eHeroKing) = $eHeroKing Or BitAND($g_aiSearchHeroWaitEnable[$LB], $eHeroKing) = $eHeroKing Then
 			$iKTime[0] = getArmyHeroTime($eHeroKing)
 			;$bKingTrue = True
@@ -123,54 +123,54 @@ Func ModTrain($ForcePreTrain = False)
 		If BitAND($g_aiSearchHeroWaitEnable[$DB], $eHeroWarden) = $eHeroWarden Or BitAND($g_aiSearchHeroWaitEnable[$LB], $eHeroWarden) = $eHeroWarden Then
 			$iKTime[2] = getArmyHeroTime($eHeroWarden)
 			;$bKingTrue = True
-		EndIf		
+		EndIf
 		If $g_abSearchSpellsWaitEnable[$DB] Or $g_abSearchSpellsWaitEnable[$LB] Then
 			getArmySpellTime()
 			$iKTime[3] = $g_aiTimeTrain[1]
 		EndIf
-		
+
 		Local $iWaitMax = _ArrayMax($iKTime, 1)
-		
+
 		If $g_iSamM0dDebug = 1 Then SetLog("$iKTime: " & $iKTime)
-		
-	If $ichkEnableMySwitch = 1 Then
 
-		Local $bIsAttackType = False
-		If $iCurActiveAcc <> -1 Then
-			For $i = 0 To UBound($aSwitchList) - 1
-				If $aSwitchList[$i][4] = $iCurActiveAcc Then
-					;$aSwitchList[$i][0] = _DateAdd('n', $iKTime[0], _NowCalc())
-					$aSwitchList[$i][0] = _DateAdd('n', $iWaitMax, _NowCalc())
-					If $iWaitMax Then
-						SetLog("Army Ready Time: " & $aSwitchList[$i][0], $COLOR_INFO)
-					EndIf
-					If $aSwitchList[$i][2] <> 1 Then
-						$bIsAttackType = True
-					EndIf
-					ExitLoop
-				EndIf
-			Next
-		EndIf
+	;If $ichkEnableMySwitch = 1 Then
+;
+	;	Local $bIsAttackType = False
+	;	If $iCurActiveAcc <> -1 Then
+	;		For $i = 0 To UBound($aSwitchList) - 1
+	;			If $aSwitchList[$i][4] = $iCurActiveAcc Then
+	;				;$aSwitchList[$i][0] = _DateAdd('n', $iKTime[0], _NowCalc())
+	;				$aSwitchList[$i][0] = _DateAdd('n', $iWaitMax, _NowCalc())
+	;				If $iWaitMax Then
+	;					SetLog("Army Ready Time: " & $aSwitchList[$i][0], $COLOR_INFO)
+	;				EndIf
+	;				If $aSwitchList[$i][2] <> 1 Then
+	;					$bIsAttackType = True
+	;				EndIf
+	;				ExitLoop
+	;			EndIf
+	;		Next
+	;	EndIf
+;
+	;	If $ichkEnableContinueStay = 1 Then
+	;		If $bIsAttackType Then
+	;			If $g_iSamM0dDebug = 1 Then SetLog("$itxtTrainTimeLeft: " & $itxtTrainTimeLeft)
+	;			;If $g_iSamM0dDebug = 1 Then SetLog("$iKTime[0]: " & $iKTime[0])
+	;			If $g_iSamM0dDebug = 1 Then SetLog("$iWaitMax: " & $iWaitMax)
+	;			If $g_iSamM0dDebug = 1 Then SetLog("Before $bAvoidSwitch: " & $bAvoidSwitch)
+	;			$bAvoidSwitch = False
+	;			If $iWaitMax <= 0 Then
+	;				$bAvoidSwitch = True
+	;			Else
+	;				If $itxtTrainTimeLeft >= $iWaitMax Then
+	;					$bAvoidSwitch = True
+	;				EndIf
+	;			EndIf
+	;			If $g_iSamM0dDebug = 1 Then SetLog("After $bAvoidSwitch: " & $bAvoidSwitch)
+	;		EndIf
+	;	EndIf
+	;EndIf
 
-		If $ichkEnableContinueStay = 1 Then
-			If $bIsAttackType Then
-				If $g_iSamM0dDebug = 1 Then SetLog("$itxtTrainTimeLeft: " & $itxtTrainTimeLeft)
-				;If $g_iSamM0dDebug = 1 Then SetLog("$iKTime[0]: " & $iKTime[0])
-				If $g_iSamM0dDebug = 1 Then SetLog("$iWaitMax: " & $iWaitMax)
-				If $g_iSamM0dDebug = 1 Then SetLog("Before $bAvoidSwitch: " & $bAvoidSwitch)
-				$bAvoidSwitch = False
-				If $iWaitMax <= 0 Then
-					$bAvoidSwitch = True
-				Else
-					If $itxtTrainTimeLeft >= $iWaitMax Then
-						$bAvoidSwitch = True
-					EndIf
-				EndIf
-				If $g_iSamM0dDebug = 1 Then SetLog("After $bAvoidSwitch: " & $bAvoidSwitch)
-			EndIf
-		EndIf
-	EndIf
-	
 	getArmyCCStatus(False, False, False)
 	If _Sleep(350) Then Return ; 350ms improve pause button response
 
@@ -187,7 +187,7 @@ Func ModTrain($ForcePreTrain = False)
 	ClickP($aAway, 1, 250, "#0504")
 	If _Sleep(250) Then Return
 	Local $iWaitS = 0
-	Local $iCanSmart = 0 
+	Local $iCanSmart = 0
 	$iCanSmart = CheckIsReady()
 	Local $iSmartTime
 	Local $iDateCalc
@@ -207,7 +207,7 @@ Func ModTrain($ForcePreTrain = False)
 			EndIf
 	EndIf
 
-	
+
 	If _Sleep(250) Then Return
 
 	ClickP($aAway, 1, 250, "#0504")
@@ -215,10 +215,10 @@ Func ModTrain($ForcePreTrain = False)
 
 	EndGainCost("Train")
 	UpdateStats()
-	
+
 	$iWaitS = Int($iWaitMax)*60
 	If $ichkEnableMySwitch = 1 and Not $iCanSmart = 1 And $iDateCalc > 0 Then $iWaitS -= $iDateCalc
-	
+
 	If $g_bCloseWhileTrainingEnable = True Then
 		If $iLoop = $iLoopMax Then
 			$iLoop = 0
@@ -231,11 +231,11 @@ Func ModTrain($ForcePreTrain = False)
 			EndIf
 		EndIf
 	EndIf
-	
+
 	If $g_iSamM0dDebug = 1 Then SetLog("$g_bfullArmy: " & $g_bfullArmy)
 	If $g_iSamM0dDebug = 1 Then SetLog("$g_bFullArmyHero: " & $g_bFullArmyHero)
 	If $g_iSamM0dDebug = 1 Then SetLog("$g_bFullArmySpells: " & $g_bFullArmySpells)
-	If $g_iSamM0dDebug = 1 Then SetLog("$g_bFullCCSpells: " & $g_bFullCCSpells) 
+	If $g_iSamM0dDebug = 1 Then SetLog("$g_bFullCCSpells: " & $g_bFullCCSpells)
 	If $g_iSamM0dDebug = 1 Then SetLog("$g_FullCCTroops: " & $g_FullCCTroops)
 	If $g_iSamM0dDebug = 1 Then SetLog("$g_bIsFullArmywithHeroesAndSpells: " & $g_bIsFullArmywithHeroesAndSpells)
 
@@ -265,7 +265,7 @@ Func CheckIsReady()
 	;	For $i = 0 To $eSpellCount - 1
 	;		$iTotalSpellsToBrew += $g_aiArmyCompSpells[$i] * $g_aiSpellSpace[$i]
 	;	Next
-    ;	
+    ;
 	;	If Number($g_iCurrentSpells) = Number($g_iTotalTrainSpaceSpell) Or Number($g_iCurrentSpells) >= Number($g_iTotalSpellValue) Or (Number($g_iCurrentSpells) >= Number($iTotalSpellsToBrew) And $g_bQuickTrainEnable = False) Then
 	;		$g_bFullArmySpells = True
 	;	EndIf
@@ -316,7 +316,7 @@ Func CheckIsReady()
 
 	; Force to Request CC troops or Spells
 	If Not $bFullArmyCC Then $g_bCanRequestCC = True
-	
+
 	If $g_FullCCTroops = False Or $g_bFullCCSpells = False Or $bFullArmyCC = False Then
 		If $ichkEnableMySwitch = 1 Then
 			; If waiting for cc or cc spell, ignore stay to the account, cause you don't know when the cc or spell will be ready.
@@ -660,7 +660,7 @@ Func GetResourcesTroopDiff()
 	Local $iNewCurDarkElixir = 0
 	Local $bDarkTrue = False
 	Local $iDiffToReturn = 0
-	
+
 	; Let??s UPDATE the current Elixir and Dark elixir each Troop train on 'Bottom train Window Page'
 	If _ColorCheck(_GetPixelColor(223, 594, True), Hex(0xE8E8E0, 6), 20) Then ; Gray background window color
 		; Village without Dark Elixir
@@ -671,7 +671,7 @@ Func GetResourcesTroopDiff()
 		$iNewCurElixir = getResourcesValueTrainPage(230, 594) ; ELIXIR
 		$iNewCurDarkElixir = getResourcesValueTrainPage(382, 594) ; DARK ELIXIR
 	EndIf
-	
+
 	If $bDarkTrue = True Then
 			If Abs($g_iCurDarkElixir - $iNewCurDarkElixir) > Abs($g_iCurElixir - $iNewCurElixir) Then
 				$iDiffToReturn = Abs($g_iCurDarkElixir - $iNewCurDarkElixir)
@@ -681,9 +681,9 @@ Func GetResourcesTroopDiff()
 		Else
 			$iDiffToReturn = Abs($g_iCurElixir - $iNewCurElixir)
 	EndIf
-	
+
 	If $bDarkTrue = True Then $g_iCurDarkElixir = $iNewCurDarkElixir
 	$g_iCurElixir = $iNewCurElixir
-	
+
 	Return $iDiffToReturn  ; IA LOGIK
 EndFunc   ;==>GetResourcesTroopDiff

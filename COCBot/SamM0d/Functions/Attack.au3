@@ -14,7 +14,7 @@
 #include <Array.au3>
 #include <WinAPIEx.au3>
 
-Local $sIniFile = $g_sProfilePath & "\profile.ini"
+Local $sIniFile = $g_sProfileConfigPath
 
 Func AttackRead()
 	If IniRead($sIniFile, "AttackCVS", "RadioCVSwait1", "False") = "True" Then $g_bRadioCVSwait1 = True

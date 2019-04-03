@@ -130,6 +130,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 	If $GoldChangeCheck Then
         ; samm0d
         AttackReport()
+		resetCloudSearchParms() ; ADDED By FENIX MOD
         If _Sleep(200) Then Return ; setlog and pause response
     EndIf
 

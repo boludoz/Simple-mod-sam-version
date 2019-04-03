@@ -265,11 +265,12 @@ Func LabGuiDisplay() ; called from main loop to get an early status for indictor
 		Local $iLabTime = _DateDiff('n', _NowCalc(), $g_sLabUpgradeTime)
 		Local $iLastCheck =_DateDiff('n', $iLastTimeChecked[$g_iCurAccount], _NowCalc()) ; elapse time from last check (minutes)
 		SetDebugLog("Lab LabUpgradeTime: " & $g_sLabUpgradeTime & ", Lab DateCalc: " & $iLabTime)
+	 
 		SetDebugLog("Lab LastCheck: " & $iLastTimeChecked[$g_iCurAccount] & ", Check DateCalc: " & $iLastCheck)
 		; A check each 6 hours [6*60 = 360] or when Lab research time finishes
 		If $iLabTime > 0 And $iLastCheck <= 360 Then Return
 	EndIf
-
+	
 	;CLOSE ARMY WINDOW
 	ClickP($aAway, 2, 0, "#0346") ;Click Away
 	If _Sleep(1500) Then Return ; Delay AFTER the click Away Prevents lots of coc restarts
@@ -299,13 +300,13 @@ Func LabGuiDisplay() ; called from main loop to get an early status for indictor
 
 	$iLastTimeChecked[$g_iCurAccount] = _NowCalc()
 
-    Local $aResearchButton = findButton("Research", Default, 1, True)
-    If IsArray($aResearchButton) And UBound($aResearchButton, 1) = 2 Then
-        If $g_bDebugImageSave Then DebugImageSave("StarLabUpgrade") ; Debug Only
-        ClickP($aResearchButton)
+	Local $aResearchButton = findButton("Research", Default, 1, True)
+	If IsArray($aResearchButton) And UBound($aResearchButton, 1) = 2 Then
+		If $g_bDebugImageSave Then DebugImageSave("StarLabUpgrade") ; Debug Only
+		ClickP($aResearchButton)
 		If _Sleep($DELAYLABORATORY1) Then Return ; Wait for window to open
 	Else
-        SetLog("Cannot find the Laboratory Research Button!", $COLOR_ERROR)
+		SetLog("Cannot find the Laboratory Research Button!", $COLOR_ERROR)
 		ClickP($aAway, 2, $DELAYLABORATORY4, "#0199")
 		;===========Hide Red  Hide Green  Show Gray==
 		GUICtrlSetState($g_hPicLabGreen, $GUI_HIDE)
@@ -317,7 +318,7 @@ Func LabGuiDisplay() ; called from main loop to get an early status for indictor
 
 	; check for upgrade in process - look for green in finish upgrade with gems button
 	If _ColorCheck(_GetPixelColor(730, 200, True), Hex(0xA2CB6C, 6), 20) Then ; Look for light green in upper right corner of lab window.
-        SetLog("Laboratory is Running", $COLOR_INFO)
+		SetLog("Laboratory is Running", $COLOR_INFO)
 		;==========Hide Red  Show Green Hide Gray===
 		GUICtrlSetState($g_hPicLabGray, $GUI_HIDE)
 		GUICtrlSetState($g_hPicLabRed, $GUI_HIDE)
@@ -335,8 +336,8 @@ Func LabGuiDisplay() ; called from main loop to get an early status for indictor
 		If ProfileSwitchAccountEnabled() Then SwitchAccountVariablesReload("Save") ; saving $asLabUpgradeTime[$g_iCurAccount] = $g_sLabUpgradeTime for instantly displaying in multi-stats
 		Return True
 	ElseIf _ColorCheck(_GetPixelColor(730, 200, True), Hex(0x8088B0, 6), 20) Then ; Look for light purple in upper right corner of lab window.
-        SetLog("Laboratory has Stopped", $COLOR_INFO)
-        If $g_bNotifyTGEnable And $g_bNotifyAlertLaboratoryIdle Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Laboratory-Idle_Info_01", "Laboratory Idle") & "%0A" & GetTranslatedFileIni("MBR Func_Notify", "Laboratory-Idle_Info_02", "Laboratory has Stopped"))
+		SetLog("Laboratory has Stopped", $COLOR_INFO)
+		If $g_bNotifyTGEnable And $g_bNotifyAlertLaboratoryIdle Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Laboratory-Idle_Info_01", "Laboratory Idle") & "%0A" & GetTranslatedFileIni("MBR Func_Notify", "Laboratory-Idle_Info_02", "Laboratory has Stopped"))
 		ClickP($aAway, 2, $DELAYLABORATORY4, "#0359")
 		;========Show Red  Hide Green  Hide Gray=====
 		GUICtrlSetState($g_hPicLabGray, $GUI_HIDE)
@@ -360,6 +361,7 @@ Func LabGuiDisplay() ; called from main loop to get an early status for indictor
 		Return
 	EndIf
 
+		
 EndFunc   ;==>LabGuiDisplay
 
 Func HideShields($bHide = False)

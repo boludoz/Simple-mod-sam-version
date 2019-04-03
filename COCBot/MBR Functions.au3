@@ -25,7 +25,7 @@
 #include "SamM0d\Functions\HLFClick.au3"
 #include "SamM0d\Functions\getMyOcr.au3"
 #include "SamM0d\Functions\FriendlyChallenge.au3"
-#include "SamM0d\Functions\MySwitch\MySwitch.au3"
+;#include "SamM0d\Functions\MySwitch\MySwitch.au3"
 #include "SamM0d\Functions\Backup system.au3"
 ;Attack
 #include "SamM0d\Functions\Attack.au3"
@@ -57,7 +57,7 @@
 #include "SamM0d\Functions\Other\_debugSaveHBitmapToImage.au3"
 #include "SamM0d\Functions\Other\_Wait4Pixel.au3"
 #include "SamM0d\Functions\Other\SetModDebugLog.au3"
-#include "SamM0d\GUI\GUI Control MySwitch Setting.au3"
+;#include "SamM0d\GUI\GUI Control MySwitch Setting.au3"
 #include "SamM0d\GUI\MBR GUI Control Child SamM0d.au3"
 ;----------------------------------------------------------------
 #include "SamM0d\MBRMates\AreCollectorsOutside\AreCollectorsOutside.au3"

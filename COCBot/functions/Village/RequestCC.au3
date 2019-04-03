@@ -12,6 +12,52 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+#Samm0d - Istorquest
+Func IsToRequestCC($ClickPAtEnd = True, $bSetLog = False, $bNeedCapture = True)
+Global $g_sImgArmyRequestCC = $g_sSamM0dImageLocation & "\Request"
+
+	Local $bNeedRequest = False
+	Local $sCCRequestDiamond = GetDiamondFromRect("715,534+88,842,571+88") ; RERC Done ; Contains iXStart, $iYStart, $iXEnd, $iYEnd
+	Local $aCurrentCCRequest = findMultiple($g_sImgArmyRequestCC, $sCCRequestDiamond, $sCCRequestDiamond, 0, 1000, 0, "objectname,objectpoints", $bNeedCapture)
+	Local $aTempCCRequestArray, $aCCRequestCoords
+	If UBound($aCurrentCCRequest, 1) >= 1 Then
+		For $i = 0 To UBound($aCurrentCCRequest, 1) - 1 ; Loop through found
+			$aTempCCRequestArray = $aCurrentCCRequest[$i] ; Declare Array to Temp Array
+			$aCCRequestCoords = StringSplit($aTempCCRequestArray[1], ",", $STR_NOCOUNT) ; Split the Coordinates where the Button got found into X and Y
+
+			If $g_bDebugSetlog Then
+				SetDebugLog($aTempCCRequestArray[0] & " Found on Coord: (" & $aCCRequestCoords[0] & "," & $aCCRequestCoords[1] & ")")
+			EndIf
+
+			If $aTempCCRequestArray[0] = "RequestFilled" Then ; Clan Castle Full
+				SetLog("Your Clan Castle is already full or you are not in a clan.", $COLOR_SUCCESS)
+				$g_bCanRequestCC = False
+			ElseIf $aTempCCRequestArray[0] = "Waiting4Request" Then ; Request has already been made
+				SetLog("Request has already been made!", $COLOR_INFO)
+				$g_bCanRequestCC = False
+			ElseIf $aTempCCRequestArray[0] = "CanRequest" Then ; Can make a request
+				If Not $g_abRequestType[0] And Not $g_abRequestType[1] And Not $g_abRequestType[2] Then
+					SetDebugLog("Request for Specific CC is not enable!", $COLOR_INFO)
+					$bNeedRequest = True
+				ElseIf Not $ClickPAtEnd Then
+					$bNeedRequest = True
+				Else
+					For $i = 0 To 2
+						If Not IsFullClanCastleType($i) Then
+							$bNeedRequest = True
+							ExitLoop
+						EndIf
+					Next
+				EndIf
+			Else ; No button request found
+				SetLog("Cannot detect button request troops.")
+			EndIf
+		Next
+	EndIf
+	Return $bNeedRequest
+
+EndFunc   ;==>IsToRequestCC
+#ce
 
 Func RequestCC($bClickPAtEnd = True, $sText = "", $bOpenTrainWindow = True)
 

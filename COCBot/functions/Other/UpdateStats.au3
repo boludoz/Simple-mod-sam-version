@@ -6,7 +6,7 @@
 ; Return values .: None
 ; Author ........: kaganus (06-2015)
 ; Modified ......: CodeSlinger69 (01-2017), Fliegerfaust (02-2017)
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2018
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
@@ -116,7 +116,6 @@ Func UpdateStats($bForceUpdate = False)
 		GUICtrlSetState($g_hLblResultTrophyNow, $GUI_SHOW)
 		GUICtrlSetState($g_hLblResultBuilderNow, $GUI_SHOW)
 		GUICtrlSetState($g_hLblResultGemNow, $GUI_SHOW)
-		btnVillageStat("UpdateStats")
 		$g_iStatsStartedWith[$eLootGold] = $g_aiCurrentLoot[$eLootGold]
 		$g_iStatsStartedWith[$eLootElixir] = $g_aiCurrentLoot[$eLootElixir]
 		$g_iStatsStartedWith[$eLootDarkElixir] = $g_aiCurrentLoot[$eLootDarkElixir]
@@ -141,6 +140,7 @@ Func UpdateStats($bForceUpdate = False)
 		$iOldFreeBuilderCount = $g_iFreeBuilderCount
 		$iOldTotalBuilderCount = $g_iTotalBuilderCount
 		$g_iFirstRun = 0
+		btnVillageStat("UpdateStats")
 		GUICtrlSetState($btnResetStats, $GUI_ENABLE)
 		If $g_iGuiMode = 0 Then
 			; send update to GUI process
@@ -337,7 +337,7 @@ Func UpdateStats($bForceUpdate = False)
 	If $iOldSkippedVillageCount <> $g_iSkippedVillageCount Then
 		$bStatsUpdated = True
 		GUICtrlSetData($g_hLblResultVillagesSkipped, _NumberFormat($g_iSkippedVillageCount, True))
-		GUICtrlSetData($g_hLblResultSkippedHourNow, _NumberFormat($g_iSkippedVillageCount, True))
+		If Not ProfileSwitchAccountEnabled() Then GUICtrlSetData($g_hLblResultSkippedHourNow, _NumberFormat($g_iSkippedVillageCount, True))
 		$iOldSkippedVillageCount = $g_iSkippedVillageCount
 	EndIf
 
@@ -501,38 +501,15 @@ Func UpdateStats($bForceUpdate = False)
 		GUICtrlSetData($g_hLblTotalTroopsXP, _NumberFormat($g_iTotalDonateStatsTroopsXP, True))
 	EndIf
 
-    ; samm0d - samm0dzap
-    ; SmartZap DE Gain
-;~ 	If $s_iOldSmartZapGain <> $g_iSmartZapGain Then
-;~ 		$bStatsUpdated = True
-;~ 		GUICtrlSetData($g_hLblSmartZap, _NumberFormat($g_iSmartZapGain, True))
-;~         GUICtrlSetData($lblMySmartZap, _NumberFormat($g_iSmartZapGain, True))
-;~ 		$s_iOldSmartZapGain = $g_iSmartZapGain
-;~ 	EndIf
-
-;~ 	If $s_iOldNumLSpellsUsed <> $g_iNumLSpellsUsed Then
-;~ 		$bStatsUpdated = True
-;~ 		GUICtrlSetData($g_hLblSmartLightningUsed, _NumberFormat($g_iNumLSpellsUsed, True))
-;~         GUICtrlSetData($lblMyLightningUsed, _NumberFormat($g_iNumLSpellsUsed, True))
-;~ 		$s_iOldNumLSpellsUsed = $g_iNumLSpellsUsed
-;~ 	EndIf
-
-;~ 	If $s_iOldNumEQSpellsUsed <> $g_iNumEQSpellsUsed Then
-;~ 		$bStatsUpdated = True
-;~ 		GUICtrlSetData($g_hLblSmartEarthQuakeUsed, _NumberFormat($g_iNumEQSpellsUsed, True))
-;~ 		$s_iOldNumEQSpellsUsed = $g_iNumEQSpellsUsed
-;~ 	EndIf
 	If $s_iOldSmartZapGain <> $g_iSmartZapGain Then
 		$bStatsUpdated = True
 		GUICtrlSetData($g_hLblSmartZap, _NumberFormat($g_iSmartZapGain, True))
-																				
 		$s_iOldSmartZapGain = $g_iSmartZapGain
 	EndIf
 
 	If $s_iOldNumLSpellsUsed <> $g_iNumLSpellsUsed Then
 		$bStatsUpdated = True
 		GUICtrlSetData($g_hLblSmartLightningUsed, _NumberFormat($g_iNumLSpellsUsed, True))
-																					   
 		$s_iOldNumLSpellsUsed = $g_iNumLSpellsUsed
 	EndIf
 
@@ -661,102 +638,6 @@ Func UpdateStats($bForceUpdate = False)
 		EndIf
 	Next
 
-    ; samm0d ==============================================
-    If $ichkEnableMySwitch Then
-        If $iCurActiveAcc <> - 1 Then
-            If $aProfileStats[32][$iCurActiveAcc+1] = 0 Then
-                $aProfileStats[32][$iCurActiveAcc+1] = $g_aiCurrentLoot
-
-                $g_iStatsStartedWith[$eLootGold] = $g_aiCurrentLoot[$eLootGold]
-                $g_iStatsStartedWith[$eLootElixir] = $g_aiCurrentLoot[$eLootElixir]
-                $g_iStatsStartedWith[$eLootDarkElixir] = $g_aiCurrentLoot[$eLootDarkElixir]
-                $g_iStatsStartedWith[$eLootTrophy] = $g_aiCurrentLoot[$eLootTrophy]
-
-                $aProfileStats[32][$iCurActiveAcc+1] = $g_iStatsStartedWith
-
-                Local $tempStatsStartedWith[$eLootCount]
-                $tempStatsStartedWith = $aProfileStats[32][$iCurActiveAcc+1]
-
-                GUICtrlSetData($g_ahLblStatsStartedWith[$eLootGold], _NumberFormat($tempStatsStartedWith[$eLootGold], True))
-                GUICtrlSetData($g_ahLblStatsStartedWith[$eLootElixir], _NumberFormat($tempStatsStartedWith[$eLootElixir], True))
-                If $tempStatsStartedWith[$eLootDarkElixir] <> "" Then
-                    GUICtrlSetData($g_ahLblStatsStartedWith[$eLootDarkElixir], _NumberFormat($tempStatsStartedWith[$eLootDarkElixir], True))
-                EndIf
-                GUICtrlSetData($g_ahLblStatsStartedWith[$eLootTrophy], _NumberFormat($tempStatsStartedWith[$eLootTrophy], True))
-            EndIf
-
-            saveCurStats($iCurActiveAcc)
-
-            If $g_iStatsStartedWith[$eLootDarkElixir] <> "" Then
-                GUICtrlSetState($g_hLblResultDeNow, $GUI_SHOW)
-                GUICtrlSetState($g_hPicResultDeNow, $GUI_SHOW)
-
-                GUICtrlSetState($g_hPicResultDEStart, $GUI_SHOW)
-                GUICtrlSetState($g_hPicDarkLoot, $GUI_SHOW)
-                GUICtrlSetState($g_hPicDarkLastAttack, $GUI_SHOW)
-                GUICtrlSetState($g_hPicHourlyStatsDark, $GUI_SHOW)
-
-                ;GUICtrlSetData($g_ahLblStatsStartedWith[$eLootDarkElixir], _NumberFormat($g_iStatsStartedWith[$eLootDarkElixir], True))
-                ;GUICtrlSetData($g_hLblResultDeNow, _NumberFormat($g_iStatsStartedWith[$eLootDarkElixir], True))
-            Else
-                GUICtrlSetState($g_hPicResultDEStart, $GUI_HIDE)
-                GUICtrlSetState($g_hPicDarkLoot, $GUI_HIDE)
-                GUICtrlSetState($g_hPicDarkLastAttack, $GUI_HIDE)
-                GUICtrlSetState($g_hPicHourlyStatsDark, $GUI_HIDE)
-            EndIf
-
-            If $g_iFirstAttack = 2 Then
-                Local $iTotalGain[4] = [0,0,"",0]
-                For $i = 0 To 7
-                    If $ichkEnableAcc[$i] = 1 Then
-                        if IsArray($aProfileStats[33][$i+1]) Then
-                            Local $tempGain[4] = [0,0,"",0]
-                            $tempGain = $aProfileStats[33][$i+1]
-                            $iTotalGain[0] += $tempGain[0]
-                            $iTotalGain[1] += $tempGain[1]
-                            If $tempGain[2] <> "" Then
-                                $iTotalGain[2] += $tempGain[2]
-                            EndIf
-                            $iTotalGain[3] += $tempGain[3]
-                        EndIf
-                    EndIf
-                Next
-
-                GUICtrlSetData($g_ahLblStatsSwitchTotal[$eLootGold], $iTotalGain[$eLootGold])
-                GUICtrlSetData($g_ahLblStatsSwitchTotal[$eLootElixir], $iTotalGain[$eLootElixir])
-                GUICtrlSetData($g_ahLblStatsSwitchTotal[$eLootDarkElixir], $iTotalGain[$eLootDarkElixir])
-                GUICtrlSetData($g_ahLblStatsSwitchTotal[$eLootTrophy], $iTotalGain[$eLootTrophy])
-
-                GUICtrlSetData($g_ahLblStatsSwitchGPH[$eLootGold], _NumberFormat(Round($iTotalGain[$eLootGold] / (Int(__TimerDiff($g_hTimerSinceStarted) + $g_iTimePassed)) * 3600)) & "k / h")
-                GUICtrlSetData($g_ahLblStatsSwitchGPH[$eLootElixir], _NumberFormat(Round($iTotalGain[$eLootElixir] / (Int(__TimerDiff($g_hTimerSinceStarted) + $g_iTimePassed)) * 3600)) & "k / h")
-                If $g_ahLblStatsSwitchGPH[$eLootDarkElixir] <> "" Then
-                    GUICtrlSetData($g_ahLblStatsSwitchGPH[$eLootDarkElixir], _NumberFormat(Round($iTotalGain[$eLootDarkElixir] / (Int(__TimerDiff($g_hTimerSinceStarted) + $g_iTimePassed)) * 3600 * 1000)) & " / h")
-                EndIf
-                GUICtrlSetData($g_ahLblStatsSwitchGPH[$eLootTrophy], _NumberFormat(Round($iTotalGain[$eLootTrophy] / (Int(__TimerDiff($g_hTimerSinceStarted) + $g_iTimePassed)) * 3600 * 1000)) & " / h")
-
-            EndIf
-
-
-            If $bUpdateStats = True Then
-                If $iCurActiveAcc <> - 1 Then
-                If $aSwitchList[$iCurStep][4] <> $iCurActiveAcc Then
-                    For $i = 0 To UBound($aSwitchList) - 1
-                        If $aSwitchList[$i][4] = $iCurActiveAcc Then
-                            $iCurStep = $i
-                        EndIf
-                    Next
-                    GUICtrlSetData($g_hGrpVillage, GetTranslatedFileIni("MBR GUI Design Bottom", "GrpVillage", "Village") & ": " & $aSwitchList[$iCurStep][3])
-                    GUICtrlSetData($g_hLblProfileName,$aSwitchList[$iCurStep][3])
-
-                    displayStats($iCurActiveAcc)
-                EndIf
-                EndIf
-            EndIf
-        EndIf
-    EndIf
-    ;===================================
-	If Not _DateIsValid($g_sLabUpgradeTime) Then GUICtrlSetData($g_hLbLLabTime, "")
-
 	If ProfileSwitchAccountEnabled() Then
 		For $i = 0 To 7
 			;village report
@@ -786,6 +667,12 @@ Func UpdateStats($bForceUpdate = False)
 		Next
 		GUICtrlSetData($g_hLblResultSkippedHourNow, $g_aiSkippedVillageCountAcc[$g_iCurAccount]) ;	Counting skipped village at Bottom GUI
 		GUICtrlSetData($g_hLblResultAttackedHourNow, $g_aiAttackedCountAcc[$g_iCurAccount]) ;	Counting attacked village at Bottom GUI
+
+		If $g_iFirstAttack = 2 Then
+			GUICtrlSetData($g_hLblResultGoldHourNow, _NumberFormat(Round($g_aiGoldTotalAcc[$g_iCurAccount] / (Int(__TimerDiff($g_hTimerSinceStarted) + $g_iTimePassed)) * 3600)) & "k / h") ;GUI BOTTOM
+			GUICtrlSetData($g_hLblResultElixirHourNow, _NumberFormat(Round($g_aiElixirTotalAcc[$g_iCurAccount] / (Int(__TimerDiff($g_hTimerSinceStarted) + $g_iTimePassed)) * 3600)) & "k / h") ;GUI BOTTOM
+			GUICtrlSetData($g_hLblResultDEHourNow, _NumberFormat(Round($g_aiDarkTotalAcc[$g_iCurAccount] / (Int(__TimerDiff($g_hTimerSinceStarted) + $g_iTimePassed)) * 3600 * 1000)) & " / h") ;GUI BOTTOM
+		EndIf
 	EndIf
 
 	If $ResetStats = 1 Then
@@ -874,32 +761,22 @@ Func ResetStats()
 	$g_iTotalDonateStatsTroops = 0
 	$g_iTotalDonateStatsTroopsXP = 0
 	$g_iTotalDonateStatsSpells = 0
-    $g_iTotalDonateStatsSpellsXP = 0
-
-    ;========SamM0d===========
-    If $ichkEnableMySwitch Then
-        If $iCurActiveAcc <> - 1 Then
-            ; samm0d myswitch
-            For $i = 0 To 7
-                resetCurStats($i)
-            Next
-            $aProfileStats[32][$iCurActiveAcc+1] = $g_aiCurrentLoot
-        EndIf
-    EndIf
-
+	$g_iTotalDonateStatsSpellsXP = 0
 	$g_iTotalDonateStatsSiegeMachines = 0
 	$g_iTotalDonateStatsSiegeMachinesXP = 0
 	If ProfileSwitchAccountEnabled() Then
-		SwitchAccountVariablesReload("Reset")
-		For $i = 0 To 7
-			GUICtrlSetData($g_ahLblResultRuntimeNowAcc[$i], "00:00:00")
-			$g_aiRunTime[$i] = 0
-			GUICtrlSetData($g_hLbLLabTime, "")
+		For $i = 0 To $g_iTotalAcc
+			$g_aiGoldTotalAcc[$i] = 0
+			$g_aiElixirTotalAcc[$i] = 0
+			$g_aiDarkTotalAcc[$i] = 0
+			$g_aiTrophyLootAcc[$i] = 0
+			$g_aiAttackedCountAcc[$i] = 0
+			$g_aiSkippedVillageCountAcc[$i] = 0
 		Next
 	EndIf
-	ResetGoblinsXP() ; SamM0d
+	ResetGoblinsXP() ; Goblin XP - ADDED BY FENIX MOD
 	UpdateStats()
-	BuilderBaseResetStats() ; SamM0d
+	BuilderBaseResetStats()
 EndFunc   ;==>ResetStats
 
 Func WallsStatsMAJ()

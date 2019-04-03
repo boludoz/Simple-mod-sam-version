@@ -1762,7 +1762,7 @@ Func tabMain()
 			GUISetState(@SW_HIDE, $hGUI_MOD)
             GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_BUILDER_BASE)
             tabBuilderBase()
-			
+
 		Case $tabidx = 4  ; Mod
 			GUISetState(@SW_HIDE, $g_hGUI_LOG)
 			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
@@ -2059,20 +2059,20 @@ Func tabBot()
 EndFunc   ;==>tabBot
 
 ; samm0d
-Func tabStats()
-    Local $tabidx = GUICtrlRead($g_hGUI_STATS_TAB)
-    ;SetLog("$tabidx: " & $tabidx)
-        Select
-            Case $tabidx = 3 ; Options tab
-                GUICtrlSetState($g_hLblProfileName,$GUI_HIDE)
-                GUICtrlSetState($arrowleft2,$GUI_HIDE)
-                GUICtrlSetState($arrowright2,$GUI_HIDE)
-            Case Else
-                GUICtrlSetState($g_hLblProfileName,$GUI_SHOW)
-                GUICtrlSetState($arrowleft2,$GUI_SHOW)
-                GUICtrlSetState($arrowright2,$GUI_SHOW)
-        EndSelect
-EndFunc
+;Func tabStats()
+;    Local $tabidx = GUICtrlRead($g_hGUI_STATS_TAB)
+;    ;SetLog("$tabidx: " & $tabidx)
+;        Select
+;            Case $tabidx = 3 ; Options tab
+;                GUICtrlSetState($g_hLblProfileName,$GUI_HIDE)
+;                GUICtrlSetState($arrowleft2,$GUI_HIDE)
+;                GUICtrlSetState($arrowright2,$GUI_HIDE)
+;            Case Else
+;                GUICtrlSetState($g_hLblProfileName,$GUI_SHOW)
+;                GUICtrlSetState($arrowleft2,$GUI_SHOW)
+;                GUICtrlSetState($arrowright2,$GUI_SHOW)
+;        EndSelect
+;EndFunc
 
 
 Func tabDeadbase()

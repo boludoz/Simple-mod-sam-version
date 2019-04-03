@@ -18,7 +18,8 @@
 
 Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400)
 	If $g_bDebugSetlogTrain Then SetLog("Func TrainIt $iIndex=" & $iIndex & " $howMuch=" & $iQuantity & " $iSleep=" & $iSleep, $COLOR_DEBUG)
-	Local $bDark = ($iIndex >= $eMini And $iIndex <= $eIceG)
+    Local $bDark = ($iIndex >= $eMini And $iIndex <= $eIceG)
+	Local $iErrors = 0
 
 	For $i = 1 To 5 ; Do
 
@@ -48,9 +49,12 @@ Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400)
 				EndIf
 			Else
                 ForceCaptureRegion()
-				Local $sBadPixelColor = _GetPixelColor($aTrainPos[0], $aTrainPos[1], $g_bCapturePixel)
-				If $g_bDebugSetlogTrain Then SetLog("Positon X: " & $aTrainPos[0] & "| Y : " & $aTrainPos[1] & " |Color get: " & $sBadPixelColor & " | Need: " & $aTrainPos[2])
-				If StringMid($sBadPixelColor, 1, 2) = StringMid($sBadPixelColor, 3, 2) And StringMid($sBadPixelColor, 1, 2) = StringMid($sBadPixelColor, 5, 2) Then
+                Local $sBadPixelColor = _GetPixelColor($aTrainPos[0], $aTrainPos[1], $g_bCapturePixel)
+				;Taking 2 Bad Pixel Colors Just To Be Sure That There Is Not A False Postive
+				Local $sBadPixelColor1 = _GetPixelColor($aTrainPos[0] + 2, $aTrainPos[1] + 3, $g_bCapturePixel)
+				If $g_bDebugSetlogTrain Then SetLog("Positon X: " & $aTrainPos[0] & "| Y : " & $aTrainPos[1] & " |Color get: " & $sBadPixelColor & "&" & $sBadPixelColor1 & " | Need: " & $aTrainPos[2])
+				If StringMid($sBadPixelColor, 1, 2) = StringMid($sBadPixelColor, 3, 2) And StringMid($sBadPixelColor, 1, 2) = StringMid($sBadPixelColor, 5, 2) And _
+						StringMid($sBadPixelColor1, 1, 2) = StringMid($sBadPixelColor1, 3, 2) And StringMid($sBadPixelColor1, 1, 2) = StringMid($sBadPixelColor1, 5, 2) Then
 					; Pixel is gray, so queue is full -> nothing to inform the user about
 					SetLog("Troop " & GetTroopName($iIndex) & " is not available due to full queue", $COLOR_DEBUG)
 				Else
@@ -58,8 +62,8 @@ Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400)
 						If $g_bDebugSetlogTrain Then DebugImageSave("BadPixelCheck_" & GetTroopName($iIndex))
 						SetLog("Bad pixel check on troop position " & GetTroopName($iIndex), $COLOR_ERROR)
 						If $g_bDebugSetlogTrain Then SetLog("Train Pixel Color: " & $sBadPixelColor, $COLOR_DEBUG)
-                    EndIf
-                EndIf
+					EndIf
+				EndIf
                 If Mod($i, 2) = 1 Then ; executed on $i = 1, 3 or 5
                     ; force detecting train slot again
                     Local $aEmptyArray[4] = [-1,-1,-1,-1]
@@ -90,24 +94,24 @@ Func GetTrainPos(Const $iIndex)
 	If $aTrainPos[0] <> -1 Then
 		Return $aTrainPos
 	Else
-	; Get the Image path to search
-	If $iIndex >= $eBarb And $iIndex <= $eIceG Then
-		Local $sFilter = String($g_asTroopShortNames[$iIndex]) & "*"
-		Local $asImageToUse = _FileListToArray($g_sImgTrainTroops, $sFilter, $FLTA_FILES, True)
-		If $g_bDebugSetlogTrain Then SetLog("$asImageToUse Troops: " & $asImageToUse[1])
-		$aTrainPos = GetVariable($asImageToUse[1], $iIndex)
-		$aTrainArmy[$iIndex] = $aTrainPos
-		Return $aTrainPos
-	EndIf
+		; Get the Image path to search
+		If $iIndex >= $eBarb And $iIndex <= $eIceG Then
+			Local $sFilter = String($g_asTroopShortNames[$iIndex]) & "*"
+			Local $asImageToUse = _FileListToArray($g_sImgTrainTroops, $sFilter, $FLTA_FILES, True)
+			If $g_bDebugSetlogTrain Then SetLog("$asImageToUse Troops: " & $asImageToUse[1])
+			$aTrainPos = GetVariable($asImageToUse[1], $iIndex)
+			$aTrainArmy[$iIndex] = $aTrainPos
+			Return $aTrainPos
+		EndIf
 
-	If $iIndex >= $eLSpell And $iIndex <= $eBtSpell Then
-		Local $sFilter = String($g_asSpellShortNames[$iIndex - $eLSpell]) & "*"
-		Local $asImageToUse = _FileListToArray($g_sImgTrainSpells, $sFilter, $FLTA_FILES, True)
-		If $g_bDebugSetlogTrain Then SetLog("$asImageToUse Spell: " & $asImageToUse[1])
-		$aTrainPos = GetVariable($asImageToUse[1], $iIndex)
-		$aTrainArmy[$iIndex] = $aTrainPos
-		Return $aTrainPos
-	EndIf
+		If $iIndex >= $eLSpell And $iIndex <= $eBtSpell Then
+			Local $sFilter = String($g_asSpellShortNames[$iIndex - $eLSpell]) & "*"
+			Local $asImageToUse = _FileListToArray($g_sImgTrainSpells, $sFilter, $FLTA_FILES, True)
+			If $g_bDebugSetlogTrain Then SetLog("$asImageToUse Spell: " & $asImageToUse[1])
+			$aTrainPos = GetVariable($asImageToUse[1], $iIndex)
+			$aTrainArmy[$iIndex] = $aTrainPos
+			Return $aTrainPos
+		EndIf
 
 	EndIf
 

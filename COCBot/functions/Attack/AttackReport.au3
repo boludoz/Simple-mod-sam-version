@@ -181,11 +181,11 @@ Func AttackReport()
 	SetLog("Stars earned: " & $starsearned)
 Local $sAccAct = "-"
 	#Samm0d - Start
-    If $ichkEnableMySwitch = 1 Then
-        If $iCurActiveAcc <> - 1 Then $sAccAct = String($iCurActiveAcc + 1)
-    Else
+    ;If $ichkEnableMySwitch = 1 Then
+    ;    If $iCurActiveAcc <> - 1 Then $sAccAct = String($iCurActiveAcc + 1)
+    ;Else
         $sAccAct = String($g_iCurAccount + 1)
-    EndIf
+    ;EndIf
 	Local $eWinlose
 	If $starsearned >= 1 Then
 		$eWinlose = "VICTORY"

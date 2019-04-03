@@ -14,11 +14,10 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func SelectDropTroop($iSlotIndex, $iClicks = 1, $iDelay = 0, $bCheckAttackPage = True)
-	If $bCheckAttackPage = False Then 
-		ClickP(GetSlotPosition($iSlotIndex), $iClicks, $iDelay, "#0111")
-	Else
-		If IsAttackPage() = True Then ClickP(GetSlotPosition($iSlotIndex), $iClicks, $iDelay, "#0111")
-	EndIf
+	# Samm0d - DROP PLUS / START
+	Local $aSlotPos = GetSlotPosition($iSlotIndex)
+	If BitOr(BitAND(IsAttackPage() = True, IsSlotDead($aSlotPos, True) = False), (not $bCheckAttackPage)) Then (ClickPDrop($aSlotPos, $iClicks, $iDelay, "#0111"))
+	# Samm0d - DROP PLUS / END
 EndFunc   ;==>SelectDropTroop
 
 ;Samm0d

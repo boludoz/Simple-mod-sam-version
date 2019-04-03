@@ -55,7 +55,8 @@ Func CheckOverviewFullArmy($bOpenArmyWindow = False, $bCloseArmyWindow = False)
 		$g_bFullArmy = True
 	EndIf
 
-	$g_bCanRequestCC = _ColorCheck(_GetPixelColor($aRequestTroopsAO[0], $aRequestTroopsAO[1] + 20, True), Hex($aRequestTroopsAO[3], 6), $aRequestTroopsAO[5]) And _ColorCheck(_GetPixelColor($aRequestTroopsAO[0], $aRequestTroopsAO[1], True), Hex($aRequestTroopsAO[4], 6), $aRequestTroopsAO[5])
+	;verify can make requestCC and update global flag
+	$g_bCanRequestCC = IsToRequestCC(False)
 	If $g_bDebugSetlog Then SetDebugLog("Can Request CC: " & $g_bCanRequestCC, $COLOR_DEBUG)
 
 	If $bCloseArmyWindow Then

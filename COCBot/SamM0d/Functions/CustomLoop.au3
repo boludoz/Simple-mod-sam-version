@@ -50,60 +50,61 @@ Func CustomModLoop()
 		$bDonateAwayFlag = False
 		$tempDisableBrewSpell = False
 		$tempDisableTrain = False
-		$bAvoidSwitch = False
+		;$bAvoidSwitch = False
 		$g_iCommandStop = -1
 
 		; samm0d switch
-		If $ichkEnableMySwitch Then
-			If $g_iSamM0dDebug = 1 Then SetLog("$bAvoidSwitch: " & $bAvoidSwitch)
-			$bUpdateStats = True
-			If $g_bIsClientSyncError = False And $g_bIsSearchLimit = False And ($g_bQuickAttack = False) Then
-				DoSwitchAcc()
-				If $g_bRestart = True Then Return "ContinueLoop"
-
-				If _Sleep($DELAYRUNBOT1) Then Return "Return"
-			    If NOT BitAND($g_bChkPlayBBOnly, IsOnBuilderBaseEz()) Then checkMainScreen()
-				If $g_bRestart = True Then Return "ContinueLoop"
-
-				If $ichkProfileImage = 1 Then ; check with image is that village load correctly
-					If $bAvoidSwitch = False And $bChangeNextAcc = True Then
-						If checkProfileCorrect() = True Then
-							SetLog("Profile match with village.png, profile loaded correctly.", $COLOR_INFO)
-							$iCheckAccProfileError = 0
-							;$bProfileImageChecked = True
-						Else
-							SetLog("Profile not match with village.png, profile load failed.", $COLOR_ERROR)
-							$iCheckAccProfileError += 1
-							If $iCheckAccProfileError > 2 Then
-								$iCheckAccProfileError = 0
-								DoVillageLoadFailed()
-							EndIf
-							$iCurActiveAcc = -1
-							ClickP($aAway,1,0)
-							If _Sleep(1000) Then Return "Return"
-							Return "ContinueLoop"
-						EndIf
-					EndIf
-				EndIf
-				If $g_iTownHallLevel = 0 And not $g_bEnableSkipBuild Then BotDetectFirstTime()
-			Else
-				If _Sleep($DELAYRUNBOT1) Then Return "Return"
-			    If NOT BitAND($g_bChkPlayBBOnly, IsOnBuilderBaseEz()) Then checkMainScreen()
-				If $g_bRestart = True Then Return "ContinueLoop"
-			EndIf
-			$iDoPerformAfterSwitch = True
-		Else
-			If _Sleep($DELAYRUNBOT1) Then Return "Return"
-			If NOT BitAND($g_bChkPlayBBOnly, IsOnBuilderBaseEz()) Then checkMainScreen()
-			If $g_bRestart = True Then Return "ContinueLoop"
-		EndIf
+		;If $ichkEnableMySwitch Then
+		;	If $g_iSamM0dDebug = 1 Then SetLog("$bAvoidSwitch: " & $bAvoidSwitch)
+		;	$bUpdateStats = True
+		;	If $g_bIsClientSyncError = False And $g_bIsSearchLimit = False And ($g_bQuickAttack = False) Then
+		;		DoSwitchAcc()
+		;		If $g_bRestart = True Then Return "ContinueLoop"
+        ;
+		;		If _Sleep($DELAYRUNBOT1) Then Return "Return"
+		;	    If NOT BitAND($g_bChkPlayBBOnly, IsOnBuilderBaseEz()) Then checkMainScreen()
+		;		If $g_bRestart = True Then Return "ContinueLoop"
+        ;
+		;		If $ichkProfileImage = 1 Then ; check with image is that village load correctly
+		;			If $bAvoidSwitch = False And $bChangeNextAcc = True Then
+		;				If checkProfileCorrect() = True Then
+		;					SetLog("Profile match with village.png, profile loaded correctly.", $COLOR_INFO)
+		;					$iCheckAccProfileError = 0
+		;					;$bProfileImageChecked = True
+		;				Else
+		;					SetLog("Profile not match with village.png, profile load failed.", $COLOR_ERROR)
+		;					$iCheckAccProfileError += 1
+		;					If $iCheckAccProfileError > 2 Then
+		;						$iCheckAccProfileError = 0
+		;						DoVillageLoadFailed()
+		;					EndIf
+		;					$iCurActiveAcc = -1
+		;					ClickP($aAway,1,0)
+		;					If _Sleep(1000) Then Return "Return"
+		;					Return "ContinueLoop"
+		;				EndIf
+		;			EndIf
+		;		EndIf
+		;		If $g_iTownHallLevel = 0 And not $g_bEnableSkipBuild Then BotDetectFirstTime()
+		;	Else
+		;		If _Sleep($DELAYRUNBOT1) Then Return "Return"
+		;	    If NOT BitAND($g_bChkPlayBBOnly, IsOnBuilderBaseEz()) Then checkMainScreen()
+		;		If $g_bRestart = True Then Return "ContinueLoop"
+		;	EndIf
+		;	$iDoPerformAfterSwitch = True
+		;Else
+		;	If _Sleep($DELAYRUNBOT1) Then Return "Return"
+		;	If NOT BitAND($g_bChkPlayBBOnly, IsOnBuilderBaseEz()) Then checkMainScreen()
+		;	If $g_bRestart = True Then Return "ContinueLoop"
+		;EndIf
 
 		If $g_bChkPlayBBOnly Then
 			SetLog("Let's Play Builder Base Only", $COLOR_INFO)
 			runBuilderBase()
-			$iDoPerformAfterSwitch = True
-			DoSwitchAcc()
+			;$iDoPerformAfterSwitch = True
+			;DoSwitchAcc()
 			If ProfileSwitchAccountEnabled() Then checkSwitchAcc() ; Forced to switch
-			Return "ContinueLoop"
+					If Not $g_bRunState Then Return "Return"
+			If $g_bRestart = True Or $g_bChkPlayBBOnly = False Then Return "ContinueLoop" ; must be level 2 due to loop-in-loop
 		EndIf
 EndFunc   ;==>CustomSwitch

@@ -320,43 +320,43 @@ Global $btnAttNowDB, $btnAttNowLB
 
 ; MySwitch
 ; GUI
-Global $g_ahLblStatsSwitchTotal[4]
-Global $g_ahLblStatsSwitchGPH[4]
-Global $grpMySwitch, $chkEnableMySwitch, $chkProfileImage, $g_hLblProfileName, $arrowleft2, $arrowright2, $btnMakeSwitchADBFolder, $cmbSwitchMethod, $btnPushshared_prefs
+;Global $g_ahLblStatsSwitchTotal[4]
+;Global $g_ahLblStatsSwitchGPH[4]
+;Global $grpMySwitch, $chkEnableMySwitch, $chkProfileImage, $g_hLblProfileName, $arrowleft2, $arrowright2, $btnMakeSwitchADBFolder, $cmbSwitchMethod, $btnPushshared_prefs
+;;Global $chkUseADBLoadVillage
+;Global $chkEnableAcc[8], $cmbWithProfile[8], $cmbAtkDon[8], $cmbStayTime[8], $chkPriority[8], $hLabelTime[8]
+;
+;;Global $ichkUseADBLoadVillage = 0
+;Global $icmbSwitchMethod = 0
+;Global $iSelectAccError = 0
+;Global $iTotalDonateType = 0
+;Global $iCheckAccProfileError = 0
+;Global $iSlotYOffset = 0
 ;Global $chkUseADBLoadVillage
-Global $chkEnableAcc[8], $cmbWithProfile[8], $cmbAtkDon[8], $cmbStayTime[8], $chkPriority[8], $hLabelTime[8]
-
-;Global $ichkUseADBLoadVillage = 0
-Global $icmbSwitchMethod = 0
-Global $iSelectAccError = 0
-Global $iTotalDonateType = 0
-Global $iCheckAccProfileError = 0
-Global $iSlotYOffset = 0
-Global $chkUseADBLoadVillage
-Global $lblActiveAcc
-Global $chkCanCloseGame, $txtCanCloseGameTime
-
-Global $ichkProfileImage = 0
-Global $ichkEnableAcc[8] = [0,0,0,0,0,0,0,0]
-Global $icmbWithProfile[8] = [0,0,0,0,0,0,0,0]
-Global $icmbAtkDon[8] = [0,0,0,0,0,0,0,0]
-Global $icmbStayTime[8] = [0,0,0,0,0,0,0,0]
-Global $ichkPriority[8] = [0,0,0,0,0,0,0,0]
-
-Global $ichkEnableMySwitch = 0
-Global $ichkCanCloseGame = 1
-Global $itxtCanCloseGameTime = 180
-Global $iMySwitchSmartWaitTime = 0
-Global $iDoPerformAfterSwitch = False
-Global $iCurActiveAcc = -1
-Global $iNextAcc = 0
-Global $iCurStep = 0
-Global $iSortEnd = 0
-Global $bChangeNextAcc = True
-Global $ichkEnableContinueStay, $chkEnableContinueStay, $itxtTrainTimeLeft, $txtTrainTimeLeft, $ichkForcePreTrainB4Switch, $chkForcePreTrainB4Switch
-Global $ichkSwitchDonTypeOnlyWhenAtkTypeNotReady = False
-Global $bAvoidSwitch = False
-;Global $bNowWaitingConfirm = False
+;Global $lblActiveAcc
+;Global $chkCanCloseGame, $txtCanCloseGameTime
+;
+;Global $ichkProfileImage = 0
+;Global $ichkEnableAcc[8] = [0,0,0,0,0,0,0,0]
+;Global $icmbWithProfile[8] = [0,0,0,0,0,0,0,0]
+;Global $icmbAtkDon[8] = [0,0,0,0,0,0,0,0]
+;Global $icmbStayTime[8] = [0,0,0,0,0,0,0,0]
+;Global $ichkPriority[8] = [0,0,0,0,0,0,0,0]
+;
+;Global $ichkEnableMySwitch = 0
+;Global $ichkCanCloseGame = 1
+;Global $itxtCanCloseGameTime = 180
+;Global $iMySwitchSmartWaitTime = 0
+;Global $iDoPerformAfterSwitch = False
+;Global $iCurActiveAcc = -1
+;Global $iNextAcc = 0
+;Global $iCurStep = 0
+;Global $iSortEnd = 0
+;Global $bChangeNextAcc = True
+;Global $ichkEnableContinueStay, $chkEnableContinueStay, $itxtTrainTimeLeft, $txtTrainTimeLeft, $ichkForcePreTrainB4Switch, $chkForcePreTrainB4Switch
+;Global $ichkSwitchDonTypeOnlyWhenAtkTypeNotReady = False
+;Global $bAvoidSwitch = False
+;;Global $bNowWaitingConfirm = False
 
 ; Custom Chat OCR
 Global $g_sGetOcrMod = ""
@@ -529,3 +529,6 @@ Global $g_iQuickMISWOffSetX = 0, $g_iQuickMISWOffSetY = 0 ; SAMM0D
 
 Global $g_aIAVar[5] = [0, 0, 0, 0, 0]
 Global $g_sIAVar = '0|0|0|0|0'
+
+; Search Timer
+Global $g_iTotalSearchTime = 0
